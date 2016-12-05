@@ -33,12 +33,20 @@ namespace Mahou
 		[STAThread] //DO NOT REMOVE THIS
         public static void Main(string[] args)
 		{
+			Logging.Log("Mahou started.");
+			//Catch any error during program runtime
+			AppDomain.CurrentDomain.UnhandledException += (obj, arg) => {
+				var e = (Exception)arg.ExceptionObject;
+				Logging.Log("Unexpected error occured, Mahou exitted, error details:\r\n" + e.Message+"\r\n" + e.StackTrace, 1);
+			};
+			Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
 			using (var mutex = new Mutex(false, "Global\\" + appGUid)) {
 				if (!mutex.WaitOne(0, false)) {
 					KMHook.PostMessage((IntPtr)0xffff, ao, 0, 0);
 					return;
 				}
 				if (locales.Length < 2) {
+					Logging.Log("Too less layouts/locales. Program will exit.");
 					Locales.IfLessThan2();
 				} else {
 					mahou = new MahouForm();
@@ -49,12 +57,14 @@ namespace Mahou
 					Application.EnableVisualStyles(); // Huh i did not noticed that it was missing... '~'
 					if (args.Length != 0)
 					if (args[0] == "_!_updated_!_") {
+						Logging.Log("Mahou updated.");
 						mahou.ToggleVisibility();
 						MessageBox.Show(Msgs[0], Msgs[1], MessageBoxButtons.OK, MessageBoxIcon.Information);
 					}
 					StartHook();
 					//for first run, add your locale 1 & locale 2 to settings
 					if (MyConfs.Read("Locales", "locale1Lang") == "" && MyConfs.Read("Locales", "locale2Lang") == "") {
+						Logging.Log("Initializing locales.");
 						MyConfs.Write("Locales", "locale1uId", locales[0].uId.ToString());
 						MyConfs.Write("Locales", "locale2uId", locales[1].uId.ToString());
 						MyConfs.Write("Locales", "locale1Lang", locales[0].Lang);
@@ -86,6 +96,7 @@ namespace Mahou
 			_mouse_hookID = KMHook.SetHook(_mouse_proc, (int)KMHook.KMMessages.WH_MOUSE_LL);
 			_hookID = KMHook.SetHook(_proc, (int)KMHook.KMMessages.WH_KEYBOARD_LL);
 			Thread.Sleep(10); //Give some time for it to apply
+			Logging.Log("Global hooks started.");
 		}
 		public static void StopHook()
 		{
@@ -96,6 +107,7 @@ namespace Mahou
 			KMHook.UnhookWindowsHookEx(_mouse_hookID);
 			_hookID = _mouse_hookID = IntPtr.Zero;
 			Thread.Sleep(10); //Give some time for it to apply
+			Logging.Log("Global hooks stopped.");
 		}
 		public static bool CheckHook()
 		{

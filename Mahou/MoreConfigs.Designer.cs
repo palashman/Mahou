@@ -69,6 +69,7 @@
         	this.btnEMore = new System.Windows.Forms.Button();
         	this.cbOnChange = new System.Windows.Forms.CheckBox();
         	this.pEExtra = new System.Windows.Forms.Panel();
+        	this.cbLogging = new System.Windows.Forms.CheckBox();
         	this.tbConMorWor = new System.Windows.Forms.TextBox();
         	this.lbConMorWor = new System.Windows.Forms.Label();
         	this.cbCheckForUPD = new System.Windows.Forms.CheckBox();
@@ -486,6 +487,7 @@
         	// 
         	// pEExtra
         	// 
+        	this.pEExtra.Controls.Add(this.cbLogging);
         	this.pEExtra.Controls.Add(this.tbConMorWor);
         	this.pEExtra.Controls.Add(this.lbConMorWor);
         	this.pEExtra.Controls.Add(this.cbCheckForUPD);
@@ -496,6 +498,17 @@
         	this.pEExtra.Size = new System.Drawing.Size(279, 268);
         	this.pEExtra.TabIndex = 31;
         	this.pEExtra.Visible = false;
+        	// 
+        	// cbLogging
+        	// 
+        	this.cbLogging.AutoSize = true;
+        	this.cbLogging.Location = new System.Drawing.Point(10, 107);
+        	this.cbLogging.Name = "cbLogging";
+        	this.cbLogging.Size = new System.Drawing.Size(167, 17);
+        	this.cbLogging.TabIndex = 4;
+        	this.cbLogging.Text = "Enable logging for debugging.";
+        	this.cbLogging.UseVisualStyleBackColor = true;
+        	this.cbLogging.MouseHover += new System.EventHandler(this.CbLoggingMouseHover);
         	// 
         	// tbConMorWor
         	// 
@@ -646,5 +659,6 @@
         private System.Windows.Forms.CheckBox cbCheckForUPD;
         private System.Windows.Forms.TextBox tbConMorWor;
         private System.Windows.Forms.Label lbConMorWor;
+        private System.Windows.Forms.CheckBox cbLogging;
     }
 }

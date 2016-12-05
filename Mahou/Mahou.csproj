@@ -88,6 +88,7 @@
     <Compile Include="Classes\KMHook.cs" />
     <Compile Include="Classes\KInputs.cs" />
     <Compile Include="Classes\Locales.cs" />
+    <Compile Include="Classes\Logging.cs" />
     <Compile Include="Classes\NativeClipboard.cs" />
     <Compile Include="Classes\Translation.cs" />
     <Compile Include="Classes\TrayIcon.cs" />

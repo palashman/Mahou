@@ -290,6 +290,7 @@ namespace Mahou
 		void GitHubLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
 			System.Diagnostics.Process.Start("https://github.com/BladeMight/Mahou");
+			Logging.Log("Opening GitHub repository.");
 		}
 		void btnUpd_Click(object sender, EventArgs e)
 		{
@@ -308,6 +309,7 @@ namespace Mahou
 				MMain.MyConfs.Write("Locales", "LANGUAGE", "RU");
 				btnLangChange.Text = "RU";
 			}
+			Logging.Log("UI language changed to ["+MMain.MyConfs.Read("Locales", "LANGUAGE")+"].");
 			MMain.InitLanguage();
 			RefreshLanguage();
 		}
@@ -331,6 +333,7 @@ namespace Mahou
 		{
 			if (m.Msg == MMain.ao) { // ao = Already Opened
 				ToggleVisibility();
+        		Logging.Log("Another instance detected, closing it.");
 			}
 			base.WndProc(ref m);
 		}
@@ -423,6 +426,7 @@ namespace Mahou
 				Hotkey.GetMods(MMain.MyConfs.Read("Hotkeys", "HKSymIgnMods")));
 			HKConMorWor = new Hotkey(MMain.MyConfs.ReadInt("Hotkeys", "HKConvertMore"), 
 				Hotkey.GetMods(MMain.MyConfs.Read("Hotkeys", "HKConvertMoreMods")));
+			Logging.Log("Hotkeys initialized.");
 		}
 		public void IfNotExist()
 		{
@@ -501,6 +505,7 @@ namespace Mahou
 				MMain.MyConfs.Write("Locales", "locale2Lang", tempLoc2.Lang);
 				MMain.MyConfs.Write("Locales", "locale2uId", tempLoc2.uId.ToString());
 			}
+			Logging.Log("Main window configurations saved.");
 			RefreshControlsData();
 			InitializeHotkeys();
 		}
@@ -517,6 +522,7 @@ namespace Mahou
 		}
 		public void ToggleVisibility() //Toggles visibility of main window
 		{
+			Logging.Log("Mahou Main window visibility changed to ["+!Visible+"].");
 			if (Visible != false)
 				Visible = moreConfigs.Visible = update.Visible = false;
 			else {
@@ -533,6 +539,7 @@ namespace Mahou
 				cbSwitchLayoutKeys.SelectedIndex = 0;
 				cbSwitchLayoutKeys.Items.Remove("Left Control");
 				cbSwitchLayoutKeys.Items.Remove("Right Control");
+				Logging.Log("RCtrl & LCtrl removed from switch only combobox, due to enabling specific layout changing by R/L Ctrls in More configs.");
 			} else {
 				cbSwitchLayoutKeys.Items.Remove("None");
 				if (!cbSwitchLayoutKeys.Items.Contains("Left Control"))
@@ -540,6 +547,7 @@ namespace Mahou
 				if (!cbSwitchLayoutKeys.Items.Contains("Right Control"))
 					cbSwitchLayoutKeys.Items.Add("Right Control");
 				cbSwitchLayoutKeys.Items.Add("None");
+				Logging.Log("RCtrl & LCtrl restored to switch only combobox, due to disabling specific layout changing by R/L Ctrls in More configs.");
 			}
 		}
 		void RefreshControlsData() //Refresh all controls state from configs
@@ -573,6 +581,7 @@ namespace Mahou
 				Environment.GetFolderPath(Environment.SpecialFolder.Startup),
 				"Mahou.lnk")) ? true : false;
 			RefreshLocales();
+			Logging.Log("Main window configurations loaded.");
 		}
 		void RefreshLocales() //Re-adds existed locales to select boxes
 		{
@@ -595,6 +604,7 @@ namespace Mahou
 				cbLangOne.SelectedIndex = 0;
 				cbLangTwo.SelectedIndex = 1;
 			}
+			Logging.Log("Locales for comboboxes refreshed.");
 		}
 		void RefreshLanguage() //Refreshed in realtime all controls text
 		{
@@ -621,6 +631,7 @@ namespace Mahou
 			btnCancel.Text = MMain.UI[19];
 			btnHelp.Text = MMain.UI[20];
 			icon.RefreshText(MMain.UI[44], MMain.UI[42], MMain.UI[43]);
+			Logging.Log("Main Window language refreshed.");
 		}
 		public void RefreshIconAll() //Refreshes icon's icon and visibility
 		{
@@ -660,6 +671,7 @@ namespace Mahou
 			} finally {
 				Marshal.FinalReleaseComObject(shell);
 			}
+			Logging.Log("Startup shortcut created.");
 		}
 		void DeleteShortcut() //Deletes startup shortcut
 		{
@@ -670,9 +682,11 @@ namespace Mahou
 					Environment.GetFolderPath(Environment.SpecialFolder.Startup),
 					"Mahou.lnk"));
 			}
+			Logging.Log("Startup shortcut removed.");
 		}
 		public void ExitProgram()
 		{
+			Logging.Log("Exit by user demand.");
 			icon.Hide();
 			Refresh();
 			Application.Exit();

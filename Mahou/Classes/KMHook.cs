@@ -69,15 +69,15 @@ namespace Mahou
 					});
 					self = false;
 					int wordnum = Convert.ToInt32(Key.ToString().Replace("D", ""));
-//					Console.WriteLine("wrdn"+wordnum);
+					Logging.Log("Attempt to convert "+ wordnum +" word(s).");
 					var words = new List<YuKey>();
 					try {
 						foreach (var word in MMain.c_words.GetRange(MMain.c_words.Count-wordnum,wordnum)) {
 							words.AddRange(word);
 						}
-//						Console.WriteLine("lico = " + line.Count);
+						Logging.Log("Full character count in all "+ wordnum +" last word(s) is " + words.Count + ".");
 					} catch {
-//						Application.Exit();
+					Logging.Log("Converting "+ wordnum +" word(s) impossible it is bigger that entered words.");
 					}
 					var t = new Task(new Action(() => ConvertLast(words)));
 					t.RunSynchronously();
@@ -135,6 +135,7 @@ namespace Mahou
 					hklOK = hksOK = hklineOK = hkSIOK = true;
 				if (!MMain.mahou.Active && !MMain.mahou.moreConfigs.Visible || !MMain.mahou.Active && !MMain.mahou.moreConfigs.Active) {
 					if (MMain.MyConfs.ReadBool("EnabledHotkeys", "HKCSEnabled")) {
+						Logging.Log("Hotkey convert selection fired.");
 						if (thishk.Equals(MMain.mahou.HKCSelection) && hksOK) {
 							if (MMain.MyConfs.ReadBool("Functions", "BlockCTRL") &&
 							    MMain.MyConfs.Read("Hotkeys", "HKCSMods").Contains("Control")) {
@@ -151,6 +152,7 @@ namespace Mahou
 							}
 						}
 						if (thishk.Equals(MMain.mahou.HKCSelection) && MMain.MyConfs.ReadBool("DoubleKey", "Use")) {
+							Logging.Log("Waiting for second hotkey press of convert selection hotkey.");
 							hksOK = true;
 							doublekey.Interval = MMain.MyConfs.ReadInt("DoubleKey", "Delay");
 							doublekey.Start();
@@ -158,6 +160,7 @@ namespace Mahou
 					}
 					if (MMain.MyConfs.ReadBool("EnabledHotkeys", "HKCLEnabled")) {
 						if (thishk.Equals(MMain.mahou.HKCLast) && hklOK && !csdoing) {
+							Logging.Log("Hotkey convert last word fired.");
 							if (MMain.MyConfs.ReadBool("Functions", "BlockCTRL") &&
 							    MMain.MyConfs.Read("Hotkeys", "HKCLMods").Contains("Control")) {
 							} else {
@@ -173,6 +176,7 @@ namespace Mahou
 							}
 						}
 						if (thishk.Equals(MMain.mahou.HKCLast) && MMain.MyConfs.ReadBool("DoubleKey", "Use")) {
+							Logging.Log("Waiting for second hotkey press of convert last word hotkey.");
 							hklOK = true;
 							doublekey.Interval = MMain.MyConfs.ReadInt("DoubleKey", "Delay");
 							doublekey.Start();
@@ -180,6 +184,7 @@ namespace Mahou
 					}
 					if (MMain.MyConfs.ReadBool("EnabledHotkeys", "HKCLineEnabled")) {
 						if (thishk.Equals(MMain.mahou.HKCLine) && hklineOK && !csdoing) {
+							Logging.Log("Hotkey convert line fired.");
 							if (MMain.MyConfs.ReadBool("Functions", "BlockCTRL") &&
 							    MMain.MyConfs.Read("Hotkeys", "HKCLineMods").Contains("Control")) {
 							} else {
@@ -199,6 +204,7 @@ namespace Mahou
 							}
 						}
 						if (thishk.Equals(MMain.mahou.HKCLine) && MMain.MyConfs.ReadBool("DoubleKey", "Use")) {
+							Logging.Log("Waiting for second hotkey press of convert line hotkey.");
 							hklineOK = true;
 							doublekey.Interval = MMain.MyConfs.ReadInt("DoubleKey", "Delay");
 							doublekey.Start();
@@ -208,6 +214,7 @@ namespace Mahou
 				}
 				if (MMain.MyConfs.ReadBool("EnabledHotkeys", "HKSymIgnEnabled")) {
 					if (thishk.Equals(MMain.mahou.HKSymIgn) && hkSIOK) {
+						Logging.Log("Hotkey symbol ignore mode fired.");
 						if (MMain.MyConfs.ReadBool("Functions", "SymIgnModeEnabled")) {
 							MMain.MyConfs.Write("Functions", "SymIgnModeEnabled", "false");
 							MMain.mahou.Icon = MMain.mahou.icon.trIcon.Icon = Properties.Resources.MahouTrayHD;
@@ -217,6 +224,7 @@ namespace Mahou
 						}
 					}
 					if (thishk.Equals(MMain.mahou.HKSymIgn) && MMain.MyConfs.ReadBool("DoubleKey", "Use")) {
+						Logging.Log("Waiting for second hotkey press of symbol ignore mode hotkey.");
 						hkSIOK = true;
 						doublekey.Interval = MMain.MyConfs.ReadInt("DoubleKey", "Delay");
 						doublekey.Start();
@@ -242,7 +250,6 @@ namespace Mahou
 						by[(int)Keys.ShiftKey] = 0xFF;
 					}
 					ToUnicodeEx((uint)vkCode, (uint)vkCode, by, stb, stb.Capacity, 0, (IntPtr)Locales.GetCurrentLocale());
-//				Console.WriteLine(stb.ToString()[0]);
 					c_snip.Add(stb.ToString()[0]);
 				}
 				if (wParam == (IntPtr)(int)KMMessages.WM_KEYUP && Key == Keys.Space) {
@@ -250,12 +257,10 @@ namespace Mahou
 					foreach (var ch in c_snip) {
 						snip += ch;
 					}
-//				Console.WriteLine(snip);
+					Logging.Log("Current snippet is [" + snip + "].");
 					for (int i = 0; i < snipps.Length; i++) {
-//					Console.WriteLine("!Current is = " + snipps[i]);
 						if (snip == snipps[i]) {
-//						Console.WriteLine("ITISEQ!");
-//							Console.WriteLine(c_snip.Count);
+							Logging.Log("Current snippet [" + snip + "] matched existing snippet ["+snipps[i]+"].");
 							self = true;
 							for (int e = -1; e < c_snip.Count; e++) {
 								KInputs.MakeInput(new [] { KInputs.AddKey(Keys.Back, true),
@@ -268,6 +273,7 @@ namespace Mahou
 							try {
 								KInputs.MakeInput(KInputs.AddString(exps[i]));
 							} catch {
+								Logging.Log("Some snippets configured wrong, check them.");
 								// If not use TASK, form won't accept the keys(Enter/Escape/Alt+F4).
 								var tsk = new Task(() => MessageBox.Show(MMain.Msgs[10], MMain.Msgs[11], MessageBoxButtons.OK, MessageBoxIcon.Error));
 								tsk.Start();
@@ -307,6 +313,7 @@ namespace Mahou
 			    Key == Keys.CapsLock && wParam == (IntPtr)(int)KMMessages.WM_KEYUP) {
 				self = true;
 				ChangeLayout();
+				Logging.Log("Changing layout by CapsLock key.");
 				self = false;
 			}
 			if (!self && !shift && MMain.MyConfs.Read("HotKeys", "OnlyKeyLayoutSwicth") == "CapsLock" &&
@@ -340,6 +347,7 @@ namespace Mahou
 				if (MMain.MyConfs.ReadBool("Functions", "EmulateLayoutSwitch")) {
 					KeybdEvent(Keys.LControlKey, 2); // Sends it up to make it work when using "EmulateLayoutSwitch" 
 				}
+				Logging.Log("Changing layout by LCtrl key.");
 				ChangeLayout();
 				KeybdEvent(Keys.LControlKey, 2); //fix for PostMessage, it somehow o_0 sends another ctrl...
 
@@ -352,6 +360,7 @@ namespace Mahou
 				if (MMain.MyConfs.ReadBool("Functions", "EmulateLayoutSwitch")) {
 					KeybdEvent(Keys.RControlKey, 2); // Sends it up to make it work when using "EmulateLayoutSwitch" 
 				}
+				Logging.Log("Changing layout by RCtrl key.");
 				ChangeLayout();
 				self = false;
 			}
@@ -360,9 +369,11 @@ namespace Mahou
 			keyAfterCTRL |= !self && wParam == (IntPtr)(int)KMMessages.WM_KEYUP && ctrl;
 			if (!self && MMain.MyConfs.ReadBool("ExtCtrls", "UseExtCtrls") && wParam == (IntPtr)(int)KMMessages.WM_KEYUP && !keyAfterCTRL) {
 				if (Key == Keys.RControlKey) {
+					Logging.Log("Switching to specific layout by RCtrl key.");
 					PostMessage(Locales.ActiveWindow(), KInputs.WM_INPUTLANGCHANGEREQUEST, 0, (uint)MMain.MyConfs.ReadInt("ExtCtrls", "RCLocale"));
 				}
 				if (Key == Keys.LControlKey) {
+					Logging.Log("Switching to specific layout by LCtrl key.");
 					PostMessage(Locales.ActiveWindow(), KInputs.WM_INPUTLANGCHANGEREQUEST, 0, (uint)MMain.MyConfs.ReadInt("ExtCtrls", "LCLocale"));
 				}
 			}
@@ -377,17 +388,18 @@ namespace Mahou
 					if (MMain.c_words.Count != 0) {
 						removeat:
 						try {
-//							Console.WriteLine("MinONE! " + MMain.c_words[MMain.c_words.Count - 1].Count + " LANA " + MMain.c_words.Count);
+							Logging.Log("Removed one character from current words.");
 							MMain.c_words[MMain.c_words.Count - 1].RemoveAt(MMain.c_words[MMain.c_words.Count - 1].Count - 1);
 						} catch {
+							Logging.Log("Removed one empty word from current words.");
 							MMain.c_words.RemoveAt(MMain.c_words.Count - 1);
-//							Console.WriteLine("LastRemoved!");
 							goto removeat;
 						}
 					}
 					if (MMain.MyConfs.ReadBool("Functions", "Snippets")) {
 						if (c_snip.Count != 0) {
 							c_snip.RemoveAt(c_snip.Count - 1);
+							Logging.Log("Removed one character from current snippet.");
 						}
 					}
 				}
@@ -396,6 +408,7 @@ namespace Mahou
 				    Key == Keys.Tab || Key == Keys.PageDown || Key == Keys.PageUp ||
 				    Key == Keys.Left || Key == Keys.Right || Key == Keys.Down || Key == Keys.Up ||
 				    (ctrl && Key != Keys.None)) { //Ctrl modifier + Any key will clear word too
+					Logging.Log("Last word, words and snippet cleared.");
 					MMain.c_word.Clear();
 					if (MMain.MyConfs.ReadBool("Functions", "Snippets")) {
 						c_snip.Clear();
@@ -406,6 +419,7 @@ namespace Mahou
 					MMain.c_words.Add(new List<YuKey>());
 					if (MMain.MyConfs.ReadBool("Functions", "EatOneSpace") && MMain.c_word.Count != 0 &&
 					    MMain.c_word[MMain.c_word.Count - 1].yukey != Keys.Space) {
+						Logging.Log("Eat one space passed, next space will clear last word.");
 						MMain.c_word.Add(new YuKey() {
 							yukey = Keys.Space,
 							upper = false
@@ -413,6 +427,7 @@ namespace Mahou
 						afterEOS = true;
 					} else {
 						MMain.c_word.Clear();
+						Logging.Log("Last word cleared.");
 						afterEOS = false;
 					}
 				}
@@ -449,27 +464,20 @@ namespace Mahou
 			if (!self && incapt &&
 			    (Key == Keys.RMenu || Key == Keys.LMenu || Key == Keys.Menu) &&
 			    wParam == (IntPtr)(int)KMMessages.WM_KEYUP) {
-//				Console.WriteLine("Capture of Numpads ended, captured:");
-//				foreach (var k in tempNumpads) {
-//					Console.WriteLine(k);
-//				}
-//				Console.WriteLine("tempNumpads Cleared.");
-//				Console.WriteLine("incapt reseted.");                 //new List => VERY important here!!!
+				Logging.Log("Capture of numpads ended, captured ["+tempNumpads.Count+"] numpads.");
 				MMain.c_word.Add(new YuKey() {
 					altnum = true,
-					numpads = new List<Keys>(tempNumpads)
-				});
+					numpads = new List<Keys>(tempNumpads)//new List => VERY important here!!!
+				});                                      //It prevents pointer to tempNumpads, which is cleared.
 				MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() {
 					altnum = true,
 					numpads = new List<Keys>(tempNumpads)
 				});
-				tempNumpads.Clear();                                  //It prevents pointer to tempNumpads, which is cleared.
+				tempNumpads.Clear();
 				incapt = false;
-//				Console.WriteLine("LIKE YOU"+MMain.c_word[MMain.c_word.Count-1].numpads.Count);
-//				Console.WriteLine("numpads are:"+MMain.c_word.Count);
 			}
 			if (!self && !incapt && alt && wParam == (IntPtr)(int)KMMessages.WM_SYSKEYDOWN) {
-//				Console.WriteLine("Starting capture of Numpads...");
+				Logging.Log("Alt is down, starting capture of Numpads...");
 				incapt = true;
 			}
 			if (!self && alt && incapt) {
@@ -487,8 +495,10 @@ namespace Mahou
 				if ((KMMessages.WM_LBUTTONDOWN == (KMMessages)(int)wParam) || KMMessages.WM_RBUTTONDOWN == (KMMessages)(int)wParam) {
 					MMain.c_word.Clear();
 					MMain.c_words.Clear();
+					Logging.Log("Last word & words cleared [with mouse click].");
 					if (MMain.MyConfs.ReadBool("Functions", "Snippets")) {
 						c_snip.Clear();
+						Logging.Log("Current snippet cleared[with mouse click].");
 					}
 				}
 			}
@@ -500,8 +510,10 @@ namespace Mahou
 		{
 			Locales.IfLessThan2();
 			self = true;
+			Logging.Log("Starting Convert selection.");
 			string ClipStr = "";
 			// Backup & Restore feature, now only text supported...
+			Logging.Log("Taking backup of clipboard text if possible.");
 			var doBackup = false || NativeClipboard.IsClipboardFormatAvailable((uint)NativeClipboard.uFormat.CF_UNICODETEXT);
 			var datas = new NativeClipboard.ClipboardData() {
 				data = new List<byte[]>(),
@@ -516,6 +528,7 @@ namespace Mahou
 			//This prevents from converting text that alredy exist in Clipboard
 			//by pressing "Convert Selection hotkey" without selected text.
 			NativeClipboard.Clear();
+			Logging.Log("Getting selected text.");
 			if (MMain.MyConfs.ReadBool("Functions", "MoreTries"))
 				for (int i = 0; i != MMain.MyConfs.ReadInt("Functions", "TriesCount"); i++) {
 					ClipStr = MakeCopy();
@@ -526,6 +539,7 @@ namespace Mahou
 				ClipStr = MakeCopy();
 			if (!String.IsNullOrEmpty(ClipStr)) {
 				csdoing = true;
+				Logging.Log("Starting conversion of ["+ClipStr+"].");
 				KInputs.MakeInput(new [] {
 					KInputs.AddKey(Keys.Back, true),
 					KInputs.AddKey(Keys.Back, false)
@@ -533,6 +547,7 @@ namespace Mahou
 				var result = "";
 				int items = 0;
 				if (MMain.MyConfs.ReadBool("Functions", "CSSwitch")) {
+					Logging.Log("Using CS-Switch mode.");
 					self = true;
 					var wasLocale = Locales.GetCurrentLocale();
 					var wawasLocale = wasLocale;
@@ -559,22 +574,19 @@ namespace Mahou
 						if (state2 == 1)
 							bytes2[(int)Keys.ShiftKey] = 0xFF;
 						if (MMain.MyConfs.ReadBool("Functions", "ExperimentalCSSwitch")) {
+							Logging.Log("Using Experimental CS-Switch mode.");
 							ToUnicodeEx((uint)scan, (uint)scan, bytes, s, s.Capacity, 0, (IntPtr)wasLocale);
-//						Console.WriteLine("1Char is in " + wasLocale + " " + s);
-//						Console.WriteLine(String.IsNullOrEmpty(s.ToString()));
-//						Console.WriteLine("Checking the " + (ClipStr[index].ToString() + " == " + s.ToString() + " -> " + (ClipStr[index].ToString() == s.ToString())));
+							Logging.Log("Char 1 is ["+s+"] in locale +["+ wasLocale+"].");
 							if (ClipStr[index].ToString() == s.ToString()) {
-//							Console.WriteLine("NO/:");
+								Logging.Log("Making input of ["+scan+"] in locale +["+ nowLocale +"].");
 								KInputs.MakeInput(KInputs.AddString(InAnother(c, wasLocale, nowLocale)));
 								index++;
 								continue;
 							}
 							ToUnicodeEx((uint)scan2, (uint)scan2, bytes2, sb, sb.Capacity, 0, (IntPtr)nowLocale);
-//						Console.WriteLine("2Char is in " + nowLocale + " " + sb);
-//						Console.WriteLine(String.IsNullOrEmpty(sb.ToString()));
-//						Console.WriteLine("Checking the " + (ClipStr[index].ToString() + " == " + sb.ToString() + " -> " + (ClipStr[index].ToString() == sb.ToString())));
+							Logging.Log("Char 2 is ["+sb+"] in locale +["+ nowLocale+"].");
 							if (ClipStr[index].ToString() == sb.ToString()) {
-//							Console.WriteLine("YO/:");
+								Logging.Log("Char 1, 2 and origial are equivalent.");
 								PostMessage(Locales.ActiveWindow(), KInputs.WM_INPUTLANGCHANGEREQUEST, 0, (uint)wasLocale);
 								wasLocale = nowLocale;
 								scan = scan2;
@@ -589,7 +601,7 @@ namespace Mahou
 								var key = (Keys)(scan & 0xff);
 								bool upper = false || state == 1;
 								yk = new YuKey() { yukey = key, upper = upper };
-								//Console.WriteLine(key + "~" + state);
+								Logging.Log("Key of char ["+c+"] = {"+key+"}, upper = +["+ state +"].");
 							} else {
 								yk = new YuKey() { yukey = Keys.None };
 							}
@@ -597,11 +609,11 @@ namespace Mahou
 						if (yk.yukey == Keys.None) { // retype unrecognized as unicode
 							var unrecognized = ClipStr[items - 1].ToString();
 							KInputs.INPUT unr = KInputs.AddString(unrecognized)[0];
-							//Console.WriteLine("Uis = " + unrecognized + " ind = " + (items - 1));
-							//Console.WriteLine(unr.Data.Keyboard.Scan + "~" + unr.Data.Keyboard.Flags + "=>"  + unr.Data.Keyboard.Vk);
+							Logging.Log("Key of char ["+c+"] = not exist, using input as string.");
 							KInputs.MakeInput(new [] { unr });
 						} else {
 							if (!SymbolIgnoreRules(yk.yukey, yk.upper, wasLocale)) {
+								Logging.Log("Making input of ["+yk.yukey+"] key with upper = ["+yk.upper+"].");
 								if (yk.upper)
 									KInputs.MakeInput(new [] { KInputs.AddKey(Keys.LShiftKey, true) });
 								KInputs.MakeInput(new [] { KInputs.AddKey(yk.yukey, true) });
@@ -613,6 +625,7 @@ namespace Mahou
 						index++;
 					}
 				} else {
+					Logging.Log("Using default convert selection mode.");
 					var l1 = (uint)MMain.MyConfs.ReadInt("Locales", "locale1uId");
 					var l2 = (uint)MMain.MyConfs.ReadInt("Locales", "locale2uId");
 					var index = 0;
@@ -629,13 +642,16 @@ namespace Mahou
 						result += T;
 						index++;
 					}
+					Logging.Log("Conversion of string ["+ClipStr+"] from locale ["+l1 +"] into locale ["+l2 +"] became ["+result+"].");
 					result = Regex.Replace(result, "\r\\D\n?|\n\\D\r?", "\n");
 					//Inputs converted text
+					Logging.Log("Making input of ["+result+"] as string");
 					KInputs.MakeInput(KInputs.AddString(result));
 					items = result.Length;
 				}
 				if (MMain.MyConfs.ReadBool("Functions", "ReSelect")) {
 					//reselects text
+					Logging.Log("Reselecting text.");
 					for (int i = items; i != 0; i--) {
 						KInputs.MakeInput(new [] { 
 							KInputs.AddKey(Keys.LShiftKey, true),
@@ -689,10 +705,11 @@ namespace Mahou
 			Locales.IfLessThan2();
 			YuKey[] YuKeys = c_.ToArray();
 			{
+				Logging.Log("Starting to convert word.");
 				self = true;
 				var wasLocale = Locales.GetCurrentLocale();
 				ChangeLayout();
-				//Console.WriteLine(wasLocale + "|" + Locales.GetCurrentLocale());
+				Logging.Log("Deleting old word, with lenght of ["+YuKeys.Length+"].");
 				for (int e = 0; e < YuKeys.Length; e++) {
 					KInputs.MakeInput(new [] { KInputs.AddKey(Keys.Back, true),
 						KInputs.AddKey(Keys.Back, false) 
@@ -700,16 +717,16 @@ namespace Mahou
 				}
 				for (int i = 0; i < YuKeys.Length; i++) {
 					if (YuKeys[i].altnum) {
-//						Console.WriteLine("An YuKeys with numpads passed...");
+						Logging.Log("An YuKey with numpads passed.");
 						KInputs.MakeInput(new [] { KInputs.AddKey(Keys.LMenu, true) });
-//						Console.WriteLine(YuKeys[i].numpads[0]);
 						foreach (var numpad in YuKeys[i].numpads) {
-//							Console.WriteLine(numpad);
+							Logging.Log(numpad + " is being inputted.");
 							KInputs.MakeInput(new [] { KInputs.AddKey(numpad, true) });
 							KInputs.MakeInput(new [] { KInputs.AddKey(numpad, false) });
 						}
 						KInputs.MakeInput(new [] { KInputs.AddKey(Keys.LMenu, false) });
 					} else {
+						Logging.Log("An YuKey with state passed.");
 						if (YuKeys[i].upper)
 							KInputs.MakeInput(new [] { KInputs.AddKey(Keys.LShiftKey, true) });
 						if (!SymbolIgnoreRules(YuKeys[i].yukey, YuKeys[i].upper, wasLocale)) {
@@ -726,9 +743,7 @@ namespace Mahou
 		}
 		static bool SymbolIgnoreRules(Keys key, bool upper, uint wasLocale) //Rules to ignore symbols
 		{
-//            Console.WriteLine(MMain.MyConfs.ReadBool("Functions", "SymIgnModeEnabled").ToString() +
-//                MMain.MyConfs.ReadBool("EnabledHotkeys", "HKSymIgnEnabled").ToString() +
-//                " ? " + key + upper.ToString() + wasLocale);
+			Logging.Log("Passing through symbol ignore rules.");
 			if (MMain.MyConfs.ReadBool("EnabledHotkeys", "HKSymIgnEnabled") &&
 			    MMain.MyConfs.ReadBool("Functions", "SymIgnModeEnabled") &&
 			    (wasLocale == 1033 || wasLocale == 1041) &&
@@ -742,7 +757,6 @@ namespace Mahou
 			        key == Keys.Oemcomma ||
 			        key == Keys.OemPeriod ||
 			        key == Keys.OemQuestion)) {
-				//Console.WriteLine("And it goes to here");
 				if (upper && key == Keys.OemOpenBrackets)
 					KInputs.MakeInput(KInputs.AddString("{"));
 				if (!upper && key == Keys.OemOpenBrackets)
@@ -789,11 +803,13 @@ namespace Mahou
 		}
 		static void ChangeLayout() //Changes current layout
 		{
+			Logging.Log("Changing layout normally.");
 			var nowLocale = Locales.GetCurrentLocale();
 			uint notnowLocale = nowLocale == (uint)MMain.MyConfs.ReadInt("Locales", "locale1uId")
                 ? (uint)MMain.MyConfs.ReadInt("Locales", "locale2uId")
                 : (uint)MMain.MyConfs.ReadInt("Locales", "locale1uId");
 			if (!MMain.MyConfs.ReadBool("Functions", "CycleMode")) {
+				Logging.Log("Changing layout using cycle mode programmaticaly.");
 				int tries = 0;
 				//Cycles while layout not changed
 				while (Locales.GetCurrentLocale() == nowLocale) {
@@ -808,6 +824,7 @@ namespace Mahou
 		}
 		static void CycleSwitch() //Switches layout by cycling between installed all in system
 		{
+			Logging.Log("Changing layout using cycle mode by simulating key press.");
 			if (MMain.MyConfs.ReadBool("Functions", "EmulateLayoutSwitch")) {
 				if (MMain.MyConfs.ReadInt("Functions", "ELSType") == 0)
                     //Emulate Alt+Shift
@@ -884,6 +901,7 @@ namespace Mahou
 				KMHook.KeybdEvent(Keys.RMenu, 2); // Right Alt Up
 				KMHook.KeybdEvent(Keys.LMenu, 2); // Left Alt Up
 			}
+			Logging.Log("All modifiers sended up.");
 			self = false;
 		}
 		static void IfKeyIsMod(Keys key)
@@ -918,21 +936,16 @@ namespace Mahou
 				var rx = new Regex("->(.*)");
 				foreach (Match rema in rx.Matches(snippets)) {
 					var noN = Regex.Replace(rema.Groups[1].Value, "(\n|\r)", "");
-//					Console.WriteLine(noN);
 					snili.Add(noN);
 				}
 				var rxex = new Regex(@"(?<=====>)(.*?)(?=<====)", RegexOptions.Singleline);
 				foreach (Match rema in rxex.Matches(snippets)) {
 					var noRN = Regex.Replace(rema.Groups[1].Value, "\r", "");
-//					Console.WriteLine(noRN);
 					expli.Add(noRN);
 				}
 				snipps = snili.ToArray();
-//				Console.WriteLine(snipps[0]);
-//				Console.WriteLine(snili.ToArray()[0]);
 				exps = expli.ToArray();
-//				Console.WriteLine(exps[0]);
-//				Console.WriteLine(expli.ToArray()[0]);
+				Logging.Log("Snippets (re)initialized.");
 			}
 		}
 		public struct YuKey // YuKey is struct of key and it state(upper/lower) AND if it is Alt+[NumPad]

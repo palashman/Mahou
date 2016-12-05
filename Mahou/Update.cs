@@ -82,6 +82,7 @@ namespace Mahou
 					if (!String.IsNullOrEmpty(tbProxy.Text)) {
 						wc.Proxy = MakeProxy();
 					}
+					Logging.Log("Downloding Mahou update: "+UpdInfo[3]);
 					wc.DownloadFileAsync(new System.Uri(UpdInfo[3]), Path.Combine(new string[] {
 						nPath,
 						fn
@@ -129,6 +130,7 @@ namespace Mahou
 			pbStatus.Value = progress = e.ProgressPercentage;
 			//Below in "if" is AUTO-UPDATE feature ;)
 			if (e.ProgressPercentage == 100 && !was) {
+				Logging.Log("Download of Mahou update [" + UpdInfo[3] +"] finished.");
 				int MahouPID = Process.GetCurrentProcess().Id;
 				//Downloaded archive
 				var arch = Regex.Match(UpdInfo[3], @"[^\\\/]+$").Groups[0].Value;
@@ -157,6 +159,7 @@ DEL ""%MAHOUDIR%" + arch + @"""
 DEL ""%MAHOUDIR%unzip.vbs""
 DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				//Save Batch script
+				Logging.Log("Writing update script.");
 				File.WriteAllText(Path.Combine(new string[] {
 					nPath,
 					"UpdateMahou.cmd"
@@ -169,6 +172,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				//Make UpdateMahou.cmd's startup hidden
 				piUpdateMahou.WindowStyle = ProcessWindowStyle.Hidden;
 				//Start updating(unzipping)
+				Logging.Log("Starting update script.");
 				Process.Start(piUpdateMahou);
 				was = true;
 			}
@@ -252,10 +256,12 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 					Info.Add(Regex.Replace(Description, "\n", "\r\n")); // Regex needed to properly display new lines.
 					Info.Add(Version);
 					Info.Add(Link);
+					Logging.Log("Check for updates succeded, GitHub version: "+ Version + ".");
 				} else {
 					response.Close();
 				}
 			} catch (WebException) {
+				Logging.Log("Check for updates failed.");
 				Info = new List<string> {
 					MMain.UI[31],
 					MMain.UI[35],
@@ -266,9 +272,11 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 		}
 		WebProxy MakeProxy()
 		{
+			Logging.Log("Creating proxy...");
 			var myProxy = new WebProxy();
 			try {
 				var newUri = new Uri("http://" + tbProxy.Text);
+				Logging.Log("Proxy is " + newUri);
 				myProxy.Address = newUri;
 			} catch {
 				gbProxy.Text = MMain.UI[51];
@@ -286,6 +294,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 		}
 		public async void StartupCheck()
 		{
+			Logging.Log("Startup check for updates.");
 			await GetUpdateInfo();
 			try {
 				if (flVersion("v" + Application.ProductVersion) < flVersion(UpdInfo[2])) {
@@ -320,6 +329,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			gbProxy.Text = MMain.UI[48];
 			lbProxy.Text = MMain.UI[49];
 			lbNamePass.Text = MMain.UI[50];
+			Logging.Log("Update UI Language refreshed.");
 		}
 
 		public static float flVersion(string ver) // converts "Mahou version type" to float

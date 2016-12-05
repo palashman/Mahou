@@ -25,11 +25,12 @@ namespace Mahou
 		}
 		public void RefreshLang()
 		{
+			var lcid = (int)Locales.GetCurrentLocale();
 			try{
-			var clangname = new System.Globalization.CultureInfo((int)Locales.GetCurrentLocale());
+			var clangname = new System.Globalization.CultureInfo(lcid);
 			ChangeLD(clangname.ThreeLetterISOLanguageName.Substring(0,1).ToUpper() + clangname.ThreeLetterISOLanguageName.Substring(1));
 			}
-			catch{}
+			catch(Exception e){Logging.Log("Language tooltip text NOT changed:\n"+e.Message);}
 		}
 		public void ChangeColors(Color fore, Color back)
 		{

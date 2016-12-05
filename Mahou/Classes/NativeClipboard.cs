@@ -75,6 +75,7 @@ namespace Mahou
                 System.Threading.Thread.Sleep(1);
             }
             CloseClipboard();
+            Logging.Log("Clipboard text was get.");
             return data;
         }
         public static ClipboardData GetClipboardDatas() // Gets all clipboard datas, but only text-based datas supported...
@@ -133,6 +134,7 @@ namespace Mahou
                 SetClipboardData(fmt, alloc);
             }
             CloseClipboard();
+            Logging.Log("Clipboard text was restored");
         }
         public struct ClipboardData // Struct of List of byte[](data) and uint(data format)
         {

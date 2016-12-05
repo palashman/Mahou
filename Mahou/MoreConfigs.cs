@@ -122,7 +122,7 @@ namespace Mahou
 		void BtnEMoreClick(object sender, EventArgs e)
 		{
 			page++;
-//			Console.WriteLine(page);
+			Logging.Log("More Configs page changed page = "+ page+".");
 			switch (page) {
 				case 0:
 					pEExtra.Visible = false;
@@ -190,6 +190,7 @@ namespace Mahou
 			MMain.MyConfs.Write("Functions", "DTTOnChange", cbOnChange.Checked.ToString());
 			MMain.MyConfs.Write("Functions", "ScrollTip", cbScrollLight.Checked.ToString());
 			MMain.MyConfs.Write("Functions", "UpdatesEnabled", cbCheckForUPD.Checked.ToString());
+			MMain.MyConfs.Write("Functions", "Logging", cbLogging.Checked.ToString());
 			MMain.mahou.langDisplay.ChangeColors(ColorTranslator.FromHtml(MMain.MyConfs.Read("Functions", "DLForeColor")),
 				ColorTranslator.FromHtml(MMain.MyConfs.Read("Functions", "DLBackColor")));
 			MMain.mahou.langDisplay.ChangeSizes((Font)fcv.ConvertFromString(MMain.MyConfs.Read("TTipUI", "Font")), 
@@ -222,6 +223,7 @@ namespace Mahou
 				MMain.mahou.ScrlCheck.Start();
 			else
 				MMain.mahou.ScrlCheck.Stop();
+			Logging.Log("More Configs configurations saved.");
 			MMain.mahou.ICheck.Interval = Convert.ToInt32(nudRefreshRate.Value);
 			MMain.mahou.res.Interval = Convert.ToInt32(nudRefreshRate.Value) * 7;
 			MMain.mahou.RefreshIconAll();
@@ -263,10 +265,12 @@ namespace Mahou
 			cbOnChange.Checked = MMain.MyConfs.ReadBool("Functions", "DTTOnChange");
 			cbScrollLight.Checked = MMain.MyConfs.ReadBool("Functions", "ScrollTip");
 			cbCheckForUPD.Checked = MMain.MyConfs.ReadBool("Functions", "UpdatesEnabled");
+			cbLogging.Checked = MMain.MyConfs.ReadBool("Functions", "Logging");
 			if (File.Exists(snipfile)) {
 				tbSnippets.Text = File.ReadAllText(snipfile);
 				KMHook.ReInitSnippets();
 			}
+			Logging.Log("More Configs configurations loaded.");
 		}
 		void tmpRestore() // Restores temporaries
 		{
@@ -314,6 +318,8 @@ namespace Mahou
 			cbScrollLight.Text 	= MMain.UI[63];
 			cbCheckForUPD.Text = MMain.UI[64];
 			lbConMorWor.Text = MMain.UI[65];
+			cbLogging.Text = MMain.UI[66];
+			Logging.Log("More Configs UI language refreshed.");
 		}
 		#endregion
 		#region Tooltips
@@ -417,6 +423,11 @@ namespace Mahou
 		{
 			HelpTT.ToolTipTitle = lbConMorWor.Text;
 			HelpTT.Show(MMain.TTips[35], tbConMorWor);	
+		}
+		void CbLoggingMouseHover(object sender, EventArgs e)
+		{
+			HelpTT.ToolTipTitle = cbLogging.Text;
+			HelpTT.Show(MMain.TTips[36], cbLogging);	
 		}
 		#endregion
 	}
