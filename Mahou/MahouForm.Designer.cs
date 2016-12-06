@@ -150,7 +150,6 @@
         	// 
         	// tbCLHK
         	// 
-        	this.tbCLHK.BackColor = System.Drawing.Color.White;
         	this.tbCLHK.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
         	this.tbCLHK.Location = new System.Drawing.Point(136, 12);
         	this.tbCLHK.Name = "tbCLHK";
@@ -163,7 +162,6 @@
         	// 
         	// tbCSHK
         	// 
-        	this.tbCSHK.BackColor = System.Drawing.Color.White;
         	this.tbCSHK.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
         	this.tbCSHK.Location = new System.Drawing.Point(136, 37);
         	this.tbCSHK.Name = "tbCSHK";
@@ -297,7 +295,6 @@
         	// 
         	// tbCLineHK
         	// 
-        	this.tbCLineHK.BackColor = System.Drawing.Color.White;
         	this.tbCLineHK.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
         	this.tbCLineHK.Location = new System.Drawing.Point(136, 62);
         	this.tbCLineHK.Name = "tbCLineHK";

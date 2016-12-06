@@ -12,7 +12,8 @@ namespace Mahou
 		{
 			uint tid = GetWindowThreadProcessId(ActiveWindow(), IntPtr.Zero);
 			IntPtr layout = GetKeyboardLayout(tid);
-            Logging.Log("Current locale id is " + (uint)(layout.ToInt32() & 0xFFFF) + ".");
+			//Produces TOO much logging, disabled.
+            //Logging.Log("Current locale id is [" + (uint)(layout.ToInt32() & 0xFFFF) + "].");
 			return (uint)(layout.ToInt32() & 0xFFFF);
 		}
 		public static IntPtr ActiveWindow() //Gets active windows(focused) or foreground

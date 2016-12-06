@@ -15,23 +15,18 @@ namespace Mahou
 		/// <param name="msgtype">Type of message: 0(or nothing) = Info, 1 = Error, 2 = Warning.</param>
 		public static void Log(string logmsg, int msgtype = 0)
 		{
-			try {
+			if (!Directory.Exists(Path.Combine(Update.nPath, "Logs")))
+				Directory.CreateDirectory(logdir);
 			if (MMain.MyConfs.ReadBool("Functions", "Logging")) { 
 				var messagetype = "Info";
-				var msgtime = DateTime.Now.ToString("yyyy.MM.dd hh:mm:ss.fff");
+				var msgtime = DateTime.Now.ToString("hh:mm:ss.fff");
 				switch (msgtype) {
 					case 1:
 						messagetype = "Error"; break;
 					case 2:
 						messagetype = "Warning"; break;
 				}
-				File.AppendAllText(log, msgtime + " [" + messagetype + "]\r\n                                " + logmsg + "\r\n");
-			}
-			} catch {
-				if (!Directory.Exists(Path.Combine(Update.nPath, "Logs")))
-					Directory.CreateDirectory(logdir);
-				if (!File.Exists(log))
-					Log("Log file ["+log+"] was missing, created new one.", 1);
+				File.AppendAllText(log, msgtime + " [" + messagetype + "]\r\n                    " + logmsg + "\r\n");
 			}
 		}
 	}
