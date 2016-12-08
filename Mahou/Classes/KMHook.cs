@@ -404,8 +404,8 @@ namespace Mahou
 					if (MMain.c_word.Count != 0) {
 						MMain.c_word.RemoveAt(MMain.c_word.Count - 1);
 					}
-					if (MMain.c_words.Count != 0) {
-						if (MMain.c_words[MMain.c_words.Count - 1].Count - 1 != 0) {
+					if (MMain.c_words.Count > 0) {
+						if (MMain.c_words[MMain.c_words.Count - 1].Count - 1 > 0) {
 							Logging.Log("Removed key ["+MMain.c_words[MMain.c_words.Count - 1][MMain.c_words[MMain.c_words.Count - 1].Count - 1].key+"] from last word in words.");
 							MMain.c_words[MMain.c_words.Count - 1].RemoveAt(MMain.c_words[MMain.c_words.Count - 1].Count - 1);
 						} else {
