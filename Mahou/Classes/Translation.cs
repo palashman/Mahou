@@ -87,7 +87,8 @@ namespace Mahou
           /*06-07*/"You have pressed just modifiers for Convert word hotkey!!","You have pressed just modifiers for Convert selection hotkey!!",
           /*08-09*/"You have pressed just modifiers for Convert line hotkey!!","You have removed selected locales, reselect.",
 		  /*10-11*/"Snippets configured wrong...", "Mahou snippets error!",
-          /*12-13*/"Using CapsLock with CapsLock assigned as [Switch Only Key] will produce issues, disable [Switch Only Key] feature or assign it to another key.","Hotkey with CapsLock warning!"};
+          /*12-13*/"Using CapsLock with CapsLock assigned as [Switch Only Key] will produce issues, disable [Switch Only Key] feature or assign it to another key.","Hotkey with CapsLock warning!",
+          /*14*/"Logging disabled due to 10+ logging errors, last error:"};
         #endregion
         #region Русский
         public static string[] UIRU = new string[] {
@@ -171,7 +172,8 @@ namespace Mahou
           /*06-07*/"Вы нажали только модификаторы для Конверт слова!!","Вы нажали только модификаторы для Конверт выделения!!",
           /*08-09*/"Вы нажали только модификаторы для Конверт линии!!","Вы убрали выбранные ранее раскладки, выберите заново.",
 		  /*10-11*/"Сниппеты настроены не правильно...", "Mahou ошибка сниппетов!",
-          /*12-13*/"Использование CapsLock в горячей клавише с CapsLock назначенным на [Сменить язык клавишей] вызовет проблемы, отключите или переключите на другую клавишу функцию [Сменить язык клавишей].","Внимание клавиша с CapsLock!"};
+          /*12-13*/"Использование CapsLock в горячей клавише с CapsLock назначенным на [Сменить язык клавишей] вызовет проблемы, отключите или переключите на другую клавишу функцию [Сменить язык клавишей].","Внимание клавиша с CapsLock!",
+          /*14*/"Логирование выключенно из-за более 10 ошибок логгинга, последняя ошибка:"};
         #endregion
     }
 }
