@@ -6,6 +6,8 @@
 Mahou работает совершенно по другому в отличии от других переключателей раскладок, он переключает *не по следующей раскладке*, а по **указаных в настройках** раскладках. <br/>
 Даже выделенный текст переключается между **выбранными** раскладками, но есил Вам нравилось цикличное переключение, то начиная с версии `v1.0.2.9` есть **Циклич. режим**(Cycle Mode).
 
+### Для работы необходим [.Net 4.5 или выше](https://www.microsoft.com/ru-ru/download/details.aspx?id=53345).
+
 ### Возможности
 
 ###### Как использовать:
@@ -108,6 +110,8 @@ Mahou находится под GPL v2+.
 ### How it works
 Mahou works completely different from other Layout Swtichers, it switches *not by next layout*, but by **specified in settings** layouts. <br/>
 Even selected text switches just between **selected** layouts, though if you liked cycling through, starting from `v1.0.2.9` there is **Cycle Mode**.
+
+### Mahou requires [.Net 4.5 or greater](https://www.microsoft.com/en-us/download/details.aspx?id=53345) to work properly.
 
 ### Features
 
