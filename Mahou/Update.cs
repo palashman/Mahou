@@ -67,6 +67,7 @@ namespace Mahou
 		void Update_Load(object sender, EventArgs e)
 		{
 			RefreshLanguage();
+            btShowProxy.BackgroundImage = recolorImg(SystemColors.WindowText, (Bitmap)Mahou.Properties.Resources.down_arrow);
 		}
 
 		void btDMahou_Click(object sender, EventArgs e)
@@ -145,7 +146,7 @@ namespace Mahou
 chcp 65001
 SET MAHOUDIR=" + nPath + @"
 TASKKILL /PID " + MahouPID + @" /F
-DEL """ + nPath + @"Mahou.exe""
+DEL /Q /F12:/2:56.98/ """ + nPath + @"Mahou.exe""
 
 ECHO With CreateObject(""Shell.Application"") > ""%MAHOUDIR%unzip.vbs""
 ECHO    .NameSpace(WScript.Arguments(1)).CopyHere .NameSpace(WScript.Arguments(0) ).items >> ""%MAHOUDIR%unzip.vbs""
@@ -178,12 +179,12 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			}
 		}
 
-		async void btnCheck_Click(object sender, EventArgs e)
+		void btnCheck_Click(object sender, EventArgs e)
 		{
 			btnCheck.Visible = false;
 			lbChecking.Visible = true;
 			lbChecking.Text = MMain.UI[23];
-			await GetUpdateInfo();
+			Task.Factory.StartNew(()=>GetUpdateInfo());
 			tmr.Tick += (_, __) => {
 				btnCheck.Text = MMain.UI[22];
 				lbChecking.Visible = false;
@@ -220,7 +221,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			}
 		}
 
-		async Task GetUpdateInfo()
+		void GetUpdateInfo()
 		{
 			var Info = new List<string>(); // Update info
 			try {
@@ -232,12 +233,11 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 					request.Proxy = MakeProxy();
 				}
 				request.ServicePoint.SetTcpKeepAlive(true, 5000, 1000);
-				var response = (HttpWebResponse)await Task.Factory
-                    .FromAsync<WebResponse>(request.BeginGetResponse,
-					               request.EndGetResponse,
-					               null);
+                var response = (HttpWebResponse)Task.Factory
+                    .FromAsync<WebResponse>(request.BeginGetResponse,request.EndGetResponse, null).Result;
 				//Console.WriteLine(response.StatusCode)
-				if (response.StatusCode == HttpStatusCode.OK) {
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
 					var data = new StreamReader(response.GetResponseStream(), true).ReadToEnd();
 					response.Close();
 					// Below are REGEX HTML PARSES!!
@@ -246,7 +246,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 					var Title = Regex.Match(data,
 						            "<h1 class=\"release-title\">\n.*<a href=\".*\">(.*)</a>").Groups[1].Value;
 					var Description = Regex.Replace(Regex.Match(data,
-                                                //These ↓↓↓↓↓↓↓↓ &&&  ↓↓↓↓↓↓ spaces looks unsafe, but really they works!
+                                                                  //These ↓↓↓↓↓↓↓↓ &&&  ↓↓↓↓↓↓ spaces looks unsafe, but really they works!
 						                  "<div class=\"markdown-body\">\n        (.*)\n      </div>",
 						                  RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value, "<[^>]*>", "");
 					var Version = Regex.Match(data, "<span class=\"css-truncate-target\">(.*)</span>").Groups[1].Value;
@@ -258,10 +258,10 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 					Info.Add(Link);
 					Logging.Log("Check for updates succeded, GitHub version: "+ Version + ".");
 				} else {
-					response.Close();
+				   response.Close();
 				}
-			} catch (WebException) {
-				Logging.Log("Check for updates failed.");
+			} catch {
+				Logging.Log("Check for updates failed, error message:", 1);
 				Info = new List<string> {
 					MMain.UI[31],
 					MMain.UI[35],
@@ -292,10 +292,10 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			
 			return myProxy;
 		}
-		public async void StartupCheck()
+		public void StartupCheck()
 		{
 			Logging.Log("Startup check for updates.");
-			await GetUpdateInfo();
+			Task.Factory.StartNew(()=>GetUpdateInfo());
 			try {
 				if (flVersion("v" + Application.ProductVersion) < flVersion(UpdInfo[2])) {
 					if (MessageBox.Show(new Form() { TopMost = true },
@@ -339,14 +339,30 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 		}
 		void BtShowProxyClick(object sender, EventArgs e)
 		{
-			if (Size.Height == 300) {
-				btShowProxy.BackgroundImage = Mahou.Properties.Resources.up_arrow;
+            if (Size.Height == 300)
+            {
+                btShowProxy.BackgroundImage = recolorImg(SystemColors.WindowText, (Bitmap)Mahou.Properties.Resources.up_arrow);
 				Size = new Size(Size.Width, 410);
-			} else {
-				btShowProxy.BackgroundImage = Mahou.Properties.Resources.down_arrow;
+            }
+            else
+            {
+                btShowProxy.BackgroundImage = recolorImg(SystemColors.WindowText, (Bitmap)Mahou.Properties.Resources.down_arrow);
 				Size = new Size(Size.Width, 300);
 			}
-			
 		}
+        Bitmap recolorImg(Color col, Bitmap img) // Recolors image, useful for dark(classic) themes.
+        {
+            for (int x = 0; x < img.Width; x++)
+            {
+                for (int y = 0; y < img.Height; y++)
+                {
+                    if (!(((Color)img.GetPixel(x, y)).ToArgb() + 1 == (Color.Black.ToArgb() * -1)))
+                    {
+                        img.SetPixel(x, y, col);
+                    }
+                }
+            }
+            return img;
+        }
 	}
 }

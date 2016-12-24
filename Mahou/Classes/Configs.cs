@@ -181,7 +181,7 @@ namespace Mahou
                 this.Write("TTipUI", "Height", "14"); //Lang Tooltip height
             
             if (!Int32.TryParse(this.Read("TTipUI", "Width"), out it))
-                this.Write("TTipUI", "Width", "16"); //Lang Tooltip width
+                this.Write("TTipUI", "Width", "24"); //Lang Tooltip width
             
             if (String.IsNullOrEmpty(this.Read("TTipUI", "Font")))
                 this.Write("TTipUI", "Font", "Georgia; 8pt"); //Lang Tooltip font & it size

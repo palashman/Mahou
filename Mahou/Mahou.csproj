@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Mahou</RootNamespace>
     <AssemblyName>Mahou</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -159,15 +159,6 @@
     <Compile Include="Update.Designer.cs">
       <DependentUpon>Update.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="LangDisplay.resx">
-      <DependentUpon>LangDisplay.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MoreConfigs.resx">
-      <DependentUpon>MoreConfigs.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MahouForm.resx">
-      <DependentUpon>MahouForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -202,9 +193,7 @@
   <ItemGroup>
     <None Include="Resources\Mahou.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\DataSources\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Resources\MahouSymbolIgnoreMode.ico" />
   </ItemGroup>
