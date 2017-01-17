@@ -958,19 +958,25 @@ namespace Mahou
 				var snippets = System.IO.File.ReadAllText(MMain.mahou.moreConfigs.snipfile);
 				var snili = new List<string>();
 				var expli = new List<string>();
-				var rx = new Regex("->(.*)");
-				foreach (Match rema in rx.Matches(snippets)) {
-					var noN = Regex.Replace(rema.Groups[1].Value, "(\n|\r)", "");
-					snili.Add(noN);
+				// One Regex is faster than two, because it makes it to process again snippets file. Benchmarkings says that it in ~2 times faster.
+				var RX = new Regex("(?<=====>)(.*?)(?=<====)|->(.*?)(\r|\n|\r\n)", RegexOptions.Singleline);
+				Stopwatch watch = null;
+				if (MMain.MyConfs.ReadBool("Functions", "Logging")) {
+					watch = new Stopwatch();
+					watch.Start();
 				}
-				var rxex = new Regex(@"(?<=====>)(.*?)(?=<====)", RegexOptions.Singleline);
-				foreach (Match rema in rxex.Matches(snippets)) {
-					var noRN = Regex.Replace(rema.Groups[1].Value, "\r", "");
-					expli.Add(noRN);
+				foreach (Match snip in RX.Matches(snippets)) {
+					if (!String.IsNullOrEmpty(snip.Groups[2].Value))
+					    snili.Add(snip.Groups[2].Value);
+					if (!String.IsNullOrEmpty(snip.Groups[1].Value))
+						expli.Add(Regex.Replace(snip.Groups[1].Value,"\r",""));
+				}
+				if (MMain.MyConfs.ReadBool("Functions", "Logging")) {
+					watch.Stop();
+					Logging.Log("Snippet init finished, elapsed ["+watch.Elapsed.TotalMilliseconds+"] ms.");
 				}
 				snipps = snili.ToArray();
 				exps = expli.ToArray();
-				Logging.Log("Snippets (re)initialized.");
 			}
 		}
 		public struct YuKey // YuKey is struct of key and it state(upper/lower) AND if it is Alt+[NumPad]
