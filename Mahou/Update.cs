@@ -184,7 +184,8 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			btnCheck.Visible = false;
 			lbChecking.Visible = true;
 			lbChecking.Text = MMain.UI[23];
-			Task.Factory.StartNew(()=>GetUpdateInfo());
+			UpdInfo = null;
+			Task.Factory.StartNew(GetUpdateInfo).Wait();
 			tmr.Tick += (_, __) => {
 				btnCheck.Text = MMain.UI[22];
 				lbChecking.Visible = false;
