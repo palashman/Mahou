@@ -296,9 +296,10 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 		public void StartupCheck()
 		{
 			Logging.Log("Startup check for updates.");
-			Task.Factory.StartNew(()=>GetUpdateInfo());
+			Task.Factory.StartNew(GetUpdateInfo).Wait();
 			try {
 				if (flVersion("v" + Application.ProductVersion) < flVersion(UpdInfo[2])) {
+					Logging.Log("Newest version avaible, showing dialog...");
 					if (MessageBox.Show(new Form() { TopMost = true },
 						     UpdInfo[0] + '\n' + UpdInfo[1], "Mahou - " + MMain.UI[33],
 						     MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.OK) {
@@ -308,7 +309,8 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 						MMain.mahou.update.StartPosition = FormStartPosition.CenterParent;
 					}
 				}
-			} catch {
+			} catch(Exception e) {
+				Logging.Log("Unexpected error: \n" + e.Message +"\n" + e.StackTrace);
 			}
 		}
 
