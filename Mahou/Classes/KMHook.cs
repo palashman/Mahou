@@ -97,7 +97,7 @@ namespace Mahou
 				case Keys.RControlKey:
 				case Keys.LControlKey:
 				case Keys.ControlKey:
-					ctrl = (wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN) ? true : false;
+					ctrl = ((wParam == (IntPtr)(int)KMMessages.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN) ? true : false);
 					break;
 				case Keys.RMenu:
 				case Keys.LMenu:
@@ -106,13 +106,16 @@ namespace Mahou
 					break;
 				case Keys.RWin:
 				case Keys.LWin:
-					win = (wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN) ? true : false;
+					win = ((wParam == (IntPtr)(int)KMMessages.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN) ? true : false);
 					break;
 				default:
 					Logging.Log("Catched Key=[" + Key + "] with VKCode=[" + vkCode + "] and message=[" + (int)wParam + "], modifiers=[" + (shift ? "Shift" : "") + (alt ? "Alt" : "") + (ctrl ? "Ctrl" : "") + (win ? "Win" : "") + "].");
 					break;
 			}
-			#endregion)
+			// Anti win-stuck rule
+			if (win && Key == Keys.L)
+				win = false;
+			#endregion
 			#region Hotkeys
 			switch (vkCode) {
 				case 160:
