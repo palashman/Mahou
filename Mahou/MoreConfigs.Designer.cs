@@ -69,6 +69,7 @@
         	this.btnEMore = new System.Windows.Forms.Button();
         	this.cbOnChange = new System.Windows.Forms.CheckBox();
         	this.pEExtra = new System.Windows.Forms.Panel();
+        	this.btnDbgInf = new System.Windows.Forms.Button();
         	this.cbLogging = new System.Windows.Forms.CheckBox();
         	this.tbConMorWor = new System.Windows.Forms.TextBox();
         	this.lbConMorWor = new System.Windows.Forms.Label();
@@ -487,6 +488,7 @@
         	// 
         	// pEExtra
         	// 
+        	this.pEExtra.Controls.Add(this.btnDbgInf);
         	this.pEExtra.Controls.Add(this.cbLogging);
         	this.pEExtra.Controls.Add(this.tbConMorWor);
         	this.pEExtra.Controls.Add(this.lbConMorWor);
@@ -498,6 +500,16 @@
         	this.pEExtra.Size = new System.Drawing.Size(279, 268);
         	this.pEExtra.TabIndex = 31;
         	this.pEExtra.Visible = false;
+        	// 
+        	// btnDbgInf
+        	// 
+        	this.btnDbgInf.Location = new System.Drawing.Point(162, 130);
+        	this.btnDbgInf.Name = "btnDbgInf";
+        	this.btnDbgInf.Size = new System.Drawing.Size(106, 23);
+        	this.btnDbgInf.TabIndex = 5;
+        	this.btnDbgInf.Text = "Debug Info";
+        	this.btnDbgInf.UseVisualStyleBackColor = true;
+        	this.btnDbgInf.Click += new System.EventHandler(this.BtnDbgInfClick);
         	// 
         	// cbLogging
         	// 
@@ -660,5 +672,6 @@
         private System.Windows.Forms.TextBox tbConMorWor;
         private System.Windows.Forms.Label lbConMorWor;
         private System.Windows.Forms.CheckBox cbLogging;
+        private System.Windows.Forms.Button btnDbgInf;
     }
 }

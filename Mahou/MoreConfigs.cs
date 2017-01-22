@@ -71,6 +71,33 @@ namespace Mahou
 			if (fntd.ShowDialog() == DialogResult.OK)
 				btFont.Font = fntd.Font;
 		}
+		void BtnDbgInfClick(object sender, EventArgs e)
+		{
+			try {
+				string debuginfo = "### MAHOU DEBUG INFO";
+				debuginfo += "\r\n" + "- Mahou-v"+Application.ProductVersion;
+				debuginfo += "\r\n" + "- OS = [" + Environment.OSVersion + "]";
+				debuginfo += "\r\n" + "- x64 = [" + Environment.Is64BitOperatingSystem + "]";
+				debuginfo += "\r\n" + "- .Net = [" + Environment.Version +"]";
+				debuginfo += "\r\n" + "#### Mahou.ini:\r\n```ini\r\n"+ File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Mahou.ini")) + "```";
+				if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "snippets.txt")))
+				    debuginfo += "\r\n" + "#### Snippets:\r\n```\r\n" + File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "snippets.txt")) + "```";
+				Clipboard.SetText(debuginfo);
+				var tmr = new Timer();
+				tmr.Tick += (_,__) => { 
+					btnDbgInf.Text = MMain.UI[67];
+					tmr.Stop();
+				};
+				tmr.Interval = 2000;
+				btnDbgInf.Text = MMain.UI[68];
+				tmr.Start();
+				
+				Logging.Log("Debug info copied.");
+			}
+			catch(Exception er) { 
+				Logging.Log("Error during DEBUG INFO copy, details:\r\n" +er.Message +"\r\n"+er.StackTrace);
+			}
+		}
 		void DisEnaOnCheckedChanged(object sender, EventArgs e)
 		{
 			DisEna();
@@ -319,6 +346,7 @@ namespace Mahou
 			cbCheckForUPD.Text = MMain.UI[64];
 			lbConMorWor.Text = MMain.UI[65];
 			cbLogging.Text = MMain.UI[66];
+			btnDbgInf.Text = MMain.UI[67];
 			Logging.Log("More Configs UI language refreshed.");
 		}
 		#endregion
