@@ -16,9 +16,7 @@ Write here what did you expected to happen?
 - .Net version: [Your .Net version(4.0/4.5/4.6)]
 - Mahou version: [Mahou version(you can see it in Mahou main window title)]
 
-## Debug information
-
-Paste here debug info from Mahou:
+Or you can Paste here debug info from Mahou(version >1.4.4.1):
 
 1. Go to Mahou main window(<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>I</kbd> or in *tray icon's* menu select settings).
 2. Press on [...] button to go to *More configs* window.
