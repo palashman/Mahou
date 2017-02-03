@@ -11,7 +11,7 @@ namespace Mahou
           /*04-06*/"Convert word","Convert selection","Convert line",
           /*07-10*/"CS-Switch","Re-Press","Re-Select","Switch layout by key:",
           /*11-14*/"Block CTRL","Tray icon","Cycle Mode","Emu",
-          /*15-16*/"Switch between layouts","Language",
+          /*15-16*/"Switch between layouts","Layout",
           /*17-20*/"Apply","OK","Cancel","Help",
           /*///////////////Update UI\\\\\\\\\\\\\\\\\
           /*21-23*/"Mahou update","Check for Updates","Checking...",
@@ -98,7 +98,7 @@ namespace Mahou
           /*04-06*/"Конверт слова","Конверт выделения", "Конверт линии",
           /*07-10*/"КВ-Ключ","Пере-наж.","Пере-выдел.","Сменить язык клавишой:",
           /*11-14*/"Игнор. CTRL","Иконка трея","Циклч. режим","Эму",
-          /*15-16*/"Конверт между языками","Язык",
+          /*15-16*/"Конверт между раскладками","Раскладка",
           /*17-20*/"Применить","OK","Отмена","Помощь",
           /*///////////////Update UI\\\\\\\\\\\\\\\
           /*21-23*/"Mahou обновления","Проверить обновления","Проверяю...",

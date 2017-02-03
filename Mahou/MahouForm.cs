@@ -65,7 +65,7 @@ namespace Mahou
 			ScrlCheck.Tick += (_, __) => {
 				if (MMain.MyConfs.ReadBool("Functions", "ScrollTip") && !KMHook.self) {
 					KMHook.self = true;
-					if (Locales.GetCurrentLocale() == MMain.MyConfs.ReadInt("Locales", "locale1uId")) {
+					if (Locales.GetCurrentLocale() == MMain.MyConfs.ReadUInt("Locales", "locale1uId")) {
 						if (!Control.IsKeyLocked(Keys.Scroll)) { // Turn on 
 							KMHook.KeybdEvent(Keys.Scroll, 0);
 							KMHook.KeybdEvent(Keys.Scroll, 2);
@@ -517,7 +517,7 @@ namespace Mahou
 			} else {
 				gbSBL.Enabled = false;
 				cbUseEmulate.Enabled = true;
-				cbELSType.Enabled &= cbUseEmulate.Checked;
+				cbELSType.Enabled = cbUseEmulate.Checked;
 			}
 		}
 		public void ToggleVisibility() //Toggles visibility of main window

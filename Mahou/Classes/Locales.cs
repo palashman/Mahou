@@ -12,9 +12,10 @@ namespace Mahou
 		{
 			uint tid = GetWindowThreadProcessId(ActiveWindow(), IntPtr.Zero);
 			IntPtr layout = GetKeyboardLayout(tid);
+			System.Diagnostics.Debug.WriteLine(tid.ToString() + ' ' +layout);
 			//Produces TOO much logging, disabled.
             //Logging.Log("Current locale id is [" + (uint)(layout.ToInt32() & 0xFFFF) + "].");
-			return (uint)(layout.ToInt32() & 0xFFFF);
+			return (uint)layout;
 		}
 		public static IntPtr ActiveWindow() //Gets active windows(focused) or foreground
 		{
@@ -36,8 +37,8 @@ namespace Mahou
 			foreach (InputLanguage lang in InputLanguage.InstalledInputLanguages) {
 				count++;
 				locs.Add(new Locale {
-					Lang = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(lang.Culture.NativeName.Split(' ')[0].ToLower()),
-					uId = (uint)lang.Culture.KeyboardLayoutId
+					Lang = lang.LayoutName,
+					uId = (uint)lang.Handle
 				});
 			}
 			return locs.ToArray();

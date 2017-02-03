@@ -57,6 +57,7 @@ namespace Mahou
 		}
 		public static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
 		{
+			try {
 			int vkCode = Marshal.ReadInt32(lParam);
 			var Key = (Keys)vkCode; // "Key" will further be used instead of "(Keys)vkCode"
 			#region Multiple last words convert
@@ -392,11 +393,11 @@ namespace Mahou
 			if (!self && MMain.MyConfs.ReadBool("ExtCtrls", "UseExtCtrls") && wParam == (IntPtr)(int)KMMessages.WM_KEYUP && !keyAfterCTRL) {
 				if (Key == Keys.RControlKey) {
 					Logging.Log("Switching to specific layout by RCtrl key.");
-					PostMessage(Locales.ActiveWindow(), KInputs.WM_INPUTLANGCHANGEREQUEST, 0, (uint)MMain.MyConfs.ReadInt("ExtCtrls", "RCLocale"));
+					PostMessage(Locales.ActiveWindow(), KInputs.WM_INPUTLANGCHANGEREQUEST, 0, MMain.MyConfs.ReadUInt("ExtCtrls", "RCLocale"));
 				}
 				if (Key == Keys.LControlKey) {
 					Logging.Log("Switching to specific layout by LCtrl key.");
-					PostMessage(Locales.ActiveWindow(), KInputs.WM_INPUTLANGCHANGEREQUEST, 0, (uint)MMain.MyConfs.ReadInt("ExtCtrls", "LCLocale"));
+					PostMessage(Locales.ActiveWindow(), KInputs.WM_INPUTLANGCHANGEREQUEST, 0, MMain.MyConfs.ReadUInt("ExtCtrls", "LCLocale"));
 				}
 			}
 			keyAfterCTRL &= self || wParam != (IntPtr)(int)KMMessages.WM_KEYUP || (Key != Keys.LControlKey && Key != Keys.RControlKey);
@@ -513,9 +514,16 @@ namespace Mahou
 			}
 			#endregion
 			return CallNextHookEx(MMain._hookID, nCode, wParam, lParam);
+			} catch (Exception e) {
+				Logging.Log("Keyboard HOOK died! Stack Trace & Error Message:\r\n"+e.Message+"\r\n"+e.StackTrace, 1);
+				Logging.Log("Restarting HOOKs...");
+				MMain.StopHook(); MMain.StartHook();
+				return CallNextHookEx(MMain._mouse_hookID, nCode, wParam, lParam);
+			}
 		}
 		public static IntPtr MouseHookCallback(int nCode, IntPtr wParam, IntPtr lParam)
 		{
+			try {
 			if (nCode >= 0) {
 				if ((KMMessages.WM_LBUTTONDOWN == (KMMessages)(int)wParam) || KMMessages.WM_RBUTTONDOWN == (KMMessages)(int)wParam) {
 					MMain.c_word.Clear();
@@ -528,11 +536,18 @@ namespace Mahou
 				}
 			}
 			return CallNextHookEx(MMain._mouse_hookID, nCode, wParam, lParam);
+			} catch(Exception e) {
+				Logging.Log("Mouse HOOK died! Stack Trace & Error Message:\r\n"+e.Message+"\r\n"+e.StackTrace, 1);
+				Logging.Log("Restarting HOOKs...");
+				MMain.StopHook(); MMain.StartHook();
+				return CallNextHookEx(MMain._mouse_hookID, nCode, wParam, lParam);
+			}
 		}
 		#endregion
 		#region Functions/Struct
 		static void ConvertSelection() //Converts selected text
 		{
+			try { //Used to catch errors, since it called as Task
 			Locales.IfLessThan2();
 			self = true;
 			Logging.Log("Starting Convert selection.");
@@ -574,15 +589,15 @@ namespace Mahou
 				if (MMain.MyConfs.ReadBool("Functions", "CSSwitch")) {
 					Logging.Log("Using CS-Switch mode.");
 					self = true;
-					var wasLocale = Locales.GetCurrentLocale();
-					var wawasLocale = wasLocale;
-					var nowLocale = wasLocale == (uint)MMain.MyConfs.ReadInt("Locales", "locale1uId")
-						? (uint)MMain.MyConfs.ReadInt("Locales", "locale2uId")
-						: (uint)MMain.MyConfs.ReadInt("Locales", "locale1uId");
+					var wasLocale = Locales.GetCurrentLocale() & 0xffff;
+					var wawasLocale = wasLocale & 0xffff;
+					var nowLocale = wasLocale == (MMain.MyConfs.ReadUInt("Locales", "locale1uId") & 0xffff)
+						? MMain.MyConfs.ReadUInt("Locales", "locale2uId") & 0xffff
+						: MMain.MyConfs.ReadUInt("Locales", "locale1uId") & 0xffff;
 					ChangeLayout();
 					var index = 0;
-					// Don't even think "Regex.Replace(ClipStr, "\r\\D\n?|\n\\D\r?", "\n")" can't be used as variable...
-					foreach (char c in Regex.Replace(ClipStr, "\r\\D\n?|\n\\D\r?", "\n")) {
+					// Finally fixed this regex.... →             ↓↓        ↓
+					foreach (char c in Regex.Replace(ClipStr, "\r?\n|\r", "\n")) {
 						items++;
 						wasLocale = wawasLocale;
 						var s = new StringBuilder(10);
@@ -612,7 +627,7 @@ namespace Mahou
 							Logging.Log("Char 2 is [" + sb + "] in locale +[" + nowLocale + "].");
 							if (ClipStr[index].ToString() == sb.ToString()) {
 								Logging.Log("Char 1, 2 and origial are equivalent.");
-								PostMessage(Locales.ActiveWindow(), KInputs.WM_INPUTLANGCHANGEREQUEST, 0, (uint)wasLocale);
+								PostMessage(Locales.ActiveWindow(), KInputs.WM_INPUTLANGCHANGEREQUEST, 0, wasLocale);
 								wasLocale = nowLocale;
 								scan = scan2;
 								state = state2;
@@ -651,8 +666,8 @@ namespace Mahou
 					}
 				} else {
 					Logging.Log("Using default convert selection mode.");
-					var l1 = (uint)MMain.MyConfs.ReadInt("Locales", "locale1uId");
-					var l2 = (uint)MMain.MyConfs.ReadInt("Locales", "locale2uId");
+					var l1 = MMain.MyConfs.ReadUInt("Locales", "locale1uId");
+					var l2 = MMain.MyConfs.ReadUInt("Locales", "locale2uId");
 					var index = 0;
 					foreach (char c in ClipStr) {
 						var T = InAnother(c, l2, l1);
@@ -693,6 +708,9 @@ namespace Mahou
 				NativeClipboard.RestoreData(datas);
 			}
 			self = false;
+			} catch(Exception e) {
+				Logging.Log("Convert Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
+			}
 		}
 		static string MakeCopy() //Gets text from selection
 		{
@@ -727,6 +745,7 @@ namespace Mahou
 		}
 		static void ConvertLast(List<YuKey> c_) //Converts last word/line
 		{
+			try { //Used to catch errors, since it called as Task
 			Locales.IfLessThan2();
 			YuKey[] YuKeys = c_.ToArray();
 			{
@@ -764,6 +783,9 @@ namespace Mahou
 				}
 				RePress();
 				self = false;
+			}
+			} catch (Exception e) {
+				Logging.Log("Convert Last encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
 			}
 		}
 		static bool SymbolIgnoreRules(Keys key, bool upper, uint wasLocale) //Rules to ignore symbols
@@ -829,9 +851,9 @@ namespace Mahou
 		static void ChangeLayout() //Changes current layout
 		{
 			var nowLocale = Locales.GetCurrentLocale();
-			uint notnowLocale = nowLocale == (uint)MMain.MyConfs.ReadInt("Locales", "locale1uId")
-                ? (uint)MMain.MyConfs.ReadInt("Locales", "locale2uId")
-                : (uint)MMain.MyConfs.ReadInt("Locales", "locale1uId");
+			uint notnowLocale = nowLocale == MMain.MyConfs.ReadUInt("Locales", "locale1uId")
+                ? MMain.MyConfs.ReadUInt("Locales", "locale2uId")
+                : MMain.MyConfs.ReadUInt("Locales", "locale1uId");
 			if (!MMain.MyConfs.ReadBool("Functions", "CycleMode")) {
 				Logging.Log("Changing layout using normal mode, PostMessage [WM_INPUTLANGCHANGEREQUEST] with LParam ["+notnowLocale+"].");
 				int tries = 0;

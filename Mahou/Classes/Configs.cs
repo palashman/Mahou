@@ -218,6 +218,12 @@ namespace Mahou
             int i = GetPrivateProfileString(section, key, "", SB, 255, filePath);
             return Int32.Parse(SB.ToString());
         }
+        public uint ReadUInt(string section, string key) //Returns "key" value in "section" as int
+        {
+            var SB = new StringBuilder(255);
+            int i = GetPrivateProfileString(section, key, "", SB, 255, filePath);
+            return UInt32.Parse(SB.ToString());
+        }
         public bool ReadBool(string section, string key) //Returns "key" value in "section" as bool
         {
             var SB = new StringBuilder(255);
