@@ -76,8 +76,8 @@ namespace Mahou
           /*31*/"If this enabled, pressing Space will expand small (which starts with \"->\") word, to big (which is between \"====>\" and \"<====\") word/text fragment.",
           /*32*/"Display language tooltip only on layout change.\nTime of displaying is 7x[Refresh rate].",
           /*33*/"Highlight Scroll Lock when active language 1, selected in main window.",
-          /*34-35*/"If enabled Mahou will check for updates at startup.", "Allow to convert specific last word count by pressing hotkey and then 1-9 on keyboard.",
-          /*36*/"Designed ONLY to search for errors, logs are saved in Mahou's folder, in folder Logs."};
+          /*34-35*/"If enabled Mahou will check for updates at startup.", "Allow to convert specific last word count by pressing hotkey and then 0-9(0 = 10) on keyboard.",
+          /*36*/"Designed ONLY to search for errors, BIG PERFORMANCE IMPACT, logs are saved in Mahou's folder, in folder Logs."};
         public static string[] MessagesEN = new string[] {
           /*00-01*/"Mahou successfully updated!", "Update complete!",
           /*0002*/"Press Pause(by Default) to convert last inputted word.\nPress Scroll(by Default) while selected text is focused to convert it.\nPress Shift+Pause(by Default) to convert last inputted line.\n"+
@@ -162,8 +162,8 @@ namespace Mahou
           /*31*/"Если включено, нажатие Space превратит маленькое (то что начинается с \"->\") слово, в большое(то что между \"====>\" и \"<====\") слово/кусок текста.",
           /*32*/"Показывает подсказку только при смене языка.\nВремя отображения = 7x[Скор. обнов.].",
           /*33*/"Подсвечивает лампочку Scroll Lock при активации языка 1, выбранного в главном окне.",
-          /*34-35*/"Если включено Mahou будет проверять обновления при запуске.", "Позволяет конвертировать выбранное количество последних слов нажатием горячей клавиши, а потом 1-9 на клавиатуре.",
-          /*36*/"Предназначенно ТОЛЬКО для поиска ошибок, логи сохраняются в папке Mahou, в папке Logs."};
+          /*34-35*/"Если включено Mahou будет проверять обновления при запуске.", "Позволяет конвертировать выбранное количество последних слов нажатием горячей клавиши, а потом 0-9(0 = 10) на клавиатуре.",
+          /*36*/"Предназначенно ТОЛЬКО для поиска ошибок, СИЛЬНО ВЛИЯЕТ НА СКОРОСТЬ РАБОТЫ, логи сохраняются в папке Mahou, в папке Logs."};
         public static string[] MessagesRU = new string[] {
           /*00-01*/"Mahou успешно обновлен!", "Обновление завершено!",
           /*0002*/"Нажмите Pause(по умолчанию) для конвертации последнего введенного слова.\nНажмите Scroll(по умолчанию) пока выделенный текс в фокусе чтобы конвертивровать его.\nНажмите Shift+Pause(по умолчанию) для конвертации последней введенной линии.\n"+
