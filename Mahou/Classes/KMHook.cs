@@ -58,468 +58,464 @@ namespace Mahou
 		public static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
 		{
 			try {
-			int vkCode = Marshal.ReadInt32(lParam);
-			var Key = (Keys)vkCode; // "Key" will further be used instead of "(Keys)vkCode"
-			#region Multiple last words convert
-			if (waitfornum && wParam == (IntPtr)(int)KMMessages.WM_KEYUP && !shift && !ctrl && !alt) {
-				waitfornum = false;
-				if (Key >= Keys.D1 && Key <= Keys.D9) {
+				int vkCode = Marshal.ReadInt32(lParam);
+				var Key = (Keys)vkCode; // "Key" will further be used instead of "(Keys)vkCode"
+				#region Multiple last words convert
+				if (waitfornum && wParam == (IntPtr)(int)KMMessages.WM_KEYUP && !shift && !ctrl && !alt) {
+					waitfornum = false;
+					if (Key >= Keys.D0 && Key <= Keys.D9) {
+						self = true;
+						KInputs.MakeInput(new [] { KInputs.AddKey(Keys.Back, true),
+							KInputs.AddKey(Keys.Back, false)
+						});
+						self = false;
+						int wordnum = Convert.ToInt32(Key.ToString().Replace("D", "").Replace("0", "10"));
+						Logging.Log("Attempt to convert " + wordnum + " word(s).");
+						var words = new List<YuKey>();
+						try {
+							foreach (var word in MMain.c_words.GetRange(MMain.c_words.Count-wordnum,wordnum)) {
+								words.AddRange(word);
+							}
+							Logging.Log("Full character count in all " + wordnum + " last word(s) is " + words.Count + ".");
+						} catch {
+							Logging.Log("Converting " + wordnum + " word(s) impossible it is bigger that entered words.");
+						}
+						ConvertLast(words);
+					}
+				}
+				if (MMain.c_words.Count == 0) {
+					MMain.c_words.Add(new List<YuKey>());
+				}
+				#endregion
+				#region Checks modifiers that are down
+				switch (Key) {
+					case Keys.LShiftKey:
+					case Keys.RShiftKey:
+					case Keys.ShiftKey:
+						shift = ((wParam == (IntPtr)(int)KMMessages.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN) ? true : false);
+						break;
+					case Keys.RControlKey:
+					case Keys.LControlKey:
+					case Keys.ControlKey:
+						ctrl = ((wParam == (IntPtr)(int)KMMessages.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN) ? true : false);
+						break;
+					case Keys.RMenu:
+					case Keys.LMenu:
+					case Keys.Menu:
+						alt = ((wParam == (IntPtr)(int)KMMessages.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN) ? true : false);
+						break;
+					case Keys.RWin:
+					case Keys.LWin:
+						win = ((wParam == (IntPtr)(int)KMMessages.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN) ? true : false);
+						break;
+					default:
+						if (!self)
+							Logging.Log("Catched Key=[" + Key + "] with VKCode=[" + vkCode + "] and message=[" + (int)wParam + "], modifiers=[" + (shift ? "Shift" : "") + (alt ? "Alt" : "") + (ctrl ? "Ctrl" : "") + (win ? "Win" : "") + "].");
+						break;
+				}
+				// Anti win-stuck rule
+				if (win && Key == Keys.L)
+					win = false;
+				#endregion
+				#region Hotkeys
+				switch (vkCode) {
+					case 160:
+					case 161:
+						vkCode = 16;
+						break;
+					case 162:
+					case 163:
+						vkCode = 17;
+						break;
+					case 164:
+					case 165:
+						vkCode = 18;
+						break;
+					case 240:
+						vkCode = 20;
+						break;
+				}
+				var thishk = new Hotkey(vkCode, new []{ ctrl, shift, alt });
+				if (!self && thishk.keyCode == 20 &&
+				   (thishk.Equals(MMain.mahou.HKCLast) ||
+				   thishk.Equals(MMain.mahou.HKCLine) ||
+				   thishk.Equals(MMain.mahou.HKCSelection))) {
 					self = true;
-					KInputs.MakeInput(new [] { KInputs.AddKey(Keys.Back, true),
-						KInputs.AddKey(Keys.Back, false)
-					});
+					if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if alraedy on
+						KeybdEvent(Keys.CapsLock, 0);
+						KeybdEvent(Keys.CapsLock, 2);
+					}
+					//Code below removes CapsLock original action, but if hold will not work and will stuck, press again to off.
+					KeybdEvent(Keys.CapsLock, 0);
+					KeybdEvent(Keys.CapsLock, 2);
 					self = false;
-					int wordnum = Convert.ToInt32(Key.ToString().Replace("D", ""));
-					Logging.Log("Attempt to convert " + wordnum + " word(s).");
-					var words = new List<YuKey>();
-					try {
-						foreach (var word in MMain.c_words.GetRange(MMain.c_words.Count-wordnum,wordnum)) {
-							words.AddRange(word);
-						}
-						Logging.Log("Full character count in all " + wordnum + " last word(s) is " + words.Count + ".");
-					} catch {
-						Logging.Log("Converting " + wordnum + " word(s) impossible it is bigger that entered words.");
-					}
-					var t = new Task(new Action(() => ConvertLast(words)));
-					t.RunSynchronously();
 				}
-			}
-			if (MMain.c_words.Count == 0) {
-				MMain.c_words.Add(new List<YuKey>());
-			}
-			#endregion
-			#region Checks modifiers that are down
-			switch (Key) {
-				case Keys.LShiftKey:
-				case Keys.RShiftKey:
-				case Keys.ShiftKey:
-					shift = ((wParam == (IntPtr)(int)KMMessages.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN) ? true : false);
-					break;
-				case Keys.RControlKey:
-				case Keys.LControlKey:
-				case Keys.ControlKey:
-					ctrl = ((wParam == (IntPtr)(int)KMMessages.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN) ? true : false);
-					break;
-				case Keys.RMenu:
-				case Keys.LMenu:
-				case Keys.Menu:
-					alt = ((wParam == (IntPtr)(int)KMMessages.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN) ? true : false);
-					break;
-				case Keys.RWin:
-				case Keys.LWin:
-					win = ((wParam == (IntPtr)(int)KMMessages.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN) ? true : false);
-					break;
-				default:
-					Logging.Log("Catched Key=[" + Key + "] with VKCode=[" + vkCode + "] and message=[" + (int)wParam + "], modifiers=[" + (shift ? "Shift" : "") + (alt ? "Alt" : "") + (ctrl ? "Ctrl" : "") + (win ? "Win" : "") + "].");
-					break;
-			}
-			// Anti win-stuck rule
-			if (win && Key == Keys.L)
-				win = false;
-			#endregion
-			#region Hotkeys
-			switch (vkCode) {
-				case 160:
-				case 161:
-					vkCode = 16;
-					break;
-				case 162:
-				case 163:
-					vkCode = 17;
-					break;
-				case 164:
-				case 165:
-					vkCode = 18;
-					break;
-				case 240:
-					vkCode = 20;
-					break;
-			}
-			var thishk = new Hotkey(vkCode, new []{ ctrl, shift, alt });
-			if (!self && thishk.keyCode == 20 &&
-			    (thishk.Equals(MMain.mahou.HKCLast) ||
-			    thishk.Equals(MMain.mahou.HKCLine) ||
-			    thishk.Equals(MMain.mahou.HKCSelection))) {
-				self = true;
-				if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if alraedy on
+				if (!self && wParam == (IntPtr)(int)KMMessages.WM_KEYUP) {
+					MMain.mahou.IfNotExist();
+					if (!MMain.MyConfs.ReadBool("DoubleKey", "Use"))
+						hklOK = hksOK = hklineOK = hkSIOK = true;
+					if (!MMain.MahouActive()) {
+						if (MMain.MyConfs.ReadBool("EnabledHotkeys", "HKCSEnabled")) {
+							if (thishk.Equals(MMain.mahou.HKCSelection) && hksOK) {
+								Logging.Log("Hotkey convert selection fired.");
+								if (MMain.MyConfs.ReadBool("Functions", "BlockCTRL") &&
+								   MMain.MyConfs.Read("Hotkeys", "HKCSMods").Contains("Control")) {
+								} else {
+									if (Array.Exists(Hotkey.GetMods(MMain.MyConfs.Read("Hotkeys", "HKCSMods")), b => b == true) &&
+									   MMain.MyConfs.ReadBool("Functions", "RePress")) {
+										hotkeywithmodsfired = true;
+										RePressAfter(MMain.MyConfs.Read("Hotkeys", "HKCSMods"));
+									}
+									SendModsUp(Hotkey.GetMods(MMain.MyConfs.Read("Hotkeys", "HKCSMods")));
+									IfKeyIsMod(Key);
+									ConvertSelection();
+								}
+							}
+							if (thishk.Equals(MMain.mahou.HKCSelection) && MMain.MyConfs.ReadBool("DoubleKey", "Use")) {
+								Logging.Log("Waiting for second hotkey press of convert selection hotkey.");
+								hksOK = true;
+								doublekey.Interval = MMain.MyConfs.ReadInt("DoubleKey", "Delay");
+								doublekey.Start();
+							}
+						}
+						if (MMain.MyConfs.ReadBool("EnabledHotkeys", "HKCLEnabled")) {
+							if (thishk.Equals(MMain.mahou.HKCLast) && hklOK && !csdoing) {
+								Logging.Log("Hotkey convert last word fired.");
+								if (MMain.MyConfs.ReadBool("Functions", "BlockCTRL") &&
+								   MMain.MyConfs.Read("Hotkeys", "HKCLMods").Contains("Control")) {
+								} else {
+									if (Array.Exists(Hotkey.GetMods(MMain.MyConfs.Read("Hotkeys", "HKCLMods")), b => b == true) &&
+									   MMain.MyConfs.ReadBool("Functions", "RePress")) {
+										hotkeywithmodsfired = true;
+										RePressAfter(MMain.MyConfs.Read("Hotkeys", "HKCLMods"));
+									}
+									SendModsUp(Hotkey.GetMods(MMain.MyConfs.Read("Hotkeys", "HKCLMods")));
+									IfKeyIsMod(Key);
+									ConvertLast(MMain.c_word);
+								}
+							}
+							if (thishk.Equals(MMain.mahou.HKCLast) && MMain.MyConfs.ReadBool("DoubleKey", "Use")) {
+								Logging.Log("Waiting for second hotkey press of convert last word hotkey.");
+								hklOK = true;
+								doublekey.Interval = MMain.MyConfs.ReadInt("DoubleKey", "Delay");
+								doublekey.Start();
+							}
+						}
+						if (MMain.MyConfs.ReadBool("EnabledHotkeys", "HKCLineEnabled")) {
+							if (thishk.Equals(MMain.mahou.HKCLine) && hklineOK && !csdoing) {
+								Logging.Log("Hotkey convert line fired.");
+								if (MMain.MyConfs.ReadBool("Functions", "BlockCTRL") &&
+								   MMain.MyConfs.Read("Hotkeys", "HKCLineMods").Contains("Control")) {
+								} else {
+									if (Array.Exists(Hotkey.GetMods(MMain.MyConfs.Read("Hotkeys", "HKCLineMods")), b => b == true) &&
+									   MMain.MyConfs.ReadBool("Functions", "RePress")) {
+										hotkeywithmodsfired = true;
+										RePressAfter(MMain.MyConfs.Read("Hotkeys", "HKCLineMods"));
+									}
+									SendModsUp(Hotkey.GetMods(MMain.MyConfs.Read("Hotkeys", "HKCLineMods")));
+									IfKeyIsMod(Key);
+									var line = new List<YuKey>();
+									foreach (var word in MMain.c_words) {
+										line.AddRange(word);
+									}
+									ConvertLast(line);
+								}
+							}
+							if (thishk.Equals(MMain.mahou.HKCLine) && MMain.MyConfs.ReadBool("DoubleKey", "Use")) {
+								Logging.Log("Waiting for second hotkey press of convert line hotkey.");
+								hklineOK = true;
+								doublekey.Interval = MMain.MyConfs.ReadInt("DoubleKey", "Delay");
+								doublekey.Start();
+							}
+						}
+						csdoing = false;
+					}
+					if (MMain.MyConfs.ReadBool("EnabledHotkeys", "HKSymIgnEnabled")) {
+						if (thishk.Equals(MMain.mahou.HKSymIgn) && hkSIOK) {
+							Logging.Log("Hotkey symbol ignore mode fired.");
+							if (MMain.MyConfs.ReadBool("Functions", "SymIgnModeEnabled")) {
+								MMain.MyConfs.Write("Functions", "SymIgnModeEnabled", "false");
+								MMain.mahou.Icon = MMain.mahou.icon.trIcon.Icon = Properties.Resources.MahouTrayHD;
+							} else {
+								MMain.MyConfs.Write("Functions", "SymIgnModeEnabled", "true");
+								MMain.mahou.Icon = MMain.mahou.icon.trIcon.Icon = Properties.Resources.MahouSymbolIgnoreMode;
+							}
+						}
+						if (thishk.Equals(MMain.mahou.HKSymIgn) && MMain.MyConfs.ReadBool("DoubleKey", "Use")) {
+							Logging.Log("Waiting for second hotkey press of symbol ignore mode hotkey.");
+							hkSIOK = true;
+							doublekey.Interval = MMain.MyConfs.ReadInt("DoubleKey", "Delay");
+							doublekey.Start();
+						}
+					}
+				}
+				//these are global, so they don't need to be stoped when window is visible.
+				if (thishk.Equals(MMain.mahou.HKConMorWor) && wParam == (IntPtr)(int)KMMessages.WM_KEYUP)
+					waitfornum = true;
+				if (thishk.Equals(MMain.mahou.Mainhk) && wParam == (IntPtr)(int)KMMessages.WM_KEYUP)
+					MMain.mahou.ToggleVisibility();
+				if (thishk.Equals(MMain.mahou.ExitHk) && wParam == (IntPtr)(int)KMMessages.WM_KEYUP)
+					MMain.mahou.ExitProgram();
+				#endregion
+				#region Snippets
+				if (MMain.MyConfs.ReadBool("Functions", "Snippets")) {
+					if (((Key >= Keys.D0 && Key <= Keys.Z) || // This is 0-9 & A-Z
+					   Key >= Keys.Oem1 && Key <= Keys.OemBackslash // All other printables
+					   ) && !self && !win && !alt && !ctrl && wParam == (IntPtr)(int)KMMessages.WM_KEYUP) {
+						var stb = new StringBuilder(10);
+						var byt = new byte[256];
+						if (shift) {
+							byt[(int)Keys.ShiftKey] = 0xFF;
+						}
+						ToUnicodeEx((uint)vkCode, (uint)vkCode, byt, stb, stb.Capacity, 0, (IntPtr)(Locales.GetCurrentLocale() & 0xffff));
+						c_snip.Add(stb.ToString()[0]);
+					}
+					if (wParam == (IntPtr)(int)KMMessages.WM_KEYUP && Key == Keys.Space) {
+						var snip = "";
+						foreach (var ch in c_snip) {
+							snip += ch;
+						}
+						Logging.Log("Current snippet is [" + snip + "].");
+						for (int i = 0; i < snipps.Length; i++) {
+							if (snip == snipps[i]) {
+								Logging.Log("Current snippet [" + snip + "] matched existing snippet [" + snipps[i] + "].");
+								self = true;
+								for (int e = -1; e < c_snip.Count; e++) {
+									KInputs.MakeInput(new [] { KInputs.AddKey(Keys.Back, true),
+										KInputs.AddKey(Keys.Back, false) 
+									});
+								}
+								Logging.Log("Last word, words cleared due to snippet expansion.");
+								Logging.Log("Expanding snippet [" + snip + "] to [" + snipps[i] + "].");
+								MMain.c_words.Clear();
+								MMain.c_word.Clear();
+								try {
+									KInputs.MakeInput(KInputs.AddString(exps[i]));
+								} catch {
+									Logging.Log("Some snippets configured wrong, check them.", 1);
+									// If not use TASK, form(MessageBox) won't accept the keys(Enter/Escape/Alt+F4).
+									var tsk = new Task(() => MessageBox.Show(MMain.Msgs[10], MMain.Msgs[11], MessageBoxButtons.OK, MessageBoxIcon.Error));
+									tsk.Start();
+									KInputs.MakeInput(KInputs.AddString(snip));
+								}
+								self = false;
+							}
+						}
+						c_snip.Clear();
+					}
+				}
+				#endregion
+				#region Release Re-Pressed keys
+				if (hotkeywithmodsfired && wParam == (IntPtr)(int)KMMessages.WM_KEYUP && !self &&
+				   (Key == Keys.LShiftKey || Key == Keys.LMenu || Key == Keys.LControlKey)) {
+					self = true;
+					hotkeywithmodsfired = false;
+					var mods = new bool[3];
+					if (cwas) {
+						cwas = false;
+						mods[0] = true;
+					}
+					if (swas) {
+						swas = false;
+						mods[1] = true;
+					}
+					if (awas) {
+						awas = false;
+						mods[2] = true;
+					}
+					SendModsUp(mods);
+					self = false;
+				}
+				#endregion
+				#region Switch only key
+				if (!self && !shift && MMain.MyConfs.Read("HotKeys", "OnlyKeyLayoutSwicth") == "CapsLock" &&
+				   Key == Keys.CapsLock && wParam == (IntPtr)(int)KMMessages.WM_KEYUP) {
+					self = true;
+					ChangeLayout();
+					Logging.Log("Changing layout by CapsLock key.");
+					self = false;
+				}
+				if (!self && !shift && MMain.MyConfs.Read("HotKeys", "OnlyKeyLayoutSwicth") == "CapsLock" &&
+				   Key == Keys.CapsLock && wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN) {
+					self = true;
+					if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if alraedy on
+						KeybdEvent(Keys.CapsLock, 0);
+						KeybdEvent(Keys.CapsLock, 2);
+					}
+					//Code below removes CapsLock original action, but if hold will not work and will stuck, press again to off.
 					KeybdEvent(Keys.CapsLock, 0);
 					KeybdEvent(Keys.CapsLock, 2);
+					self = false;
 				}
-				//Code below removes CapsLock original action, but if hold will not work and will stuck, press again to off.
-				KeybdEvent(Keys.CapsLock, 0);
-				KeybdEvent(Keys.CapsLock, 2);
-				self = false;
-			}
-			if (!MMain.mahou.Focused && !self &&
-			    wParam == (IntPtr)(int)KMMessages.WM_KEYUP) {			
-				MMain.mahou.IfNotExist();
-				if (!MMain.MyConfs.ReadBool("DoubleKey", "Use"))
-					hklOK = hksOK = hklineOK = hkSIOK = true;
-				if (!MMain.mahou.Active && !MMain.mahou.moreConfigs.Visible || !MMain.mahou.Active && !MMain.mahou.moreConfigs.Active) {
-					if (MMain.MyConfs.ReadBool("EnabledHotkeys", "HKCSEnabled")) {
-						if (thishk.Equals(MMain.mahou.HKCSelection) && hksOK) {
-							Logging.Log("Hotkey convert selection fired.");
-							if (MMain.MyConfs.ReadBool("Functions", "BlockCTRL") &&
-							    MMain.MyConfs.Read("Hotkeys", "HKCSMods").Contains("Control")) {
-							} else {
-								if (Array.Exists(Hotkey.GetMods(MMain.MyConfs.Read("Hotkeys", "HKCSMods")), b => b == true) &&
-								    MMain.MyConfs.ReadBool("Functions", "RePress")) {
-									hotkeywithmodsfired = true;
-									RePressAfter(MMain.MyConfs.Read("Hotkeys", "HKCSMods"));
-								}
-								SendModsUp(Hotkey.GetMods(MMain.MyConfs.Read("Hotkeys", "HKCSMods")));
-								IfKeyIsMod(Key);
-								var t = new Task(ConvertSelection);
-								t.RunSynchronously();
-							}
-						}
-						if (thishk.Equals(MMain.mahou.HKCSelection) && MMain.MyConfs.ReadBool("DoubleKey", "Use")) {
-							Logging.Log("Waiting for second hotkey press of convert selection hotkey.");
-							hksOK = true;
-							doublekey.Interval = MMain.MyConfs.ReadInt("DoubleKey", "Delay");
-							doublekey.Start();
-						}
+				// Additional fix for scroll tip.
+				if (!self && MMain.MyConfs.ReadBool("Functions", "ScrollTip") &&
+				   Key == Keys.Scroll && wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN) {
+					self = true;
+					if (Control.IsKeyLocked(Keys.Scroll)) { // Turn off if alraedy on
+						KeybdEvent(Keys.Scroll, 0);
+						KeybdEvent(Keys.Scroll, 2);
 					}
-					if (MMain.MyConfs.ReadBool("EnabledHotkeys", "HKCLEnabled")) {
-						if (thishk.Equals(MMain.mahou.HKCLast) && hklOK && !csdoing) {
-							Logging.Log("Hotkey convert last word fired.");
-							if (MMain.MyConfs.ReadBool("Functions", "BlockCTRL") &&
-							    MMain.MyConfs.Read("Hotkeys", "HKCLMods").Contains("Control")) {
-							} else {
-								if (Array.Exists(Hotkey.GetMods(MMain.MyConfs.Read("Hotkeys", "HKCLMods")), b => b == true) &&
-								    MMain.MyConfs.ReadBool("Functions", "RePress")) {
-									hotkeywithmodsfired = true;
-									RePressAfter(MMain.MyConfs.Read("Hotkeys", "HKCLMods"));
-								}
-								SendModsUp(Hotkey.GetMods(MMain.MyConfs.Read("Hotkeys", "HKCLMods")));
-								IfKeyIsMod(Key);
-								var t = new Task(new Action(() => ConvertLast(MMain.c_word)));
-								t.RunSynchronously();
-							}
-						}
-						if (thishk.Equals(MMain.mahou.HKCLast) && MMain.MyConfs.ReadBool("DoubleKey", "Use")) {
-							Logging.Log("Waiting for second hotkey press of convert last word hotkey.");
-							hklOK = true;
-							doublekey.Interval = MMain.MyConfs.ReadInt("DoubleKey", "Delay");
-							doublekey.Start();
-						}
-					}
-					if (MMain.MyConfs.ReadBool("EnabledHotkeys", "HKCLineEnabled")) {
-						if (thishk.Equals(MMain.mahou.HKCLine) && hklineOK && !csdoing) {
-							Logging.Log("Hotkey convert line fired.");
-							if (MMain.MyConfs.ReadBool("Functions", "BlockCTRL") &&
-							    MMain.MyConfs.Read("Hotkeys", "HKCLineMods").Contains("Control")) {
-							} else {
-								if (Array.Exists(Hotkey.GetMods(MMain.MyConfs.Read("Hotkeys", "HKCLineMods")), b => b == true) &&
-								    MMain.MyConfs.ReadBool("Functions", "RePress")) {
-									hotkeywithmodsfired = true;
-									RePressAfter(MMain.MyConfs.Read("Hotkeys", "HKCLineMods"));
-								}
-								SendModsUp(Hotkey.GetMods(MMain.MyConfs.Read("Hotkeys", "HKCLineMods")));
-								IfKeyIsMod(Key);
-								var line = new List<YuKey>();
-								foreach (var word in MMain.c_words) {
-									line.AddRange(word);
-								}
-								var t = new Task(new Action(() => ConvertLast(line)));
-								t.RunSynchronously();
-							}
-						}
-						if (thishk.Equals(MMain.mahou.HKCLine) && MMain.MyConfs.ReadBool("DoubleKey", "Use")) {
-							Logging.Log("Waiting for second hotkey press of convert line hotkey.");
-							hklineOK = true;
-							doublekey.Interval = MMain.MyConfs.ReadInt("DoubleKey", "Delay");
-							doublekey.Start();
-						}
-					}
-					csdoing = false;
-				}
-				if (MMain.MyConfs.ReadBool("EnabledHotkeys", "HKSymIgnEnabled")) {
-					if (thishk.Equals(MMain.mahou.HKSymIgn) && hkSIOK) {
-						Logging.Log("Hotkey symbol ignore mode fired.");
-						if (MMain.MyConfs.ReadBool("Functions", "SymIgnModeEnabled")) {
-							MMain.MyConfs.Write("Functions", "SymIgnModeEnabled", "false");
-							MMain.mahou.Icon = MMain.mahou.icon.trIcon.Icon = Properties.Resources.MahouTrayHD;
-						} else {
-							MMain.MyConfs.Write("Functions", "SymIgnModeEnabled", "true");
-							MMain.mahou.Icon = MMain.mahou.icon.trIcon.Icon = Properties.Resources.MahouSymbolIgnoreMode;
-						}
-					}
-					if (thishk.Equals(MMain.mahou.HKSymIgn) && MMain.MyConfs.ReadBool("DoubleKey", "Use")) {
-						Logging.Log("Waiting for second hotkey press of symbol ignore mode hotkey.");
-						hkSIOK = true;
-						doublekey.Interval = MMain.MyConfs.ReadInt("DoubleKey", "Delay");
-						doublekey.Start();
-					}
-				}
-			}
-			//these are global, so they don't need to be stoped when window is visible.
-			if (thishk.Equals(MMain.mahou.HKConMorWor) && wParam == (IntPtr)(int)KMMessages.WM_KEYUP)
-				waitfornum = true;
-			if (thishk.Equals(MMain.mahou.Mainhk) && wParam == (IntPtr)(int)KMMessages.WM_KEYUP)
-				MMain.mahou.ToggleVisibility();
-			if (thishk.Equals(MMain.mahou.ExitHk) && wParam == (IntPtr)(int)KMMessages.WM_KEYUP)
-				MMain.mahou.ExitProgram();
-			#endregion
-			#region Snippets
-			if (MMain.MyConfs.ReadBool("Functions", "Snippets")) {
-				if (((Key >= Keys.D0 && Key <= Keys.Z) || // This is 0-9 & A-Z
-				    Key >= Keys.Oem1 && Key <= Keys.OemBackslash // All other printables
-				    ) && !self && !win && !alt && !ctrl && wParam == (IntPtr)(int)KMMessages.WM_KEYUP) {
-					var stb = new StringBuilder(10);
-					var by = new byte[256];
-					if (shift) {
-						by[(int)Keys.ShiftKey] = 0xFF;
-					}
-					ToUnicodeEx((uint)vkCode, (uint)vkCode, by, stb, stb.Capacity, 0, (IntPtr)Locales.GetCurrentLocale());
-					c_snip.Add(stb.ToString()[0]);
-				}
-				if (wParam == (IntPtr)(int)KMMessages.WM_KEYUP && Key == Keys.Space) {
-					var snip = "";
-					foreach (var ch in c_snip) {
-						snip += ch;
-					}
-					Logging.Log("Current snippet is [" + snip + "].");
-					for (int i = 0; i < snipps.Length; i++) {
-						if (snip == snipps[i]) {
-							Logging.Log("Current snippet [" + snip + "] matched existing snippet [" + snipps[i] + "].");
-							self = true;
-							for (int e = -1; e < c_snip.Count; e++) {
-								KInputs.MakeInput(new [] { KInputs.AddKey(Keys.Back, true),
-									KInputs.AddKey(Keys.Back, false) 
-								});
-							}
-							Logging.Log("Last word, words cleared due to snippet expansion.");
-							Logging.Log("Expanding snippet [" + snip + "] to [" + snipps[i] + "].");
-							MMain.c_words.Clear();
-							MMain.c_word.Clear();
-							try {
-								KInputs.MakeInput(KInputs.AddString(exps[i]));
-							} catch {
-								Logging.Log("Some snippets configured wrong, check them.", 1);
-								// If not use TASK, form(MessageBox) won't accept the keys(Enter/Escape/Alt+F4).
-								var tsk = new Task(() => MessageBox.Show(MMain.Msgs[10], MMain.Msgs[11], MessageBoxButtons.OK, MessageBoxIcon.Error));
-								tsk.Start();
-								KInputs.MakeInput(KInputs.AddString(snip));
-							}
-							self = false;
-						}
-					}
-					c_snip.Clear();
-				}
-			}
-			#endregion
-			#region Release Re-Pressed keys
-			if (hotkeywithmodsfired && wParam == (IntPtr)(int)KMMessages.WM_KEYUP && !self &&
-			    (Key == Keys.LShiftKey || Key == Keys.LMenu || Key == Keys.LControlKey)) {
-				self = true;
-				hotkeywithmodsfired = false;
-				var mods = new bool[3];
-				if (cwas) {
-					cwas = false;
-					mods[0] = true;
-				}
-				if (swas) {
-					swas = false;
-					mods[1] = true;
-				}
-				if (awas) {
-					awas = false;
-					mods[2] = true;
-				}
-				SendModsUp(mods);
-				self = false;
-			}
-			#endregion
-			#region Switch only key
-			if (!self && !shift && MMain.MyConfs.Read("HotKeys", "OnlyKeyLayoutSwicth") == "CapsLock" &&
-			    Key == Keys.CapsLock && wParam == (IntPtr)(int)KMMessages.WM_KEYUP) {
-				self = true;
-				ChangeLayout();
-				Logging.Log("Changing layout by CapsLock key.");
-				self = false;
-			}
-			if (!self && !shift && MMain.MyConfs.Read("HotKeys", "OnlyKeyLayoutSwicth") == "CapsLock" &&
-			    Key == Keys.CapsLock && wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN) {
-				self = true;
-				if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if alraedy on
-					KeybdEvent(Keys.CapsLock, 0);
-					KeybdEvent(Keys.CapsLock, 2);
-				}
-				//Code below removes CapsLock original action, but if hold will not work and will stuck, press again to off.
-				KeybdEvent(Keys.CapsLock, 0);
-				KeybdEvent(Keys.CapsLock, 2);
-				self = false;
-			}
-			// Additional fix for scroll tip.
-			if (!self && MMain.MyConfs.ReadBool("Functions", "ScrollTip") &&
-			    Key == Keys.Scroll && wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN) {
-				self = true;
-				if (Control.IsKeyLocked(Keys.Scroll)) { // Turn off if alraedy on
 					KeybdEvent(Keys.Scroll, 0);
 					KeybdEvent(Keys.Scroll, 2);
+					self = false;
 				}
-				KeybdEvent(Keys.Scroll, 0);
-				KeybdEvent(Keys.Scroll, 2);
-				self = false;
-			}
-			if (!self && MMain.MyConfs.Read("HotKeys", "OnlyKeyLayoutSwicth") == "Left Control" &&
-			    Key == Keys.LControlKey && wParam == (IntPtr)(int)KMMessages.WM_KEYUP &&
-			    !MMain.MyConfs.ReadBool("ExtCtrls", "UseExtCtrls")) {
-				self = true;
-				if (MMain.MyConfs.ReadBool("Functions", "EmulateLayoutSwitch")) {
-					KeybdEvent(Keys.LControlKey, 2); // Sends it up to make it work when using "EmulateLayoutSwitch" 
-				}
-				Logging.Log("Changing layout by LCtrl key.");
-				ChangeLayout();
-				KeybdEvent(Keys.LControlKey, 2); //fix for PostMessage, it somehow o_0 sends another ctrl...
+				if (!self && MMain.MyConfs.Read("HotKeys", "OnlyKeyLayoutSwicth") == "Left Control" &&
+				   Key == Keys.LControlKey && wParam == (IntPtr)(int)KMMessages.WM_KEYUP &&
+				   !MMain.MyConfs.ReadBool("ExtCtrls", "UseExtCtrls")) {
+					self = true;
+					if (MMain.MyConfs.ReadBool("Functions", "EmulateLayoutSwitch")) {
+						KeybdEvent(Keys.LControlKey, 2); // Sends it up to make it work when using "EmulateLayoutSwitch" 
+					}
+					Logging.Log("Changing layout by LCtrl key.");
+					ChangeLayout();
+					KeybdEvent(Keys.LControlKey, 2); //fix for PostMessage, it somehow o_0 sends another ctrl...
 
-				self = false;
-			}
-			if (!self && MMain.MyConfs.Read("HotKeys", "OnlyKeyLayoutSwicth") == "Right Control" &&
-			    Key == Keys.RControlKey && wParam == (IntPtr)(int)KMMessages.WM_KEYUP &&
-			    !MMain.MyConfs.ReadBool("ExtCtrls", "UseExtCtrls")) {
-				self = true;
-				if (MMain.MyConfs.ReadBool("Functions", "EmulateLayoutSwitch")) {
-					KeybdEvent(Keys.RControlKey, 2); // Sends it up to make it work when using "EmulateLayoutSwitch" 
+					self = false;
 				}
-				Logging.Log("Changing layout by RCtrl key.");
-				ChangeLayout();
-				self = false;
-			}
-			#endregion
-			#region By Ctrls switch
-			keyAfterCTRL |= !self && wParam == (IntPtr)(int)KMMessages.WM_KEYUP && ctrl;
-			if (!self && MMain.MyConfs.ReadBool("ExtCtrls", "UseExtCtrls") && wParam == (IntPtr)(int)KMMessages.WM_KEYUP && !keyAfterCTRL) {
-				if (Key == Keys.RControlKey) {
-					Logging.Log("Switching to specific layout by RCtrl key.");
-					PostMessage(Locales.ActiveWindow(), KInputs.WM_INPUTLANGCHANGEREQUEST, 0, MMain.MyConfs.ReadUInt("ExtCtrls", "RCLocale"));
-				}
-				if (Key == Keys.LControlKey) {
-					Logging.Log("Switching to specific layout by LCtrl key.");
-					PostMessage(Locales.ActiveWindow(), KInputs.WM_INPUTLANGCHANGEREQUEST, 0, MMain.MyConfs.ReadUInt("ExtCtrls", "LCLocale"));
-				}
-			}
-			keyAfterCTRL &= self || wParam != (IntPtr)(int)KMMessages.WM_KEYUP || (Key != Keys.LControlKey && Key != Keys.RControlKey);
-			#endregion
-			#region Other, when KeyDown
-			if (nCode >= 0 && wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN && !self && !waitfornum) {
-				if (Key == Keys.Back) { //Removes last item from current word when user press Backspace
-					if (MMain.c_word.Count != 0) {
-						MMain.c_word.RemoveAt(MMain.c_word.Count - 1);
+				if (!self && MMain.MyConfs.Read("HotKeys", "OnlyKeyLayoutSwicth") == "Right Control" &&
+				   Key == Keys.RControlKey && wParam == (IntPtr)(int)KMMessages.WM_KEYUP &&
+				   !MMain.MyConfs.ReadBool("ExtCtrls", "UseExtCtrls")) {
+					self = true;
+					if (MMain.MyConfs.ReadBool("Functions", "EmulateLayoutSwitch")) {
+						KeybdEvent(Keys.RControlKey, 2); // Sends it up to make it work when using "EmulateLayoutSwitch" 
 					}
-					if (MMain.c_words.Count > 0) {
-						if (MMain.c_words[MMain.c_words.Count - 1].Count - 1 > 0) {
-							Logging.Log("Removed key ["+MMain.c_words[MMain.c_words.Count - 1][MMain.c_words[MMain.c_words.Count - 1].Count - 1].key+"] from last word in words.");
-							MMain.c_words[MMain.c_words.Count - 1].RemoveAt(MMain.c_words[MMain.c_words.Count - 1].Count - 1);
-						} else {
-							Logging.Log("Removed one empty word from current words.");
-							MMain.c_words.RemoveAt(MMain.c_words.Count - 1);
+					Logging.Log("Changing layout by RCtrl key.");
+					ChangeLayout();
+					self = false;
+				}
+				#endregion
+				#region By Ctrls switch
+				keyAfterCTRL |= !self && wParam == (IntPtr)(int)KMMessages.WM_KEYUP && ctrl;
+				if (!self && MMain.MyConfs.ReadBool("ExtCtrls", "UseExtCtrls") && wParam == (IntPtr)(int)KMMessages.WM_KEYUP && !keyAfterCTRL) {
+					if (Key == Keys.RControlKey) {
+						Logging.Log("Switching to specific layout by RCtrl key.");
+						PostMessage(Locales.ActiveWindow(), KInputs.WM_INPUTLANGCHANGEREQUEST, 0, MMain.MyConfs.ReadUInt("ExtCtrls", "RCLocale"));
+					}
+					if (Key == Keys.LControlKey) {
+						Logging.Log("Switching to specific layout by LCtrl key.");
+						PostMessage(Locales.ActiveWindow(), KInputs.WM_INPUTLANGCHANGEREQUEST, 0, MMain.MyConfs.ReadUInt("ExtCtrls", "LCLocale"));
+					}
+				}
+				keyAfterCTRL &= self || wParam != (IntPtr)(int)KMMessages.WM_KEYUP || (Key != Keys.LControlKey && Key != Keys.RControlKey);
+				#endregion
+				#region Other, when KeyDown
+				if (nCode >= 0 && wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN && !self && !waitfornum) {
+					if (Key == Keys.Back) { //Removes last item from current word when user press Backspace
+						if (MMain.c_word.Count != 0) {
+							MMain.c_word.RemoveAt(MMain.c_word.Count - 1);
+						}
+						if (MMain.c_words.Count > 0) {
+							if (MMain.c_words[MMain.c_words.Count - 1].Count - 1 > 0) {
+								Logging.Log("Removed key [" + MMain.c_words[MMain.c_words.Count - 1][MMain.c_words[MMain.c_words.Count - 1].Count - 1].key + "] from last word in words.");
+								MMain.c_words[MMain.c_words.Count - 1].RemoveAt(MMain.c_words[MMain.c_words.Count - 1].Count - 1);
+							} else {
+								Logging.Log("Removed one empty word from current words.");
+								MMain.c_words.RemoveAt(MMain.c_words.Count - 1);
+							}
+						}
+						if (MMain.MyConfs.ReadBool("Functions", "Snippets")) {
+							if (c_snip.Count != 0) {
+								c_snip.RemoveAt(c_snip.Count - 1);
+								Logging.Log("Removed one character from current snippet.");
+							}
 						}
 					}
-					if (MMain.MyConfs.ReadBool("Functions", "Snippets")) {
-						if (c_snip.Count != 0) {
-							c_snip.RemoveAt(c_snip.Count - 1);
-							Logging.Log("Removed one character from current snippet.");
-						}
-					}
-				}
-				//Pressing any of these Keys will empty current word, and snippet
-				if (Key == Keys.Enter || Key == Keys.Home || Key == Keys.End ||
-				    Key == Keys.Tab || Key == Keys.PageDown || Key == Keys.PageUp ||
-				    Key == Keys.Left || Key == Keys.Right || Key == Keys.Down || Key == Keys.Up ||
-				    (ctrl && Key != Keys.None)) { //Ctrl modifier + Any key will clear word too
-					Logging.Log("Last word cleared.");
-					MMain.c_word.Clear();
-					if (MMain.MyConfs.ReadBool("Functions", "Snippets")) {
-						c_snip.Clear();
-						Logging.Log("Snippet cleared.");
-					}
-				}
-				if (Key == Keys.Enter || Key == Keys.Home || Key == Keys.End ||
-				    Key == Keys.Tab || Key == Keys.PageDown || Key == Keys.PageUp ||
-				    Key == Keys.Left || Key == Keys.Right || Key == Keys.Down || Key == Keys.Up) {
-					Logging.Log("Words cleared.");
-					MMain.c_words.Clear();
-				}
-				if (Key == Keys.Space) {
-					Logging.Log("Adding one new empty word to words, and adding to it [Space] key.");
-					MMain.c_words.Add(new List<YuKey>());
-					MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() { key = Keys.Space });
-					if (MMain.MyConfs.ReadBool("Functions", "EatOneSpace") && MMain.c_word.Count != 0 &&
-					    MMain.c_word[MMain.c_word.Count - 1].key != Keys.Space) {
-						Logging.Log("Eat one space passed, next space will clear last word.");
-						MMain.c_word.Add(new YuKey() { key = Keys.Space });
-						afterEOS = true;
-					} else {
-						MMain.c_word.Clear();
+					//Pressing any of these Keys will empty current word, and snippet
+					if (Key == Keys.Enter || Key == Keys.Home || Key == Keys.End ||
+					   Key == Keys.Tab || Key == Keys.PageDown || Key == Keys.PageUp ||
+					   Key == Keys.Left || Key == Keys.Right || Key == Keys.Down || Key == Keys.Up ||
+					   (ctrl && Key != Keys.None)) { //Ctrl modifier + Any key will clear word too
 						Logging.Log("Last word cleared.");
-						afterEOS = false;
-					}
-				}
-				if (((Key >= Keys.D0 && Key <= Keys.Z) || // This is 0-9 & A-Z
-				    Key >= Keys.Oem1 && Key <= Keys.OemBackslash // All other printables
-				    ) && !win && !alt && !ctrl) {
-					if (afterEOS) { //Clears word after Eat ONE space
 						MMain.c_word.Clear();
-						afterEOS = false;
+						if (MMain.MyConfs.ReadBool("Functions", "Snippets")) {
+							c_snip.Clear();
+							Logging.Log("Snippet cleared.");
+						}
 					}
-					if (!shift) {
-						MMain.c_word.Add(new YuKey() {
-							key = Key,
-							upper = false
-						});
-						MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() {
-							key = Key,
-							upper = false
-						});
-					} else {
-						MMain.c_word.Add(new YuKey() {
-							key = Key,
-							upper = true
-						});
-						MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() {
-							key = Key,
-							upper = true
-						});
+					if (Key == Keys.Enter || Key == Keys.Home || Key == Keys.End ||
+					   Key == Keys.Tab || Key == Keys.PageDown || Key == Keys.PageUp ||
+					   Key == Keys.Left || Key == Keys.Right || Key == Keys.Down || Key == Keys.Up) {
+						Logging.Log("Words cleared.");
+						MMain.c_words.Clear();
+					}
+					if (Key == Keys.Space) {
+						Logging.Log("Adding one new empty word to words, and adding to it [Space] key.");
+						MMain.c_words.Add(new List<YuKey>());
+						MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() { key = Keys.Space });
+						if (MMain.MyConfs.ReadBool("Functions", "EatOneSpace") && MMain.c_word.Count != 0 &&
+						   MMain.c_word[MMain.c_word.Count - 1].key != Keys.Space) {
+							Logging.Log("Eat one space passed, next space will clear last word.");
+							MMain.c_word.Add(new YuKey() { key = Keys.Space });
+							afterEOS = true;
+						} else {
+							MMain.c_word.Clear();
+							Logging.Log("Last word cleared.");
+							afterEOS = false;
+						}
+					}
+					if (((Key >= Keys.D0 && Key <= Keys.Z) || // This is 0-9 & A-Z
+					   Key >= Keys.Oem1 && Key <= Keys.OemBackslash // All other printables
+					   ) && !win && !alt && !ctrl) {
+						if (afterEOS) { //Clears word after Eat ONE space
+							MMain.c_word.Clear();
+							afterEOS = false;
+						}
+						if (!shift) {
+							MMain.c_word.Add(new YuKey() {
+								key = Key,
+								upper = false
+							});
+							MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() {
+								key = Key,
+								upper = false
+							});
+						} else {
+							MMain.c_word.Add(new YuKey() {
+								key = Key,
+								upper = true
+							});
+							MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() {
+								key = Key,
+								upper = true
+							});
+						}
 					}
 				}
-			}
-			#endregion
-			#region Alt+Numpad (fully workable)
-			if (!self && incapt &&
-			    (Key == Keys.RMenu || Key == Keys.LMenu || Key == Keys.Menu) &&
-			    wParam == (IntPtr)(int)KMMessages.WM_KEYUP) {
-				Logging.Log("Capture of numpads ended, captured [" + tempNumpads.Count + "] numpads.");
-				MMain.c_word.Add(new YuKey() {
-					altnum = true,
-					numpads = new List<Keys>(tempNumpads)//new List => VERY important here!!!
-				});                                      //It prevents pointer to tempNumpads, which is cleared.
-				MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() {
-					altnum = true,
-					numpads = new List<Keys>(tempNumpads)
-				});
-				tempNumpads.Clear();
-				incapt = false;
-			}
-			if (!self && !incapt && alt && wParam == (IntPtr)(int)KMMessages.WM_SYSKEYDOWN) {
-				Logging.Log("Alt is down, starting capture of Numpads...");
-				incapt = true;
-			}
-			if (!self && alt && incapt) {
-				if (Key >= Keys.NumPad0 && Key <= Keys.NumPad9 && wParam == (IntPtr)(int)KMMessages.WM_SYSKEYUP) {
+				#endregion
+				#region Alt+Numpad (fully workable)
+				if (!self && incapt &&
+				   (Key == Keys.RMenu || Key == Keys.LMenu || Key == Keys.Menu) &&
+				   wParam == (IntPtr)(int)KMMessages.WM_KEYUP) {
+					Logging.Log("Capture of numpads ended, captured [" + tempNumpads.Count + "] numpads.");
+					MMain.c_word.Add(new YuKey() {
+						altnum = true,
+						numpads = new List<Keys>(tempNumpads)//new List => VERY important here!!!
+					});                                      //It prevents pointer to tempNumpads, which is cleared.
+					MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() {
+						altnum = true,
+						numpads = new List<Keys>(tempNumpads)
+					});
+					tempNumpads.Clear();
+					incapt = false;
+				}
+				if (!self && !incapt && alt && wParam == (IntPtr)(int)KMMessages.WM_SYSKEYDOWN) {
+					Logging.Log("Alt is down, starting capture of Numpads...");
+					incapt = true;
+				}
+				if (!self && alt && incapt) {
+					if (Key >= Keys.NumPad0 && Key <= Keys.NumPad9 && wParam == (IntPtr)(int)KMMessages.WM_SYSKEYUP) {
 //					Console.WriteLine("Alt is down, and \"" + Key + "\" is released.");
-					tempNumpads.Add(Key);
+						tempNumpads.Add(Key);
+					}
 				}
-			}
-			#endregion
-			return CallNextHookEx(MMain._hookID, nCode, wParam, lParam);
+				#endregion
 			} catch (Exception e) {
-				Logging.Log("Keyboard HOOK died! Stack Trace & Error Message:\r\n"+e.Message+"\r\n"+e.StackTrace, 1);
+				Logging.Log("Keyboard HOOK died! Stack Trace & Error Message:\r\n" + e.Message + "\r\n" + e.StackTrace, 1);
 				Logging.Log("Restarting HOOKs...");
-				MMain.StopHook(); MMain.StartHook();
-				return CallNextHookEx(MMain._mouse_hookID, nCode, wParam, lParam);
+				MMain.StopHook();
+				MMain.StartHook();
 			}
+			return CallNextHookEx(MMain._hookID, nCode, wParam, lParam);
 		}
 		public static IntPtr MouseHookCallback(int nCode, IntPtr wParam, IntPtr lParam)
 		{
@@ -535,13 +531,12 @@ namespace Mahou
 					}
 				}
 			}
-			return CallNextHookEx(MMain._mouse_hookID, nCode, wParam, lParam);
 			} catch(Exception e) {
 				Logging.Log("Mouse HOOK died! Stack Trace & Error Message:\r\n"+e.Message+"\r\n"+e.StackTrace, 1);
 				Logging.Log("Restarting HOOKs...");
 				MMain.StopHook(); MMain.StartHook();
-				return CallNextHookEx(MMain._mouse_hookID, nCode, wParam, lParam);
 			}
+			return CallNextHookEx(MMain._mouse_hookID, nCode, wParam, lParam);
 		}
 		#endregion
 		#region Functions/Struct

@@ -14,7 +14,7 @@ namespace Mahou
 		#region Variables
 		// Hotkeys, HKC => HotKey Convert
 		public Hotkey Mainhk, ExitHk, HKCLast, HKCSelection, HKCLine, HKSymIgn, HKConMorWor;
-		public bool messagebox, Active;
+		public bool messagebox;
 		// Temporary modifiers
 		string tempCLMods = "None", tempCSMods = "None", tempCLineMods = "None";
 		// Temporary keys
@@ -142,12 +142,10 @@ namespace Mahou
 		}
 		void MahouForm_Activated(object sender, EventArgs e)
 		{
-			Active = true;
 			RefreshLocales();
 		}
 		void MahouForm_Deactivate(object sender, EventArgs e)
 		{
-			Active = false;
 			RefreshLocales();
 		}
 		#endregion
@@ -526,12 +524,19 @@ namespace Mahou
 			if (Visible != false)
 				Visible = moreConfigs.Visible = update.Visible = false;
 			else {
-				TopMost = true;
-				Visible = true;
+				TopMost = Visible = true;
 				System.Threading.Thread.Sleep(5);
 				TopMost = false;
 			}
 			Refresh();
+			// Sometimes when logging is enabled, hooks may die without error...
+			// This fixes it, but you need manually to show/hide main window:
+			// 1. Click tray icon. 2. Start Mahou.exe
+			// This bug is under look...			
+			if (MMain.MyConfs.ReadBool("Functions", "Logging")) {
+				MMain.StopHook();MMain.StartHook();
+				KMHook.win = KMHook.alt = KMHook.shift = KMHook.ctrl = false;
+			}
 		}
 		public void RemoveAddCtrls() //Removes or adds ctrls to "Switch layout by key" items
 		{

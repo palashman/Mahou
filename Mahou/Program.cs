@@ -113,6 +113,16 @@ namespace Mahou
 		{
 			return _hookID == IntPtr.Zero;
 		}
+		public static bool MahouActive()
+		{
+			var ActHandle = Locales.GetForegroundWindow();
+			if (ActHandle == IntPtr.Zero) {
+				return false;
+			}
+			var active = mahou.Handle == ActHandle || mahou.moreConfigs.Handle == ActHandle;
+			Logging.Log("Mahou is active = ["+active+"]" + ", Mahou handle [" + mahou.Handle +"], moreConfigs handle ["+mahou.moreConfigs.Handle+"], fore win handle ["+ActHandle+"]");
+			return active;
+		}
 		#endregion
 	}
 }
