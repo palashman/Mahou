@@ -25,7 +25,7 @@ namespace Mahou
 		}
 		public void RefreshLang()
 		{
-			var lcid = (int)Locales.GetCurrentLocale();
+			var lcid = (int)(Locales.GetCurrentLocale() & 0xffff);
 			if (lcid > 0) {
 				var clangname = new System.Globalization.CultureInfo(lcid);
 				ChangeLD(clangname.ThreeLetterISOLanguageName.Substring(0, 1).ToUpper() + clangname.ThreeLetterISOLanguageName.Substring(1));
