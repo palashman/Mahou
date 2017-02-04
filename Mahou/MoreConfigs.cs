@@ -79,7 +79,11 @@ namespace Mahou
 				debuginfo += "\r\n" + "- OS = [" + Environment.OSVersion + "]";
 				debuginfo += "\r\n" + "- x64 = [" + Environment.Is64BitOperatingSystem + "]";
 				debuginfo += "\r\n" + "- .Net = [" + Environment.Version +"]";
-				debuginfo += "\r\n" + "#### Mahou.ini:\r\n```ini\r\n"+ File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Mahou.ini")) + "```";
+				debuginfo += "\r\n" + "#### All installed layouts:\r\n";
+				foreach (var l in MMain.lcnmid) {
+					debuginfo += l + "\r\n";
+				}
+				debuginfo += "#### Mahou.ini:\r\n```ini\r\n"+ File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Mahou.ini")) + "```";
 				if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "snippets.txt")))
 				    debuginfo += "\r\n" + "#### Snippets:\r\n```\r\n" + File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "snippets.txt")) + "```";
 				Clipboard.SetText(debuginfo);
@@ -192,12 +196,11 @@ namespace Mahou
 		void Save() // Saves configurations
 		{
 			MMain.mahou.IfNotExist();
-			var getname = new Regex("\\w+");
-			var getUID = new Regex("\\w+\\W(\\d+)");
-			MMain.MyConfs.Write("ExtCtrls", "LCLocaleName", getname.Match(cbLCLocalesList.Text).Value);
-			MMain.MyConfs.Write("ExtCtrls", "RCLocaleName", getname.Match(cbRCLocalesList.Text).Value);
-			MMain.MyConfs.Write("ExtCtrls", "LCLocale", getUID.Match(cbLCLocalesList.Text).Groups[1].Value);
-			MMain.MyConfs.Write("ExtCtrls", "RCLocale", getUID.Match(cbRCLocalesList.Text).Groups[1].Value);
+			var getLocale = new Regex(@"^(.+)\((\d+)");
+			MMain.MyConfs.Write("ExtCtrls", "LCLocaleName", getLocale.Match(cbLCLocalesList.Text).Groups[1].Value);
+			MMain.MyConfs.Write("ExtCtrls", "RCLocaleName", getLocale.Match(cbRCLocalesList.Text).Groups[1].Value);
+			MMain.MyConfs.Write("ExtCtrls", "LCLocale", getLocale.Match(cbLCLocalesList.Text).Groups[2].Value);
+			MMain.MyConfs.Write("ExtCtrls", "RCLocale", getLocale.Match(cbRCLocalesList.Text).Groups[2].Value);
 			MMain.MyConfs.Write("ExtCtrls", "UseExtCtrls", cbUseLRC.Checked.ToString());
 			MMain.MyConfs.Write("EnabledHotkeys", "HKSymIgnEnabled", cbSymIgn.Checked.ToString());
 			MMain.MyConfs.Write("Functions", "MoreTries", cbMoreTries.Checked.ToString());
