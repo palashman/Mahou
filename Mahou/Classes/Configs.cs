@@ -154,13 +154,13 @@ namespace Mahou
             if (!Boolean.TryParse(this.Read("ExtCtrls", "UseExtCtrls"), out bt))
                 this.Write("ExtCtrls", "UseExtCtrls", "false"); //Use extended CTRLs feature
 
-            if (!Int32.TryParse(this.Read("ExtCtrls", "LCLocale"), out it))
+            if (!UInt32.TryParse(this.Read("ExtCtrls", "LCLocale"), out uit))
                 this.Write("ExtCtrls", "LCLocale", ""); //Left CTRL switch to locale
 
             if (String.IsNullOrEmpty(this.Read("ExtCtrls", "LCLocaleName")))
                 this.Write("ExtCtrls", "LCLocaleName", "");
 
-            if (!Int32.TryParse(this.Read("ExtCtrls", "RCLocale"), out it))
+            if (!UInt32.TryParse(this.Read("ExtCtrls", "RCLocale"), out uit))
                 this.Write("ExtCtrls", "RCLocale", ""); //Right CTRL switch to locale
 
             if (String.IsNullOrEmpty(this.Read("ExtCtrls", "RCLocaleName")))
