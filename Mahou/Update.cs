@@ -12,7 +12,9 @@ namespace Mahou
 {
 	public partial class Update : Form
 	{
-		//Path to now Mahou
+		/// <summary>
+		/// Directory where Mahou.exe is.
+		/// </summary>
 		public static string nPath = AppDomain.CurrentDomain.BaseDirectory;
 		static string[] UpdInfo;
 		static bool updating, was, isold = true, fromStartup;
@@ -20,6 +22,7 @@ namespace Mahou
 		static Timer old = new Timer();
 		static Timer animate = new Timer();
 		static int progress = 0, _progress = 0;
+		#region Form events
 		public Update()
 		{
 			animate.Interval = 2500;
@@ -31,15 +34,9 @@ namespace Mahou
 			};
 			InitializeComponent();
 		}
-
 		void Update_VisibleChanged(object sender, EventArgs e)
 		{
 			ActiveControl = lbVer;
-//            Console.WriteLine(UpdInfo == null);
-//            Console.WriteLine(UpdInfo.Length);
-//            foreach (var i in UpdInfo) {
-//            	Console.WriteLine(i);
-//            }
 			try {
 				if (UpdInfo != null && UpdInfo[2].Substring(0, 1) == "v") {
 					SetUInfo();
@@ -63,13 +60,11 @@ namespace Mahou
 			}
 		
 		}
-
 		void Update_Load(object sender, EventArgs e)
 		{
 			RefreshLanguage();
             btShowProxy.BackgroundImage = recolorImg(SystemColors.WindowText, (Bitmap)Mahou.Properties.Resources.down_arrow);
 		}
-
 		void btDMahou_Click(object sender, EventArgs e)
 		{
 			if (!updating) {
@@ -123,7 +118,6 @@ namespace Mahou
 				}
 			}
 		}
-
 		void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
 		{
 			if (isold)
@@ -178,7 +172,6 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				was = true;
 			}
 		}
-
 		void btnCheck_Click(object sender, EventArgs e)
 		{
 			btnCheck.Visible = false;
@@ -220,8 +213,25 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 					SetUInfo();
 				}
 			}
+		}		
+		void BtShowProxyClick(object sender, EventArgs e)
+		{
+            if (Size.Height == 300)
+            {
+                btShowProxy.BackgroundImage = recolorImg(SystemColors.WindowText, (Bitmap)Mahou.Properties.Resources.up_arrow);
+				Size = new Size(Size.Width, 410);
+            }
+            else
+            {
+                btShowProxy.BackgroundImage = recolorImg(SystemColors.WindowText, (Bitmap)Mahou.Properties.Resources.down_arrow);
+				Size = new Size(Size.Width, 300);
+			}
 		}
-
+		#endregion
+		#region Functions
+		/// <summary>
+		/// Gets update info, and sets it to static [UpdInfo] string.
+		/// </summary>
 		void GetUpdateInfo()
 		{
 			var Info = new List<string>(); // Update info
@@ -271,6 +281,10 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			}
 			UpdInfo = Info.ToArray();
 		}
+		/// <summary>
+		/// Creates proxy from proxy controls(server/name/pass) text.
+		/// </summary>
+		/// <returns>WebProxy</returns>
 		WebProxy MakeProxy()
 		{
 			Logging.Log("Creating proxy...");
@@ -293,6 +307,9 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			
 			return myProxy;
 		}
+		/// <summary>
+		/// Check for updates at Mahou startup.
+		/// </summary>
 		public void StartupCheck()
 		{
 			Logging.Log("Startup check for updates.");
@@ -313,14 +330,18 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				Logging.Log("Unexpected error: \n" + e.Message +"\n" + e.StackTrace);
 			}
 		}
-
+		/// <summary>
+		/// Sets UI info controls(version/title/description) text.
+		/// </summary>
 		void SetUInfo()
 		{
 			gpRTitle.Text = UpdInfo[0];
 			lbRDesc.Text = UpdInfo[1];
 			lbVer.Text = UpdInfo[2];
 		}
-
+		/// <summary>
+		/// Refreshes controls text's language.
+		/// </summary>
 		void RefreshLanguage()
 		{
 			Text = MMain.UI[21];
@@ -334,38 +355,35 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			lbNamePass.Text = MMain.UI[50];
 			Logging.Log("Update UI Language refreshed.");
 		}
-
-		public static float flVersion(string ver) // converts "Mahou version type" to float
+		/// <summary>
+		/// Converts Mahou version string to float.
+		/// </summary>
+		/// <param name="ver">Mahou version string.</param>
+		/// <returns>float</returns>
+		public static float flVersion(string ver)
 		{
 			var justdigs = Regex.Replace(ver, "\\D", "");
 			return float.Parse(justdigs[0] + "." + justdigs.Substring(1), CultureInfo.InvariantCulture);
 		}
-		void BtShowProxyClick(object sender, EventArgs e)
-		{
-            if (Size.Height == 300)
-            {
-                btShowProxy.BackgroundImage = recolorImg(SystemColors.WindowText, (Bitmap)Mahou.Properties.Resources.up_arrow);
-				Size = new Size(Size.Width, 410);
-            }
-            else
-            {
-                btShowProxy.BackgroundImage = recolorImg(SystemColors.WindowText, (Bitmap)Mahou.Properties.Resources.down_arrow);
-				Size = new Size(Size.Width, 300);
-			}
-		}
-        Bitmap recolorImg(Color col, Bitmap img) // Recolors image, useful for dark(classic) themes.
+		/// <summary>
+		/// Recolors image, useful for dark(classic/high contrast) themes.
+		/// </summary>
+		/// <param name="col">Color to be colored into.</param>
+		/// <param name="img">Image to be colored.</param>
+		/// <returns>Bitmap</returns>
+        Bitmap recolorImg(Color col, Bitmap img)
         {
             for (int x = 0; x < img.Width; x++)
             {
                 for (int y = 0; y < img.Height; y++)
                 {
-                    if (!(((Color)img.GetPixel(x, y)).ToArgb() + 1 == (Color.Black.ToArgb() * -1)))
-                    {
-                        img.SetPixel(x, y, col);
-                    }
+					if (((Color)img.GetPixel(x, y)).ToArgb() + 1 != (Color.Black.ToArgb() * -1)) {
+						img.SetPixel(x, y, col);
+					}
                 }
             }
             return img;
         }
+        #endregion
 	}
 }

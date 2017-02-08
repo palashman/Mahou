@@ -4,70 +4,25 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 static class KInputs
 {
-    #region Native Win32
-    public const int INPUT_KEYBOARD = 1;
-    public const uint HKL_NEXT = 1;
-    public const uint WM_INPUTLANGCHANGEREQUEST = 0x0050;
-    public const uint KEYEVENTF_EXTENDEDKEY = 0x0001;
-    public const uint KEYEVENTF_KEYUP = 0x0002;
-    public const uint KEYEVENTF_UNICODE = 0x0004;
-    public const uint KEYEVENTF_SCANCODE = 0x0008;
-#pragma warning disable 649
-    internal struct INPUT
-    {
-        public UInt32 Type;
-        public KEYBOARDMOUSEHARDWARE Data;
-    }
-    [StructLayout(LayoutKind.Explicit)]
-    //This is KEYBOARD-MOUSE-HARDWARE union INPUT won't work if you remove MOUSE or HARDWARE
-    internal struct KEYBOARDMOUSEHARDWARE
-    {
-        [FieldOffset(0)]
-        public KEYBDINPUT Keyboard;
-        [FieldOffset(0)]
-        public HARDWAREINPUT Hardware;
-        [FieldOffset(0)]
-        public MOUSEINPUT Mouse;
-    }
-    internal struct KEYBDINPUT
-    {
-        public UInt16 Vk;
-        public UInt16 Scan;
-        public UInt32 Flags;
-        public UInt32 Time;
-        public IntPtr ExtraInfo;
-    }
-    internal struct MOUSEINPUT
-    {
-        public Int32 X;
-        public Int32 Y;
-        public UInt32 MouseData;
-        public UInt32 Flags;
-        public UInt32 Time;
-        public IntPtr ExtraInfo;
-    }
-    internal struct HARDWAREINPUT
-    {
-        public UInt32 Msg;
-        public UInt16 ParamL;
-        public UInt16 ParamH;
-    }
-#pragma warning restore 649
-    #endregion
-    #region Add Inputs & Make Input & check
-    public static INPUT AddKey(Keys key, bool down) //Returns INPUT down or up
+	/// <summary>
+	/// Creates INPUT from key and state.
+	/// </summary>
+	/// <param name="key">Key to be converted to INPUT.</param>
+	/// <param name="down">State of key(down=true, up=false)</param>
+	/// <returns>WinAPI.INPUT</returns>
+    public static WinAPI.INPUT AddKey(Keys key, bool down)
     {
         var vk = (UInt16)key;
-        var input = new INPUT
+        var input = new WinAPI.INPUT
         {
-            Type = INPUT_KEYBOARD,
+            Type = WinAPI.INPUT_KEYBOARD,
             Data =
             {
-                Keyboard = new KEYBDINPUT
+                Keyboard = new WinAPI.KEYBDINPUT
                 {
                     Vk = vk,
-                    Flags = IsExtended(key) ? (down ? (KEYEVENTF_EXTENDEDKEY) : (KEYEVENTF_KEYUP | KEYEVENTF_EXTENDEDKEY)) : (down ? 0 : KEYEVENTF_KEYUP),
-                    Scan = (ushort)MapVirtualKey(vk, 0),
+                    Flags = IsExtended(key) ? (down ? (WinAPI.KEYEVENTF_EXTENDEDKEY) : (WinAPI.KEYEVENTF_KEYUP | WinAPI.KEYEVENTF_EXTENDEDKEY)) : (down ? 0 : WinAPI.KEYEVENTF_KEYUP),
+                    Scan = (ushort)WinAPI.MapVirtualKey(vk, 0),
                     ExtraInfo = IntPtr.Zero,
                     Time = 0
                 }
@@ -75,6 +30,11 @@ static class KInputs
         };
         return input;
     }
+    /// <summary>
+    /// Returns true if key is extended, else false.
+    /// </summary>
+    /// <param name="key">Key to be checked.</param>
+    /// <returns>bool</returns>
     public static bool IsExtended(Keys key) //Check for extended keys
     {
 		return key == Keys.Menu ||
@@ -97,36 +57,41 @@ static class KInputs
 			key == Keys.Snapshot || 
 			key == Keys.Divide;
     }
-    public static INPUT[] AddString(string str) //Returns all string chars with down & up INPUT as INPUT[]
+    /// <summary>
+    /// Creates array of INPUT from string.
+    /// </summary>
+    /// <param name="str">String to be converted into INPUT[].</param>
+    /// <returns>INPUT[]</returns>
+    public static WinAPI.INPUT[] AddString(string str)
     {
-        var result = new List<INPUT>();
+        var result = new List<WinAPI.INPUT>();
         char[] inputs = str.ToCharArray();
         foreach (var s in inputs)
         {
-            var down = new INPUT
+            var down = new WinAPI.INPUT
             {
-                Type = INPUT_KEYBOARD,
+                Type = WinAPI.INPUT_KEYBOARD,
                 Data =
                 {
-                    Keyboard = new KEYBDINPUT
+                    Keyboard = new WinAPI.KEYBDINPUT
                     {
                         Vk = 0,
-                        Flags = KEYEVENTF_UNICODE,
+                        Flags = WinAPI.KEYEVENTF_UNICODE,
                         Scan = (UInt16)s,
                         ExtraInfo = IntPtr.Zero,
                         Time = 0
                     }
                 }
             };
-            var up = new INPUT
+            var up = new WinAPI.INPUT
             {
-                Type = INPUT_KEYBOARD,
+                Type = WinAPI.INPUT_KEYBOARD,
                 Data =
                 {
-                    Keyboard = new KEYBDINPUT
+                    Keyboard = new WinAPI.KEYBDINPUT
                     {
                         Vk = 0,
-                        Flags = KEYEVENTF_UNICODE | KEYEVENTF_KEYUP,
+                        Flags = WinAPI.KEYEVENTF_UNICODE | WinAPI.KEYEVENTF_KEYUP,
                         Scan = s,
                         ExtraInfo = IntPtr.Zero,
                         Time = 0
@@ -143,15 +108,12 @@ static class KInputs
         }
         return result.ToArray();
     }
-    public static void MakeInput(INPUT[] inputs) //Simply, sends input
+    /// <summary>
+    /// Makes input INPUT's in "inputs" variable.
+    /// </summary>
+    /// <param name="inputs">Array of INPUT to be inputted.</param>
+    public static void MakeInput(WinAPI.INPUT[] inputs) //Simply, sends input
     {
-        SendInput((UInt32)inputs.Length, inputs, Marshal.SizeOf(typeof(INPUT)));
+        WinAPI.SendInput((UInt32)inputs.Length, inputs, Marshal.SizeOf(typeof(WinAPI.INPUT)));
     }
-    #endregion
-    #region DLL
-    [DllImport("user32.dll", SetLastError = true)]
-    static extern UInt32 SendInput(UInt32 numberOfInputs, INPUT[] inputs, Int32 sizeOfInputStructure);
-    [DllImport("user32.dll", SetLastError = true)]
-    static extern int MapVirtualKey(uint uCode, uint uMapType);
-    #endregion
 }

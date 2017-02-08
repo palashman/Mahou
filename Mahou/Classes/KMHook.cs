@@ -14,23 +14,6 @@ namespace Mahou
 	class KMHook // Keyboard & Mouse Hook
 	{
 		#region Variables
-		public enum KMMessages // KMMessages Values
-		{
-			WM_LBUTTONDOWN = 0x0201,
-			WM_LBUTTONUP = 0x0202,
-			WM_MOUSEMOVE = 0x0200,
-			WM_MOUSEWHEEL = 0x020A,
-			WM_RBUTTONDOWN = 0x0204,
-			WM_RBUTTONUP = 0x0205,
-			WM_MBUTTONDOWN = 0x0207,
-			WM_MBUTTONUP = 0x0208,
-			WH_KEYBOARD_LL = 13,
-			WH_MOUSE_LL = 14,
-			WM_KEYDOWN = 0x0100,
-			WM_KEYUP = 0x0101,
-			WM_SYSKEYDOWN = 0x0104,
-			WM_SYSKEYUP = 0x0105
-		}
 		public static bool self, win, alt, ctrl, shift,
 			shiftRP, ctrlRP, altRP, //RP = Re-Press
 			awas, swas, cwas, afterEOS, //*was = alt/shift/ctrl was
@@ -39,29 +22,20 @@ namespace Mahou
 		static List<Keys> tempNumpads = new List<Keys>();
 		static List<char> c_snip = new List<char>();
 		public static System.Windows.Forms.Timer doublekey = new System.Windows.Forms.Timer();
-		public delegate IntPtr LowLevelProc(int nCode, IntPtr wParam, IntPtr lParam);
 		public static string[] snipps = new []{ "mahou", "eml" };
 		public static string[] exps = new [] {
 			"Mahou (魔法) - Magical layout switcher.",
 			"BladeMight@gmail.com"
 		};
 		#endregion
-		#region Keyboard & Mouse hooks events
-		public static IntPtr SetHook(LowLevelProc proc, int type)
-		{
-			using (Process currProcess = Process.GetCurrentProcess())
-			using (ProcessModule currModule = currProcess.MainModule) {
-				return SetWindowsHookEx(type, proc,
-					GetModuleHandle(currModule.ModuleName), 0);		
-			}
-		}
+		#region Keyboard & Mouse hooks callbacks
 		public static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
 		{
 			try {
 				int vkCode = Marshal.ReadInt32(lParam);
 				var Key = (Keys)vkCode; // "Key" will further be used instead of "(Keys)vkCode"
 				#region Multiple last words convert
-				if (waitfornum && wParam == (IntPtr)(int)KMMessages.WM_KEYUP && !shift && !ctrl && !alt) {
+				if (waitfornum && wParam == (IntPtr)WinAPI.WM_KEYUP && !shift && !ctrl && !alt) {
 					waitfornum = false;
 					if (Key >= Keys.D0 && Key <= Keys.D9) {
 						self = true;
@@ -92,21 +66,21 @@ namespace Mahou
 					case Keys.LShiftKey:
 					case Keys.RShiftKey:
 					case Keys.ShiftKey:
-						shift = ((wParam == (IntPtr)(int)KMMessages.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN) ? true : false);
+						shift = ((wParam == (IntPtr)WinAPI.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)WinAPI.WM_KEYDOWN) ? true : false);
 						break;
 					case Keys.RControlKey:
 					case Keys.LControlKey:
 					case Keys.ControlKey:
-						ctrl = ((wParam == (IntPtr)(int)KMMessages.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN) ? true : false);
+						ctrl = ((wParam == (IntPtr)WinAPI.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)WinAPI.WM_KEYDOWN) ? true : false);
 						break;
 					case Keys.RMenu:
 					case Keys.LMenu:
 					case Keys.Menu:
-						alt = ((wParam == (IntPtr)(int)KMMessages.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN) ? true : false);
+						alt = ((wParam == (IntPtr)WinAPI.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)WinAPI.WM_KEYDOWN) ? true : false);
 						break;
 					case Keys.RWin:
 					case Keys.LWin:
-						win = ((wParam == (IntPtr)(int)KMMessages.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN) ? true : false);
+						win = ((wParam == (IntPtr)WinAPI.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)WinAPI.WM_KEYDOWN) ? true : false);
 						break;
 					default:
 						if (!self)
@@ -150,7 +124,7 @@ namespace Mahou
 					KeybdEvent(Keys.CapsLock, 2);
 					self = false;
 				}
-				if (!self && wParam == (IntPtr)(int)KMMessages.WM_KEYUP) {
+				if (!self && wParam == (IntPtr)WinAPI.WM_KEYUP) {
 					MMain.mahou.IfNotExist();
 					if (!MMain.MyConfs.ReadBool("DoubleKey", "Use"))
 						hklOK = hksOK = hklineOK = hkSIOK = true;
@@ -250,27 +224,27 @@ namespace Mahou
 					}
 				}
 				//these are global, so they don't need to be stoped when window is visible.
-				if (thishk.Equals(MMain.mahou.HKConMorWor) && wParam == (IntPtr)(int)KMMessages.WM_KEYUP)
+				if (thishk.Equals(MMain.mahou.HKConMorWor) && wParam == (IntPtr)WinAPI.WM_KEYUP)
 					waitfornum = true;
-				if (thishk.Equals(MMain.mahou.Mainhk) && wParam == (IntPtr)(int)KMMessages.WM_KEYUP)
+				if (thishk.Equals(MMain.mahou.Mainhk) && wParam == (IntPtr)WinAPI.WM_KEYUP)
 					MMain.mahou.ToggleVisibility();
-				if (thishk.Equals(MMain.mahou.ExitHk) && wParam == (IntPtr)(int)KMMessages.WM_KEYUP)
+				if (thishk.Equals(MMain.mahou.ExitHk) && wParam == (IntPtr)WinAPI.WM_KEYUP)
 					MMain.mahou.ExitProgram();
 				#endregion
 				#region Snippets
 				if (MMain.MyConfs.ReadBool("Functions", "Snippets")) {
 					if (((Key >= Keys.D0 && Key <= Keys.Z) || // This is 0-9 & A-Z
 					   Key >= Keys.Oem1 && Key <= Keys.OemBackslash // All other printables
-					   ) && !self && !win && !alt && !ctrl && wParam == (IntPtr)(int)KMMessages.WM_KEYUP) {
+					   ) && !self && !win && !alt && !ctrl && wParam == (IntPtr)WinAPI.WM_KEYUP) {
 						var stb = new StringBuilder(10);
 						var byt = new byte[256];
 						if (shift) {
 							byt[(int)Keys.ShiftKey] = 0xFF;
 						}
-						ToUnicodeEx((uint)vkCode, (uint)vkCode, byt, stb, stb.Capacity, 0, (IntPtr)(Locales.GetCurrentLocale() & 0xffff));
+						WinAPI.ToUnicodeEx((uint)vkCode, (uint)vkCode, byt, stb, stb.Capacity, 0, (IntPtr)(Locales.GetCurrentLocale() & 0xffff));
 						c_snip.Add(stb.ToString()[0]);
 					}
-					if (wParam == (IntPtr)(int)KMMessages.WM_KEYUP && Key == Keys.Space) {
+					if (wParam == (IntPtr)WinAPI.WM_KEYUP && Key == Keys.Space) {
 						var snip = "";
 						foreach (var ch in c_snip) {
 							snip += ch;
@@ -306,7 +280,7 @@ namespace Mahou
 				}
 				#endregion
 				#region Release Re-Pressed keys
-				if (hotkeywithmodsfired && wParam == (IntPtr)(int)KMMessages.WM_KEYUP && !self &&
+				if (hotkeywithmodsfired && wParam == (IntPtr)WinAPI.WM_KEYUP && !self &&
 				   (Key == Keys.LShiftKey || Key == Keys.LMenu || Key == Keys.LControlKey)) {
 					self = true;
 					hotkeywithmodsfired = false;
@@ -329,14 +303,14 @@ namespace Mahou
 				#endregion
 				#region Switch only key
 				if (!self && !shift && MMain.MyConfs.Read("HotKeys", "OnlyKeyLayoutSwicth") == "CapsLock" &&
-				   Key == Keys.CapsLock && wParam == (IntPtr)(int)KMMessages.WM_KEYUP) {
+				   Key == Keys.CapsLock && wParam == (IntPtr)WinAPI.WM_KEYUP) {
 					self = true;
 					ChangeLayout();
 					Logging.Log("Changing layout by CapsLock key.");
 					self = false;
 				}
 				if (!self && !shift && MMain.MyConfs.Read("HotKeys", "OnlyKeyLayoutSwicth") == "CapsLock" &&
-				   Key == Keys.CapsLock && wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN) {
+				   Key == Keys.CapsLock && wParam == (IntPtr)WinAPI.WM_KEYDOWN) {
 					self = true;
 					if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if alraedy on
 						KeybdEvent(Keys.CapsLock, 0);
@@ -349,7 +323,7 @@ namespace Mahou
 				}
 				// Additional fix for scroll tip.
 				if (!self && MMain.MyConfs.ReadBool("Functions", "ScrollTip") &&
-				   Key == Keys.Scroll && wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN) {
+				   Key == Keys.Scroll && wParam == (IntPtr)WinAPI.WM_KEYDOWN) {
 					self = true;
 					if (Control.IsKeyLocked(Keys.Scroll)) { // Turn off if alraedy on
 						KeybdEvent(Keys.Scroll, 0);
@@ -360,7 +334,7 @@ namespace Mahou
 					self = false;
 				}
 				if (!self && MMain.MyConfs.Read("HotKeys", "OnlyKeyLayoutSwicth") == "Left Control" &&
-				   Key == Keys.LControlKey && wParam == (IntPtr)(int)KMMessages.WM_KEYUP &&
+				   Key == Keys.LControlKey && wParam == (IntPtr)WinAPI.WM_KEYUP &&
 				   !MMain.MyConfs.ReadBool("ExtCtrls", "UseExtCtrls")) {
 					self = true;
 					if (MMain.MyConfs.ReadBool("Functions", "EmulateLayoutSwitch")) {
@@ -368,12 +342,12 @@ namespace Mahou
 					}
 					Logging.Log("Changing layout by LCtrl key.");
 					ChangeLayout();
-					KeybdEvent(Keys.LControlKey, 2); //fix for PostMessage, it somehow o_0 sends another ctrl...
+					KeybdEvent(Keys.LControlKey, 2); //fix for WinAPI.PostMessage, it somehow o_0 sends another ctrl...
 
 					self = false;
 				}
 				if (!self && MMain.MyConfs.Read("HotKeys", "OnlyKeyLayoutSwicth") == "Right Control" &&
-				   Key == Keys.RControlKey && wParam == (IntPtr)(int)KMMessages.WM_KEYUP &&
+				   Key == Keys.RControlKey && wParam == (IntPtr)WinAPI.WM_KEYUP &&
 				   !MMain.MyConfs.ReadBool("ExtCtrls", "UseExtCtrls")) {
 					self = true;
 					if (MMain.MyConfs.ReadBool("Functions", "EmulateLayoutSwitch")) {
@@ -385,21 +359,21 @@ namespace Mahou
 				}
 				#endregion
 				#region By Ctrls switch
-				keyAfterCTRL |= !self && wParam == (IntPtr)(int)KMMessages.WM_KEYUP && ctrl;
-				if (!self && MMain.MyConfs.ReadBool("ExtCtrls", "UseExtCtrls") && wParam == (IntPtr)(int)KMMessages.WM_KEYUP && !keyAfterCTRL) {
+				keyAfterCTRL |= !self && wParam == (IntPtr)WinAPI.WM_KEYUP && ctrl;
+				if (!self && MMain.MyConfs.ReadBool("ExtCtrls", "UseExtCtrls") && wParam == (IntPtr)WinAPI.WM_KEYUP && !keyAfterCTRL) {
 					if (Key == Keys.RControlKey) {
 						Logging.Log("Switching to specific layout by RCtrl key.");
-						PostMessage(Locales.ActiveWindow(), KInputs.WM_INPUTLANGCHANGEREQUEST, 0, MMain.MyConfs.ReadUInt("ExtCtrls", "RCLocale"));
+						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, MMain.MyConfs.ReadUInt("ExtCtrls", "RCLocale"));
 					}
 					if (Key == Keys.LControlKey) {
 						Logging.Log("Switching to specific layout by LCtrl key.");
-						PostMessage(Locales.ActiveWindow(), KInputs.WM_INPUTLANGCHANGEREQUEST, 0, MMain.MyConfs.ReadUInt("ExtCtrls", "LCLocale"));
+						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, MMain.MyConfs.ReadUInt("ExtCtrls", "LCLocale"));
 					}
 				}
-				keyAfterCTRL &= self || wParam != (IntPtr)(int)KMMessages.WM_KEYUP || (Key != Keys.LControlKey && Key != Keys.RControlKey);
+				keyAfterCTRL &= self || wParam != (IntPtr)WinAPI.WM_KEYUP || (Key != Keys.LControlKey && Key != Keys.RControlKey);
 				#endregion
 				#region Other, when KeyDown
-				if (nCode >= 0 && wParam == (IntPtr)(int)KMMessages.WM_KEYDOWN && !self && !waitfornum) {
+				if (nCode >= 0 && wParam == (IntPtr)WinAPI.WM_KEYDOWN && !self && !waitfornum) {
 					if (Key == Keys.Back) { //Removes last item from current word when user press Backspace
 						if (MMain.c_word.Count != 0) {
 							MMain.c_word.RemoveAt(MMain.c_word.Count - 1);
@@ -485,7 +459,7 @@ namespace Mahou
 				#region Alt+Numpad (fully workable)
 				if (!self && incapt &&
 				   (Key == Keys.RMenu || Key == Keys.LMenu || Key == Keys.Menu) &&
-				   wParam == (IntPtr)(int)KMMessages.WM_KEYUP) {
+				   wParam == (IntPtr)WinAPI.WM_KEYUP) {
 					Logging.Log("Capture of numpads ended, captured [" + tempNumpads.Count + "] numpads.");
 					MMain.c_word.Add(new YuKey() {
 						altnum = true,
@@ -498,12 +472,12 @@ namespace Mahou
 					tempNumpads.Clear();
 					incapt = false;
 				}
-				if (!self && !incapt && alt && wParam == (IntPtr)(int)KMMessages.WM_SYSKEYDOWN) {
+				if (!self && !incapt && alt && wParam == (IntPtr)WinAPI.WM_SYSKEYDOWN) {
 					Logging.Log("Alt is down, starting capture of Numpads...");
 					incapt = true;
 				}
 				if (!self && alt && incapt) {
-					if (Key >= Keys.NumPad0 && Key <= Keys.NumPad9 && wParam == (IntPtr)(int)KMMessages.WM_SYSKEYUP) {
+					if (Key >= Keys.NumPad0 && Key <= Keys.NumPad9 && wParam == (IntPtr)WinAPI.WM_SYSKEYUP) {
 //					Console.WriteLine("Alt is down, and \"" + Key + "\" is released.");
 						tempNumpads.Add(Key);
 					}
@@ -515,13 +489,13 @@ namespace Mahou
 				MMain.StopHook();
 				MMain.StartHook();
 			}
-			return CallNextHookEx(MMain._hookID, nCode, wParam, lParam);
+			return WinAPI.CallNextHookEx(MMain._hookID, nCode, wParam, lParam);
 		}
 		public static IntPtr MouseHookCallback(int nCode, IntPtr wParam, IntPtr lParam)
 		{
 			try {
 			if (nCode >= 0) {
-				if ((KMMessages.WM_LBUTTONDOWN == (KMMessages)(int)wParam) || KMMessages.WM_RBUTTONDOWN == (KMMessages)(int)wParam) {
+				if ((WinAPI.WM_LBUTTONDOWN == (uint)wParam) || WinAPI.WM_RBUTTONDOWN == (uint)wParam) {
 					MMain.c_word.Clear();
 					MMain.c_words.Clear();
 					Logging.Log("Last word & words cleared [with mouse click].");
@@ -536,20 +510,23 @@ namespace Mahou
 				Logging.Log("Restarting HOOKs...");
 				MMain.StopHook(); MMain.StartHook();
 			}
-			return CallNextHookEx(MMain._mouse_hookID, nCode, wParam, lParam);
+			return WinAPI.CallNextHookEx(MMain._mouse_hookID, nCode, wParam, lParam);
 		}
 		#endregion
 		#region Functions/Struct
-		static void ConvertSelection() //Converts selected text
+		/// <summary>
+		/// Converts selected text.
+		/// </summary>
+		static void ConvertSelection()
 		{
-			try { //Used to catch errors, since it called as Task
+			try { //Used to catch errors
 			Locales.IfLessThan2();
 			self = true;
 			Logging.Log("Starting Convert selection.");
 			string ClipStr = "";
 			// Backup & Restore feature, now only text supported...
 			Logging.Log("Taking backup of clipboard text if possible.");
-			var doBackup = false || NativeClipboard.IsClipboardFormatAvailable((uint)NativeClipboard.uFormat.CF_UNICODETEXT);
+			var doBackup = false || WinAPI.IsClipboardFormatAvailable(WinAPI.CF_UNICODETEXT);
 			var datas = new NativeClipboard.ClipboardData() {
 				data = new List<byte[]>(),
 				format = new List<uint>()
@@ -598,19 +575,19 @@ namespace Mahou
 						var s = new StringBuilder(10);
 						var sb = new StringBuilder(10);
 						var yk = new YuKey();
-						var scan = VkKeyScanEx(c, (IntPtr)wasLocale);
+						var scan = WinAPI.VkKeyScanEx(c, (IntPtr)wasLocale);
 						var state = ((scan >> 8) & 0xff);
 						var bytes = new byte[255];
 						if (state == 1)
 							bytes[(int)Keys.ShiftKey] = 0xFF;
-						var scan2 = VkKeyScanEx(c, (IntPtr)nowLocale);
+						var scan2 = WinAPI.VkKeyScanEx(c, (IntPtr)nowLocale);
 						var state2 = ((scan2 >> 8) & 0xff);
 						var bytes2 = new byte[255];
 						if (state2 == 1)
 							bytes2[(int)Keys.ShiftKey] = 0xFF;
 						if (MMain.MyConfs.ReadBool("Functions", "ExperimentalCSSwitch")) {
 							Logging.Log("Using Experimental CS-Switch mode.");
-							ToUnicodeEx((uint)scan, (uint)scan, bytes, s, s.Capacity, 0, (IntPtr)wasLocale);
+							WinAPI.ToUnicodeEx((uint)scan, (uint)scan, bytes, s, s.Capacity, 0, (IntPtr)wasLocale);
 							Logging.Log("Char 1 is [" + s + "] in locale +[" + wasLocale + "].");
 							if (ClipStr[index].ToString() == s.ToString()) {
 								Logging.Log("Making input of [" + scan + "] in locale +[" + nowLocale + "].");
@@ -618,11 +595,11 @@ namespace Mahou
 								index++;
 								continue;
 							}
-							ToUnicodeEx((uint)scan2, (uint)scan2, bytes2, sb, sb.Capacity, 0, (IntPtr)nowLocale);
+							WinAPI.ToUnicodeEx((uint)scan2, (uint)scan2, bytes2, sb, sb.Capacity, 0, (IntPtr)nowLocale);
 							Logging.Log("Char 2 is [" + sb + "] in locale +[" + nowLocale + "].");
 							if (ClipStr[index].ToString() == sb.ToString()) {
 								Logging.Log("Char 1, 2 and origial are equivalent.");
-								PostMessage(Locales.ActiveWindow(), KInputs.WM_INPUTLANGCHANGEREQUEST, 0, wasLocale);
+								WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, wasLocale);
 								wasLocale = nowLocale;
 								scan = scan2;
 								state = state2;
@@ -643,7 +620,7 @@ namespace Mahou
 						}
 						if (yk.key == Keys.None) { // retype unrecognized as unicode
 							var unrecognized = ClipStr[items - 1].ToString();
-							KInputs.INPUT unr = KInputs.AddString(unrecognized)[0];
+							WinAPI.INPUT unr = KInputs.AddString(unrecognized)[0];
 							Logging.Log("Key of char [" + c + "] = not exist, using input as string.");
 							KInputs.MakeInput(new [] { unr });
 						} else {
@@ -707,7 +684,11 @@ namespace Mahou
 				Logging.Log("Convert Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
 			}
 		}
-		static string MakeCopy() //Gets text from selection
+		/// <summary>
+		/// Sends RCtrl + Insert to selected get text, and returns that text by using WinAPI.GetText().
+		/// </summary>
+		/// <returns>string</returns>
+		static string MakeCopy() 
 		{
 			KInputs.MakeInput(new [] {
 				KInputs.AddKey(Keys.RControlKey, true),
@@ -718,10 +699,13 @@ namespace Mahou
 			Thread.Sleep(30);
 			return NativeClipboard.GetText();
 		}
-		static void RePress() //Re-presses modifiers you hold when hotkey fired(due to SendModsUp())
+		/// <summary>
+		/// Re-presses modifiers you hold when hotkey fired(due to SendModsUp()).
+		/// </summary>
+		static void RePress() 
 		{
 			//Console.WriteLine("Going to repress\nct={0}\tsh={1}\tal={2}", ctrlRP, shiftRP, altRP);
-			//Repress's modifiers by Press Again variables
+			//Repress's modifiers by RePress variables
 			if (shiftRP) {
 				KeybdEvent(Keys.LShiftKey, 0);
 				swas = true;
@@ -738,7 +722,11 @@ namespace Mahou
 				ctrlRP = false;
 			}
 		}
-		static void ConvertLast(List<YuKey> c_) //Converts last word/line
+		/// <summary>
+		/// Converts last word/line/words.
+		/// </summary>
+		/// <param name="c_">List of YuKeys to be converted.</param>
+		static void ConvertLast(List<YuKey> c_)
 		{
 			try { //Used to catch errors, since it called as Task
 			Locales.IfLessThan2();
@@ -783,7 +771,14 @@ namespace Mahou
 				Logging.Log("Convert Last encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
 			}
 		}
-		static bool SymbolIgnoreRules(Keys key, bool upper, uint wasLocale) //Rules to ignore symbols
+		/// <summary>
+		/// Rules to ignore symbols in ConvertLast() function.
+		/// </summary>
+		/// <param name="key">Key to be checked.</param>
+		/// <param name="upper">State of key to be checked.</param>
+		/// <param name="wasLocale">Last layout id.</param>
+		/// <returns></returns>
+		static bool SymbolIgnoreRules(Keys key, bool upper, uint wasLocale)
 		{
 			Logging.Log("Passing through symbol ignore rules.");
 			if (MMain.MyConfs.ReadBool("EnabledHotkeys", "HKSymIgnEnabled") &&
@@ -843,18 +838,21 @@ namespace Mahou
 			} else
 				return false;
 		}
-		static void ChangeLayout() //Changes current layout
+		/// <summary>
+		/// Changes current layout.
+		/// </summary>
+		static void ChangeLayout()
 		{
 			var nowLocale = Locales.GetCurrentLocale();
 			uint notnowLocale = nowLocale == MMain.MyConfs.ReadUInt("Locales", "locale1uId")
                 ? MMain.MyConfs.ReadUInt("Locales", "locale2uId")
                 : MMain.MyConfs.ReadUInt("Locales", "locale1uId");
 			if (!MMain.MyConfs.ReadBool("Functions", "CycleMode")) {
-				Logging.Log("Changing layout using normal mode, PostMessage [WM_INPUTLANGCHANGEREQUEST] with LParam ["+notnowLocale+"].");
+				Logging.Log("Changing layout using normal mode, WinAPI.PostMessage [WinAPI.WM_INPUTLANGCHANGEREQUEST] with LParam ["+notnowLocale+"].");
 				int tries = 0;
 				//Cycles while layout not changed
 				while (Locales.GetCurrentLocale() == nowLocale) {
-					PostMessage(Locales.ActiveWindow(), KInputs.WM_INPUTLANGCHANGEREQUEST, 0, notnowLocale);
+					WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, notnowLocale);
 					Thread.Sleep(30);//Give some time to switch layout
 					tries++;
 					if (tries == 3)
@@ -863,7 +861,10 @@ namespace Mahou
 			} else
 				CycleSwitch();
 		}
-		static void CycleSwitch() //Switches layout by cycling between installed all in system
+		/// <summary>
+		/// Changes current layout by cycling between all installed in system.
+		/// </summary>
+		static void CycleSwitch()
 		{
 			if (MMain.MyConfs.ReadBool("Functions", "EmulateLayoutSwitch")) {
 				if (MMain.MyConfs.ReadInt("Functions", "ELSType") == 0) {
@@ -896,15 +897,22 @@ namespace Mahou
 					Thread.Sleep(100); //Important!
 				}
 			} else {
-				Logging.Log("Changing layout using cycle mode by sending Message [WM_INPUTLANGCHANGEREQUEST] with LParam [HKL_NEXT] using PostMessage to ActiveWindow");
-				//Use PostMessage to switch to next layout
-				PostMessage(Locales.ActiveWindow(), KInputs.WM_INPUTLANGCHANGEREQUEST, 0, KInputs.HKL_NEXT);
+				Logging.Log("Changing layout using cycle mode by sending Message [WinAPI.WM_INPUTLANGCHANGEREQUEST] with LParam [HKL_NEXT] using WinAPI.PostMessage to ActiveWindow");
+				//Use WinAPI.PostMessage to switch to next layout
+				WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, WinAPI.HKL_NEXT);
 			}
 		}
+		/// <summary>
+		/// Converts character(c) from layout(uID1) to another layout(uID2) by using WinAPI.ToUnicodeEx().
+		/// </summary>
+		/// <param name="c">Character to be converted.</param>
+		/// <param name="uID1">Layout id 1(from).</param>
+		/// <param name="uID2">Layout id 2(to)</param>
+		/// <returns></returns>
 		static string InAnother(char c, uint uID1, uint uID2) //Remakes c from uID1  to uID2
 		{
 			var cc = c;
-			var chsc = VkKeyScanEx(cc, (IntPtr)uID1);
+			var chsc = WinAPI.VkKeyScanEx(cc, (IntPtr)uID1);
 			var state = (chsc >> 8) & 0xff;
 			var byt = new byte[256];
 			//it needs just 1 but,anyway let it be 10, i think that's better
@@ -914,22 +922,35 @@ namespace Mahou
 				byt[(int)Keys.ShiftKey] = 0xFF;
 			}
 			//"Convert magic✩" is the string below
-			var ant = ToUnicodeEx((uint)chsc, (uint)chsc, byt, s, s.Capacity, 0, (IntPtr)uID2);
+			var ant = WinAPI.ToUnicodeEx((uint)chsc, (uint)chsc, byt, s, s.Capacity, 0, (IntPtr)uID2);
 			return chsc != -1 ? s.ToString() : "";
 		}
-		public static void KeybdEvent(Keys key, int flags) // Simplified keybd_event with exteded recongize feature
+		/// <summary>
+		/// Simplified WinAPI.keybd_event() with exteded recongize feature.
+		/// </summary>
+		/// <param name="key">Key to be inputted.</param>
+		/// <param name="flags">Flags(state) of key.</param>
+		public static void KeybdEvent(Keys key, int flags) // 
 		{
 			//Do not remove this line, it needed for "Left Control Switch Layout" to work properly
 			Thread.Sleep(15);
-			keybd_event((byte)key, 0, flags | (KInputs.IsExtended(key) ? 1 : 0), 0);
+			WinAPI.keybd_event((byte)key, 0, flags | (KInputs.IsExtended(key) ? 1 : 0), 0);
 		}
-		static void RePressAfter(string mods) // Sets Press Again variables for modifiers
+		/// <summary>
+		/// Sets RePress variables for modifiers.
+		/// </summary>
+		/// <param name="mods">Array of modifiers for which modifiers RePress variables will be set. Example: "Shift Alt"</param>
+		static void RePressAfter(string mods) // 
 		{
 			shiftRP = mods.Contains("Shift") ? true : false;
 			altRP = mods.Contains("Alt") ? true : false;
 			ctrlRP = mods.Contains("Control") ? true : false;
 		}
-		static void SendModsUp(bool[] modstoup) //Sends mods up by modstoup array
+		/// <summary>
+		/// Sends modifiers up by modstoup array. 
+		/// </summary>
+		/// <param name="modstoup">Array of modifiers which will be send up. 0 = ctrl, 1 = shift, 2 = alt.</param>
+		static void SendModsUp(bool[] modstoup) //
 		{
 			//These three below are needed to release all modifiers, so even if you will still hold any of it
 			//it will skip them and do as it must.
@@ -949,6 +970,10 @@ namespace Mahou
 			Logging.Log("All modifiers sended up.");
 			self = false;
 		}
+		/// <summary>
+		/// Checks if key is modifier, and calls SendModsUp() if it is.
+		/// </summary>
+		/// <param name="key">Key to be checked.</param>
 		static void IfKeyIsMod(Keys key)
 		{
 			var mods = new bool[3];
@@ -972,6 +997,9 @@ namespace Mahou
 			}
 			SendModsUp(mods);
 		}
+		/// <summary>
+		/// Re-Initializes snippets.
+		/// </summary>
 		public static void ReInitSnippets()
 		{
 			if (System.IO.File.Exists(MMain.mahou.moreConfigs.snipfile)) {
@@ -999,43 +1027,30 @@ namespace Mahou
 				exps = expli.ToArray();
 			}
 		}
-		public struct YuKey // YuKey is struct of key and it state(upper/lower) AND if it is Alt+[NumPad]
+		/// <summary>
+		/// Sets hook wtih SetWindowsEx() function.
+		/// </summary>
+		/// <param name="proc">LowLevelProc which will be hooked.</param>
+		/// <param name="type">Type of hook(Mouse/Keyboard/Hardware).</param>
+		/// <returns></returns>
+		public static IntPtr SetHook(WinAPI.LowLevelProc proc, int type)
+		{
+			using (Process currProcess = Process.GetCurrentProcess())
+			using (ProcessModule currModule = currProcess.MainModule) {
+				return WinAPI.SetWindowsHookEx(type, proc,
+					WinAPI.GetModuleHandle(currModule.ModuleName), 0);		
+			}
+		}
+		/// <summary>
+		///  Contains key(Keys key), it state(bool upper), if it is Alt+[NumPad](bool altnum) and array of numpads(list of numpad keys).
+		/// </summary>
+		public struct YuKey
 		{
 			public Keys key;
 			public bool upper;
 			public bool altnum;
 			public List<Keys> numpads;
 		}
-		#endregion
-		#region DLL imports
-		[DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-		public static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int extraInfo);
-		
-		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-		public static extern IntPtr SetWindowsHookEx(int idHook,
-			LowLevelProc lpfn, IntPtr hMod, uint dwThreadId);
-
-		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		public static extern bool UnhookWindowsHookEx(IntPtr hhk);
-
-		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-		public static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode,
-			IntPtr wParam, IntPtr lParam);
-
-		[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-		public static extern IntPtr GetModuleHandle(string lpModuleName);
-
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-		public static extern bool PostMessage(IntPtr hhwnd, uint msg, uint wparam, uint lparam);
-
-		[DllImport("user32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
-		private static extern int ToUnicodeEx(uint wVirtKey, uint wScanCode, byte[] lpKeyState,
-			StringBuilder pwszBuff, int cchBuff, uint wFlags, IntPtr dwhkl);
-
-		[DllImport("user32.dll", CharSet = CharSet.Unicode)]
-		public static extern short VkKeyScanEx(char ch, IntPtr dwhkl);
 		#endregion
 	}
 }

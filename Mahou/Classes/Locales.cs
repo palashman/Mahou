@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -8,28 +7,40 @@ namespace Mahou
 {
 	static class Locales
 	{
+		/// <summary>
+		/// Returns current layout id in foreground window.
+		/// </summary>
+		/// <returns>uint</returns>
 		public static uint GetCurrentLocale() //Gets current locale in active window
 		{
-			uint tid = GetWindowThreadProcessId(ActiveWindow(), IntPtr.Zero);
-			IntPtr layout = GetKeyboardLayout(tid);
+			uint tid = WinAPI.GetWindowThreadProcessId(ActiveWindow(), IntPtr.Zero);
+			IntPtr layout = WinAPI.GetKeyboardLayout(tid);
 			//Produces TOO much logging, disabled.
             //Logging.Log("Current locale id is [" + (uint)(layout.ToInt32() & 0xFFFF) + "].");
 			return (uint)layout;
 		}
-		public static IntPtr ActiveWindow() //Gets active windows(focused) or foreground
+		/// <summary>
+		/// Returns focused or foreground window.
+		/// </summary>
+		/// <returns>IntPtr(HWND)</returns>
+		public static IntPtr ActiveWindow()
 		{
 			IntPtr awHandle = IntPtr.Zero;
-			var gui = new GUITHREADINFO();
+			var gui = new WinAPI.GUITHREADINFO();
 			gui.cbSize = Marshal.SizeOf(gui);
-			GetGUIThreadInfo(GetWindowThreadProcessId(GetForegroundWindow(), IntPtr.Zero), ref gui);
+			WinAPI.GetGUIThreadInfo(WinAPI.GetWindowThreadProcessId(WinAPI.GetForegroundWindow(), IntPtr.Zero), ref gui);
 
 			awHandle = gui.hwndFocus;
 			if (awHandle == IntPtr.Zero) {
-				awHandle = GetForegroundWindow();
+				awHandle = WinAPI.GetForegroundWindow();
 			} 
 			return awHandle;
 		}
-		public static Locale[] AllList() //Gets list of all awaible layouts
+		/// <summary>
+		/// Returns all installed in system layouts. 
+		/// </summary>
+		/// <returns></returns>
+		public static Locale[] AllList()
 		{
 			int count = 0;
 			var locs = new List<Locale>();
@@ -42,7 +53,10 @@ namespace Mahou
 			}
 			return locs.ToArray();
 		}
-		public static void IfLessThan2() //Check if you have enough layouts
+		/// <summary>
+		/// Check if you have enough layouts(>2).
+		/// </summary>
+		public static void IfLessThan2()
 		{
 			if (AllList().Length < 2) {
 				MessageBox.Show("This program switches texts by system's layouts(locales/languages), please add at least 2!\nProgram will exit.",
@@ -50,41 +64,13 @@ namespace Mahou
 				Application.Exit();
 			}
 		}
-		#region Structs
+		/// <summary>
+		/// Contains layout name [Lang], and layout id [uId].  
+		/// </summary>
 		public struct Locale
 		{
 			public string Lang { get; set; }
 			public uint uId { get; set; }
 		}
-		public struct RECT
-		{
-			public int iLeft;
-			public int iTop;
-			public int iRight;
-			public int iBottom;
-		}
-		public struct GUITHREADINFO
-		{
-			public int cbSize;
-			public int flags;
-			public IntPtr hwndActive;
-			public IntPtr hwndFocus;
-			public IntPtr hwndCapture;
-			public IntPtr hwndMenuOwner;
-			public IntPtr hwndMoveSize;
-			public IntPtr hwndCaret;
-			public RECT rectCaret;
-		}
-		#endregion
-		#region DLLs
-		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-		static extern IntPtr GetKeyboardLayout(uint WindowsThreadProcessID);
-		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-		public static extern IntPtr GetForegroundWindow();
-		[DllImport("user32.dll")]
-		public static extern uint GetWindowThreadProcessId(IntPtr hwnd, IntPtr proccess);
-		[DllImport("user32.dll", SetLastError = true)]
-		public static extern bool GetGUIThreadInfo(uint hTreadID, ref GUITHREADINFO lpgui);
-		#endregion
 	}
 }

@@ -174,7 +174,11 @@ namespace Mahou
 		}
 		#endregion
 		#region Functions
-		void Close(FormClosingEventArgs e) // Closes window without destruction
+		/// <summary>
+		/// Closes window without destruction.
+		/// </summary>
+		/// <param name="e">Form closing event argumnets.</param>
+		void Close(FormClosingEventArgs e) // 
 		{
 			if (e.CloseReason == CloseReason.UserClosing) {
 				e.Cancel = true;
@@ -182,7 +186,10 @@ namespace Mahou
 			}
 			DisEna();
 		}
-		void DisEna() // Disables or Enables some controls
+		/// <summary>
+		/// Disables or Enables some controls.
+		/// </summary>
+		void DisEna()
 		{
 			MMain.mahou.IfNotExist();
 			lbLCto.Enabled = lbRCto.Enabled = cbLCLocalesList.Enabled = cbRCLocalesList.Enabled = cbUseLRC.Checked;
@@ -193,7 +200,10 @@ namespace Mahou
 			tbSnippets.Enabled = cbUseSnippets.Checked;
 			MMain.mahou.RemoveAddCtrls();
 		}
-		void Save() // Saves configurations
+		/// <summary>
+		/// Saves configurations.
+		/// </summary>
+		void Save()
 		{
 			MMain.mahou.IfNotExist();
 			var getLocale = new Regex(@"^(.+)\((\d+)");
@@ -260,7 +270,10 @@ namespace Mahou
 			MMain.mahou.InitializeHotkeys();
 
 		}
-		void load() // Loads configurations
+		/// <summary>
+		/// Loads configurations.
+		/// </summary>
+		void load()
 		{
 			MMain.mahou.IfNotExist();
 			try {
@@ -302,7 +315,10 @@ namespace Mahou
 			}
 			Logging.Log("More Configs configurations loaded.");
 		}
-		void tmpRestore() // Restores temporaries
+		/// <summary>
+		/// Restores temporary variables.
+		/// </summary>
+		void tmpRestore()
 		{
 			MMain.mahou.IfNotExist();
 			tmpSIKey = MMain.MyConfs.ReadInt("Hotkeys", "HKSymIgnKey");
@@ -310,7 +326,10 @@ namespace Mahou
 			tempConMorWorKey = MMain.MyConfs.ReadInt("Hotkeys", "HKConvertMore");
 			tempConMorWorMods = MMain.MyConfs.Read("Hotkeys", "HKConvertMoreMods");
 		}
-		void RefreshLocales() // Refreshes locales in comboboxes
+		/// <summary>
+		/// Refreshes locales in comboboxes.
+		/// </summary>
+		void RefreshLocales() 
 		{
 			Locales.IfLessThan2();
 			MMain.locales = Locales.AllList();
@@ -323,7 +342,10 @@ namespace Mahou
 				MMain.lcnmid.Add(lc.Lang + "(" + lc.uId + ")");
 			}
 		}
-		void RefreshLanguage() // Refreshes controls text
+		/// <summary>
+		/// Refreshes controls text's language.
+		/// </summary>
+		void RefreshLanguage()
 		{
 			cbUseLRC.Text = MMain.UI[36];
 			lbLCto.Text = MMain.UI[37];

@@ -9,9 +9,14 @@ namespace Mahou
 {
     class Configs
     {
-        //Path where Mahou is now + Mahou.ini
+        /// <summary>
+        /// Mahou.ini file path.
+        /// </summary>
         public static readonly string filePath = Path.Combine(Update.nPath, "Mahou.ini");
-        public Configs()//Initializes settings, if some of elements or settinhs file, not exists it creates them with default value
+        /// <summary>
+        /// Initializes settings, if some of values or settins file, not exists it creates them with default value.
+        /// </summary>
+        public Configs()
         {
             if (!File.Exists(filePath)) //Create an UTF-16 configuration file
             {
@@ -202,42 +207,63 @@ namespace Mahou
             if (!Int32.TryParse(this.Read("DoubleKey", "Delay"), out it))
                 this.Write("DoubleKey", "Delay", "350");
         }
-        public void Write(string section, string key, string value) //Writes "value" to "key" in "section"
+        /// <summary>
+        /// Writes "value" to "key" in "section" in INI configuration.
+        /// </summary>
+        /// <param name="section">Section name in which key will be written.</param>
+        /// <param name="key">Key name to be written.</param>
+        /// <param name="value">Key's value to be written.</param>
+        public void Write(string section, string key, string value)
         {
-            WritePrivateProfileString(section, key, value, filePath);
+            WinAPI.WritePrivateProfileString(section, key, value, filePath);
         }
-        public string Read(string section, string key) //Returns "key" value in "section" as string
+        /// <summary>
+        /// Reads "value" from "key" in "section" from INI configuration.
+        /// </summary>
+        /// <param name="section">Section name in which key will be readen.</param>
+        /// <param name="key">Key's name in which value will be readen.</param>
+        /// <returns>string</returns>
+        public string Read(string section, string key)
         {
             var SB = new StringBuilder(255);
-            int i = GetPrivateProfileString(section, key, "", SB, 255, filePath);
+            int i = WinAPI.GetPrivateProfileString(section, key, "", SB, 255, filePath);
             return SB.ToString();
         }
+        /// <summary>
+        /// Reads "value" as int from "key" in "section" from INI configuration.
+        /// </summary>
+        /// <param name="section">Section name in which key will be readen.</param>
+        /// <param name="key">Key's name in which value will be readen.</param>
+        /// <returns>int</returns>
         public int ReadInt(string section, string key) //Returns "key" value in "section" as int
         {
             var SB = new StringBuilder(255);
-            int i = GetPrivateProfileString(section, key, "", SB, 255, filePath);
+            int i = WinAPI.GetPrivateProfileString(section, key, "", SB, 255, filePath);
             return Int32.Parse(SB.ToString());
         }
+        /// <summary>
+        /// Reads "value" as uint from "key" in "section" from INI configuration .
+        /// </summary>
+        /// <param name="section">Section name in which key will be readen.</param>
+        /// <param name="key">Key's name in which value will be readen.</param>
+        /// <returns>uint</returns>
         public uint ReadUInt(string section, string key) //Returns "key" value in "section" as int
         {
             var SB = new StringBuilder(255);
-            int i = GetPrivateProfileString(section, key, "", SB, 255, filePath);
+            int i = WinAPI.GetPrivateProfileString(section, key, "", SB, 255, filePath);
             return UInt32.Parse(SB.ToString());
         }
+        /// <summary>
+        /// Reads "value" as bool from "key" in "section" from INI configuration.
+        /// </summary>
+        /// <param name="section">Section name in which key will be readen.</param>
+        /// <param name="key">Key's name in which value will be readen.</param>
+        /// <returns>bool</returns>
         public bool ReadBool(string section, string key) //Returns "key" value in "section" as bool
         {
             var SB = new StringBuilder(255);
-            int i = GetPrivateProfileString(section, key, "", SB, 255, filePath);
+            int i = WinAPI.GetPrivateProfileString(section, key, "", SB, 255, filePath);
             return Boolean.Parse(SB.ToString().ToLower());
         }
-        #region Dll imports
-        [DllImport("kernel32", CharSet = CharSet.Unicode)]
-        static extern long WritePrivateProfileString(string section,
-        string key, string val, string filePath);
-
-        [DllImport("kernel32", CharSet = CharSet.Unicode)]
-        static extern int GetPrivateProfileString(string section,
-        string key, string def, StringBuilder retVal, int size, string filePath);
-        #endregion
     }
 }

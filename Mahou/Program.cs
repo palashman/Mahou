@@ -20,8 +20,8 @@ namespace Mahou
 		public static List<List<KMHook.YuKey>> c_words = new List<List<KMHook.YuKey>>();
 		public static IntPtr _hookID = IntPtr.Zero;
 		public static IntPtr _mouse_hookID = IntPtr.Zero;
-		public static KMHook.LowLevelProc _proc = KMHook.HookCallback;
-		public static KMHook.LowLevelProc _mouse_proc = KMHook.MouseHookCallback;
+		public static WinAPI.LowLevelProc _proc = KMHook.HookCallback;
+		public static WinAPI.LowLevelProc _mouse_proc = KMHook.MouseHookCallback;
 		public static Locales.Locale[] locales = Locales.AllList();
 		public static Configs MyConfs = new Configs();
 		public static MahouForm mahou;
@@ -42,7 +42,7 @@ namespace Mahou
 			Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
 			using (var mutex = new Mutex(false, "Global\\" + appGUid)) {
 				if (!mutex.WaitOne(0, false)) {
-					KMHook.PostMessage((IntPtr)0xffff, ao, 0, 0);
+					WinAPI.PostMessage((IntPtr)0xffff, ao, 0, 0);
 					return;
 				}
 				if (locales.Length < 2) {
@@ -93,8 +93,8 @@ namespace Mahou
 			if (!CheckHook()) {
 				return;
 			}
-			_mouse_hookID = KMHook.SetHook(_mouse_proc, (int)KMHook.KMMessages.WH_MOUSE_LL);
-			_hookID = KMHook.SetHook(_proc, (int)KMHook.KMMessages.WH_KEYBOARD_LL);
+			_mouse_hookID = KMHook.SetHook(_mouse_proc, WinAPI.WH_MOUSE_LL);
+			_hookID = KMHook.SetHook(_proc, WinAPI.WH_KEYBOARD_LL);
 			Thread.Sleep(10); //Give some time for it to apply
 			Logging.Log("Global hooks started.");
 		}
@@ -103,8 +103,8 @@ namespace Mahou
 			if (CheckHook()) {
 				return;
 			}
-			KMHook.UnhookWindowsHookEx(_hookID);
-			KMHook.UnhookWindowsHookEx(_mouse_hookID);
+			WinAPI.UnhookWindowsHookEx(_hookID);
+			WinAPI.UnhookWindowsHookEx(_mouse_hookID);
 			_hookID = _mouse_hookID = IntPtr.Zero;
 			Thread.Sleep(10); //Give some time for it to apply
 			Logging.Log("Global hooks stopped.");
@@ -115,7 +115,7 @@ namespace Mahou
 		}
 		public static bool MahouActive()
 		{
-			var ActHandle = Locales.GetForegroundWindow();
+			var ActHandle = WinAPI.GetForegroundWindow();
 			if (ActHandle == IntPtr.Zero) {
 				return false;
 			}

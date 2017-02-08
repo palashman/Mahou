@@ -10,6 +10,10 @@ namespace Mahou
         public NotifyIcon trIcon;
         ContextMenu cMenu;
         MenuItem Exi, ShHi;
+        /// <summary>
+        /// Initializes new tray icon.
+        /// </summary>
+        /// <param name="visible">State of tray icon visibilty on initialize.</param>
         public TrayIcon(bool? visible = true)
         {
             trIcon = new NotifyIcon();
@@ -25,6 +29,9 @@ namespace Mahou
             trIcon.MouseDoubleClick += ShowHideHandler;
             trIcon.BalloonTipClicked += ExitHandler;
         }
+        /// <summary>
+        /// Exit event handler..
+        /// </summary>
         void ExitHandler(object sender, EventArgs e)
         {
             if (Exit != null)
@@ -32,6 +39,9 @@ namespace Mahou
                 Exit(this, null);
             }
         }
+        /// <summary>
+        /// ShowHide event handler..
+        /// </summary>
         void ShowHideHandler(object sender, EventArgs e)
         {
             if (ShowHide != null)
@@ -39,14 +49,26 @@ namespace Mahou
                 ShowHide(this, null);
             }
         }
+        /// <summary>
+        /// Hides tray icon.
+        /// </summary>
         public void Hide()
         {
             trIcon.Visible = false;
         }
+        /// <summary>
+        /// Shows tray icon.
+        /// </summary>
         public void Show()
         {
             trIcon.Visible = true;
         }
+        /// <summary>
+        /// Refreshes tray icon various text.
+        /// </summary>
+        /// <param name="TrText">Tray icon hover text.</param>
+        /// <param name="ShHiText">Show/Hide tray icon menu item's text.</param>
+        /// <param name="ExiText">Exit tray icon menu item's text.</param>
         public void RefreshText(string TrText, string ShHiText, string ExiText)
         {
             trIcon.Text = TrText;

@@ -7,10 +7,6 @@ namespace Mahou
 {
 	public partial class MahouForm : Form
 	{
-		#region DLL (dummy hotkey)
-		[DllImport("user32.dll")]
-		public static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, int vk);
-		#endregion
 		#region Variables
 		// Hotkeys, HKC => HotKey Convert
 		public Hotkey Mainhk, ExitHk, HKCLast, HKCSelection, HKCLine, HKSymIgn, HKConMorWor;
@@ -107,7 +103,7 @@ namespace Mahou
 			icon.ShowHide += showHideToolStripMenuItem_Click;
 			//↓ Dummy(none) hotkey, makes it possible WndProc to handle messages at startup
 			//↓ when form isn't was shown. 
-			RegisterHotKey(Handle, 0xffff ^ 0xffff, 0, 0); //HWND must be this form handle
+			WinAPI.RegisterHotKey(Handle, 0xffff ^ 0xffff, 0, 0); //HWND must be this form handle
 			RefreshIconAll();
 			InitializeHotkeys();
 			//Background startup check for updates
@@ -335,7 +331,13 @@ namespace Mahou
 			}
 			base.WndProc(ref m);
 		}
-		public string Remake(Keys k, bool oninit = false) //Make readable some special keys
+		/// <summary>
+		/// Converts some special keys to readable string.
+		/// </summary>
+		/// <param name="k">Key to be converted.</param>
+		/// <param name="oninit">On initialize.</param>
+		/// <returns>string</returns>
+		public string Remake(Keys k, bool oninit = false)
 		{
 			if (MMain.MyConfs.ReadBool("DoubleKey", "Use") || oninit) {
 				switch (k) {
@@ -375,7 +377,12 @@ namespace Mahou
 					return k.ToString();
 			}
 		}
-		public string OemReadable(string inpt) //Make readable Oem Keys
+		/// <summary>
+		/// Converts Oem Keys string to readable string.
+		/// </summary>
+		/// <param name="inpt">String with oem keys.</param>
+		/// <returns>string</returns>
+		public string OemReadable(string inpt) //
 		{
 			return inpt
                   .Replace("Oemtilde", "`")
@@ -394,7 +401,10 @@ namespace Mahou
                   .Replace("Oemcomma", ",")
                   .Replace("OemQuestion", "/");
 		}
-		void tempRestore() //Restores temporary variables from settings
+		/// <summary>
+		/// Restores temporary variables from settings.
+		/// </summary>
+		void tempRestore()
 		{
 			//This creates(silently) new config file if existed one disappeared o_O
 			IfNotExist();
@@ -410,7 +420,10 @@ namespace Mahou
 				uId = 0
 			};
 		}
-		public void InitializeHotkeys() //Initializes all hotkeys
+		/// <summary>
+		/// Initializes all hotkeys.
+		/// </summary>
+		public void InitializeHotkeys()
 		{
 			Mainhk = new Hotkey((int)Keys.Insert, new bool[]{ true, true, true });
 			ExitHk = new Hotkey((int)Keys.F12, new bool[]{ true, true, true });
@@ -426,6 +439,9 @@ namespace Mahou
 				Hotkey.GetMods(MMain.MyConfs.Read("Hotkeys", "HKConvertMoreMods")));
 			Logging.Log("Hotkeys initialized.");
 		}
+		/// <summary>
+		/// If configs were deleted, create new with default values.
+		/// </summary>
 		public void IfNotExist()
 		{
 			if (!System.IO.File.Exists(Configs.filePath)) {
@@ -433,7 +449,10 @@ namespace Mahou
 				tempRestore();
 			}
 		}
-		void Apply() //Saves current selections to settings
+		/// <summary>
+		/// Saves current settings to INI.
+		/// </summary>
+		void Apply()
 		{
 			IfNotExist();
 			if (tempCLineKey == tempCLKey && tempCLMods == tempCLineMods) {
@@ -507,7 +526,10 @@ namespace Mahou
 			RefreshControlsData();
 			InitializeHotkeys();
 		}
-		void EnableIF() //Enables controls IF...
+		/// <summary>
+		/// Enables controls IF...
+		/// </summary>
+		void EnableIF()
 		{
 			if (!cbCycleMode.Checked) {
 				gbSBL.Enabled = true;
@@ -518,7 +540,10 @@ namespace Mahou
 				cbELSType.Enabled = cbUseEmulate.Checked;
 			}
 		}
-		public void ToggleVisibility() //Toggles visibility of main window
+		/// <summary>
+		/// Toggles visibility of main window.
+		/// </summary>
+		public void ToggleVisibility()
 		{
 			Logging.Log("Mahou Main window visibility changed to ["+!Visible+"].");
 			if (Visible != false)
@@ -538,7 +563,10 @@ namespace Mahou
 				KMHook.win = KMHook.alt = KMHook.shift = KMHook.ctrl = false;
 			}
 		}
-		public void RemoveAddCtrls() //Removes or adds ctrls to "Switch layout by key" items
+		/// <summary>
+		/// Removes or adds ctrls to "Switch layout by key" items.
+		/// </summary>
+		public void RemoveAddCtrls()
 		{
 			if (MMain.MyConfs.ReadBool("ExtCtrls", "UseExtCtrls")) {
 				cbSwitchLayoutKeys.SelectedIndex = 0;
@@ -555,7 +583,10 @@ namespace Mahou
 				Logging.Log("RCtrl & LCtrl restored to switch only combobox, due to disabling specific layout changing by R/L Ctrls in More configs.");
 			}
 		}
-		void RefreshControlsData() //Refresh all controls state from configs
+		/// <summary>
+		/// Refresh all controls state from configs.
+		/// </summary>
+		void RefreshControlsData()
 		{
 			RefreshLocales();
 			RefreshIconAll();
@@ -588,7 +619,10 @@ namespace Mahou
 			RefreshLocales();
 			Logging.Log("Main window configurations loaded.");
 		}
-		void RefreshLocales() //Re-adds existed locales to select boxes
+		/// <summary>
+		/// Re-Adds existed locales to comboboxes.
+		/// </summary>
+		void RefreshLocales()
 		{
 			Locales.IfLessThan2();
 			MMain.locales = Locales.AllList();
@@ -611,7 +645,10 @@ namespace Mahou
 			}
 			Logging.Log("Locales for comboboxes refreshed.");
 		}
-		void RefreshLanguage() //Refreshed in realtime all controls text
+		/// <summary>
+		/// Refreshed in realtime all controls text language.
+		/// </summary>
+		void RefreshLanguage()
 		{
 			GitHubLink.Text = MMain.UI[0];
 			cbAutorun.Text = MMain.UI[1];
@@ -638,7 +675,10 @@ namespace Mahou
 			icon.RefreshText(MMain.UI[44], MMain.UI[42], MMain.UI[43]);
 			Logging.Log("Main Window language refreshed.");
 		}
-		public void RefreshIconAll() //Refreshes icon's icon and visibility
+		/// <summary>
+		/// Refreshes tray icon's icon and visibility.
+		/// </summary>
+		public void RefreshIconAll()
 		{
 			if (MMain.MyConfs.ReadBool("Functions", "SymIgnModeEnabled") && MMain.MyConfs.ReadBool("EnabledHotkeys", "HKSymIgnEnabled"))
 				Icon = icon.trIcon.Icon = Properties.Resources.MahouSymbolIgnoreMode;
@@ -652,7 +692,10 @@ namespace Mahou
 				Refresh();
 			}
 		}
-		void CreateShortcut() //Creates startup shortcut v2.0, now not uses com. So whole project not need the Windows SDK :p
+		/// <summary>
+		/// Creates startup shortcut v2.0.(now not uses com. So whole project not need the Windows SDK :p)
+		/// </summary>
+		void CreateShortcut()
 		{
 			var exelocation = Assembly.GetExecutingAssembly().Location;
 			var shortcutLocation = System.IO.Path.Combine(
@@ -678,7 +721,10 @@ namespace Mahou
 			}
 			Logging.Log("Startup shortcut created.");
 		}
-		void DeleteShortcut() //Deletes startup shortcut
+		/// <summary>
+		/// Deletes startup shortcut.
+		/// </summary>
+		void DeleteShortcut()
 		{
 			if (System.IO.File.Exists(System.IO.Path.Combine(
 				    Environment.GetFolderPath(Environment.SpecialFolder.Startup),
@@ -689,6 +735,9 @@ namespace Mahou
 			}
 			Logging.Log("Startup shortcut removed.");
 		}
+		/// <summary>
+		/// Exits Mahou.
+		/// </summary>
 		public void ExitProgram()
 		{
 			Logging.Log("Exit by user demand.");

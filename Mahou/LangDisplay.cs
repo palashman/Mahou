@@ -70,7 +70,7 @@ namespace Mahou
 		{
 			ShowWindow(Handle, 0);
 		}
-		#region P/Invoke
+		#region WinAPI
 		const int SW_SHOWNOACTIVATE = 4;
 		const int HWND_TOPMOST = -1;
 		const uint SWP_NOACTIVATE = 0x0010;
@@ -83,8 +83,7 @@ namespace Mahou
 			int Y,                // Vertical position
 			int cx,               // Width
 			int cy,               // Height
-			uint uFlags);
-		// Window positioning flags
+			uint uFlags);         // Window positioning flags
 
 		[DllImport("user32.dll")]
 		static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
