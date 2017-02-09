@@ -25,7 +25,7 @@ namespace Mahou
             int it = 0;      //int temp
             uint uit = 0;    //uint temp
             bool bt = false; //bool temp
-            //Hotkeys section
+            #region Hotkeys section
             if (!Int32.TryParse(this.Read("Hotkeys", "HKCLKey"), out it))
                 this.Write("Hotkeys", "HKCLKey", "19"); //Hotkey convert last word
 
@@ -58,8 +58,8 @@ namespace Mahou
 
             if (String.IsNullOrEmpty(this.Read("Hotkeys", "HKConvertMoreMods"))) //Hotkey Convert more words modifiers
                 this.Write("Hotkeys", "HKConvertMoreMods", "Shift + Control");
-
-            //Locales section
+			#endregion
+            #region Locales section
             if (!UInt32.TryParse(this.Read("Locales", "locale1uId"), out uit))
                 this.Write("Locales", "locale1uId", ""); //Locale 1 id
 
@@ -74,8 +74,8 @@ namespace Mahou
 
             if (String.IsNullOrEmpty(this.Read("Locales", "LANGUAGE")))
                 this.Write("Locales", "LANGUAGE", "EN"); //Language of user interface, messages etc.
-
-            //Functions section
+			#endregion
+            #region Functions section
             if (!Boolean.TryParse(this.Read("Functions", "IconVisibility"), out bt))
                 this.Write("Functions", "IconVisibility", "true"); //Tray icon visibility
 
@@ -107,7 +107,7 @@ namespace Mahou
                 this.Write("Functions", "SymIgnModeEnabled", "false");
 
             if (!Boolean.TryParse(this.Read("Functions", "MoreTries"), out bt))
-                this.Write("Functions", "MoreTries", "true");
+                this.Write("Functions", "MoreTries", "false");
 
             if (!Int32.TryParse(this.Read("Functions", "TriesCount"), out it))
                 this.Write("Functions", "TriesCount", "5");
@@ -117,12 +117,6 @@ namespace Mahou
 
             if (!Int32.TryParse(this.Read("Functions", "DLRefreshRate"), out it))
                 this.Write("Functions", "DLRefreshRate", "50");
-            
-            if (String.IsNullOrEmpty(this.Read("Functions", "DLForeColor")))
-                this.Write("Functions", "DLForeColor", "#FFFFFF");
-
-            if (String.IsNullOrEmpty(this.Read("Functions", "DLBackColor")))
-                this.Write("Functions", "DLBackColor", "#000000");
 
             if (!Boolean.TryParse(this.Read("Functions", "ExperimentalCSSwitch"), out bt))
                 this.Write("Functions", "ExperimentalCSSwitch", "false");
@@ -141,8 +135,17 @@ namespace Mahou
             
             if (!Boolean.TryParse(this.Read("Functions", "Logging"), out bt))
                 this.Write("Functions", "Logging", "false");
+            
+            if (!Boolean.TryParse(this.Read("Functions", "DiffLayoutColors"), out bt))
+                this.Write("Functions", "DiffLayoutColors", "false");
+            
+            if (!Boolean.TryParse(this.Read("Functions", "CrtDisplayLang"), out bt))
+                this.Write("Functions", "CrtDisplayLang", "false");
 
-            //EnabledHotkeys section
+            if (!Int32.TryParse(this.Read("Functions", "CrtDLRefreshRate"), out it))
+                this.Write("Functions", "CrtDLRefreshRate", "50");
+			#endregion
+            #region EnabledHotkeys section
             if (!Boolean.TryParse(this.Read("EnabledHotkeys", "HKCLEnabled"), out bt))
                 this.Write("EnabledHotkeys", "HKCLEnabled", "true"); //Hotkey convert last word enabled
 
@@ -154,8 +157,8 @@ namespace Mahou
 
             if (!Boolean.TryParse(this.Read("EnabledHotkeys", "HKSymIgnEnabled"), out bt))
                 this.Write("EnabledHotkeys", "HKSymIgnEnabled", "true"); //Hotkey symbol ignore enabled
-
-            //ExtCtrls section
+			#endregion
+            #region ExtCtrls section
             if (!Boolean.TryParse(this.Read("ExtCtrls", "UseExtCtrls"), out bt))
                 this.Write("ExtCtrls", "UseExtCtrls", "false"); //Use extended CTRLs feature
 
@@ -170,8 +173,8 @@ namespace Mahou
 
             if (String.IsNullOrEmpty(this.Read("ExtCtrls", "RCLocaleName")))
                 this.Write("ExtCtrls", "RCLocaleName", "");
-            
-            //Proxy section
+            #endregion
+            #region Proxy section
             if (String.IsNullOrEmpty(this.Read("Proxy", "ServerPort")))
                 this.Write("Proxy", "ServerPort", "");
             
@@ -180,8 +183,8 @@ namespace Mahou
             
             if (String.IsNullOrEmpty(this.Read("Proxy", "Password")))
                 this.Write("Proxy", "Password", "");
-            
-            //Tooltip UI sections
+            #endregion
+            #region Tooltip UI sections
             if (!Int32.TryParse(this.Read("TTipUI", "Height"), out it))
                 this.Write("TTipUI", "Height", "14"); //Lang Tooltip height
             
@@ -200,12 +203,58 @@ namespace Mahou
             if (!Boolean.TryParse(this.Read("TTipUI", "TransparentBack"), out bt))
                 this.Write("TTipUI", "TransparentBack", "false"); //Transparent Background in tooltip
             
-            //DoubleKey section
+            if (String.IsNullOrEmpty(this.Read("TTipUI", "DLForeColor")))
+                this.Write("TTipUI", "DLForeColor", "#FFFFFF");
+
+            if (String.IsNullOrEmpty(this.Read("TTipUI", "DLBackColor")))
+                this.Write("TTipUI", "DLBackColor", "#000000");
+            
+            if (String.IsNullOrEmpty(this.Read("TTipUI", "CrtDLForeColor")))
+                this.Write("TTipUI", "CrtDLForeColor", "#FFFFFF");
+
+            if (String.IsNullOrEmpty(this.Read("TTipUI", "CrtDLBackColor")))
+                this.Write("TTipUI", "CrtDLBackColor", "#000000");
+            
+            if (String.IsNullOrEmpty(this.Read("TTipUI", "L1DiffFGColor")))
+                this.Write("TTipUI", "L1DiffFGColor", "#8B5FFF"); //Layout 1 different ForeGround color
+
+            if (String.IsNullOrEmpty(this.Read("TTipUI", "L1DiffBGColor")))
+                this.Write("TTipUI", "L1DiffBGColor", "#FFFFFF");
+            
+            if (String.IsNullOrEmpty(this.Read("TTipUI", "L1DiffFont")))
+                this.Write("TTipUI", "L1DiffFont", "Georgia; 8pt"); //Layout 1 different font
+            
+            if (String.IsNullOrEmpty(this.Read("TTipUI", "L2DiffFGColor")))
+                this.Write("TTipUI", "L2DiffFGColor", "#E1E100");
+
+            if (String.IsNullOrEmpty(this.Read("TTipUI", "L2DiffBGColor")))
+                this.Write("TTipUI", "L2DiffBGColor", "#000000"); //Layout 2 different BackGround color
+            
+            if (String.IsNullOrEmpty(this.Read("TTipUI", "L2DiffFont")))
+                this.Write("TTipUI", "L2DiffFont", "Palatino Linotype; 9pt"); //Layout 2 different font
+            
+            if (!Int32.TryParse(this.Read("TTipUI", "CrtHeight"), out it))
+                this.Write("TTipUI", "CrtHeight", "14"); //Caret Lang Tooltip height
+            
+            if (!Int32.TryParse(this.Read("TTipUI", "CrtWidth"), out it))
+                this.Write("TTipUI", "CrtWidth", "24"); //Caret Lang Tooltip width
+            
+            if (String.IsNullOrEmpty(this.Read("TTipUI", "CrtFont")))
+                this.Write("TTipUI", "CrtFont", "Georgia; 8pt"); //Caret Lang Tooltip font & it size
+            
+            if (!Int32.TryParse(this.Read("TTipUI", "Crtxpos"), out it))
+                this.Write("TTipUI", "Crtxpos", "8"); //Caret Lang Tooltip x pos
+            
+            if (!Int32.TryParse(this.Read("TTipUI", "Crtypos"), out it))
+                this.Write("TTipUI", "Crtypos", "0"); //Caret Lang Tooltip y pos
+            #endregion
+            #region DoubleKey section
             if (String.IsNullOrEmpty(this.Read("DoubleKey", "Use")))
                 this.Write("DoubleKey", "Use", "false");
             
             if (!Int32.TryParse(this.Read("DoubleKey", "Delay"), out it))
                 this.Write("DoubleKey", "Delay", "350");
+            #endregion
         }
         /// <summary>
         /// Writes "value" to "key" in "section" in INI configuration.

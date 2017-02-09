@@ -22,9 +22,11 @@ namespace Mahou
 		static Timer old = new Timer();
 		static Timer animate = new Timer();
 		static int progress = 0, _progress = 0;
+		int titlebar = 12;
 		#region Form events
 		public Update()
 		{
+			titlebar = RectangleToScreen(ClientRectangle).Top - Top;
 			animate.Interval = 2500;
 			tmr.Interval = 3000;
 			old.Interval = 7500;
@@ -33,6 +35,7 @@ namespace Mahou
 				isold = !isold;
 			};
 			InitializeComponent();
+			Height = 266+titlebar;
 		}
 		void Update_VisibleChanged(object sender, EventArgs e)
 		{
@@ -216,15 +219,15 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 		}		
 		void BtShowProxyClick(object sender, EventArgs e)
 		{
-            if (Size.Height == 300)
+			if (Height < 376)
             {
                 btShowProxy.BackgroundImage = recolorImg(SystemColors.WindowText, (Bitmap)Mahou.Properties.Resources.up_arrow);
-				Size = new Size(Size.Width, 410);
+                Height = 376+titlebar;
             }
             else
             {
                 btShowProxy.BackgroundImage = recolorImg(SystemColors.WindowText, (Bitmap)Mahou.Properties.Resources.down_arrow);
-				Size = new Size(Size.Width, 300);
+                Height = 266+titlebar;
 			}
 		}
 		#endregion

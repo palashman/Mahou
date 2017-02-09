@@ -31,10 +31,10 @@ namespace Mahou
           /*48-51*/"Proxy","Server:port","Name/Password","Your proxy not working...",
           /*///////////////Back to MoreConfigs UI\\\\\\\\\\\\\\\\\
           /*52-58*/"Font","Size:","Position:", "More", "Back","Double hotkey:","Delay:",
-  	      /*59-60*/"Experimental CS-Switch+","Transparent background in language tooltip",
+  	      /*59-60*/"Experimental CS-Switch+","Transparent background in language tooltips",
   	      /*61-63*/"Use snippets", "On change","Highlight ScrollLock when language 1 is active.",
-          /*64-66*/"Enable check for updates at startup.","Convert multiple words hotkey:", "Enable logging for debugging.",
-          /*67-68*/"Debug Info","Copied!"};
+          /*64-66*/"Startup updates check.","Convert multiple words hotkey:", "Enable logging.",
+          /*67-70*/"Debug Info","Copied!","Display language beside caret:","Use different colors for layouts:"};
         public static string[] ToolTipsEN = new string[] {
           /*///////////////Main TT\\\\\\\\\\\\\\\\\
           /*00*/"While this option enabled, [Convert word] and [Convert line] and [Convert selection with \"CS-Switch\" enabled]\n"+
@@ -72,12 +72,14 @@ namespace Mahou
           /*27*/"Enables double hotkey ability,\nand makes it possible to set modifies to hotkey.",
           /*28*/"Time to wait second hotkey press(ms)", 
           /*29*/"Combines some abilities of Convert selection with enabled CS-Switch and when it disabled.(Enable CS-Switch for it to work)\nIt can:\n1.Conversion from multiple languages at once.\n2.Ignore symbols feature work in it.\n3.Auto get language of text(not all symbols(the ones that exist in both layouts) can be rightly recognized if wrong layout selected from begin)\n4.Ability to convert symbols that exist in both layouts different if change layout before conversion.",
-          /*30*/"Makes background of language tooltip transparent.\nDon't forget to change text color.(because \"White\" is default)\nSome fonts may look bad, try changing to another.(\"Georgia\" or \"Palatino Linotype\" is recommend)",
+          /*30*/"Makes background of language tooltips transparent.\nDon't forget to change text color.(because \"White\" is default)\nSome fonts may look bad, try changing to another.(\"Georgia\" or \"Palatino Linotype\" is recommend)",
           /*31*/"If this enabled, pressing Space will expand small (which starts with \"->\") word, to big (which is between \"====>\" and \"<====\") word/text fragment.",
           /*32*/"Display language tooltip only on layout change.\nTime of displaying is 7x[Refresh rate].",
           /*33*/"Highlight Scroll Lock when active language 1, selected in main window.",
           /*34-35*/"If enabled Mahou will check for updates at startup.", "Allow to convert specific last word count by pressing hotkey and then 0-9(0 = 10) on keyboard.",
-          /*36*/"Designed ONLY to search for errors, BIG PERFORMANCE IMPACT, logs are saved in Mahou's folder, in folder Logs."};
+          /*36*/"Designed ONLY to search for errors, BIG PERFORMANCE IMPACT, logs are saved in Mahou's folder, in folder Logs.",
+          /*37-38*/"Displays language tooltip around caret(carriage).", "If enabled language tooltips will use different color for different layouts(1&2).",
+          /*39-41*/"Speed of checking caret avaibility.", "Foreground/Text color.", "Background color."};
         public static string[] MessagesEN = new string[] {
           /*00-01*/"Mahou successfully updated!", "Update complete!",
           /*0002*/"Press Pause(by Default) to convert last inputted word.\nPress Scroll(by Default) while selected text is focused to convert it.\nPress Shift+Pause(by Default) to convert last inputted line.\n"+
@@ -118,10 +120,10 @@ namespace Mahou
           /*48-51*/"Прокси","Сервер:порт","Имя/Пароль","Ваш прокси не работает...",
           /*///////////////Back to MoreConfigs UI\\\\\\\\\\\\\\\\\
           /*52-58*/"Шрифт","Размер:","Позиция:", "Еще", "Назад", "Двойные гор. клавиши:", "Ожидание:",
-  	      /*59-60*/"Экспериментальный КВ-Ключ+","Прозрачный фон в подсказке языка",
+  	      /*59-60*/"Экспериментальный КВ-Ключ+","Прозрачный фон в подсказках языка",
   	      /*61-63*/"Использовать сниппеты","При смене","Подсвечивать ScrollLock когда язык 1 активен.",
-          /*64-66*/"Проверять обновления при запуске.", "Конверт нескольких последних слов гор. клав.:", "Включить логирование для поиска ошибок.",
-          /*67-68*/"Отладочная инф.", "Скопировано!"};
+          /*64-66*/"Проверять обновления.", "Конверт нескольких последних слов гор. клав.:", "Включить логирование.",
+          /*67-70*/"Отладочная инф.", "Скопировано!","Отображ. язык близ каретки:","Разные цвета для раскладок:"};
         public static string[] ToolTipsRU = new string[] {
           /*///////////////Main TT\\\\\\\\\\\\\\\\\
           /*00*/"Пока включена, [Конверт слова] and [Конверт линии] and [Конверт выделения с \"КВ-Ключ\" включенной]\n"+
@@ -158,12 +160,14 @@ namespace Mahou
           /*27*/"Включает возможность двойных горячих клавиш,\nи возможность назначить только модификатор на горячую клавишу",
           /*28*/"Время ожидания второго нажатия(мс)",
           /*29*/"Совмещает некоторые возможности Конверт выделения с КВ-Ключ включенным и когда выключен.(Для работы включите КВ-Ключ)\nВозможности:\n1.Конвертирование из разных языков за 1 конверт.\n2.Игнор. символов работает здесь.\n3.Авто-распознование языка текста(не все символы(те которые есть в обеих раскладках) могут быть распознаны правильно если выбран неправильный язык изначально)\n4.Возможность конвертирование символов которые есть в обеих раскладках по разному если менять язык перед конвертацией.",
-          /*30*/"Делает фон подсказки языка прозрачным.\nНе забудьте поменять цвет текста.(т.к. \"Белый\" по умолчанию)\nНекоторые шрифты могут выглядеть не очень, попробуйте поменять шрифт.(\"Georgia\" или \"Palatino Linotype\" рекоммендуется)",
+          /*30*/"Делает фон подсказкок языка прозрачным.\nНе забудьте поменять цвет текста.(т.к. \"Белый\" по умолчанию)\nНекоторые шрифты могут выглядеть не очень, попробуйте поменять шрифт.(\"Georgia\" или \"Palatino Linotype\" рекоммендуется)",
           /*31*/"Если включено, нажатие Space превратит маленькое (то что начинается с \"->\") слово, в большое(то что между \"====>\" и \"<====\") слово/кусок текста.",
           /*32*/"Показывает подсказку только при смене языка.\nВремя отображения = 7x[Скор. обнов.].",
           /*33*/"Подсвечивает лампочку Scroll Lock при активации языка 1, выбранного в главном окне.",
           /*34-35*/"Если включено Mahou будет проверять обновления при запуске.", "Позволяет конвертировать выбранное количество последних слов нажатием горячей клавиши, а потом 0-9(0 = 10) на клавиатуре.",
-          /*36*/"Предназначенно ТОЛЬКО для поиска ошибок, СИЛЬНО ВЛИЯЕТ НА СКОРОСТЬ РАБОТЫ, логи сохраняются в папке Mahou, в папке Logs."};
+          /*36*/"Предназначенно ТОЛЬКО для поиска ошибок, СИЛЬНО ВЛИЯЕТ НА СКОРОСТЬ РАБОТЫ, логи сохраняются в папке Mahou, в папке Logs.",
+          /*37-38*/"Отображать подсказку языка рядом с кареткой(текстовым курсором).", "Если включено то подсказки языка будут использовать разный цвет для разных раскладок(1&2).",
+          /*39-41*/"Скорость проверки доступности текстового курсора.", "Цвет текста.", "Цвет фона."};
         public static string[] MessagesRU = new string[] {
           /*00-01*/"Mahou успешно обновлен!", "Обновление завершено!",
           /*0002*/"Нажмите Pause(по умолчанию) для конвертации последнего введенного слова.\nНажмите Scroll(по умолчанию) пока выделенный текс в фокусе чтобы конвертивровать его.\nНажмите Shift+Pause(по умолчанию) для конвертации последней введенной линии.\n"+

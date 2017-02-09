@@ -123,6 +123,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\CaretPos.cs" />
     <Compile Include="Classes\Hotkey.cs" />
     <Compile Include="Classes\ICheckings.cs" />
     <Compile Include="Classes\KMHook.cs" />

@@ -13,7 +13,7 @@ namespace Mahou
         /// <summary>
         /// Initializes new tray icon.
         /// </summary>
-        /// <param name="visible">State of tray icon visibilty on initialize.</param>
+        /// <param name="visible">State of tray icon's visibility on initialize.</param>
         public TrayIcon(bool? visible = true)
         {
             trIcon = new NotifyIcon();
@@ -26,7 +26,7 @@ namespace Mahou
             cMenu.MenuItems.Add(Exi);
             trIcon.Text = "Mahou (魔法)\nA magical layout switcher.";
             trIcon.ContextMenu = cMenu;
-            trIcon.MouseDoubleClick += ShowHideHandler;
+            trIcon.MouseClick += ShowHideHandler;
             trIcon.BalloonTipClicked += ExitHandler;
         }
         /// <summary>

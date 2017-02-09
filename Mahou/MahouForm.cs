@@ -11,18 +11,26 @@ namespace Mahou
 		// Hotkeys, HKC => HotKey Convert
 		public Hotkey Mainhk, ExitHk, HKCLast, HKCSelection, HKCLine, HKSymIgn, HKConMorWor;
 		public bool messagebox;
-		// Temporary modifiers
+		/// <summary>
+		/// Temporary modifier.
+		/// </summary>
 		string tempCLMods = "None", tempCSMods = "None", tempCLineMods = "None";
-		// Temporary keys
+		/// <summary>
+		/// Temporary key.
+		/// </summary>
 		int tempCLKey, tempCSKey, tempCLineKey;
-		// Temporary locales
+		/// <summary>
+		/// Temporary locale.
+		/// </summary>
 		Locales.Locale tempLoc1 = new Locales.Locale { Lang = "dummy", uId = 0 },
 			tempLoc2 = new Locales.Locale { Lang = "dummy", uId = 0	};
 		public TrayIcon icon;
 		public Update update = new Update();
 		public Timer ICheck = new Timer();
 		public Timer ScrlCheck = new Timer();
+		public Timer crtCheck = new Timer();
 		public LangDisplay langDisplay = new LangDisplay();
+		public LangDisplay caretLangDisplay = new LangDisplay();
 		public MoreConfigs moreConfigs = new MoreConfigs();
 		uint latestL = 0;
 		bool onepass = true;
@@ -31,76 +39,10 @@ namespace Mahou
 		public MahouForm()
 		{
 			InitializeComponent();
-			res.Tick += (_, __) => {
-//				Console.WriteLine("hiding");
-				onepass = true;
-				langDisplay.HideWnd();
-				res.Stop();
-			};
-			res.Interval = ICheck.Interval * 4;
-			ICheck.Tick += (_, __) => {
-				if (MMain.MyConfs.ReadBool("Functions", "DTTOnChange")) {
-					if (onepass) {
-						latestL = Locales.GetCurrentLocale();
-						onepass = false;
-					}
-					if (latestL != Locales.GetCurrentLocale()) {
-						langDisplay.ShowInactiveTopmost();
-						res.Start();
-					}
-				} else {
-					if (ICheckings.IsICursor())
-						langDisplay.ShowInactiveTopmost();
-					else
-						langDisplay.HideWnd();
-				}
-				langDisplay.Location = new Point(Cursor.Position.X + MMain.MyConfs.ReadInt("TTipUI", "xpos"),
-					Cursor.Position.Y + MMain.MyConfs.ReadInt("TTipUI", "ypos"));
-				langDisplay.RefreshLang();
-			};
-			ScrlCheck.Tick += (_, __) => {
-				if (MMain.MyConfs.ReadBool("Functions", "ScrollTip") && !KMHook.self) {
-					KMHook.self = true;
-					if (Locales.GetCurrentLocale() == MMain.MyConfs.ReadUInt("Locales", "locale1uId")) {
-						if (!Control.IsKeyLocked(Keys.Scroll)) { // Turn on 
-							KMHook.KeybdEvent(Keys.Scroll, 0);
-							KMHook.KeybdEvent(Keys.Scroll, 2);
-						}
-					} else {
-						if (Control.IsKeyLocked(Keys.Scroll)) { // Turn off
-							KMHook.KeybdEvent(Keys.Scroll, 0);
-							KMHook.KeybdEvent(Keys.Scroll, 2);
-						}
-					}
-					KMHook.self = false;
-				}
-			};
-			ScrlCheck.Interval = 250;
-			if (MMain.MyConfs.ReadBool("Functions", "ScrollTip"))
-				ScrlCheck.Start();
-			KMHook.doublekey.Tick += (_, __) => {
-				if (KMHook.hklOK)
-					KMHook.hklOK = false;
-				if (KMHook.hksOK)
-					KMHook.hksOK = false;
-				if (KMHook.hklineOK)
-					KMHook.hklineOK = false;
-				if (KMHook.hkSIOK)
-					KMHook.hkSIOK = false;
-				KMHook.doublekey.Stop();
-				//Console.WriteLine("Timeout!");
-			};
-			langDisplay.ChangeColors(ColorTranslator.FromHtml(MMain.MyConfs.Read("Functions", "DLForeColor")),
-				ColorTranslator.FromHtml(MMain.MyConfs.Read("Functions", "DLBackColor")));
-			langDisplay.ChangeSizes((Font)moreConfigs.fcv.ConvertFromString(MMain.MyConfs.Read("TTipUI", "Font")), 
-				MMain.MyConfs.ReadInt("TTipUI", "Height"), 
-				MMain.MyConfs.ReadInt("TTipUI", "Width"));
-			ICheck.Interval = MMain.MyConfs.ReadInt("Functions", "DLRefreshRate");
-			if (MMain.MyConfs.ReadBool("Functions", "DisplayLang"))
-				ICheck.Start();
+			InitializeTimers();
 			icon = new TrayIcon(MMain.MyConfs.ReadBool("Functions", "IconVisibility"));
-			icon.Exit += exitToolStripMenuItem_Click;
-			icon.ShowHide += showHideToolStripMenuItem_Click;
+			icon.Exit += (_, __) => ExitProgram();
+			icon.ShowHide += (_, __) => ToggleVisibility();;
 			//↓ Dummy(none) hotkey, makes it possible WndProc to handle messages at startup
 			//↓ when form isn't was shown. 
 			WinAPI.RegisterHotKey(Handle, 0xffff ^ 0xffff, 0, 0); //HWND must be this form handle
@@ -306,20 +248,6 @@ namespace Mahou
 			Logging.Log("UI language changed to ["+MMain.MyConfs.Read("Locales", "LANGUAGE")+"].");
 			MMain.InitLanguage();
 			RefreshLanguage();
-		}
-		#endregion
-		#region Tray Events
-		void mhouIcon_DoubleClick(object sender, EventArgs e)
-		{
-			ToggleVisibility();
-		}
-		void showHideToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			ToggleVisibility();
-		}
-		void exitToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			ExitProgram();
 		}
 		#endregion
 		#region WndProc & Functions
@@ -691,6 +619,117 @@ namespace Mahou
 				icon.Hide();
 				Refresh();
 			}
+		}
+		/// <summary>
+		/// Refreshes language tooltips(caret/mouse) colors, size and font.
+		/// </summary>
+		public void RefreshLangDisplays()
+		{
+			langDisplay.ChangeColors((Font)moreConfigs.fcv.ConvertFromString(MMain.MyConfs.Read("TTipUI", "Font")),
+			                         ColorTranslator.FromHtml(MMain.MyConfs.Read("TTipUI", "DLForeColor")),
+									 ColorTranslator.FromHtml(MMain.MyConfs.Read("TTipUI", "DLBackColor")));
+			langDisplay.ChangeSize(MMain.MyConfs.ReadInt("TTipUI", "Height"), MMain.MyConfs.ReadInt("TTipUI", "Width"));
+			langDisplay.SetVisInvis();
+			caretLangDisplay.ChangeColors((Font)moreConfigs.fcv.ConvertFromString(MMain.MyConfs.Read("TTipUI", "CrtFont")),
+			                              ColorTranslator.FromHtml(MMain.MyConfs.Read("TTipUI", "CrtDLForeColor")),
+										  ColorTranslator.FromHtml(MMain.MyConfs.Read("TTipUI", "CrtDLBackColor")));
+			caretLangDisplay.ChangeSize(MMain.MyConfs.ReadInt("TTipUI", "CrtHeight"), MMain.MyConfs.ReadInt("TTipUI", "CrtWidth"));
+			caretLangDisplay.SetVisInvis();
+		}
+		/// <summary>
+		/// Initializes timers.
+		/// </summary>
+		void InitializeTimers()
+		{
+			crtCheck.Interval = MMain.MyConfs.ReadInt("Functions", "CrtDLRefreshRate");;
+			crtCheck.Tick += (_, __) => {
+				var crtOnly = new Point(0,0);
+				var curCrtPos = CaretPos.GetCaretPointToScreen(out crtOnly);
+				if (crtOnly.X != 0 || crtOnly.Y != 0)
+					caretLangDisplay.ShowInactiveTopmost();
+				else
+					caretLangDisplay.HideWnd();
+				caretLangDisplay.Location = new Point(curCrtPos.X + MMain.MyConfs.ReadInt("TTipUI", "Crtxpos"),
+				                                      curCrtPos.Y + MMain.MyConfs.ReadInt("TTipUI", "Crtypos"));
+				caretLangDisplay.RefreshLang();
+//				System.Diagnostics.Debug.WriteLine(crtOnly.X+" "+crtOnly.Y);
+			};
+			ICheck.Interval = MMain.MyConfs.ReadInt("Functions", "DLRefreshRate");
+			ICheck.Tick += (_, __) => {
+				if (MMain.MyConfs.ReadBool("Functions", "DTTOnChange")) {
+					if (onepass) {
+						latestL = Locales.GetCurrentLocale();
+						onepass = false;
+					}
+					if (latestL != Locales.GetCurrentLocale()) {
+						langDisplay.ShowInactiveTopmost();
+						res.Start();
+					}
+				} else {
+					if (ICheckings.IsICursor())
+						langDisplay.ShowInactiveTopmost();
+					else
+						langDisplay.HideWnd();
+				}
+				langDisplay.Location = new Point(Cursor.Position.X + MMain.MyConfs.ReadInt("TTipUI", "xpos"),
+					Cursor.Position.Y + MMain.MyConfs.ReadInt("TTipUI", "ypos"));
+				langDisplay.RefreshLang();
+			};
+			res.Interval = ICheck.Interval * 4;
+			res.Tick += (_, __) => {
+				onepass = true;
+				langDisplay.HideWnd();
+				res.Stop();
+			};
+			ScrlCheck.Interval = 250;
+			ScrlCheck.Tick += (_, __) => {
+				if (MMain.MyConfs.ReadBool("Functions", "ScrollTip") && !KMHook.self) {
+					KMHook.self = true;
+					if (Locales.GetCurrentLocale() == MMain.MyConfs.ReadUInt("Locales", "locale1uId")) {
+						if (!Control.IsKeyLocked(Keys.Scroll)) { // Turn on 
+							KMHook.KeybdEvent(Keys.Scroll, 0);
+							KMHook.KeybdEvent(Keys.Scroll, 2);
+						}
+					} else {
+						if (Control.IsKeyLocked(Keys.Scroll)) { // Turn off
+							KMHook.KeybdEvent(Keys.Scroll, 0);
+							KMHook.KeybdEvent(Keys.Scroll, 2);
+						}
+					}
+					KMHook.self = false;
+				}
+			};
+			KMHook.doublekey.Tick += (_, __) => {
+				if (KMHook.hklOK)
+					KMHook.hklOK = false;
+				if (KMHook.hksOK)
+					KMHook.hksOK = false;
+				if (KMHook.hklineOK)
+					KMHook.hklineOK = false;
+				if (KMHook.hkSIOK)
+					KMHook.hkSIOK = false;
+				KMHook.doublekey.Stop();
+			};
+			RefreshLangDisplays();
+			ToggleTimers();
+		}
+		/// <summary>
+		/// Toggles timers state.
+		/// </summary>
+		public void ToggleTimers()
+		{
+			if (MMain.MyConfs.ReadBool("Functions", "DisplayLang"))
+				ICheck.Start();
+			else
+				ICheck.Stop();
+			if (MMain.MyConfs.ReadBool("Functions", "ScrollTip"))
+				ScrlCheck.Start();
+			else
+				ScrlCheck.Stop();
+			if (MMain.MyConfs.ReadBool("Functions", "CrtDisplayLang"))
+				crtCheck.Start();
+			else
+				crtCheck.Stop();
 		}
 		/// <summary>
 		/// Creates startup shortcut v2.0.(now not uses com. So whole project not need the Windows SDK :p)

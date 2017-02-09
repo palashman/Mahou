@@ -55,21 +55,18 @@ namespace Mahou
 		{
 			Close();
 		}
-		void BtCol1Click(object sender, EventArgs e)
+		void btShowColorDialog(object sender, EventArgs e)
 		{
+			var btn = sender as Button;
 			if (clrd.ShowDialog() == DialogResult.OK)
-				btCol1.BackColor = clrd.Color;
+				btn.BackColor = clrd.Color;
 		}
-		void BtCol2Click(object sender, EventArgs e)
+		void btShowFontDialog(object sender, EventArgs e)
 		{
-			if (clrd.ShowDialog() == DialogResult.OK)
-				btCol2.BackColor = clrd.Color;
-		}
-		void BtFontClick(object sender, EventArgs e)
-		{
-			fntd.Font = btFont.Font;
+			var btn = sender as Button;
+			fntd.Font = btn.Font;
 			if (fntd.ShowDialog() == DialogResult.OK)
-				btFont.Font = fntd.Font;
+				btn.Font = fntd.Font;
 		}
 		void BtnDbgInfClick(object sender, EventArgs e)
 		{
@@ -193,11 +190,18 @@ namespace Mahou
 		{
 			MMain.mahou.IfNotExist();
 			lbLCto.Enabled = lbRCto.Enabled = cbLCLocalesList.Enabled = cbRCLocalesList.Enabled = cbUseLRC.Checked;
-			nudRefreshRate.Enabled = cbOnChange.Enabled = lblRefRate.Enabled = lbColors.Enabled = btCol1.Enabled = btCol2.Enabled = btFont.Enabled =
-				lbSize.Enabled = lbPosition.Enabled = nudTTWidth.Enabled = nudTTHeight.Enabled = nudXpos.Enabled = nudYpos.Enabled = cbDisplayLang.Checked;
+			nudRefreshRate.Enabled = cbOnChange.Enabled = lblRefRate.Enabled = lbColors.Enabled = 
+				btCol1.Enabled = btCol2.Enabled = btFont.Enabled = lbSize.Enabled = lbPosition.Enabled =
+				nudTTWidth.Enabled = nudTTHeight.Enabled = nudXpos.Enabled = nudYpos.Enabled = cbDisplayLang.Checked;
 			lbDDelay.Enabled = nudDoubleDelay.Enabled = cbDoublePress.Checked;
-			btCol2.Enabled = !cbTrBLT.Checked;
 			tbSnippets.Enabled = cbUseSnippets.Checked;
+			btL1DifClrBGClr.Enabled = btL1DifClrFGClr.Enabled = btL1DifClrFont.Enabled = lblLayout1DifClr.Enabled =
+				lblLayout2DifClr.Enabled = btL2DifClrBGClr.Enabled = btL2DifClrFGClr.Enabled = btL2DifClrFont.Enabled =
+				cbDifLayoClr.Checked;
+			btCrtCol1.Enabled = btCrtCol2.Enabled = btCrtFont.Enabled = nudCrtTTHeight.Enabled = lbCrtH.Enabled =
+				lbCrtW.Enabled = lbCrtX.Enabled = lbCrtY.Enabled = lblCrtRefRate.Enabled = nudCrtTTWidth.Enabled =
+				nudCrtXpos.Enabled = nudCrtYpos.Enabled = nudCrtRefreshRate.Enabled = cbCaretLangDisplay.Checked;
+			btCol2.Enabled = btCrtCol2.Enabled = btL1DifClrBGClr.Enabled = btL2DifClrBGClr.Enabled = !cbTrBLT.Checked;
 			MMain.mahou.RemoveAddCtrls();
 		}
 		/// <summary>
@@ -217,8 +221,6 @@ namespace Mahou
 			MMain.MyConfs.Write("Functions", "TriesCount", nudMTCount.Value.ToString());
 			MMain.MyConfs.Write("Functions", "DLRefreshRate", nudRefreshRate.Value.ToString());
 			MMain.MyConfs.Write("Functions", "DisplayLang", cbDisplayLang.Checked.ToString());
-			MMain.MyConfs.Write("Functions", "DLForeColor", ColorTranslator.ToHtml(btCol1.BackColor));
-			MMain.MyConfs.Write("Functions", "DLBackColor", ColorTranslator.ToHtml(btCol2.BackColor));
 			MMain.MyConfs.Write("Functions", "ExperimentalCSSwitch", cbExCSSwitch.Checked.ToString());
 			MMain.MyConfs.Write("Functions", "Snippets", cbUseSnippets.Checked.ToString());
 			MMain.MyConfs.Write("TTipUI", "Height", nudTTHeight.Value.ToString());
@@ -227,21 +229,33 @@ namespace Mahou
 			MMain.MyConfs.Write("TTipUI", "xpos", nudXpos.Value.ToString());
 			MMain.MyConfs.Write("TTipUI", "ypos", nudYpos.Value.ToString());
 			MMain.MyConfs.Write("TTipUI", "TransparentBack", cbTrBLT.Checked.ToString());
+			MMain.MyConfs.Write("TTipUI", "DLForeColor", ColorTranslator.ToHtml(btCol1.BackColor));
+			MMain.MyConfs.Write("TTipUI", "DLBackColor", ColorTranslator.ToHtml(btCol2.BackColor));
+			MMain.MyConfs.Write("TTipUI", "CrtHeight", nudCrtTTHeight.Value.ToString());
+			MMain.MyConfs.Write("TTipUI", "CrtWidth", nudCrtTTWidth.Value.ToString());
+			MMain.MyConfs.Write("TTipUI", "CrtFont", fcv.ConvertToString(btCrtFont.Font));
+			MMain.MyConfs.Write("TTipUI", "Crtxpos", nudCrtXpos.Value.ToString());
+			MMain.MyConfs.Write("TTipUI", "Crtypos", nudCrtYpos.Value.ToString());
+			MMain.MyConfs.Write("TTipUI", "CrtDLForeColor", ColorTranslator.ToHtml(btCrtCol1.BackColor));
+			MMain.MyConfs.Write("TTipUI", "CrtDLBackColor", ColorTranslator.ToHtml(btCrtCol2.BackColor));
+			MMain.MyConfs.Write("TTipUI", "L1DiffFGColor", ColorTranslator.ToHtml(btL1DifClrFGClr.BackColor));
+			MMain.MyConfs.Write("TTipUI", "L1DiffBGColor", ColorTranslator.ToHtml(btL1DifClrBGClr.BackColor));
+			MMain.MyConfs.Write("TTipUI", "L1DiffFont", fcv.ConvertToString(btL1DifClrFont.Font));
+			MMain.MyConfs.Write("TTipUI", "L2DiffFGColor", ColorTranslator.ToHtml(btL2DifClrFGClr.BackColor));
+			MMain.MyConfs.Write("TTipUI", "L2DiffBGColor", ColorTranslator.ToHtml(btL2DifClrBGClr.BackColor));
+			MMain.MyConfs.Write("TTipUI", "L2DiffFont", fcv.ConvertToString(btL2DifClrFont.Font));
+			MMain.MyConfs.Write("Functions", "CrtDisplayLang", cbCaretLangDisplay.Checked.ToString());
+			MMain.MyConfs.Write("Functions", "DiffLayoutColors", cbDifLayoClr.Checked.ToString());
+			MMain.MyConfs.Write("Functions", "CrtDLRefreshRate", nudCrtRefreshRate.Value.ToString());
 			MMain.MyConfs.Write("Functions", "DTTOnChange", cbOnChange.Checked.ToString());
 			MMain.MyConfs.Write("Functions", "ScrollTip", cbScrollLight.Checked.ToString());
 			MMain.MyConfs.Write("Functions", "UpdatesEnabled", cbCheckForUPD.Checked.ToString());
 			MMain.MyConfs.Write("Functions", "Logging", cbLogging.Checked.ToString());
-			MMain.mahou.langDisplay.ChangeColors(ColorTranslator.FromHtml(MMain.MyConfs.Read("Functions", "DLForeColor")),
-				ColorTranslator.FromHtml(MMain.MyConfs.Read("Functions", "DLBackColor")));
-			MMain.mahou.langDisplay.ChangeSizes((Font)fcv.ConvertFromString(MMain.MyConfs.Read("TTipUI", "Font")), 
-				MMain.MyConfs.ReadInt("TTipUI", "Height"), 
-				MMain.MyConfs.ReadInt("TTipUI", "Width"));
 			MMain.MyConfs.Write("DoubleKey", "Delay", nudDoubleDelay.Value.ToString());
 			MMain.MyConfs.Write("DoubleKey", "Use", cbDoublePress.Checked.ToString());
 			File.WriteAllText(snipfile, tbSnippets.Text);
 			KMHook.ReInitSnippets();
-			MMain.mahou.langDisplay.SetVisInvis();
-			
+			MMain.mahou.RefreshLangDisplays();
 			if (!string.IsNullOrEmpty(tmpSIMods) && tmpSIKey != 0)
 				MMain.MyConfs.Write("Hotkeys", "HKSymIgnMods", tmpSIMods);
 			if (tmpSIKey != 0)
@@ -255,17 +269,11 @@ namespace Mahou
 				MMain.MyConfs.Write("Hotkeys", "HKConvertMore", tempConMorWorKey.ToString());
 			else
 				MessageBox.Show(MMain.Msgs[6], MMain.Msgs[5], MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-			if (MMain.MyConfs.ReadBool("Functions", "DisplayLang"))
-				MMain.mahou.ICheck.Start();
-			else
-				MMain.mahou.ICheck.Stop();
-			if (MMain.MyConfs.ReadBool("Functions", "ScrollTip"))
-				MMain.mahou.ScrlCheck.Start();
-			else
-				MMain.mahou.ScrlCheck.Stop();
-			Logging.Log("More Configs configurations saved.");
 			MMain.mahou.ICheck.Interval = Convert.ToInt32(nudRefreshRate.Value);
 			MMain.mahou.res.Interval = Convert.ToInt32(nudRefreshRate.Value) * 7;
+			MMain.mahou.crtCheck.Interval = Convert.ToInt32(nudCrtRefreshRate.Value);
+			MMain.mahou.ToggleTimers();
+			Logging.Log("More Configs configurations saved.");
 			MMain.mahou.RefreshIconAll();
 			MMain.mahou.InitializeHotkeys();
 
@@ -293,8 +301,6 @@ namespace Mahou
 			nudMTCount.Value = MMain.MyConfs.ReadInt("Functions", "TriesCount");
 			nudRefreshRate.Value = MMain.MyConfs.ReadInt("Functions", "DLRefreshRate");
 			cbDisplayLang.Checked = MMain.MyConfs.ReadBool("Functions", "DisplayLang");
-			btCol1.BackColor = ColorTranslator.FromHtml(MMain.MyConfs.Read("Functions", "DLForeColor"));
-			btCol2.BackColor = ColorTranslator.FromHtml(MMain.MyConfs.Read("Functions", "DLBackColor"));
 			cbExCSSwitch.Checked = MMain.MyConfs.ReadBool("Functions", "ExperimentalCSSwitch");
 			cbUseSnippets.Checked = MMain.MyConfs.ReadBool("Functions", "Snippets");
 			nudTTHeight.Value = MMain.MyConfs.ReadInt("TTipUI", "Height");
@@ -303,6 +309,24 @@ namespace Mahou
 			nudXpos.Value = MMain.MyConfs.ReadInt("TTipUI", "xpos");
 			nudYpos.Value = MMain.MyConfs.ReadInt("TTipUI", "ypos");
 			cbTrBLT.Checked = MMain.MyConfs.ReadBool("TTipUI", "TransparentBack");
+			btCol1.BackColor = ColorTranslator.FromHtml(MMain.MyConfs.Read("TTipUI", "DLForeColor"));
+			btCol2.BackColor = ColorTranslator.FromHtml(MMain.MyConfs.Read("TTipUI", "DLBackColor"));			
+			nudCrtTTHeight.Value = MMain.MyConfs.ReadInt("TTipUI", "CrtHeight");
+			nudCrtTTWidth.Value = MMain.MyConfs.ReadInt("TTipUI", "CrtWidth");
+			btCrtFont.Font = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("TTipUI", "CrtFont"));
+			nudCrtXpos.Value = MMain.MyConfs.ReadInt("TTipUI", "Crtxpos");
+			nudCrtYpos.Value = MMain.MyConfs.ReadInt("TTipUI", "Crtypos");
+			btCrtCol1.BackColor = ColorTranslator.FromHtml(MMain.MyConfs.Read("TTipUI", "CrtDLForeColor"));
+			btCrtCol2.BackColor = ColorTranslator.FromHtml(MMain.MyConfs.Read("TTipUI", "CrtDLBackColor"));
+			btL1DifClrFGClr.BackColor = ColorTranslator.FromHtml(MMain.MyConfs.Read("TTipUI", "L1DiffFGColor"));
+			btL1DifClrBGClr.BackColor = ColorTranslator.FromHtml(MMain.MyConfs.Read("TTipUI", "L1DiffBGColor"));
+			btL1DifClrFont.Font = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("TTipUI", "L1DiffFont"));
+			btL2DifClrFGClr.BackColor = ColorTranslator.FromHtml(MMain.MyConfs.Read("TTipUI", "L2DiffFGColor"));
+			btL2DifClrBGClr.BackColor = ColorTranslator.FromHtml(MMain.MyConfs.Read("TTipUI", "L2DiffBGColor"));
+			btL2DifClrFont.Font = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("TTipUI", "L2DiffFont"));
+			cbCaretLangDisplay.Checked  = MMain.MyConfs.ReadBool("Functions", "CrtDisplayLang");
+			cbDifLayoClr.Checked = MMain.MyConfs.ReadBool("Functions", "DiffLayoutColors");
+			nudCrtRefreshRate.Value = MMain.MyConfs.ReadInt("Functions", "CrtDLRefreshRate");
 			nudDoubleDelay.Value = MMain.MyConfs.ReadInt("DoubleKey", "Delay");
 			cbDoublePress.Checked = MMain.MyConfs.ReadBool("DoubleKey", "Use");
 			cbOnChange.Checked = MMain.MyConfs.ReadBool("Functions", "DTTOnChange");
@@ -355,9 +379,9 @@ namespace Mahou
 			cbMoreTries.Text = MMain.UI[41];
 			btnNO.Text = MMain.UI[19];
 			cbDisplayLang.Text = MMain.UI[45];
-			lblRefRate.Text = MMain.UI[46];
+			lblRefRate.Text = lblCrtRefRate.Text = MMain.UI[46];
 			lbColors.Text = MMain.UI[47];
-			btFont.Text = MMain.UI[52];
+			btFont.Text = btL2DifClrFont.Text = btL1DifClrFont.Text = btCrtFont.Text = MMain.UI[52];
 			lbSize.Text = MMain.UI[53];
 			lbPosition.Text = MMain.UI[54];
 			btnEMore.Text = !pEExtra.Visible ? MMain.UI[55] : MMain.UI[56];
@@ -372,6 +396,10 @@ namespace Mahou
 			lbConMorWor.Text = MMain.UI[65];
 			cbLogging.Text = MMain.UI[66];
 			btnDbgInf.Text = MMain.UI[67];
+			lblLayout1DifClr.Text = MMain.UI[16] + " 1:";
+			lblLayout2DifClr.Text = MMain.UI[16] + " 2:";
+			cbCaretLangDisplay.Text = MMain.UI[69];
+			cbDifLayoClr.Text = MMain.UI[70];
 			Logging.Log("More Configs UI language refreshed.");
 		}
 		#endregion
@@ -481,6 +509,33 @@ namespace Mahou
 		{
 			HelpTT.ToolTipTitle = cbLogging.Text;
 			HelpTT.Show(MMain.TTips[36], cbLogging);	
+		}
+		void CbCaretLangDisplayMouseHover(object sender, EventArgs e)
+		{
+			HelpTT.ToolTipTitle = cbCaretLangDisplay.Text;
+			HelpTT.Show(MMain.TTips[37], cbCaretLangDisplay);
+		}
+		void CbDifLayoClrMouseHover(object sender, EventArgs e)
+		{
+			HelpTT.ToolTipTitle = cbDifLayoClr.Text;
+			HelpTT.Show(MMain.TTips[38], cbDifLayoClr);
+		}
+		void LblCrtRefRateMouseHover(object sender, EventArgs e)
+		{
+			HelpTT.ToolTipTitle = lblCrtRefRate.Text;
+			HelpTT.Show(MMain.TTips[39], lblCrtRefRate);
+		}
+		void btColForegroundMouseHover(object sender, EventArgs e)
+		{
+			var bt = sender as Button;
+			HelpTT.ToolTipTitle = bt.BackColor.ToString().Replace("Color ", "").Replace("A=255, ","");
+			HelpTT.Show(MMain.TTips[40], bt);
+		}
+		void btColBackgroundMouseHover(object sender, EventArgs e)
+		{
+			var bt = sender as Button;
+			HelpTT.ToolTipTitle = bt.BackColor.ToString().Replace("Color ", "").Replace("A=255, ","");
+			HelpTT.Show(MMain.TTips[41], bt);
 		}
 		#endregion
 	}

@@ -11,7 +11,7 @@ using System.Resources;
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("BladeMight")]
 [assembly: AssemblyProduct ("Mahou")]
-[assembly: AssemblyCopyright ("Copyright © BladeMight 2016")]
+[assembly: AssemblyCopyright ("Copyright © BladeMight 2017")]
 [assembly: AssemblyTrademark ("BM")]
 [assembly: AssemblyCulture ("")]
 // Параметр ComVisible со значением FALSE делает типы в сборке невидимыми 
@@ -30,7 +30,7 @@ using System.Resources;
 // Можно задать все значения или принять номер построения и номер редакции по умолчанию, 
 // используя "*", как показано ниже:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion ("1.4.4.9")]
-[assembly: AssemblyFileVersion ("1.4.4.9")]
+[assembly: AssemblyVersion ("1.5.0.0")]
+[assembly: AssemblyFileVersion ("1.5.0.0")]
 [assembly: NeutralResourcesLanguage ("")]
 [assembly: AssemblyDefaultAlias ("BladeMight")]

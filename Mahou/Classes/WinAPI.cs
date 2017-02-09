@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Text;
+using System.Drawing;
+using System.Runtime.InteropServices;
 
 /// <summary>
 /// This class contains only WinAPI functions.
@@ -49,6 +50,14 @@ public static class WinAPI
 	public static uint WM_SYSKEYDOWN = 0x0104;
 	public static uint WM_SYSKEYUP = 0x0105;
 	#endregion
+	#region LangDisplay requirements
+	public const int SW_SHOWNOACTIVATE = 4;
+	public const int HWND_TOPMOST = -1;
+	public const uint SWP_NOACTIVATE = 0x0010;
+	public const int GWL_EXSTYLE = -20;
+	public const int WS_EX_TRANSPARENT = 0x20;
+	public const int WS_EX_LAYERED = 0x80000;
+	#endregion
 	#endregion
 	#region DLL Imports
 	#region Configs requires
@@ -92,11 +101,13 @@ public static class WinAPI
 	[DllImport("user32.dll", CharSet = CharSet.Unicode)]
 	public static extern short VkKeyScanEx(char ch, IntPtr dwhkl);
     #endregion
-	#region Locales requires
+	#region Locales/CaretPos requires
 	[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 	public static extern IntPtr GetKeyboardLayout(uint WindowsThreadProcessID);
+	
 	[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 	public static extern IntPtr GetForegroundWindow();
+	
 	[DllImport("user32.dll")]
 	public static extern uint GetWindowThreadProcessId(IntPtr hwnd, IntPtr proccess);
 	[DllImport("user32.dll", SetLastError = true)]
@@ -130,7 +141,40 @@ public static class WinAPI
 	[DllImport("user32.dll")]
 	public static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, int vk);
 	#endregion
-    #endregion
+	#region CaretPos requires
+	[DllImport("user32.dll", SetLastError=true)]
+	public static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
+	[DllImport("user32.dll", SetLastError=true)]
+	public static extern bool GetCaretPos(out Point lpPoint);
+	[DllImport("user32.dll", SetLastError=true)]
+	public static extern IntPtr GetFocus();
+	[DllImport("kernel32.dll", SetLastError=true)]
+	public static extern uint GetCurrentThreadId();
+	[DllImport("user32.dll", SetLastError=true)]
+	public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+	[DllImport("user32.dll", SetLastError=true)]
+	public static extern bool GetWindowRect(IntPtr hwnd, out RECT lpRect);
+	#endregion
+	#region LangDisplay requires
+	[DllImport("user32.dll", EntryPoint = "SetWindowPos")]
+	public static extern bool SetWindowPos(
+		int hWnd,             // Window handle
+		int hWndInsertAfter,  // Placement-order handle
+		int X,                // Horizontal position
+		int Y,                // Vertical position
+		int cx,               // Width
+		int cy,               // Height
+		uint uFlags);         // Window positioning flags
+
+	[DllImport("user32.dll")]
+	public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+	
+	[DllImport("user32.dll", EntryPoint = "GetWindowLong")]
+	public static extern int GetWindowLong(IntPtr hWnd, int nIndex);		
+	[DllImport("user32.dll", EntryPoint = "SetWindowLong")]
+	public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);		
+	#endregion
+	#endregion
     #region Required structs
     #region ICheckings required structs
 	[StructLayout(LayoutKind.Sequential)]
@@ -196,14 +240,23 @@ public static class WinAPI
     }
 	#pragma warning restore 649
     #endregion
-	#region Locales required structs
+	#region Locales/CaretPos required structs
+	/// <summary>
+	/// Contains x and y positions of upper-left and lower-right corners.
+	/// </summary>
+	[StructLayout(LayoutKind.Sequential)]
 	public struct RECT
 	{
-		public int iLeft;
-		public int iTop;
-		public int iRight;
-		public int iBottom;
+		public int Left;        // x position of upper-left corner
+		public int Top;         // y position of upper-left corner
+		public int Right;       // x position of lower-right corner
+		public int Bottom;      // y position of lower-right corner
+		public RECT(int lt, int tp, int rt, int btm) {
+			Left = lt; Top = tp; 
+			Right = rt; Bottom = btm;
+		}
 	}
+	
 	public struct GUITHREADINFO
 	{
 		public int cbSize;
