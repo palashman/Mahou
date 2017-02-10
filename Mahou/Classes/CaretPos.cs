@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
-
+using System.Text.RegularExpressions;
 namespace Mahou
 {
 	public static class CaretPos
@@ -73,8 +73,14 @@ namespace Mahou
 				Logging.Log("ForeWin's focus: ["+_fwFCS+"].");
 				var _pntCR = new Point(0, 0);
 				var _fwFCS_Re = new WinAPI.RECT(0, 0, 0, 0);
+				var _clsNMb = new System.Text.StringBuilder(256);
+				WinAPI.GetClassName(_fw, _clsNMb, _clsNMb.Capacity);
+				Logging.Log("Focused window classname = ["+_clsNMb+"].");
+				var _clsNMfw = _clsNMb.ToString();
 				if (_fwFCS != IntPtr.Zero && _fwFCS != _fw) {
 					Logging.Log("Getting caret pos from main ForeWin's focused control("+_fwFCS+").");
+					WinAPI.GetClassName(_fwFCS, _clsNMb, _clsNMb.Capacity);
+					Logging.Log("Focused control classname = ["+_clsNMb+"].");
 					if (!AttachThreads(_fwThr_id, _cThr_id, false))
 						return LuckyNone;
 					GetWinRect(_fwFCS, out _fwFCS_Re);
@@ -90,6 +96,25 @@ namespace Mahou
 					GetWinRect(_fw, out _fwFCS_Re);
 					if (!AttachThreads(_fwThr_id, _cThr_id, false) || _pntCR.Equals(new Point(0,0)))
 						return LuckyNone;
+				}
+				// Do not display caret for these classes:
+				var _clsNM = _clsNMb.ToString();
+				if (new Regex("[Ll][Ii][Ss][Tt][Bb][Oo][Xx]").IsMatch(_clsNM) ||
+				    new Regex("[Bb][Uu][Tt][Tt][Oo][Nn]").IsMatch(_clsNM) ||
+			  	    new Regex("[Cc][Hh][Ee][Cc][Kk][Bb][Oo][Xx]").IsMatch(_clsNM) ||
+				    new Regex("[Cc][Oo][Mm][Bb][Oo][Bb][Oo][Xx]").IsMatch(_clsNM) ||
+				    new Regex("[Ll][Ii][Ss][Tt][Vv][Ii][Ee][Ww]").IsMatch(_clsNM) ||
+				    new Regex("[Pp][Aa][Gg][Ee][Cc][Oo][Nn][Tt][rR][oO][lL]").IsMatch(_clsNM) ||
+				    new Regex("[Ww][Ii][Nn][Dd][Oo][Ww]").IsMatch(_clsNM) ||
+				    new Regex("[Ss][Yy][Ss][Ll][Ii][Nn][Kk]").IsMatch(_clsNM) ||
+				    new Regex("[Tt][Rr][Ee][Ee]").IsMatch(_clsNM) ||
+				    new Regex("[Hh][Ee][Ll][Pp][Ff][Oo][Rr][Mm]").IsMatch(_clsNM) ||
+				    _clsNM == "msctls_trackbar32"|| _clsNM.Contains("wxWindow") ||
+				    _clsNM == "SysTabControl32" || _clsNM == "DirectUIHWND" ||
+				    _clsNM == "Static" ||  _clsNM == "NetUIHWND" || _clsNMfw == "MSPaintApp")
+					return LuckyNone;
+				if (_clsNM.Contains("SharpDevelop.exe")) {
+					_pntCR.Y += 28; _pntCR.X += 3;
 				}
 				Logging.Log("Get caret position finished succesfully.", 0);
 				caretOnlyPos = _pntCR;
