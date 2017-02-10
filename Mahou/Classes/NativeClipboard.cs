@@ -45,7 +45,7 @@ namespace Mahou
             return data;
         }
         /// <summary>
-        /// Gets all clipboard data's, but only text-based datas supported... for now...
+        /// Gets all clipboard data's, but only text-based data supported... for now...
         /// </summary>
         /// <returns></returns>
         public static ClipboardData GetClipboardDatas()
@@ -63,7 +63,7 @@ namespace Mahou
                     continue;
                 UIntPtr lenght = WinAPI.GlobalSize(pos);
                 IntPtr gLock = WinAPI.GlobalLock(pos);
-                //Console.WriteLine(fmt + " is awaible in clipboard!!");
+                //Console.WriteLine(fmt + " is available in clipboard!!");
                 byte[] data;
                 if ((uint)lenght > 0)
                 {
@@ -85,7 +85,7 @@ namespace Mahou
             return cd;
         }
         /// <summary>
-        /// Stores all data's to clipboard, but only text-based datas supported... for now...
+        /// Stores all data's to clipboard, but only text-based data supported... for now...
         /// </summary>
         /// <param name="datas">Data's to be stored into clipboard.</param>
         public static void RestoreData(ClipboardData datas)

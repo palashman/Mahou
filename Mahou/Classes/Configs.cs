@@ -14,7 +14,7 @@ namespace Mahou
         /// </summary>
         public static readonly string filePath = Path.Combine(Update.nPath, "Mahou.ini");
         /// <summary>
-        /// Initializes settings, if some of values or settins file, not exists it creates them with default value.
+        /// Initializes settings, if some of values or settings file, not exists it creates them with default value.
         /// </summary>
         public Configs()
         {
@@ -269,8 +269,8 @@ namespace Mahou
         /// <summary>
         /// Reads "value" from "key" in "section" from INI configuration.
         /// </summary>
-        /// <param name="section">Section name in which key will be readen.</param>
-        /// <param name="key">Key's name in which value will be readen.</param>
+        /// <param name="section">Section name in which key will be read.</param>
+        /// <param name="key">Key's name in which value will be read.</param>
         /// <returns>string</returns>
         public string Read(string section, string key)
         {
@@ -281,8 +281,8 @@ namespace Mahou
         /// <summary>
         /// Reads "value" as int from "key" in "section" from INI configuration.
         /// </summary>
-        /// <param name="section">Section name in which key will be readen.</param>
-        /// <param name="key">Key's name in which value will be readen.</param>
+        /// <param name="section">Section name in which key will be read.</param>
+        /// <param name="key">Key's name in which value will be read.</param>
         /// <returns>int</returns>
         public int ReadInt(string section, string key) //Returns "key" value in "section" as int
         {
@@ -293,8 +293,8 @@ namespace Mahou
         /// <summary>
         /// Reads "value" as uint from "key" in "section" from INI configuration .
         /// </summary>
-        /// <param name="section">Section name in which key will be readen.</param>
-        /// <param name="key">Key's name in which value will be readen.</param>
+        /// <param name="section">Section name in which key will be read.</param>
+        /// <param name="key">Key's name in which value will be read.</param>
         /// <returns>uint</returns>
         public uint ReadUInt(string section, string key) //Returns "key" value in "section" as int
         {
@@ -305,8 +305,8 @@ namespace Mahou
         /// <summary>
         /// Reads "value" as bool from "key" in "section" from INI configuration.
         /// </summary>
-        /// <param name="section">Section name in which key will be readen.</param>
-        /// <param name="key">Key's name in which value will be readen.</param>
+        /// <param name="section">Section name in which key will be read.</param>
+        /// <param name="key">Key's name in which value will be read.</param>
         /// <returns>bool</returns>
         public bool ReadBool(string section, string key) //Returns "key" value in "section" as bool
         {

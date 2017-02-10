@@ -81,7 +81,7 @@ namespace Mahou
 					if (!String.IsNullOrEmpty(tbProxy.Text)) {
 						wc.Proxy = MakeProxy();
 					}
-					Logging.Log("Downloding Mahou update: "+UpdInfo[3]);
+					Logging.Log("Downloading Mahou update: "+UpdInfo[3]);
 					wc.DownloadFileAsync(new System.Uri(UpdInfo[3]), Path.Combine(new string[] {
 						nPath,
 						fn
@@ -319,7 +319,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			Task.Factory.StartNew(GetUpdateInfo).Wait();
 			try {
 				if (flVersion("v" + Application.ProductVersion) < flVersion(UpdInfo[2])) {
-					Logging.Log("Newest version avaible, showing dialog...");
+					Logging.Log("New version available, showing dialog...");
 					if (MessageBox.Show(new Form() { TopMost = true },
 						     UpdInfo[0] + '\n' + UpdInfo[1], "Mahou - " + MMain.UI[33],
 						     MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.OK) {

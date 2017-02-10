@@ -37,7 +37,7 @@ namespace Mahou
 			//Catch any error during program runtime
 			AppDomain.CurrentDomain.UnhandledException += (obj, arg) => {
 				var e = (Exception)arg.ExceptionObject;
-				Logging.Log("Unexpected error occured, Mahou exitted, error details:\r\n" + e.Message+"\r\n" + e.StackTrace, 1);
+				Logging.Log("Unexpected error occurred, Mahou exited, error details:\r\n" + e.Message+"\r\n" + e.StackTrace, 1);
 			};
 			Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
 			using (var mutex = new Mutex(false, "Global\\" + appGUid)) {

@@ -115,7 +115,7 @@ namespace Mahou
 				   thishk.Equals(MMain.mahou.HKCLine) ||
 				   thishk.Equals(MMain.mahou.HKCSelection))) {
 					self = true;
-					if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if alraedy on
+					if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
 						KeybdEvent(Keys.CapsLock, 0);
 						KeybdEvent(Keys.CapsLock, 2);
 					}
@@ -223,7 +223,7 @@ namespace Mahou
 						}
 					}
 				}
-				//these are global, so they don't need to be stoped when window is visible.
+				//these are global, so they don't need to be stopped when window is visible.
 				if (thishk.Equals(MMain.mahou.HKConMorWor) && wParam == (IntPtr)WinAPI.WM_KEYUP)
 					waitfornum = true;
 				if (thishk.Equals(MMain.mahou.Mainhk) && wParam == (IntPtr)WinAPI.WM_KEYUP)
@@ -234,7 +234,7 @@ namespace Mahou
 				#region Snippets
 				if (MMain.MyConfs.ReadBool("Functions", "Snippets")) {
 					if (((Key >= Keys.D0 && Key <= Keys.Z) || // This is 0-9 & A-Z
-					   Key >= Keys.Oem1 && Key <= Keys.OemBackslash // All other printables
+					   Key >= Keys.Oem1 && Key <= Keys.OemBackslash // All other printable
 					   ) && !self && !win && !alt && !ctrl && wParam == (IntPtr)WinAPI.WM_KEYUP) {
 						var stb = new StringBuilder(10);
 						var byt = new byte[256];
@@ -312,7 +312,7 @@ namespace Mahou
 				if (!self && !shift && MMain.MyConfs.Read("HotKeys", "OnlyKeyLayoutSwicth") == "CapsLock" &&
 				   Key == Keys.CapsLock && wParam == (IntPtr)WinAPI.WM_KEYDOWN) {
 					self = true;
-					if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if alraedy on
+					if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
 						KeybdEvent(Keys.CapsLock, 0);
 						KeybdEvent(Keys.CapsLock, 2);
 					}
@@ -325,7 +325,7 @@ namespace Mahou
 				if (!self && MMain.MyConfs.ReadBool("Functions", "ScrollTip") &&
 				   Key == Keys.Scroll && wParam == (IntPtr)WinAPI.WM_KEYDOWN) {
 					self = true;
-					if (Control.IsKeyLocked(Keys.Scroll)) { // Turn off if alraedy on
+					if (Control.IsKeyLocked(Keys.Scroll)) { // Turn off if already on
 						KeybdEvent(Keys.Scroll, 0);
 						KeybdEvent(Keys.Scroll, 2);
 					}
@@ -428,7 +428,7 @@ namespace Mahou
 						}
 					}
 					if (((Key >= Keys.D0 && Key <= Keys.Z) || // This is 0-9 & A-Z
-					   Key >= Keys.Oem1 && Key <= Keys.OemBackslash // All other printables
+					   Key >= Keys.Oem1 && Key <= Keys.OemBackslash // All other printable
 					   ) && !win && !alt && !ctrl) {
 						if (afterEOS) { //Clears word after Eat ONE space
 							MMain.c_word.Clear();
@@ -535,7 +535,7 @@ namespace Mahou
 			};
 			if (doBackup)
 				datas = NativeClipboard.GetClipboardDatas();
-			//This prevents from converting text that alredy exist in Clipboard
+			//This prevents from converting text that already exist in Clipboard
 			//by pressing "Convert Selection hotkey" without selected text.
 			NativeClipboard.Clear();
 			Logging.Log("Getting selected text.");
@@ -596,7 +596,7 @@ namespace Mahou
 							WinAPI.ToUnicodeEx((uint)scan2, (uint)scan2, bytes2, sb, sb.Capacity, 0, (IntPtr)nowLocale);
 							Logging.Log("Char 2 is [" + sb + "] in locale +[" + nowLocale + "].");
 							if (ClipStr[index].ToString() == sb.ToString()) {
-								Logging.Log("Char 1, 2 and origial are equivalent.");
+								Logging.Log("Char 1, 2 and original are equivalent.");
 								WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, wasLocale);
 								wasLocale = nowLocale;
 								scan = scan2;
@@ -924,7 +924,7 @@ namespace Mahou
 			return chsc != -1 ? s.ToString() : "";
 		}
 		/// <summary>
-		/// Simplified WinAPI.keybd_event() with exteded recongize feature.
+		/// Simplified WinAPI.keybd_event() with extended recognize feature.
 		/// </summary>
 		/// <param name="key">Key to be inputted.</param>
 		/// <param name="flags">Flags(state) of key.</param>
@@ -1004,7 +1004,7 @@ namespace Mahou
 				var snippets = System.IO.File.ReadAllText(MMain.mahou.moreConfigs.snipfile);
 				var snili = new List<string>();
 				var expli = new List<string>();
-				// One Regex is faster than two, because it makes it to process again snippets file. Benchmarkings says that it in ~2 times faster.
+				// One Regex is faster than two, because it makes it to process again snippets file. Benchmarks says that it in ~2 times faster.
 				var RX = new Regex("(?<=====>)(.*?)(?=<====)|->(.*?)(\r|\n|\r\n)", RegexOptions.Singleline);
 				Stopwatch watch = null;
 				if (MMain.MyConfs.ReadBool("Functions", "Logging")) {
