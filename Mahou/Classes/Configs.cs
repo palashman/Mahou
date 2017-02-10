@@ -131,7 +131,7 @@ namespace Mahou
                 this.Write("Functions", "ScrollTip", "false");
             
             if (!Boolean.TryParse(this.Read("Functions", "UpdatesEnabled"), out bt))
-                this.Write("Functions", "UpdatesEnabled", "true");
+                this.Write("Functions", "UpdatesEnabled", "false");
             
             if (!Boolean.TryParse(this.Read("Functions", "Logging"), out bt))
                 this.Write("Functions", "Logging", "false");

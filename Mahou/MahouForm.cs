@@ -29,6 +29,7 @@ namespace Mahou
 		public Timer ICheck = new Timer();
 		public Timer ScrlCheck = new Timer();
 		public Timer crtCheck = new Timer();
+		public Timer capsCheck = new Timer();
 		public LangDisplay langDisplay = new LangDisplay();
 		public LangDisplay caretLangDisplay = new LangDisplay();
 		public MoreConfigs moreConfigs = new MoreConfigs();
@@ -700,6 +701,15 @@ namespace Mahou
 					KMHook.self = false;
 				}
 			};
+			capsCheck.Tick += (_, __) => {
+				KMHook.self = true;
+				if (Control.IsKeyLocked(Keys.CapsLock)) {
+					KMHook.KeybdEvent(Keys.CapsLock, 0);
+					KMHook.KeybdEvent(Keys.CapsLock, 2);
+				}
+				KMHook.self = false;
+			};
+			capsCheck.Interval = 5;
 			KMHook.doublekey.Tick += (_, __) => {
 				if (KMHook.hklOK)
 					KMHook.hklOK = false;
@@ -731,6 +741,10 @@ namespace Mahou
 				crtCheck.Start();
 			else
 				crtCheck.Stop();
+			if (MMain.MyConfs.Read("HotKeys", "OnlyKeyLayoutSwicth") == "CapsLock")
+				capsCheck.Start();
+			else
+				capsCheck.Stop();
 		}
 		/// <summary>
 		/// Creates startup shortcut v2.0.(now not uses com. So whole project not need the Windows SDK :p)

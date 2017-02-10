@@ -306,16 +306,16 @@ namespace Mahou
 				   Key == Keys.CapsLock && wParam == (IntPtr)WinAPI.WM_KEYUP) {
 					self = true;
 					ChangeLayout();
+					if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
+						KeybdEvent(Keys.CapsLock, 0);
+						KeybdEvent(Keys.CapsLock, 2);
+					}
 					Logging.Log("Changing layout by CapsLock key.");
 					self = false;
 				}
 				if (!self && !shift && MMain.MyConfs.Read("HotKeys", "OnlyKeyLayoutSwicth") == "CapsLock" &&
 				   Key == Keys.CapsLock && wParam == (IntPtr)WinAPI.WM_KEYDOWN) {
 					self = true;
-					if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
-						KeybdEvent(Keys.CapsLock, 0);
-						KeybdEvent(Keys.CapsLock, 2);
-					}
 					//Code below removes CapsLock original action, but if hold will not work and will stuck, press again to off.
 					KeybdEvent(Keys.CapsLock, 0);
 					KeybdEvent(Keys.CapsLock, 2);
@@ -334,7 +334,7 @@ namespace Mahou
 					self = false;
 				}
 				if (!self && MMain.MyConfs.Read("HotKeys", "OnlyKeyLayoutSwicth") == "Left Control" &&
-				   Key == Keys.LControlKey && wParam == (IntPtr)WinAPI.WM_KEYUP &&
+				   Key == Keys.LControlKey && wParam == (IntPtr)WinAPI.WM_KEYUP && !keyAfterCTRL &&
 				   !MMain.MyConfs.ReadBool("ExtCtrls", "UseExtCtrls")) {
 					self = true;
 					if (MMain.MyConfs.ReadBool("Functions", "EmulateLayoutSwitch")) {
@@ -347,7 +347,7 @@ namespace Mahou
 					self = false;
 				}
 				if (!self && MMain.MyConfs.Read("HotKeys", "OnlyKeyLayoutSwicth") == "Right Control" &&
-				   Key == Keys.RControlKey && wParam == (IntPtr)WinAPI.WM_KEYUP &&
+				   Key == Keys.RControlKey && wParam == (IntPtr)WinAPI.WM_KEYUP && !keyAfterCTRL &&
 				   !MMain.MyConfs.ReadBool("ExtCtrls", "UseExtCtrls")) {
 					self = true;
 					if (MMain.MyConfs.ReadBool("Functions", "EmulateLayoutSwitch")) {
