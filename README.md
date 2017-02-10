@@ -1,8 +1,11 @@
 [![AppVeyor build](https://ci.appveyor.com/api/projects/status/aw3qf8bevpqdidjh?svg=true)](https://ci.appveyor.com/project/BladeMight/mahou)
+
 # Русский :ru: [English](#english-us)
 
 ![](http://i.piccy.info/i9/29fa819a849fa70f38ddfcf9c29d1c99/1480349941/6018/1094353/Mahou.jpg)
+
 # Mahou (魔法) - Волшебный переключатель раскладок.
+
 ### Как работает
 Mahou работает совершенно по-другому: в отличии от других переключателей раскладок, он переключает *не по следующей раскладке*, а по **указанным в настройках** раскладкам.<br/>
 Даже выделенный текст переключается между **выбранными** раскладками, но если Вам нравилось цикличное переключение, то, начиная с версии `v1.0.2.9`, есть **Циклич. режим** (Cycle Mode).
@@ -114,7 +117,9 @@ Mahou находится под GPL v2+.
 # English :us:
 
 ![](http://i.piccy.info/i9/29fa819a849fa70f38ddfcf9c29d1c99/1480349941/6018/1094353/Mahou.jpg)
+
 # Mahou (魔法) - The magic Layout Switcher
+
 ### How it works
 Mahou works completely different from other Layout Swtichers, it switches *not by next layout*, but by **specified in settings** layouts. <br/>
 Even selected text switches just between **selected** layouts, though if you liked cycling through, starting from `v1.0.2.9` there is **Cycle Mode**.
