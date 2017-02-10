@@ -56,6 +56,7 @@ public static class WinAPI
 	public const uint SWP_NOACTIVATE = 0x0010;
 	public const int WS_EX_TRANSPARENT = 0x20;
 	public const int WS_EX_LAYERED = 0x80000;
+	public const int WS_EX_TOOLWINDOW = 0x80;
 	#endregion
 	#endregion
 	#region DLL Imports
