@@ -88,7 +88,7 @@ namespace Mahou
 					Logging.Log("Getting caret pos from main ForeWin.");
 					GetCaretPosition(out _pntCR);
 					GetWinRect(_fw, out _fwFCS_Re);
-					if (!AttachThreads(_fwThr_id, _cThr_id, false))
+					if (!AttachThreads(_fwThr_id, _cThr_id, false) || _pntCR.Equals(new Point(0,0)))
 						return LuckyNone;
 				}
 				Logging.Log("Get caret position finished succesfully.", 0);

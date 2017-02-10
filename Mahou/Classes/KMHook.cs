@@ -461,14 +461,16 @@ namespace Mahou
 				   (Key == Keys.RMenu || Key == Keys.LMenu || Key == Keys.Menu) &&
 				   wParam == (IntPtr)WinAPI.WM_KEYUP) {
 					Logging.Log("Capture of numpads ended, captured [" + tempNumpads.Count + "] numpads.");
-					MMain.c_word.Add(new YuKey() {
-						altnum = true,
-						numpads = new List<Keys>(tempNumpads)//new List => VERY important here!!!
-					});                                      //It prevents pointer to tempNumpads, which is cleared.
-					MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() {
-						altnum = true,
-						numpads = new List<Keys>(tempNumpads)
-					});
+					if (tempNumpads.Count > 0) { // Prevents zero numpads(alt only) keys
+						MMain.c_word.Add(new YuKey() {
+							altnum = true,
+							numpads = new List<Keys>(tempNumpads)//new List => VERY important here!!!
+						});                                      //It prevents pointer to tempNumpads, which is cleared.
+						MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() {
+							altnum = true,
+							numpads = new List<Keys>(tempNumpads)
+						});
+					}
 					tempNumpads.Clear();
 					incapt = false;
 				}
