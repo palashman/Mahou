@@ -56,7 +56,7 @@ namespace Mahou
                 format = new List<uint>()
             };
             WinAPI.OpenClipboard(IntPtr.Zero);
-            foreach (var fmt in new uint[1,2,4,5,6,7,8,9,10,11,12,13,14])
+            foreach (var fmt in new uint[]{1,2,4,5,6,7,8,9,10,11,12,13,14})
             {
                 IntPtr pos = WinAPI.GetClipboardData(fmt);
                 if (pos == IntPtr.Zero)

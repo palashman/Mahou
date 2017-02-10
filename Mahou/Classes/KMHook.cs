@@ -531,12 +531,8 @@ namespace Mahou
 				data = new List<byte[]>(),
 				format = new List<uint>()
 			};
-			if (doBackup) {
-				var t = new System.Threading.Tasks.Task(() => {
-					datas = NativeClipboard.GetClipboardDatas();
-				});
-				t.RunSynchronously();
-			}
+			if (doBackup)
+				datas = NativeClipboard.GetClipboardDatas();
 			//This prevents from converting text that alredy exist in Clipboard
 			//by pressing "Convert Selection hotkey" without selected text.
 			NativeClipboard.Clear();
