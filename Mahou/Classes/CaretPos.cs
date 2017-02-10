@@ -109,9 +109,11 @@ namespace Mahou
 				    new Regex("[Ss][Yy][Ss][Ll][Ii][Nn][Kk]").IsMatch(_clsNM) ||
 				    new Regex("[Tt][Rr][Ee][Ee]").IsMatch(_clsNM) ||
 				    new Regex("[Hh][Ee][Ll][Pp][Ff][Oo][Rr][Mm]").IsMatch(_clsNM) ||
+				    new Regex("[Bb][Tt][Nn]").IsMatch(_clsNM) || _clsNM.Contains("Afx:") || 
 				    _clsNM == "msctls_trackbar32"|| _clsNM.Contains("wxWindow") ||
 				    _clsNM == "SysTabControl32" || _clsNM == "DirectUIHWND" ||
-				    _clsNM == "Static" ||  _clsNM == "NetUIHWND" || _clsNMfw == "MSPaintApp")
+				    _clsNM == "Static" ||  _clsNM == "NetUIHWND" || _clsNMfw == "MSPaintApp" ||
+					_clsNM == "PotPlayer")
 					return LuckyNone;
 				if (_clsNM.Contains("SharpDevelop.exe")) {
 					_pntCR.Y += 28; _pntCR.X += 3;
