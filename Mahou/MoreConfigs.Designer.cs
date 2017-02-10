@@ -634,6 +634,11 @@
         	// nudCrtYpos
         	// 
         	this.nudCrtYpos.Location = new System.Drawing.Point(240, 161);
+        	this.nudCrtYpos.Minimum = new decimal(new int[] {
+			100,
+			0,
+			0,
+			-2147483648});
         	this.nudCrtYpos.Name = "nudCrtYpos";
         	this.nudCrtYpos.Size = new System.Drawing.Size(35, 20);
         	this.nudCrtYpos.TabIndex = 37;
@@ -650,6 +655,11 @@
         	// nudCrtXpos
         	// 
         	this.nudCrtXpos.Location = new System.Drawing.Point(191, 161);
+        	this.nudCrtXpos.Minimum = new decimal(new int[] {
+			100,
+			0,
+			0,
+			-2147483648});
         	this.nudCrtXpos.Name = "nudCrtXpos";
         	this.nudCrtXpos.Size = new System.Drawing.Size(35, 20);
         	this.nudCrtXpos.TabIndex = 38;
