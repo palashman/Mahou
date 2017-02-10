@@ -105,7 +105,7 @@ namespace Mahou
 		protected override CreateParams CreateParams {
 			get {
 				var Params = base.CreateParams;
-				// Hides form from everywhere(taskbar/task switcher/etc.).
+				// Hides form from everywhere (taskbar/task switcher/etc.).
 				Params.ExStyle |= WinAPI.WS_EX_TOOLWINDOW;
 				// Add click through window ability.
 				Params.ExStyle |= WinAPI.WS_EX_LAYERED | WinAPI.WS_EX_TRANSPARENT;

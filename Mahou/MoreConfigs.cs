@@ -174,7 +174,7 @@ namespace Mahou
 		/// <summary>
 		/// Closes window without destruction.
 		/// </summary>
-		/// <param name="e">Form closing event argumnets.</param>
+		/// <param name="e">Form closing event arguments.</param>
 		void Close(FormClosingEventArgs e) // 
 		{
 			if (e.CloseReason == CloseReason.UserClosing) {

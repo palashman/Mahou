@@ -621,7 +621,7 @@ namespace Mahou
 			}
 		}
 		/// <summary>
-		/// Refreshes language tooltips(caret/mouse) colors, size and font.
+		/// Refreshes language tooltips (caret/mouse) colors, size and font.
 		/// </summary>
 		public void RefreshLangDisplays()
 		{
@@ -751,7 +751,7 @@ namespace Mahou
 					lnk.TargetPath = exelocation;
 					lnk.WorkingDirectory = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 					lnk.IconLocation = exelocation + ", 0";
-					lnk.Description = "Mahou - Magick layout switcher";
+					lnk.Description = "Mahou - Magic layout switcher";
 					lnk.Save();
 				} finally {
 					Marshal.FinalReleaseComObject(lnk);

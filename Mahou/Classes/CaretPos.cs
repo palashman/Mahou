@@ -21,7 +21,7 @@ namespace Mahou
 				Logging.Log(atde + "tached threads."); 
 				return true;
 			}
-			Logging.Log("\t" + atde + "ttach failded, error code: ["+Marshal.GetLastWin32Error()+"].", 1); 
+			Logging.Log("\t" + atde + "tach failed, error code: ["+Marshal.GetLastWin32Error()+"].", 1); 
 			return false;
 		}
 		/// <summary>
@@ -34,7 +34,7 @@ namespace Mahou
 				Logging.Log("GetCaretPos Point: x["+lpPo.X+"], y["+lpPo.Y+"].");
 				return true;
 			}
-			Logging.Log("\tgCP failded, error code: ["+Marshal.GetLastWin32Error()+"].", 1);
+			Logging.Log("\tgCP failed, error code: ["+Marshal.GetLastWin32Error()+"].", 1);
 			return false;
 		}
 		/// <summary>
@@ -48,7 +48,7 @@ namespace Mahou
 				Logging.Log("GetWinRect Rect: left["+lpRe.Left+"], top["+lpRe.Top+"], right["+lpRe.Right+"], bottom["+lpRe.Bottom+"].");
 				return true;
 			}
-			Logging.Log("\tgetWinRe failded, error code: ["+Marshal.GetLastWin32Error()+"].", 1);
+			Logging.Log("\tgetWinRe failed, error code: ["+Marshal.GetLastWin32Error()+"].", 1);
 			return false;
 		}
 		/// <summary>
@@ -116,7 +116,7 @@ namespace Mahou
 				if (_clsNM.Contains("SharpDevelop.exe")) {
 					_pntCR.Y += 28; _pntCR.X += 3;
 				}
-				Logging.Log("Get caret position finished succesfully.", 0);
+				Logging.Log("Get caret position finished successfully.", 0);
 				caretOnlyPos = _pntCR;
 				return new Point(_fwFCS_Re.Left + _pntCR.X, _fwFCS_Re.Top + _pntCR.Y);
 			}

@@ -57,7 +57,7 @@ namespace Mahou
 						}						
 			            if (stopwatch.ElapsedMilliseconds > 50)
 			            {
-			            	Debug.WriteLine(msgtime + " Last logging cancelled...");
+			            	Debug.WriteLine(msgtime + " Last logging canceled...");
 			                break;
 			            }
 			            //Wait to Retry
