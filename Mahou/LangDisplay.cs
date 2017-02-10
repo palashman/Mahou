@@ -102,13 +102,13 @@ namespace Mahou
 		{
 			WinAPI.ShowWindow(Handle, 0);
 		}
-		/// <summary>
-		/// Hides form from everywhere(taskbar/task switcher/etc.).
-		/// </summary>
 		protected override CreateParams CreateParams {
 			get {
 				var Params = base.CreateParams;
-				Params.ExStyle |= 0x80;
+				// Hides form from everywhere(taskbar/task switcher/etc.).
+				Params.ExStyle |= WinAPI.WS_EX_TOOLWINDOW;
+				// Add click through window ability.
+				Params.ExStyle |= WinAPI.WS_EX_LAYERED | WinAPI.WS_EX_TRANSPARENT;
 				return Params;
 			}
 		}
@@ -122,16 +122,6 @@ namespace Mahou
 				e.Graphics.DrawString(lbLang.Text, lbLang.Font, new SolidBrush(lbLang.ForeColor), 0, 0);
 			}
 			base.OnPaint(e);
-		}
-		/// <summary>
-		/// Overriding for OnShown, adds support for through window clicks. somewhy not works...
-		/// </summary>
-		protected override void OnShown(EventArgs e)
-		{
-		    base.OnShown(e);
-		    int wl = WinAPI.GetWindowLong(Handle, WinAPI.GWL_EXSTYLE);
-		    wl = wl | WinAPI.WS_EX_LAYERED | WinAPI.WS_EX_TRANSPARENT;
-		    WinAPI.SetWindowLong(Handle, WinAPI.GWL_EXSTYLE, wl);
 		}
 	}
 }

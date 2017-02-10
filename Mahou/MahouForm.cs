@@ -635,6 +635,7 @@ namespace Mahou
 										  ColorTranslator.FromHtml(MMain.MyConfs.Read("TTipUI", "CrtDLBackColor")));
 			caretLangDisplay.ChangeSize(MMain.MyConfs.ReadInt("TTipUI", "CrtHeight"), MMain.MyConfs.ReadInt("TTipUI", "CrtWidth"));
 			caretLangDisplay.SetVisInvis();
+			caretLangDisplay.AddOwnedForm(langDisplay); //Prevents flickering when tooltips are one on another 
 		}
 		/// <summary>
 		/// Initializes timers.
@@ -645,12 +646,12 @@ namespace Mahou
 			crtCheck.Tick += (_, __) => {
 				var crtOnly = new Point(0,0);
 				var curCrtPos = CaretPos.GetCaretPointToScreen(out crtOnly);
-				if (crtOnly.X != 0 || crtOnly.Y != 0)
-					caretLangDisplay.ShowInactiveTopmost();
-				else
-					caretLangDisplay.HideWnd();
 				caretLangDisplay.Location = new Point(curCrtPos.X + MMain.MyConfs.ReadInt("TTipUI", "Crtxpos"),
 				                                      curCrtPos.Y + MMain.MyConfs.ReadInt("TTipUI", "Crtypos"));
+				if (crtOnly.X != 77777 && crtOnly.Y != 77777) // 77777x77777 is null/none point
+					caretLangDisplay.ShowInactiveTopmost();
+				else if (caretLangDisplay.Visible)
+					caretLangDisplay.HideWnd();
 				caretLangDisplay.RefreshLang();
 //				System.Diagnostics.Debug.WriteLine(crtOnly.X+" "+crtOnly.Y);
 			};

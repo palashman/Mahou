@@ -54,7 +54,6 @@ public static class WinAPI
 	public const int SW_SHOWNOACTIVATE = 4;
 	public const int HWND_TOPMOST = -1;
 	public const uint SWP_NOACTIVATE = 0x0010;
-	public const int GWL_EXSTYLE = -20;
 	public const int WS_EX_TRANSPARENT = 0x20;
 	public const int WS_EX_LAYERED = 0x80000;
 	#endregion
@@ -165,14 +164,8 @@ public static class WinAPI
 		int cx,               // Width
 		int cy,               // Height
 		uint uFlags);         // Window positioning flags
-
 	[DllImport("user32.dll")]
 	public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-	
-	[DllImport("user32.dll", EntryPoint = "GetWindowLong")]
-	public static extern int GetWindowLong(IntPtr hWnd, int nIndex);		
-	[DllImport("user32.dll", EntryPoint = "SetWindowLong")]
-	public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);		
 	#endregion
 	#endregion
     #region Required structs
