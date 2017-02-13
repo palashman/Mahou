@@ -640,11 +640,11 @@ namespace Mahou
 					var l2 = MMain.MyConfs.ReadUInt("Locales", "locale2uId");
 					var index = 0;
 					foreach (char c in ClipStr) {
-						var T = InAnother(c, l2, l1);
+						var T = InAnother(c, l2 & 0xffff, l1 & 0xffff);
 //						if (T == ClipStr[index].ToString())
 //							Console.WriteLine("It is same 1" + T + " == " + ClipStr[index].ToString());
 						if (T == "")
-							T = InAnother(c, l1, l2);
+							T = InAnother(c, l1 & 0xffff, l2 & 0xffff);
 //						if (T == ClipStr[index].ToString())
 //							Console.WriteLine("It is same 2" + T + " == " + ClipStr[index].ToString());
 						if (T == "")
