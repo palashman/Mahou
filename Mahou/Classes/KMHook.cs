@@ -404,16 +404,12 @@ namespace Mahou
 					   (ctrl && Key != Keys.None)) { //Ctrl modifier + Any key will clear word too
 						Logging.Log("Last word cleared.");
 						MMain.c_word.Clear();
+						MMain.c_words.Clear();
+						Logging.Log("Words cleared.");
 						if (MMain.MyConfs.ReadBool("Functions", "Snippets")) {
 							c_snip.Clear();
 							Logging.Log("Snippet cleared.");
 						}
-					}
-					if (Key == Keys.Enter || Key == Keys.Home || Key == Keys.End ||
-					   Key == Keys.Tab || Key == Keys.PageDown || Key == Keys.PageUp ||
-					   Key == Keys.Left || Key == Keys.Right || Key == Keys.Down || Key == Keys.Up) {
-						Logging.Log("Words cleared.");
-						MMain.c_words.Clear();
 					}
 					if (Key == Keys.Space) {
 						Logging.Log("Adding one new empty word to words, and adding to it [Space] key.");
