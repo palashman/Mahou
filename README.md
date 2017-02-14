@@ -22,6 +22,10 @@ Mahou работает совершенно по-другому: в отличи
 4. Начиная с v1.0.4.4, при конвертации выделения текст, не распознанный ни в одной из выбранных в настройках раскладках (пример: ♥), просто переписывается.
 
 ###### Возможности по версиям:
+
+**v1.5.2.0**<br/>
+- Добавлено фунция отображения флагов стран в трее.
+
 **v1.5.0.0**<br/>
 - Добавлена функция отображения подсказки текущего языка рядом с позицией каретки (текстового курсора).
 - Добавлена возможность выбора разных цветов/шрифтов для разных раскладок в подсказках языка.
@@ -136,6 +140,9 @@ Even selected text switches just between **selected** layouts, though if you lik
 4. Starting from v1.0.4.4 in Convert selection unrecognized text by all selected layout in settings (example: ♥) just rewrites.
 
 ###### By version features:
+
+**v1.5.2.0**<br/>
+- ِAdded feature to display country flags in tray.
 
 **v1.5.0.0**<br/>
 - Added feature to display language tooltip around caret (carriage) position.
