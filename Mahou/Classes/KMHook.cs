@@ -370,7 +370,10 @@ namespace Mahou
 						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, MMain.MyConfs.ReadUInt("ExtCtrls", "LCLocale"));
 					}
 				}
-				keyAfterCTRL &= self || wParam != (IntPtr)WinAPI.WM_KEYUP || (Key != Keys.LControlKey && Key != Keys.RControlKey);
+				if (!self && ctrl && (Key != Keys.LControlKey && Key != Keys.RControlKey && Key != Keys.ControlKey))
+					keyAfterCTRL = true;
+				else 
+					keyAfterCTRL = false;
 				#endregion
 				#region Other, when KeyDown
 				if (nCode >= 0 && wParam == (IntPtr)WinAPI.WM_KEYDOWN && !self && !waitfornum) {
