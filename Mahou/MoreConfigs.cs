@@ -151,20 +151,12 @@ namespace Mahou
 		{
 			page++;
 			Logging.Log("More Configs page changed page = "+ page+".");
-			switch (page) {
-				case 0:
-					pEExtra.Visible = false;
-					pEMore.Visible = false;
-					break;
-				case 1:
-					pEMore.Visible = true;
-					pEExtra.Visible = false;
-					break;
-				case 2:
-					pEMore.Visible = false;
-					pEExtra.Visible = true;
-					page = -1;
-					break;
+			if (page == 0)
+				pEExtra.Visible = pEMore.Visible = false;
+			if (page == 1)
+				pEMore.Visible = true;
+			if (page == 2) {
+				pEExtra.Visible = true; page = -1;
 			}
 			DisEna();
 			RefreshLanguage();
