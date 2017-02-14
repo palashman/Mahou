@@ -30,6 +30,7 @@ namespace Mahou
 		public Timer ScrlCheck = new Timer();
 		public Timer crtCheck = new Timer();
 		public Timer capsCheck = new Timer();
+		public Timer flagsCheck = new Timer();
 		public LangDisplay langDisplay = new LangDisplay();
 		public LangDisplay caretLangDisplay = new LangDisplay();
 		public MoreConfigs moreConfigs = new MoreConfigs();
@@ -609,16 +610,61 @@ namespace Mahou
 		/// </summary>
 		public void RefreshIconAll()
 		{
-			if (MMain.MyConfs.ReadBool("Functions", "SymIgnModeEnabled") && MMain.MyConfs.ReadBool("EnabledHotkeys", "HKSymIgnEnabled"))
-				Icon = icon.trIcon.Icon = Properties.Resources.MahouSymbolIgnoreMode;
-			else
-				Icon = icon.trIcon.Icon = Properties.Resources.MahouTrayHD;
+				if (MMain.MyConfs.ReadBool("Functions", "TrayFlags")) {					
+					if (MMain.MyConfs.ReadBool("Functions", "SymIgnModeEnabled") && MMain.MyConfs.ReadBool("EnabledHotkeys", "HKSymIgnEnabled"))
+						Icon = Properties.Resources.MahouSymbolIgnoreMode;
+					else
+						Icon = Properties.Resources.MahouTrayHD;
+					var flagname = "jp";
+					var clangname = new System.Globalization.CultureInfo((int)(Locales.GetCurrentLocale() & 0xffff));
+					flagname = clangname.ThreeLetterISOLanguageName.Substring(0, 2).ToLower();
+					var flag = System.IO.Path.Combine(Mahou.Update.nPath,"Flags\\"+flagname+".png");
+					Icon flagicon = null;
+					if (System.IO.File.Exists(flag))
+						flagicon = Icon.FromHandle(((Bitmap)Image.FromFile(flag)).GetHicon());
+					else 
+						switch (flagname) {
+						case "ru":
+							flagicon = Icon.FromHandle(Properties.Resources.ru.GetHicon()); break;
+						case "en":
+							flagicon = Icon.FromHandle(Properties.Resources.en.GetHicon()); break;
+						case "jp":
+							flagicon = Icon.FromHandle(Properties.Resources.jp.GetHicon()); break;
+						case "bu":
+							flagicon = Icon.FromHandle(Properties.Resources.bu.GetHicon()); break;
+						case "uk":
+							flagicon = Icon.FromHandle(Properties.Resources.uk.GetHicon()); break;
+						case "po":
+							flagicon = Icon.FromHandle(Properties.Resources.po.GetHicon()); break;
+						case "sw":
+							flagicon = Icon.FromHandle(Properties.Resources.sw.GetHicon()); break;
+						case "zh":
+							flagicon = Icon.FromHandle(Properties.Resources.zh.GetHicon()); break;
+						case "be":
+							flagicon = Icon.FromHandle(Properties.Resources.be.GetHicon()); break;
+						case "de":
+							flagicon = Icon.FromHandle(Properties.Resources.de.GetHicon()); break;
+						case "sp":
+							flagicon = Icon.FromHandle(Properties.Resources.sp.GetHicon()); break;
+						case "it":
+							flagicon = Icon.FromHandle(Properties.Resources.it.GetHicon()); break;
+						case "fr":
+							flagicon = Icon.FromHandle(Properties.Resources.fr.GetHicon()); break;
+						default:
+							flagicon = Icon; break;
+						}
+					icon.trIcon.Icon = flagicon;
+				}
+				else {
+				if (MMain.MyConfs.ReadBool("Functions", "SymIgnModeEnabled") && MMain.MyConfs.ReadBool("EnabledHotkeys", "HKSymIgnEnabled"))
+					Icon = icon.trIcon.Icon = Properties.Resources.MahouSymbolIgnoreMode;
+				else
+					Icon = icon.trIcon.Icon = Properties.Resources.MahouTrayHD;
+				}
 			if (MMain.MyConfs.ReadBool("Functions", "IconVisibility")) {
 				icon.Show();
-				Refresh();
 			} else {
 				icon.Hide();
-				Refresh();
 			}
 		}
 		/// <summary>
@@ -721,6 +767,8 @@ namespace Mahou
 					KMHook.hkSIOK = false;
 				KMHook.doublekey.Stop();
 			};
+			flagsCheck.Interval = 50;
+			flagsCheck.Tick += (_,__) => RefreshIconAll();
 			RefreshLangDisplays();
 			ToggleTimers();
 		}
@@ -741,10 +789,14 @@ namespace Mahou
 				crtCheck.Start();
 			else
 				crtCheck.Stop();
-			if (MMain.MyConfs.Read("HotKeys", "OnlyKeyLayoutSwicth") == "CapsLock")
+			if (MMain.MyConfs.Read("HotKeys", "OnlyKeyLayoutSwicth") == "CapsLock" && MMain.MyConfs.ReadBool("Functions", "CapsLockTimer"))
 				capsCheck.Start();
 			else
 				capsCheck.Stop();
+			if (MMain.MyConfs.ReadBool("Functions", "TrayFlags"))
+				flagsCheck.Start();
+			else
+				flagsCheck.Stop();
 		}
 		/// <summary>
 		/// Creates startup shortcut v2.0.(now not uses com. So whole project not need the Windows SDK :p)

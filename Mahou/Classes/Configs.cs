@@ -144,6 +144,12 @@ namespace Mahou
 
             if (!Int32.TryParse(this.Read("Functions", "CrtDLRefreshRate"), out it))
                 this.Write("Functions", "CrtDLRefreshRate", "50");
+            
+            if (!Boolean.TryParse(this.Read("Functions", "TrayFlags"), out bt))
+                this.Write("Functions", "TrayFlags", "true");
+            
+            if (!Boolean.TryParse(this.Read("Functions", "CapsLockTimer"), out bt))
+                this.Write("Functions", "CapsLockTimer", "true");
 			#endregion
             #region EnabledHotkeys section
             if (!Boolean.TryParse(this.Read("EnabledHotkeys", "HKCLEnabled"), out bt))

@@ -34,7 +34,8 @@ namespace Mahou
   	      /*59-60*/"Experimental CS-Switch+","Transparent background in language tooltips",
   	      /*61-63*/"Use snippets", "On change","Highlight ScrollLock when language 1 is active.",
           /*64-66*/"Startup updates check.","Convert multiple words hotkey:", "Enable logging.",
-          /*67-70*/"Debug Info","Copied!","Display language beside caret:","Use different colors for layouts:"};
+          /*67-70*/"Debug Info","Copied!","Display language beside caret:","Use different colors for layouts:",
+          /*71-72*/"Country flags in tray.", "CapsLock timer."};
         public static string[] ToolTipsEN = new string[] {
           /*///////////////Main TT\\\\\\\\\\\\\\\\\
           /*00*/"While this option enabled, [Convert word] and [Convert line] and [Convert selection with \"CS-Switch\" enabled]\n"+
@@ -79,7 +80,9 @@ namespace Mahou
           /*34-35*/"If enabled Mahou will check for updates at startup.", "Allow to convert specific last word count by pressing hotkey and then 0-9 (0 = 10) on keyboard.",
           /*36*/"Designed ONLY to search for errors, BIG PERFORMANCE IMPACT, logs are saved in Mahou's folder, in folder Logs.",
           /*37-38*/"Displays language tooltip around caret (carriage).", "If enabled language tooltips will use different color for different layouts (1&2).",
-          /*39-41*/"Speed of checking caret availability.", "Foreground/Text color.", "Background color."};
+          /*39-41*/"Speed of checking caret availability.", "Foreground/Text color.", "Background color.",
+          /*42-42*/"If enabled and change layout by key set to CapsLock then timer which will disable CapsLock if it is active will launch.",
+          /*43-43*/"If enabled Mahou will display country flags in tray icon.\nYou can add or change flags to yours, to make this create folder Flags in folder where Mahou.exe is, and paste there png with name of 2 letters which you can see in language tooltip."};
         public static string[] MessagesEN = new string[] {
           /*00-01*/"Mahou successfully updated!", "Update complete!",
           /*0002*/"Press Pause (by Default) to convert last inputted word.\nPress Scroll (by Default) while selected text is focused to convert it.\nPress Shift+Pause (by Default) to convert last inputted line.\n"+
@@ -123,7 +126,8 @@ namespace Mahou
   	      /*59-60*/"Экспериментальный КВ-Ключ+","Прозрачный фон в подсказках языка",
   	      /*61-63*/"Использовать сниппеты","При смене","Подсвечивать ScrollLock когда язык 1 активен.",
           /*64-66*/"Проверять обновления.", "Конверт нескольких последних слов гор. клав.:", "Включить логирование.",
-          /*67-70*/"Отладочная инф.", "Скопировано!","Отображ. язык близ каретки:","Разные цвета для раскладок:"};
+          /*67-70*/"Отладочная инф.", "Скопировано!","Отображ. язык близ каретки:","Разные цвета для раскладок:",
+          /*71-72*/"Флаги стран в трее.", "Таймер CapsLock"};
         public static string[] ToolTipsRU = new string[] {
           /*///////////////Main TT\\\\\\\\\\\\\\\\\
           /*00*/"Пока включена, [Конверт слова] and [Конверт линии] and [Конверт выделения с \"КВ-Ключ\" включённой]\n"+
@@ -167,7 +171,9 @@ namespace Mahou
           /*34-35*/"Если включено Mahou будет проверять обновления при запуске.", "Позволяет конвертировать выбранное количество последних слов нажатием горячей клавиши, а потом 0-9 (0 = 10) на клавиатуре.",
           /*36*/"Предназначено ТОЛЬКО для поиска ошибок, СИЛЬНО ВЛИЯЕТ НА СКОРОСТЬ РАБОТЫ, логи сохраняются в папке Mahou, в папке Logs.",
           /*37-38*/"Отображать подсказку языка рядом с кареткой (текстовым курсором).", "Если включено то подсказки языка будут использовать разный цвет для разных раскладок (1&2).",
-          /*39-41*/"Скорость проверки доступности текстового курсора.", "Цвет текста.", "Цвет фона."};
+          /*39-41*/"Скорость проверки доступности текстового курсора.", "Цвет текста.", "Цвет фона.",
+          /*42-42*/"Если включено и сменить язык клавишей установлен на CapsLock то тогда будет включен таймер который будет выключать CapsLock если тот включен.",
+          /*43-43*/"Если включено то в трее будут отображаться флаги стран по текущему языку.\nВы можете добавить или поменять флаги на свои для этого создайте папку Flags в папке где Mahou.exe, и поставьте туда png файл с названием из двух букв которые Вы можете посмотреть в подсказке языка."};
         public static string[] MessagesRU = new string[] {
           /*00-01*/"Mahou успешно обновлён!", "Обновление завершено!",
           /*0002*/"Нажмите Pause (по умолчанию) для конвертации последнего введённого слова.\nНажмите Scroll (по умолчанию) пока выделенный текст в фокусе чтобы конвертировать его.\nНажмите Shift+Pause (по умолчанию) для конвертации последней введённой линии.\n"+

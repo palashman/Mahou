@@ -59,15 +59,6 @@
         	this.lbX = new System.Windows.Forms.Label();
         	this.lbPosition = new System.Windows.Forms.Label();
         	this.pEMore = new System.Windows.Forms.Panel();
-        	this.cbUseSnippets = new System.Windows.Forms.CheckBox();
-        	this.tbSnippets = new System.Windows.Forms.TextBox();
-        	this.cbTrBLT = new System.Windows.Forms.CheckBox();
-        	this.cbExCSSwitch = new System.Windows.Forms.CheckBox();
-        	this.lbDDelay = new System.Windows.Forms.Label();
-        	this.nudDoubleDelay = new System.Windows.Forms.NumericUpDown();
-        	this.cbDoublePress = new System.Windows.Forms.CheckBox();
-        	this.btnEMore = new System.Windows.Forms.Button();
-        	this.cbOnChange = new System.Windows.Forms.CheckBox();
         	this.pEExtra = new System.Windows.Forms.Panel();
         	this.btCrtFont = new System.Windows.Forms.Button();
         	this.btCrtCol1 = new System.Windows.Forms.Button();
@@ -98,6 +89,17 @@
         	this.lbConMorWor = new System.Windows.Forms.Label();
         	this.cbCheckForUPD = new System.Windows.Forms.CheckBox();
         	this.cbScrollLight = new System.Windows.Forms.CheckBox();
+        	this.cbUseSnippets = new System.Windows.Forms.CheckBox();
+        	this.tbSnippets = new System.Windows.Forms.TextBox();
+        	this.cbTrBLT = new System.Windows.Forms.CheckBox();
+        	this.cbExCSSwitch = new System.Windows.Forms.CheckBox();
+        	this.lbDDelay = new System.Windows.Forms.Label();
+        	this.nudDoubleDelay = new System.Windows.Forms.NumericUpDown();
+        	this.cbDoublePress = new System.Windows.Forms.CheckBox();
+        	this.btnEMore = new System.Windows.Forms.Button();
+        	this.cbOnChange = new System.Windows.Forms.CheckBox();
+        	this.cbTrayIconFlags = new System.Windows.Forms.CheckBox();
+        	this.cbCapsLockTimer = new System.Windows.Forms.CheckBox();
         	((System.ComponentModel.ISupportInitialize)(this.nudMTCount)).BeginInit();
         	((System.ComponentModel.ISupportInitialize)(this.nudRefreshRate)).BeginInit();
         	((System.ComponentModel.ISupportInitialize)(this.nudTTWidth)).BeginInit();
@@ -105,13 +107,13 @@
         	((System.ComponentModel.ISupportInitialize)(this.nudYpos)).BeginInit();
         	((System.ComponentModel.ISupportInitialize)(this.nudXpos)).BeginInit();
         	this.pEMore.SuspendLayout();
-        	((System.ComponentModel.ISupportInitialize)(this.nudDoubleDelay)).BeginInit();
         	this.pEExtra.SuspendLayout();
         	((System.ComponentModel.ISupportInitialize)(this.nudCrtRefreshRate)).BeginInit();
         	((System.ComponentModel.ISupportInitialize)(this.nudCrtYpos)).BeginInit();
         	((System.ComponentModel.ISupportInitialize)(this.nudCrtXpos)).BeginInit();
         	((System.ComponentModel.ISupportInitialize)(this.nudCrtTTWidth)).BeginInit();
         	((System.ComponentModel.ISupportInitialize)(this.nudCrtTTHeight)).BeginInit();
+        	((System.ComponentModel.ISupportInitialize)(this.nudDoubleDelay)).BeginInit();
         	this.SuspendLayout();
         	// 
         	// cbUseLRC
@@ -325,7 +327,7 @@
         	// lbSize
         	// 
         	this.lbSize.AutoSize = true;
-        	this.lbSize.Location = new System.Drawing.Point(114, 182);
+        	this.lbSize.Location = new System.Drawing.Point(114, 180);
         	this.lbSize.Name = "lbSize";
         	this.lbSize.Size = new System.Drawing.Size(30, 13);
         	this.lbSize.TabIndex = 19;
@@ -363,6 +365,11 @@
         	// nudYpos
         	// 
         	this.nudYpos.Location = new System.Drawing.Point(233, 205);
+        	this.nudYpos.Minimum = new decimal(new int[] {
+			100,
+			0,
+			0,
+			-2147483648});
         	this.nudYpos.Name = "nudYpos";
         	this.nudYpos.Size = new System.Drawing.Size(35, 20);
         	this.nudYpos.TabIndex = 23;
@@ -379,6 +386,11 @@
         	// nudXpos
         	// 
         	this.nudXpos.Location = new System.Drawing.Point(178, 205);
+        	this.nudXpos.Minimum = new decimal(new int[] {
+			100,
+			0,
+			0,
+			-2147483648});
         	this.nudXpos.Name = "nudXpos";
         	this.nudXpos.Size = new System.Drawing.Size(35, 20);
         	this.nudXpos.TabIndex = 24;
@@ -405,6 +417,7 @@
         	// pEMore
         	// 
         	this.pEMore.AutoSize = true;
+        	this.pEMore.Controls.Add(this.pEExtra);
         	this.pEMore.Controls.Add(this.cbUseSnippets);
         	this.pEMore.Controls.Add(this.tbSnippets);
         	this.pEMore.Controls.Add(this.cbTrBLT);
@@ -418,113 +431,6 @@
         	this.pEMore.Size = new System.Drawing.Size(279, 268);
         	this.pEMore.TabIndex = 28;
         	this.pEMore.Visible = false;
-        	// 
-        	// cbUseSnippets
-        	// 
-        	this.cbUseSnippets.AutoSize = true;
-        	this.cbUseSnippets.Location = new System.Drawing.Point(10, 81);
-        	this.cbUseSnippets.Name = "cbUseSnippets";
-        	this.cbUseSnippets.Size = new System.Drawing.Size(87, 17);
-        	this.cbUseSnippets.TabIndex = 34;
-        	this.cbUseSnippets.Text = "Use snippets";
-        	this.cbUseSnippets.UseVisualStyleBackColor = true;
-        	this.cbUseSnippets.CheckedChanged += new System.EventHandler(this.DisEnaOnCheckedChanged);
-        	this.cbUseSnippets.MouseHover += new System.EventHandler(this.CbUseSnippetsMouseHover);
-        	// 
-        	// tbSnippets
-        	// 
-        	this.tbSnippets.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-        	this.tbSnippets.Location = new System.Drawing.Point(10, 104);
-        	this.tbSnippets.Multiline = true;
-        	this.tbSnippets.Name = "tbSnippets";
-        	this.tbSnippets.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-        	this.tbSnippets.Size = new System.Drawing.Size(258, 121);
-        	this.tbSnippets.TabIndex = 33;
-        	this.tbSnippets.Text = "->mahou\r\n====>\r\nMahou (魔法) - Magical layout switcher.\r\n<====\r\n->eml\r\n====>BladeMi" +
-	"ght@gmail.com<====\r\n";
-        	this.tbSnippets.WordWrap = false;
-        	// 
-        	// cbTrBLT
-        	// 
-        	this.cbTrBLT.AutoSize = true;
-        	this.cbTrBLT.Location = new System.Drawing.Point(10, 58);
-        	this.cbTrBLT.Name = "cbTrBLT";
-        	this.cbTrBLT.Size = new System.Drawing.Size(232, 17);
-        	this.cbTrBLT.TabIndex = 32;
-        	this.cbTrBLT.Text = "Transparent background in language tooltip";
-        	this.cbTrBLT.UseVisualStyleBackColor = true;
-        	this.cbTrBLT.MouseHover += new System.EventHandler(this.CbTrBLTMouseHover);
-        	// 
-        	// cbExCSSwitch
-        	// 
-        	this.cbExCSSwitch.AutoSize = true;
-        	this.cbExCSSwitch.Location = new System.Drawing.Point(10, 35);
-        	this.cbExCSSwitch.Name = "cbExCSSwitch";
-        	this.cbExCSSwitch.Size = new System.Drawing.Size(144, 17);
-        	this.cbExCSSwitch.TabIndex = 31;
-        	this.cbExCSSwitch.Text = "Experimental CS-Switch+";
-        	this.cbExCSSwitch.UseVisualStyleBackColor = true;
-        	this.cbExCSSwitch.MouseHover += new System.EventHandler(this.CbExCSSwitchMouseHover);
-        	// 
-        	// lbDDelay
-        	// 
-        	this.lbDDelay.AutoSize = true;
-        	this.lbDDelay.Location = new System.Drawing.Point(164, 14);
-        	this.lbDDelay.Name = "lbDDelay";
-        	this.lbDDelay.Size = new System.Drawing.Size(37, 13);
-        	this.lbDDelay.TabIndex = 30;
-        	this.lbDDelay.Text = "Delay:";
-        	this.lbDDelay.MouseHover += new System.EventHandler(this.LbDDelayMouseHover);
-        	// 
-        	// nudDoubleDelay
-        	// 
-        	this.nudDoubleDelay.Increment = new decimal(new int[] {
-			5,
-			0,
-			0,
-			0});
-        	this.nudDoubleDelay.Location = new System.Drawing.Point(226, 11);
-        	this.nudDoubleDelay.Maximum = new decimal(new int[] {
-			5000,
-			0,
-			0,
-			0});
-        	this.nudDoubleDelay.Name = "nudDoubleDelay";
-        	this.nudDoubleDelay.Size = new System.Drawing.Size(41, 20);
-        	this.nudDoubleDelay.TabIndex = 2;
-        	// 
-        	// cbDoublePress
-        	// 
-        	this.cbDoublePress.AutoSize = true;
-        	this.cbDoublePress.Location = new System.Drawing.Point(10, 12);
-        	this.cbDoublePress.Name = "cbDoublePress";
-        	this.cbDoublePress.Size = new System.Drawing.Size(103, 17);
-        	this.cbDoublePress.TabIndex = 0;
-        	this.cbDoublePress.Text = "Double hotkeys:";
-        	this.cbDoublePress.UseVisualStyleBackColor = true;
-        	this.cbDoublePress.CheckedChanged += new System.EventHandler(this.DisEnaOnCheckedChanged);
-        	this.cbDoublePress.MouseHover += new System.EventHandler(this.CbDoublePressMouseHover);
-        	// 
-        	// btnEMore
-        	// 
-        	this.btnEMore.Location = new System.Drawing.Point(101, 234);
-        	this.btnEMore.Name = "btnEMore";
-        	this.btnEMore.Size = new System.Drawing.Size(76, 23);
-        	this.btnEMore.TabIndex = 29;
-        	this.btnEMore.Text = "More";
-        	this.btnEMore.UseVisualStyleBackColor = true;
-        	this.btnEMore.Click += new System.EventHandler(this.BtnEMoreClick);
-        	// 
-        	// cbOnChange
-        	// 
-        	this.cbOnChange.AutoSize = true;
-        	this.cbOnChange.Location = new System.Drawing.Point(10, 148);
-        	this.cbOnChange.Name = "cbOnChange";
-        	this.cbOnChange.Size = new System.Drawing.Size(79, 17);
-        	this.cbOnChange.TabIndex = 30;
-        	this.cbOnChange.Text = "On change";
-        	this.cbOnChange.UseVisualStyleBackColor = true;
-        	this.cbOnChange.MouseHover += new System.EventHandler(this.CbOnChangeMouseHover);
         	// 
         	// pEExtra
         	// 
@@ -642,6 +548,11 @@
         	this.nudCrtYpos.Name = "nudCrtYpos";
         	this.nudCrtYpos.Size = new System.Drawing.Size(35, 20);
         	this.nudCrtYpos.TabIndex = 37;
+        	this.nudCrtYpos.Value = new decimal(new int[] {
+			100,
+			0,
+			0,
+			0});
         	// 
         	// lbCrtY
         	// 
@@ -663,6 +574,11 @@
         	this.nudCrtXpos.Name = "nudCrtXpos";
         	this.nudCrtXpos.Size = new System.Drawing.Size(35, 20);
         	this.nudCrtXpos.TabIndex = 38;
+        	this.nudCrtXpos.Value = new decimal(new int[] {
+			100,
+			0,
+			0,
+			0});
         	// 
         	// lbCrtX
         	// 
@@ -870,6 +786,137 @@
         	this.cbScrollLight.UseVisualStyleBackColor = true;
         	this.cbScrollLight.MouseHover += new System.EventHandler(this.CbScrollLightMouseHover);
         	// 
+        	// cbUseSnippets
+        	// 
+        	this.cbUseSnippets.AutoSize = true;
+        	this.cbUseSnippets.Location = new System.Drawing.Point(10, 81);
+        	this.cbUseSnippets.Name = "cbUseSnippets";
+        	this.cbUseSnippets.Size = new System.Drawing.Size(87, 17);
+        	this.cbUseSnippets.TabIndex = 34;
+        	this.cbUseSnippets.Text = "Use snippets";
+        	this.cbUseSnippets.UseVisualStyleBackColor = true;
+        	this.cbUseSnippets.CheckedChanged += new System.EventHandler(this.DisEnaOnCheckedChanged);
+        	this.cbUseSnippets.MouseHover += new System.EventHandler(this.CbUseSnippetsMouseHover);
+        	// 
+        	// tbSnippets
+        	// 
+        	this.tbSnippets.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+        	this.tbSnippets.Location = new System.Drawing.Point(10, 104);
+        	this.tbSnippets.Multiline = true;
+        	this.tbSnippets.Name = "tbSnippets";
+        	this.tbSnippets.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+        	this.tbSnippets.Size = new System.Drawing.Size(258, 121);
+        	this.tbSnippets.TabIndex = 33;
+        	this.tbSnippets.Text = "->mahou\r\n====>\r\nMahou (魔法) - Magical layout switcher.\r\n<====\r\n->eml\r\n====>BladeMi" +
+	"ght@gmail.com<====\r\n";
+        	this.tbSnippets.WordWrap = false;
+        	// 
+        	// cbTrBLT
+        	// 
+        	this.cbTrBLT.AutoSize = true;
+        	this.cbTrBLT.Location = new System.Drawing.Point(10, 58);
+        	this.cbTrBLT.Name = "cbTrBLT";
+        	this.cbTrBLT.Size = new System.Drawing.Size(232, 17);
+        	this.cbTrBLT.TabIndex = 32;
+        	this.cbTrBLT.Text = "Transparent background in language tooltip";
+        	this.cbTrBLT.UseVisualStyleBackColor = true;
+        	this.cbTrBLT.MouseHover += new System.EventHandler(this.CbTrBLTMouseHover);
+        	// 
+        	// cbExCSSwitch
+        	// 
+        	this.cbExCSSwitch.AutoSize = true;
+        	this.cbExCSSwitch.Location = new System.Drawing.Point(10, 35);
+        	this.cbExCSSwitch.Name = "cbExCSSwitch";
+        	this.cbExCSSwitch.Size = new System.Drawing.Size(144, 17);
+        	this.cbExCSSwitch.TabIndex = 31;
+        	this.cbExCSSwitch.Text = "Experimental CS-Switch+";
+        	this.cbExCSSwitch.UseVisualStyleBackColor = true;
+        	this.cbExCSSwitch.MouseHover += new System.EventHandler(this.CbExCSSwitchMouseHover);
+        	// 
+        	// lbDDelay
+        	// 
+        	this.lbDDelay.AutoSize = true;
+        	this.lbDDelay.Location = new System.Drawing.Point(164, 14);
+        	this.lbDDelay.Name = "lbDDelay";
+        	this.lbDDelay.Size = new System.Drawing.Size(37, 13);
+        	this.lbDDelay.TabIndex = 30;
+        	this.lbDDelay.Text = "Delay:";
+        	this.lbDDelay.MouseHover += new System.EventHandler(this.LbDDelayMouseHover);
+        	// 
+        	// nudDoubleDelay
+        	// 
+        	this.nudDoubleDelay.Increment = new decimal(new int[] {
+			5,
+			0,
+			0,
+			0});
+        	this.nudDoubleDelay.Location = new System.Drawing.Point(226, 11);
+        	this.nudDoubleDelay.Maximum = new decimal(new int[] {
+			5000,
+			0,
+			0,
+			0});
+        	this.nudDoubleDelay.Name = "nudDoubleDelay";
+        	this.nudDoubleDelay.Size = new System.Drawing.Size(41, 20);
+        	this.nudDoubleDelay.TabIndex = 2;
+        	// 
+        	// cbDoublePress
+        	// 
+        	this.cbDoublePress.AutoSize = true;
+        	this.cbDoublePress.Location = new System.Drawing.Point(10, 12);
+        	this.cbDoublePress.Name = "cbDoublePress";
+        	this.cbDoublePress.Size = new System.Drawing.Size(103, 17);
+        	this.cbDoublePress.TabIndex = 0;
+        	this.cbDoublePress.Text = "Double hotkeys:";
+        	this.cbDoublePress.UseVisualStyleBackColor = true;
+        	this.cbDoublePress.CheckedChanged += new System.EventHandler(this.DisEnaOnCheckedChanged);
+        	this.cbDoublePress.MouseHover += new System.EventHandler(this.CbDoublePressMouseHover);
+        	// 
+        	// btnEMore
+        	// 
+        	this.btnEMore.Location = new System.Drawing.Point(101, 234);
+        	this.btnEMore.Name = "btnEMore";
+        	this.btnEMore.Size = new System.Drawing.Size(76, 23);
+        	this.btnEMore.TabIndex = 29;
+        	this.btnEMore.Text = "More";
+        	this.btnEMore.UseVisualStyleBackColor = true;
+        	this.btnEMore.Click += new System.EventHandler(this.BtnEMoreClick);
+        	// 
+        	// cbOnChange
+        	// 
+        	this.cbOnChange.AutoSize = true;
+        	this.cbOnChange.Location = new System.Drawing.Point(10, 148);
+        	this.cbOnChange.Name = "cbOnChange";
+        	this.cbOnChange.Size = new System.Drawing.Size(79, 17);
+        	this.cbOnChange.TabIndex = 30;
+        	this.cbOnChange.Text = "On change";
+        	this.cbOnChange.UseVisualStyleBackColor = true;
+        	this.cbOnChange.MouseHover += new System.EventHandler(this.CbOnChangeMouseHover);
+        	// 
+        	// cbTrayIconFlags
+        	// 
+        	this.cbTrayIconFlags.AutoSize = true;
+        	this.cbTrayIconFlags.Location = new System.Drawing.Point(10, 168);
+        	this.cbTrayIconFlags.Name = "cbTrayIconFlags";
+        	this.cbTrayIconFlags.RightToLeft = System.Windows.Forms.RightToLeft.No;
+        	this.cbTrayIconFlags.Size = new System.Drawing.Size(95, 17);
+        	this.cbTrayIconFlags.TabIndex = 31;
+        	this.cbTrayIconFlags.Text = "Tray icon flags";
+        	this.cbTrayIconFlags.UseVisualStyleBackColor = true;
+        	this.cbTrayIconFlags.MouseHover += new System.EventHandler(this.CbTrayIconFlagsMouseHover);
+        	// 
+        	// cbCapsLockTimer
+        	// 
+        	this.cbCapsLockTimer.AutoSize = true;
+        	this.cbCapsLockTimer.Location = new System.Drawing.Point(10, 190);
+        	this.cbCapsLockTimer.Name = "cbCapsLockTimer";
+        	this.cbCapsLockTimer.RightToLeft = System.Windows.Forms.RightToLeft.No;
+        	this.cbCapsLockTimer.Size = new System.Drawing.Size(99, 17);
+        	this.cbCapsLockTimer.TabIndex = 32;
+        	this.cbCapsLockTimer.Text = "CapsLock timer";
+        	this.cbCapsLockTimer.UseVisualStyleBackColor = true;
+        	this.cbCapsLockTimer.MouseHover += new System.EventHandler(this.CbCapsLockTimerMouseHover);
+        	// 
         	// MoreConfigs
         	// 
         	this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -878,7 +925,6 @@
         	this.Controls.Add(this.btnEMore);
         	this.Controls.Add(this.btnOK);
         	this.Controls.Add(this.btnNO);
-        	this.Controls.Add(this.pEExtra);
         	this.Controls.Add(this.pEMore);
         	this.Controls.Add(this.nudYpos);
         	this.Controls.Add(this.lbY);
@@ -907,6 +953,8 @@
         	this.Controls.Add(this.lbLCto);
         	this.Controls.Add(this.cbUseLRC);
         	this.Controls.Add(this.cbOnChange);
+        	this.Controls.Add(this.cbTrayIconFlags);
+        	this.Controls.Add(this.cbCapsLockTimer);
         	this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
         	this.MaximizeBox = false;
         	this.MinimizeBox = false;
@@ -925,7 +973,6 @@
         	((System.ComponentModel.ISupportInitialize)(this.nudXpos)).EndInit();
         	this.pEMore.ResumeLayout(false);
         	this.pEMore.PerformLayout();
-        	((System.ComponentModel.ISupportInitialize)(this.nudDoubleDelay)).EndInit();
         	this.pEExtra.ResumeLayout(false);
         	this.pEExtra.PerformLayout();
         	((System.ComponentModel.ISupportInitialize)(this.nudCrtRefreshRate)).EndInit();
@@ -933,6 +980,7 @@
         	((System.ComponentModel.ISupportInitialize)(this.nudCrtXpos)).EndInit();
         	((System.ComponentModel.ISupportInitialize)(this.nudCrtTTWidth)).EndInit();
         	((System.ComponentModel.ISupportInitialize)(this.nudCrtTTHeight)).EndInit();
+        	((System.ComponentModel.ISupportInitialize)(this.nudDoubleDelay)).EndInit();
         	this.ResumeLayout(false);
         	this.PerformLayout();
 
@@ -1007,5 +1055,7 @@
         private System.Windows.Forms.Button btCrtCol1;
         private System.Windows.Forms.Button btCrtCol2;
         private System.Windows.Forms.Label lblCrtRefRate;
+        private System.Windows.Forms.CheckBox cbTrayIconFlags;
+        private System.Windows.Forms.CheckBox cbCapsLockTimer;
     }
 }

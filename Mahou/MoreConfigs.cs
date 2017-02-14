@@ -23,7 +23,7 @@ namespace Mahou
 		}
 		void MoreConfigs_Load(object sender, EventArgs e)
 		{
-			nudXpos.Minimum = nudYpos.Minimum = -100;
+			nudXpos.Minimum = nudYpos.Minimum = nudCrtXpos.Minimum = nudCrtYpos.Minimum = -100;
 			RefreshLocales();
 			load();
 			DisEna();
@@ -251,6 +251,8 @@ namespace Mahou
 			MMain.MyConfs.Write("Functions", "ScrollTip", cbScrollLight.Checked.ToString());
 			MMain.MyConfs.Write("Functions", "UpdatesEnabled", cbCheckForUPD.Checked.ToString());
 			MMain.MyConfs.Write("Functions", "Logging", cbLogging.Checked.ToString());
+			MMain.MyConfs.Write("Functions", "TrayFlags", cbTrayIconFlags.Checked.ToString());
+			MMain.MyConfs.Write("Functions", "CapsLockTimer", cbCapsLockTimer.Checked.ToString());
 			MMain.MyConfs.Write("DoubleKey", "Delay", nudDoubleDelay.Value.ToString());
 			MMain.MyConfs.Write("DoubleKey", "Use", cbDoublePress.Checked.ToString());
 			File.WriteAllText(snipfile, tbSnippets.Text);
@@ -333,6 +335,8 @@ namespace Mahou
 			cbScrollLight.Checked = MMain.MyConfs.ReadBool("Functions", "ScrollTip");
 			cbCheckForUPD.Checked = MMain.MyConfs.ReadBool("Functions", "UpdatesEnabled");
 			cbLogging.Checked = MMain.MyConfs.ReadBool("Functions", "Logging");
+			cbTrayIconFlags.Checked = MMain.MyConfs.ReadBool("Functions", "TrayFlags");
+			cbCapsLockTimer.Checked = MMain.MyConfs.ReadBool("Functions", "CapsLockTimer");
 			if (File.Exists(snipfile)) {
 				tbSnippets.Text = File.ReadAllText(snipfile);
 				KMHook.ReInitSnippets();
@@ -400,6 +404,8 @@ namespace Mahou
 			lblLayout2DifClr.Text = MMain.UI[16] + " 2:";
 			cbCaretLangDisplay.Text = MMain.UI[69];
 			cbDifLayoClr.Text = MMain.UI[70];
+			cbTrayIconFlags.Text = MMain.UI[71];
+			cbCapsLockTimer.Text = MMain.UI[72];
 			Logging.Log("More Configs UI language refreshed.");
 		}
 		#endregion
@@ -536,6 +542,16 @@ namespace Mahou
 			var bt = sender as Button;
 			HelpTT.ToolTipTitle = bt.BackColor.ToString().Replace("Color ", "").Replace("A=255, ","");
 			HelpTT.Show(MMain.TTips[41], bt);
+		}
+		void CbCapsLockTimerMouseHover(object sender, EventArgs e)
+		{
+			HelpTT.ToolTipTitle = cbCapsLockTimer.Text;
+			HelpTT.Show(MMain.TTips[42], cbCapsLockTimer);
+		}
+		void CbTrayIconFlagsMouseHover(object sender, EventArgs e)
+		{
+			HelpTT.ToolTipTitle = cbTrayIconFlags.Text;
+			HelpTT.Show(MMain.TTips[43], cbTrayIconFlags);
 		}
 		#endregion
 	}

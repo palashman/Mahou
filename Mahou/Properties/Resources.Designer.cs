@@ -9,105 +9,235 @@
 //------------------------------------------------------------------------------
 
 namespace Mahou.Properties {
-    using System;
-    
-    
-    /// <summary>
-    ///   Класс ресурса со строгой типизацией для поиска локализованных строк и т.д.
-    /// </summary>
-    // Этот класс создан автоматически классом StronglyTypedResourceBuilder
-    // с помощью такого средства, как ResGen или Visual Studio.
-    // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
-    // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Resources {
-        
-        private static global::System.Resources.ResourceManager resourceMan;
-        
-        private static global::System.Globalization.CultureInfo resourceCulture;
-        
-        [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources() {
-        }
-        
-        /// <summary>
-        ///   Возвращает кэшированный экземпляр ResourceManager, использованный этим классом.
-        /// </summary>
-        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
-            get {
-                if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Mahou.Properties.Resources", typeof(Resources).Assembly);
-                    resourceMan = temp;
-                }
-                return resourceMan;
-            }
-        }
-        
-        /// <summary>
-        ///   Перезаписывает свойство CurrentUICulture текущего потока для всех
-        ///   обращений к ресурсу с помощью этого класса ресурса со строгой типизацией.
-        /// </summary>
-        [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
-            get {
-                return resourceCulture;
-            }
-            set {
-                resourceCulture = value;
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap down_arrow {
-            get {
-                object obj = ResourceManager.GetObject("down_arrow", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
-        /// </summary>
-        public static System.Drawing.Icon Mahou {
-            get {
-                object obj = ResourceManager.GetObject("Mahou", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
-        /// </summary>
-        public static System.Drawing.Icon MahouSymbolIgnoreMode {
-            get {
-                object obj = ResourceManager.GetObject("MahouSymbolIgnoreMode", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
-        /// </summary>
-        public static System.Drawing.Icon MahouTrayHD {
-            get {
-                object obj = ResourceManager.GetObject("MahouTrayHD", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap up_arrow {
-            get {
-                object obj = ResourceManager.GetObject("up_arrow", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-    }
+	using System;
+	
+	
+	/// <summary>
+	///   Класс ресурса со строгой типизацией для поиска локализованных строк и т.д.
+	/// </summary>
+	// Этот класс создан автоматически классом StronglyTypedResourceBuilder
+	// с помощью такого средства, как ResGen или Visual Studio.
+	// Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
+	// с параметром /str или перестройте свой проект VS.
+	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+	[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+	[global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+	public class Resources {
+		
+		private static global::System.Resources.ResourceManager resourceMan;
+		
+		private static global::System.Globalization.CultureInfo resourceCulture;
+		
+		[global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+		internal Resources() {
+		}
+		
+		/// <summary>
+		///   Возвращает кэшированный экземпляр ResourceManager, использованный этим классом.
+		/// </summary>
+		[global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+		public static global::System.Resources.ResourceManager ResourceManager {
+			get {
+				if (object.ReferenceEquals(resourceMan, null)) {
+					global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Mahou.Properties.Resources", typeof(Resources).Assembly);
+					resourceMan = temp;
+				}
+				return resourceMan;
+			}
+		}
+		
+		/// <summary>
+		///   Перезаписывает свойство CurrentUICulture текущего потока для всех
+		///   обращений к ресурсу с помощью этого класса ресурса со строгой типизацией.
+		/// </summary>
+		[global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
+		public static global::System.Globalization.CultureInfo Culture {
+			get {
+				return resourceCulture;
+			}
+			set {
+				resourceCulture = value;
+			}
+		}
+		
+		/// <summary>
+		///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+		/// </summary>
+		public static System.Drawing.Bitmap be {
+			get {
+				object obj = ResourceManager.GetObject("be", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		/// <summary>
+		///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+		/// </summary>
+		public static System.Drawing.Bitmap bu {
+			get {
+				object obj = ResourceManager.GetObject("bu", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		/// <summary>
+		///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+		/// </summary>
+		public static System.Drawing.Bitmap de {
+			get {
+				object obj = ResourceManager.GetObject("de", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		/// <summary>
+		///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+		/// </summary>
+		public static System.Drawing.Bitmap down_arrow {
+			get {
+				object obj = ResourceManager.GetObject("down_arrow", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		/// <summary>
+		///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+		/// </summary>
+		public static System.Drawing.Bitmap en {
+			get {
+				object obj = ResourceManager.GetObject("en", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		/// <summary>
+		///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+		/// </summary>
+		public static System.Drawing.Bitmap fr {
+			get {
+				object obj = ResourceManager.GetObject("fr", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		/// <summary>
+		///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+		/// </summary>
+		public static System.Drawing.Bitmap it {
+			get {
+				object obj = ResourceManager.GetObject("it", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		/// <summary>
+		///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+		/// </summary>
+		public static System.Drawing.Bitmap jp {
+			get {
+				object obj = ResourceManager.GetObject("jp", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		/// <summary>
+		///   Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+		/// </summary>
+		public static System.Drawing.Icon Mahou {
+			get {
+				object obj = ResourceManager.GetObject("Mahou", resourceCulture);
+				return ((System.Drawing.Icon)(obj));
+			}
+		}
+		
+		/// <summary>
+		///   Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+		/// </summary>
+		public static System.Drawing.Icon MahouSymbolIgnoreMode {
+			get {
+				object obj = ResourceManager.GetObject("MahouSymbolIgnoreMode", resourceCulture);
+				return ((System.Drawing.Icon)(obj));
+			}
+		}
+		
+		/// <summary>
+		///   Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+		/// </summary>
+		public static System.Drawing.Icon MahouTrayHD {
+			get {
+				object obj = ResourceManager.GetObject("MahouTrayHD", resourceCulture);
+				return ((System.Drawing.Icon)(obj));
+			}
+		}
+		
+		/// <summary>
+		///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+		/// </summary>
+		public static System.Drawing.Bitmap po {
+			get {
+				object obj = ResourceManager.GetObject("po", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		/// <summary>
+		///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+		/// </summary>
+		public static System.Drawing.Bitmap ru {
+			get {
+				object obj = ResourceManager.GetObject("ru", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		/// <summary>
+		///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+		/// </summary>
+		public static System.Drawing.Bitmap sp {
+			get {
+				object obj = ResourceManager.GetObject("sp", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		/// <summary>
+		///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+		/// </summary>
+		public static System.Drawing.Bitmap sw {
+			get {
+				object obj = ResourceManager.GetObject("sw", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		/// <summary>
+		///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+		/// </summary>
+		public static System.Drawing.Bitmap uk {
+			get {
+				object obj = ResourceManager.GetObject("uk", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		/// <summary>
+		///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+		/// </summary>
+		public static System.Drawing.Bitmap up_arrow {
+			get {
+				object obj = ResourceManager.GetObject("up_arrow", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+		
+		/// <summary>
+		///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+		/// </summary>
+		public static System.Drawing.Bitmap zh {
+			get {
+				object obj = ResourceManager.GetObject("zh", resourceCulture);
+				return ((System.Drawing.Bitmap)(obj));
+			}
+		}
+	}
 }
