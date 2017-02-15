@@ -611,60 +611,78 @@ namespace Mahou
 		/// </summary>
 		public void RefreshIconAll()
 		{
-				if (MMain.MyConfs.ReadBool("Functions", "TrayFlags")) {					
-					if (MMain.MyConfs.ReadBool("Functions", "SymIgnModeEnabled") && MMain.MyConfs.ReadBool("EnabledHotkeys", "HKSymIgnEnabled"))
-						Icon = Properties.Resources.MahouSymbolIgnoreMode;
-					else
-						Icon = Properties.Resources.MahouTrayHD;
+			if (MMain.MyConfs.ReadBool("Functions", "TrayFlags")) {					
+				if (MMain.MyConfs.ReadBool("Functions", "SymIgnModeEnabled") && MMain.MyConfs.ReadBool("EnabledHotkeys", "HKSymIgnEnabled"))
+					Icon = Properties.Resources.MahouSymbolIgnoreMode;
+				else
+					Icon = Properties.Resources.MahouTrayHD;
+				var lcid = (int)(Locales.GetCurrentLocale() & 0xffff);
+				if (lcid > 0) {
 					var flagname = "jp";
-					var clangname = new System.Globalization.CultureInfo((int)(Locales.GetCurrentLocale() & 0xffff));
+					var clangname = new System.Globalization.CultureInfo(lcid);
 					flagname = clangname.ThreeLetterISOLanguageName.Substring(0, 2).ToLower();
-					var flag = System.IO.Path.Combine(Mahou.Update.nPath,"Flags\\"+flagname+".png");
+					var flag = System.IO.Path.Combine(Mahou.Update.nPath, "Flags\\" + flagname + ".png");
 					Icon flagicon = null;
 					if (flagname != latestSwitch) {
 						if (System.IO.File.Exists(flag))
 							flagicon = Icon.FromHandle(((Bitmap)Image.FromFile(flag)).GetHicon());
 						else
 							switch (flagname) {
-							case "ru":
-								flagicon = Icon.FromHandle(Properties.Resources.ru.GetHicon()); break;
-							case "en":
-								flagicon = Icon.FromHandle(Properties.Resources.en.GetHicon()); break;
-							case "jp":
-								flagicon = Icon.FromHandle(Properties.Resources.jp.GetHicon()); break;
-							case "bu":
-								flagicon = Icon.FromHandle(Properties.Resources.bu.GetHicon()); break;
-							case "uk":
-								flagicon = Icon.FromHandle(Properties.Resources.uk.GetHicon()); break;
-							case "po":
-								flagicon = Icon.FromHandle(Properties.Resources.po.GetHicon()); break;
-							case "sw":
-								flagicon = Icon.FromHandle(Properties.Resources.sw.GetHicon()); break;
-							case "zh":
-								flagicon = Icon.FromHandle(Properties.Resources.zh.GetHicon()); break;
-							case "be":
-								flagicon = Icon.FromHandle(Properties.Resources.be.GetHicon()); break;
-							case "de":
-								flagicon = Icon.FromHandle(Properties.Resources.de.GetHicon()); break;
-							case "sp":
-								flagicon = Icon.FromHandle(Properties.Resources.sp.GetHicon()); break;
-							case "it":
-								flagicon = Icon.FromHandle(Properties.Resources.it.GetHicon()); break;
-							case "fr":
-								flagicon = Icon.FromHandle(Properties.Resources.fr.GetHicon()); break;
-							default:
-								flagicon = Icon; break;
+								case "ru":
+									flagicon = Icon.FromHandle(Properties.Resources.ru.GetHicon());
+									break;
+								case "en":
+									flagicon = Icon.FromHandle(Properties.Resources.en.GetHicon());
+									break;
+								case "jp":
+									flagicon = Icon.FromHandle(Properties.Resources.jp.GetHicon());
+									break;
+								case "bu":
+									flagicon = Icon.FromHandle(Properties.Resources.bu.GetHicon());
+									break;
+								case "uk":
+									flagicon = Icon.FromHandle(Properties.Resources.uk.GetHicon());
+									break;
+								case "po":
+									flagicon = Icon.FromHandle(Properties.Resources.po.GetHicon());
+									break;
+								case "sw":
+									flagicon = Icon.FromHandle(Properties.Resources.sw.GetHicon());
+									break;
+								case "zh":
+									flagicon = Icon.FromHandle(Properties.Resources.zh.GetHicon());
+									break;
+								case "be":
+									flagicon = Icon.FromHandle(Properties.Resources.be.GetHicon());
+									break;
+								case "de":
+									flagicon = Icon.FromHandle(Properties.Resources.de.GetHicon());
+									break;
+								case "sp":
+									flagicon = Icon.FromHandle(Properties.Resources.sp.GetHicon());
+									break;
+								case "it":
+									flagicon = Icon.FromHandle(Properties.Resources.it.GetHicon());
+									break;
+								case "fr":
+									flagicon = Icon.FromHandle(Properties.Resources.fr.GetHicon());
+									break;
+								default:
+									flagicon = Icon;
+									break;
 							}
 						latestSwitch = flagname;
 						icon.trIcon.Icon = flagicon;
 					}
+				} else {
+					Logging.Log("Layout id was ["+lcid+"].", 2);
 				}
-				else {
+			} else {
 				if (MMain.MyConfs.ReadBool("Functions", "SymIgnModeEnabled") && MMain.MyConfs.ReadBool("EnabledHotkeys", "HKSymIgnEnabled"))
 					Icon = icon.trIcon.Icon = Properties.Resources.MahouSymbolIgnoreMode;
 				else
 					Icon = icon.trIcon.Icon = Properties.Resources.MahouTrayHD;
-				}
+			}
 			if (MMain.MyConfs.ReadBool("Functions", "IconVisibility")) {
 				icon.Show();
 			} else {
