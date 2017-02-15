@@ -30,7 +30,7 @@ using System.Resources;
 // Можно задать все значения или принять номер построения и номер редакции по умолчанию, 
 // используя "*", как показано ниже:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion ("1.5.2.3")]
-[assembly: AssemblyFileVersion ("1.5.2.3")]
+[assembly: AssemblyVersion ("1.5.2.4")]
+[assembly: AssemblyFileVersion ("1.5.2.4")]
 [assembly: NeutralResourcesLanguage ("")]
 [assembly: AssemblyDefaultAlias ("BladeMight")]
