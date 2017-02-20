@@ -17,6 +17,7 @@
 	<dependencies>
 		<dependency id="DotNet4.0" version="4.0.30319.20141222" />
 	</dependencies>
+	<packageSourceUrl>https://github.com/BladeMight/Mahou/tree/master/Chocolatey</packageSourceUrl>
     <projectSourceUrl>http://github.com/BladeMight/Mahou</projectSourceUrl>
     <docsUrl>http://github.com/BladeMight/Mahou/wiki</docsUrl>
     <bugTrackerUrl>http://github.com/BladeMight/Mahou/issues</bugTrackerUrl>
