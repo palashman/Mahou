@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Mahou</id>
+    <version>2.0.0.0-beta</version>
+    <title>Mahou</title>
+    <authors>BladeMight</authors>
+    <owners>BladeMight</owners>
+    <licenseUrl>https://www.gnu.org/licenses/old-licenses/gpl-2.0.html</licenseUrl>
+    <projectUrl>http://github.com/BladeMight/Mahou</projectUrl>
+    <iconUrl>http://i.piccy.info/i9/29fa819a849fa70f38ddfcf9c29d1c99/1480349941/6018/1094353/Mahou.jpg</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Layout switcher that can switch wrongly typed text in correct layout. And much more...</description>
+    <summary>Magic layout switcher.</summary>
+    <releaseNotes>http://github.com/BladeMight/Mahou/releases</releaseNotes>
+    <tags>layout switcher #</tags>
+	<dependencies>
+		<dependency id="DotNet4.0" version="4.0.30319.20141222" />
+	</dependencies>
+    <projectSourceUrl>http://github.com/BladeMight/Mahou</projectSourceUrl>
+    <docsUrl>http://github.com/BladeMight/Mahou/wiki</docsUrl>
+    <bugTrackerUrl>http://github.com/BladeMight/Mahou/issues</bugTrackerUrl>
+  </metadata>
+</package>
