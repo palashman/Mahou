@@ -8,7 +8,7 @@ namespace Mahou
 {
 	public static class Logging
 	{
-		readonly static string logdir = Path.Combine(Update.nPath, "Logs");
+		readonly static string logdir = Path.Combine(MahouUI.nPath, "Logs");
 		readonly static string log = Path.Combine(logdir, DateTime.Today.ToString("yyyy.MM.dd") + ".log");
 		static int errcount = 0; // Logging errors count
 		static bool messagebox = false;	// To prevent multiple messageboxes
@@ -22,7 +22,7 @@ namespace Mahou
 			if (!File.Exists(Configs.filePath)) 
 				MMain.MyConfs = new Configs();				
 			if (MMain.MyConfs.ReadBool("Functions", "Logging")) { 
-				if (!Directory.Exists(Path.Combine(Update.nPath, "Logs")))
+				if (!Directory.Exists(Path.Combine(MahouUI.nPath, "Logs")))
 					Directory.CreateDirectory(logdir);
 				var messagetype = "Info";
 				var msgtime = DateTime.Now.ToString("hh:mm:ss.fff");
@@ -49,7 +49,7 @@ namespace Mahou
 						Debug.WriteLine(msgtime + " [LogError]\r\n                    " + e.Message + "\r\n" + e.StackTrace + "\r\n");
 						if (errcount > 10 && !messagebox) {
 							messagebox = true;
-							MessageBox.Show(MMain.Msgs[14] + "\r\n\r\n" + e.Message + "\r\n\r\n" + e.StackTrace, MMain.Msgs[5]);
+//							MessageBox.Show(MMain.Msgs[14] + "\r\n\r\n" + e.Message + "\r\n\r\n" + e.StackTrace, MMain.Msgs[5]);
 							MMain.MyConfs.Write("Functions", "Logging", "False");
 							errcount = 0;
 							messagebox = false;

@@ -4,15 +4,19 @@ namespace Mahou
 {
 	public class Hotkey
 	{
+		public readonly bool enabled;
 		public readonly int keyCode;
 		public readonly bool[] modifs;
+		public readonly bool Double;
 		/// <summary>
-		/// Initializes an hotkey, modifs are [ctrl, shift, alt].
+		/// Initializes an hotkey, modifs are [ctrl, shift, alt, win].
 		/// </summary>
-		public Hotkey(int keyCode, bool[] modifs)
+		public Hotkey(bool enabled, int keyCode, bool[] modifs, bool Double = false)
 		{
+			this.enabled = enabled;
 			this.keyCode = keyCode;
 			this.modifs = modifs;
+			this.Double = Double;
 		}
 		/// <summary>
 		/// Checks equality of two Hotkeys.
@@ -22,9 +26,10 @@ namespace Mahou
 		public override bool Equals(object o)
 		{
 			return o is Hotkey && ((Hotkey)o).keyCode == keyCode &&
-			((Hotkey)o).modifs[0] == modifs[0] &&
-			((Hotkey)o).modifs[1] == modifs[1] &&
-			((Hotkey)o).modifs[2] == modifs[2];
+				((Hotkey)o).modifs[0] == modifs[0] &&
+				((Hotkey)o).modifs[1] == modifs[1] &&
+				((Hotkey)o).modifs[2] == modifs[2] &&
+				((Hotkey)o).modifs[3] == modifs[3];
 		}
 		/// <summary>
 		/// Gets hotkey hash code.
@@ -41,7 +46,7 @@ namespace Mahou
 		/// <returns></returns>
 		public static bool[] GetMods(string hkmods)
 		{
-			return new bool[] { hkmods.Contains("Control"), hkmods.Contains("Shift"), hkmods.Contains("Alt") };
+			return new bool[] { hkmods.Contains("Control"), hkmods.Contains("Shift"), hkmods.Contains("Alt"), hkmods.Contains("Win") };
 		}
 	}
 }

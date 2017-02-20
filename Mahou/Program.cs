@@ -24,11 +24,8 @@ namespace Mahou
 		public static WinAPI.LowLevelProc _mouse_proc = KMHook.MouseHookCallback;
 		public static Locales.Locale[] locales = Locales.AllList();
 		public static Configs MyConfs = new Configs();
-		public static MahouForm mahou;
+		public static MahouUI mahou;
 		public static List<string> lcnmid = new List<string>();
-		public static string[] UI = { };
-		public static string[] TTips = { };
-		public static string[] Msgs = { };
 		#endregion
 		[STAThread] //DO NOT REMOVE THIS
         public static void Main(string[] args)
@@ -49,43 +46,34 @@ namespace Mahou
 					Logging.Log("Too less layouts/locales. Program will exit.");
 					Locales.IfLessThan2();
 				} else {
-					mahou = new MahouForm();
-					InitLanguage();
+//					InitLanguage();
+					mahou = new MahouUI();
 					//Refreshes icon text language at startup
-					mahou.icon.RefreshText(MMain.UI[44], MMain.UI[42], MMain.UI[43]);
+//					mahou.icon.RefreshText(MMain.UI[44], MMain.UI[42], MMain.UI[43]);
 					KMHook.ReInitSnippets();
 					Application.EnableVisualStyles(); // Huh i did not noticed that it was missing... '~'
 					if (args.Length != 0)
 					if (args[0] == "_!_updated_!_") {
 						Logging.Log("Mahou updated.");
 						mahou.ToggleVisibility();
-						MessageBox.Show(Msgs[0], Msgs[1], MessageBoxButtons.OK, MessageBoxIcon.Information);
+//						MessageBox.Show(Msgs[0], Msgs[1], MessageBoxButtons.OK, MessageBoxIcon.Information);
 					}
 					StartHook();
+					foreach (Locales.Locale lc in MMain.locales) {	
+						MMain.lcnmid.Add(lc.Lang + "(" + lc.uId + ")");
+					}
 					//for first run, add your locale 1 & locale 2 to settings
-					if (MyConfs.Read("Locales", "locale1Lang") == "" && MyConfs.Read("Locales", "locale2Lang") == "") {
+					if (MyConfs.Read("Layouts", "MainLayout1") == "" && MyConfs.Read("Layouts", "MainLayout2") == "") {
 						Logging.Log("Initializing locales.");
-						MyConfs.Write("Locales", "locale1uId", locales[0].uId.ToString());
-						MyConfs.Write("Locales", "locale2uId", locales[1].uId.ToString());
-						MyConfs.Write("Locales", "locale1Lang", locales[0].Lang);
-						MyConfs.Write("Locales", "locale2Lang", locales[1].Lang);
+						MyConfs.Write("Layouts", "MainLayout1", lcnmid[0]);
+						MyConfs.Write("Layouts", "MainLayout2", lcnmid[1]);
+						mahou.cbb_MainLayout1.SelectedIndex = 0;
+						mahou.cbb_MainLayout2.SelectedIndex = 1;
 					}
 					Application.Run();
 					StopHook();
 				}
 			}
-		}
-		public static void InitLanguage()
-		{
-			if (MyConfs.Read("Locales", "LANGUAGE") == "RU") {
-				UI = Translation.UIRU;
-				TTips = Translation.ToolTipsRU;
-				Msgs = Translation.MessagesRU;
-			} else if (MyConfs.Read("Locales", "LANGUAGE") == "EN") {
-				UI = Translation.UIEN;
-				TTips = Translation.ToolTipsEN;
-				Msgs = Translation.MessagesEN;
-			}   
 		}
 		#region Actions with hooks
 		public static void StartHook()
@@ -119,8 +107,8 @@ namespace Mahou
 			if (ActHandle == IntPtr.Zero) {
 				return false;
 			}
-			var active = mahou.Handle == ActHandle || mahou.moreConfigs.Handle == ActHandle;
-			Logging.Log("Mahou is active = ["+active+"]" + ", Mahou handle [" + mahou.Handle +"], moreConfigs handle ["+mahou.moreConfigs.Handle+"], fore win handle ["+ActHandle+"]");
+			var active = mahou.Handle == ActHandle;
+			Logging.Log("Mahou is active = ["+active+"]" + ", Mahou handle [" + mahou.Handle +"], fore win handle ["+ActHandle+"]");
 			return active;
 		}
 		#endregion

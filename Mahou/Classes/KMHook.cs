@@ -15,9 +15,10 @@ namespace Mahou
 	{
 		#region Variables
 		public static bool self, win, alt, ctrl, shift,
-			shiftRP, ctrlRP, altRP, //RP = Re-Press
-			awas, swas, cwas, afterEOS, //*was = alt/shift/ctrl was
-			keyAfterCTRL, hklOK, hksOK, hklineOK, hkSIOK,
+			shiftRP, ctrlRP, altRP, winRP, //RP = Re-Press
+			awas, swas, cwas, wwas, afterEOS, //*was = alt/shift/ctrl was
+			keyAfterCTRL, hklOK, hksOK, hklineOK, hkSIOK, hkExitOK,
+			hksTTCOK, hksTRCOK, hksTSCOK, hksTrslOK, hkShWndOK, hkcwdsOK,
 			hotkeywithmodsfired, csdoing, incapt, waitfornum;
 		static List<Keys> tempNumpads = new List<Keys>();
 		static List<char> c_snip = new List<char>();
@@ -26,6 +27,22 @@ namespace Mahou
 		public static string[] exps = new [] {
 			"Mahou (魔法) - Magical layout switcher.",
 			"BladeMight@gmail.com"
+		};
+		static Dictionary<string, string> transliterationDict = new Dictionary<string, string>() { 
+	            {"Є", "EH"}, {"І", "И"}, {"і", "и"}, {"№", "#"}, {"є", "eh"},
+	            {"А", "A"}, {"Б", "B"}, {"В", "V"}, {"ВВ", "W"}, {"Г", "G"}, {"Д", "D"},
+				{"Е", "E"}, {"Ё", "JO"}, {"Ж", "ZH"}, {"З", "Z"}, {"И", "I"}, 
+				{"Й", "JJ"}, {"К", "K"}, {"Л", "L"}, {"М", "M"}, {"Н", "N"},
+				{"О", "O"}, {"П", "P"}, {"Р", "R"}, {"С", "S"}, {"Т", "T"},
+				{"У", "U"}, {"Ф", "F"}, {"Х", "H"}, {"Ц", "C"}, {"Ч", "CH"},
+				{"Ш", "SH"}, {"Щ", "SCH"}, {"Ъ", "'"}, {"Ы", "Y"}, {"Ь", "J"},
+				{"Э", "EH"}, {"Ю", "YU"}, {"Я", "YA"}, {"а", "a"}, {"б", "b"}, 
+				{"в", "v"}, {"вв", "w"}, {"г", "g"}, {"д", "d"}, {"е", "e"}, {"ё", "jo"}, 
+				{"ж", "zh"}, {"з", "z"}, {"и", "i"}, {"й", "jj"}, {"к", "k"}, 
+				{"л", "l"}, {"м", "m"}, {"н", "n"}, {"о", "o"}, {"п", "p"}, 
+				{"р", "r"}, {"с", "s"}, {"т", "t"}, {"у", "u"}, {"ф", "f"},
+				{"х", "h"}, {"ц", "c"}, {"ч", "ch"}, {"ш", "sh"}, {"щ", "sch"},
+				{"ъ", ":"}, {"ы", "y"}, {"ь", "j"}, {"э", "eh"}, {"ю", "yu"}, {"я", "ya"}
 		};
 		#endregion
 		#region Keyboard & Mouse hooks callbacks
@@ -109,7 +126,7 @@ namespace Mahou
 						vkCode = 20;
 						break;
 				}
-				var thishk = new Hotkey(vkCode, new []{ ctrl, shift, alt });
+				var thishk = new Hotkey(true, vkCode, new []{ ctrl, shift, alt, win });
 				if (!self && thishk.keyCode == 20 &&
 				   (thishk.Equals(MMain.mahou.HKCLast) ||
 				   thishk.Equals(MMain.mahou.HKCLine) ||
@@ -124,69 +141,90 @@ namespace Mahou
 					KeybdEvent(Keys.CapsLock, 2);
 					self = false;
 				}
-				if (!self && wParam == (IntPtr)WinAPI.WM_KEYUP) {
+				if (!self && (wParam == (IntPtr)WinAPI.WM_KEYUP || wParam == (IntPtr)WinAPI.WM_SYSKEYUP)) {
 					MMain.mahou.IfNotExist();
-					if (!MMain.MyConfs.ReadBool("DoubleKey", "Use"))
-						hklOK = hksOK = hklineOK = hkSIOK = true;
+//					if (!MMain.MyConfs.ReadBool("DoubleKey", "Use"))
+					if (!MMain.mahou.HKCLast.Double)
+						hklOK = true;
+					if (!MMain.mahou.HKCSelection.Double)
+						hksOK = true;
+					if (!MMain.mahou.HKCLine.Double)
+						hklineOK = true;
+					if (!MMain.mahou.HKConMorWor.Double)
+						hkcwdsOK = true;
+					if (!MMain.mahou.HKSymIgn.Double)
+						hkSIOK = true;
+					if (!MMain.mahou.HKTitleCase.Double)
+						hksTTCOK = true;
+					if (!MMain.mahou.HKRandomCase.Double)
+						hksTRCOK = true;
+					if (!MMain.mahou.HKSwapCase.Double)
+						hksTSCOK = true;
+					if (!MMain.mahou.HKTransliteration.Double)
+						hksTrslOK = true;
+					if (!MMain.mahou.Mainhk.Double)
+						hkShWndOK = true;
+					if (!MMain.mahou.ExitHk.Double)
+						hkExitOK = true;
 					if (!MMain.MahouActive()) {
-						if (MMain.MyConfs.ReadBool("EnabledHotkeys", "HKCSEnabled")) {
-							if (thishk.Equals(MMain.mahou.HKCSelection) && hksOK) {
+						if (thishk.Equals(MMain.mahou.HKCSelection) && MMain.mahou.HKCSelection.enabled) {
+							if (hksOK) {
 								Logging.Log("Hotkey convert selection fired.");
-								if (MMain.MyConfs.ReadBool("Functions", "BlockCTRL") &&
-								   MMain.MyConfs.Read("Hotkeys", "HKCSMods").Contains("Control")) {
+								if (MMain.MyConfs.ReadBool("Functions", "BlockMahouHotkeysWithCtrl") &&
+								    MMain.mahou.HKCSelection.modifs[0]) {
 								} else {
-									if (Array.Exists(Hotkey.GetMods(MMain.MyConfs.Read("Hotkeys", "HKCSMods")), b => b == true) &&
+									if (Array.Exists(MMain.mahou.HKCSelection.modifs, b => b == true) &&
 									   MMain.MyConfs.ReadBool("Functions", "RePress")) {
 										hotkeywithmodsfired = true;
-										RePressAfter(MMain.MyConfs.Read("Hotkeys", "HKCSMods"));
+										RePressAfter(MMain.mahou.HKCSelection.modifs);
 									}
-									SendModsUp(Hotkey.GetMods(MMain.MyConfs.Read("Hotkeys", "HKCSMods")));
+									SendModsUp(MMain.mahou.HKCSelection.modifs);
 									IfKeyIsMod(Key);
 									ConvertSelection();
 								}
 							}
-							if (thishk.Equals(MMain.mahou.HKCSelection) && MMain.MyConfs.ReadBool("DoubleKey", "Use")) {
+							if (MMain.mahou.HKCSelection.Double) {
 								Logging.Log("Waiting for second hotkey press of convert selection hotkey.");
 								hksOK = true;
-								doublekey.Interval = MMain.MyConfs.ReadInt("DoubleKey", "Delay");
+								doublekey.Interval = MMain.MyConfs.ReadInt("Timings", "DoubleHotkey2ndPressWait");
 								doublekey.Start();
 							}
 						}
-						if (MMain.MyConfs.ReadBool("EnabledHotkeys", "HKCLEnabled")) {
-							if (thishk.Equals(MMain.mahou.HKCLast) && hklOK && !csdoing) {
+						if (thishk.Equals(MMain.mahou.HKCLast) && MMain.mahou.HKCLast.enabled) {
+							if (hklOK && !csdoing) {
 								Logging.Log("Hotkey convert last word fired.");
-								if (MMain.MyConfs.ReadBool("Functions", "BlockCTRL") &&
-								   MMain.MyConfs.Read("Hotkeys", "HKCLMods").Contains("Control")) {
+								if (MMain.MyConfs.ReadBool("Functions", "BlockMahouHotkeysWithCtrl") &&
+								    MMain.mahou.HKCLast.modifs[0]) {
 								} else {
-									if (Array.Exists(Hotkey.GetMods(MMain.MyConfs.Read("Hotkeys", "HKCLMods")), b => b == true) &&
+									if (Array.Exists(MMain.mahou.HKCLast.modifs, b => b == true) &&
 									   MMain.MyConfs.ReadBool("Functions", "RePress")) {
 										hotkeywithmodsfired = true;
-										RePressAfter(MMain.MyConfs.Read("Hotkeys", "HKCLMods"));
+										RePressAfter(MMain.mahou.HKCLast.modifs);
 									}
-									SendModsUp(Hotkey.GetMods(MMain.MyConfs.Read("Hotkeys", "HKCLMods")));
+									SendModsUp(MMain.mahou.HKCLast.modifs);
 									IfKeyIsMod(Key);
 									ConvertLast(MMain.c_word);
 								}
 							}
-							if (thishk.Equals(MMain.mahou.HKCLast) && MMain.MyConfs.ReadBool("DoubleKey", "Use")) {
+							if (MMain.mahou.HKCLast.Double) {
 								Logging.Log("Waiting for second hotkey press of convert last word hotkey.");
 								hklOK = true;
-								doublekey.Interval = MMain.MyConfs.ReadInt("DoubleKey", "Delay");
+								doublekey.Interval = MMain.MyConfs.ReadInt("Timings", "DoubleHotkey2ndPressWait");
 								doublekey.Start();
 							}
 						}
-						if (MMain.MyConfs.ReadBool("EnabledHotkeys", "HKCLineEnabled")) {
-							if (thishk.Equals(MMain.mahou.HKCLine) && hklineOK && !csdoing) {
+						if (thishk.Equals(MMain.mahou.HKCLine) && MMain.mahou.HKCLine.enabled) {
+							if (hklineOK && !csdoing) {
 								Logging.Log("Hotkey convert line fired.");
-								if (MMain.MyConfs.ReadBool("Functions", "BlockCTRL") &&
-								   MMain.MyConfs.Read("Hotkeys", "HKCLineMods").Contains("Control")) {
+								if (MMain.MyConfs.ReadBool("Functions", "BlockMahouHotkeysWithCtrl") &&
+								    MMain.mahou.HKCLine.modifs[0]) {
 								} else {
-									if (Array.Exists(Hotkey.GetMods(MMain.MyConfs.Read("Hotkeys", "HKCLineMods")), b => b == true) &&
+									if (Array.Exists(MMain.mahou.HKCLine.modifs, b => b == true) &&
 									   MMain.MyConfs.ReadBool("Functions", "RePress")) {
 										hotkeywithmodsfired = true;
-										RePressAfter(MMain.MyConfs.Read("Hotkeys", "HKCLineMods"));
+										RePressAfter(MMain.mahou.HKCLine.modifs);
 									}
-									SendModsUp(Hotkey.GetMods(MMain.MyConfs.Read("Hotkeys", "HKCLineMods")));
+									SendModsUp(MMain.mahou.HKCLine.modifs);
 									IfKeyIsMod(Key);
 									var line = new List<YuKey>();
 									foreach (var word in MMain.c_words) {
@@ -195,44 +233,89 @@ namespace Mahou
 									ConvertLast(line);
 								}
 							}
-							if (thishk.Equals(MMain.mahou.HKCLine) && MMain.MyConfs.ReadBool("DoubleKey", "Use")) {
+							if (MMain.mahou.HKCLine.Double) {
 								Logging.Log("Waiting for second hotkey press of convert line hotkey.");
 								hklineOK = true;
-								doublekey.Interval = MMain.MyConfs.ReadInt("DoubleKey", "Delay");
+								doublekey.Interval = MMain.MyConfs.ReadInt("Timings", "DoubleHotkey2ndPressWait");
+								doublekey.Start();
+							}
+						}
+						if (thishk.Equals(MMain.mahou.HKTransliteration) && MMain.mahou.HKTransliteration.enabled) {
+							if (hksTrslOK) {
+								Logging.Log("Hotkey transliteration fired.");
+								Debug.WriteLine("LALA");
+								TransliterateSelection();
+							}
+							if (MMain.mahou.HKTransliteration.Double) {
+								Logging.Log("Waiting for second hotkey press of transliteration hotkey.");
+								hksTrslOK = true;
+								doublekey.Interval = MMain.MyConfs.ReadInt("Timings", "DoubleHotkey2ndPressWait");
 								doublekey.Start();
 							}
 						}
 						csdoing = false;
 					}
-					if (MMain.MyConfs.ReadBool("EnabledHotkeys", "HKSymIgnEnabled")) {
-						if (thishk.Equals(MMain.mahou.HKSymIgn) && hkSIOK) {
+					//these are global, so they don't need to be stopped when window is visible.
+					if (thishk.Equals(MMain.mahou.HKSymIgn) && MMain.mahou.HKSymIgn.enabled) {
+						if (hkcwdsOK) {
 							Logging.Log("Hotkey symbol ignore mode fired.");
-							if (MMain.MyConfs.ReadBool("Functions", "SymIgnModeEnabled")) {
-								MMain.MyConfs.Write("Functions", "SymIgnModeEnabled", "false");
+							if (MMain.MyConfs.ReadBool("Functions", "SymbolIgnoreModeEnabled")) {
+								MMain.mahou.SymIgnEnabled = false;
+								MMain.MyConfs.Write("Functions", "SymbolIgnoreModeEnabled", "false");
 								MMain.mahou.Icon = MMain.mahou.icon.trIcon.Icon = Properties.Resources.MahouTrayHD;
 							} else {
-								MMain.MyConfs.Write("Functions", "SymIgnModeEnabled", "true");
+								MMain.MyConfs.Write("Functions", "SymbolIgnoreModeEnabled", "true");
+								MMain.mahou.SymIgnEnabled = true;
 								MMain.mahou.Icon = MMain.mahou.icon.trIcon.Icon = Properties.Resources.MahouSymbolIgnoreMode;
 							}
 						}
-						if (thishk.Equals(MMain.mahou.HKSymIgn) && MMain.MyConfs.ReadBool("DoubleKey", "Use")) {
+						if (MMain.mahou.HKSymIgn.Double) {
 							Logging.Log("Waiting for second hotkey press of symbol ignore mode hotkey.");
 							hkSIOK = true;
-							doublekey.Interval = MMain.MyConfs.ReadInt("DoubleKey", "Delay");
+							doublekey.Interval = MMain.MyConfs.ReadInt("Timings", "DoubleHotkey2ndPressWait");
+							doublekey.Start();
+						}
+					}
+					if (thishk.Equals(MMain.mahou.HKConMorWor) && MMain.mahou.HKConMorWor.enabled) {
+						if (hkcwdsOK) {
+							Logging.Log("Hotkey convert words fired.");
+							waitfornum = true;
+						}
+						if (MMain.mahou.HKConMorWor.Double) {
+							Logging.Log("Waiting for second hotkey press of convert words hotkey.");
+							hkcwdsOK = true;
+							doublekey.Interval = MMain.MyConfs.ReadInt("Timings", "DoubleHotkey2ndPressWait");
+							doublekey.Start();
+						}
+					}
+					if (thishk.Equals(MMain.mahou.Mainhk) && MMain.mahou.Mainhk.enabled) {
+						if (hkShWndOK) {
+							Logging.Log("Hotkey toggle main window fired.");
+							MMain.mahou.ToggleVisibility();
+						}
+						if (MMain.mahou.Mainhk.Double) {
+							Logging.Log("Waiting for second hotkey press of toggle main window hotkey.");
+							hkShWndOK = true;
+							doublekey.Interval = MMain.MyConfs.ReadInt("Timings", "DoubleHotkey2ndPressWait");
+							doublekey.Start();
+						}
+					}
+					if (thishk.Equals(MMain.mahou.ExitHk) && MMain.mahou.ExitHk.enabled) {
+						if (hkExitOK) {
+							Logging.Log("Hotkey exit fired.");
+							MMain.mahou.ExitProgram();
+						}
+						if (MMain.mahou.ExitHk.Double) {
+							Logging.Log("Waiting for second hotkey press of exit hotkey.");
+							hkExitOK = true;
+							doublekey.Interval = MMain.MyConfs.ReadInt("Timings", "DoubleHotkey2ndPressWait");
 							doublekey.Start();
 						}
 					}
 				}
-				//these are global, so they don't need to be stopped when window is visible.
-				if (thishk.Equals(MMain.mahou.HKConMorWor) && wParam == (IntPtr)WinAPI.WM_KEYUP)
-					waitfornum = true;
-				if (thishk.Equals(MMain.mahou.Mainhk) && wParam == (IntPtr)WinAPI.WM_KEYUP)
-					MMain.mahou.ToggleVisibility();
-				if (thishk.Equals(MMain.mahou.ExitHk) && wParam == (IntPtr)WinAPI.WM_KEYUP)
-					MMain.mahou.ExitProgram();
 				#endregion
 				#region Snippets
-				if (MMain.MyConfs.ReadBool("Functions", "Snippets")) {
+				if (MMain.mahou.SnippetsEnabled) {
 					if (((Key >= Keys.D0 && Key <= Keys.Z) || // This is 0-9 & A-Z
 					   Key >= Keys.Oem1 && Key <= Keys.OemBackslash // All other printable
 					   ) && !self && !win && !alt && !ctrl && wParam == (IntPtr)WinAPI.WM_KEYUP) {
@@ -268,8 +351,8 @@ namespace Mahou
 								} catch {
 									Logging.Log("Some snippets configured wrong, check them.", 1);
 									// If not use TASK, form(MessageBox) won't accept the keys(Enter/Escape/Alt+F4).
-									var tsk = new Task(() => MessageBox.Show(MMain.Msgs[10], MMain.Msgs[11], MessageBoxButtons.OK, MessageBoxIcon.Error));
-									tsk.Start();
+//									var tsk = new Task(() => MessageBox.Show(MMain.Msgs[10], MMain.Msgs[11], MessageBoxButtons.OK, MessageBoxIcon.Error));
+//									tsk.Start();
 									KInputs.MakeInput(KInputs.AddString(snip));
 								}
 								self = false;
@@ -297,83 +380,33 @@ namespace Mahou
 						awas = false;
 						mods[2] = true;
 					}
+					if (wwas) {
+						wwas = false;
+						mods[3] = true;
+					}
 					SendModsUp(mods);
 					self = false;
 				}
 				#endregion
-				#region Switch only key
-				if (!self && !shift && MMain.MyConfs.Read("HotKeys", "OnlyKeyLayoutSwicth") == "CapsLock" &&
-				   Key == Keys.CapsLock && wParam == (IntPtr)WinAPI.WM_KEYUP) {
-					self = true;
-					ChangeLayout();
-					if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
-						KeybdEvent(Keys.CapsLock, 0);
-						KeybdEvent(Keys.CapsLock, 2);
-					}
-					Logging.Log("Changing layout by CapsLock key.");
-					self = false;
-				}
-				if (!self && !shift && MMain.MyConfs.Read("HotKeys", "OnlyKeyLayoutSwicth") == "CapsLock" &&
-				   Key == Keys.CapsLock && wParam == (IntPtr)WinAPI.WM_KEYDOWN) {
-					self = true;
-					//Code below removes CapsLock original action, but if hold will not work and will stuck, press again to off.
-					KeybdEvent(Keys.CapsLock, 0);
-					KeybdEvent(Keys.CapsLock, 2);
-					self = false;
-				}
+				#region One key layout switch
 				// Additional fix for scroll tip.
 				if (!self && MMain.MyConfs.ReadBool("Functions", "ScrollTip") &&
 				   Key == Keys.Scroll && wParam == (IntPtr)WinAPI.WM_KEYDOWN) {
 					self = true;
-					if (Control.IsKeyLocked(Keys.Scroll)) { // Turn off if already on
-						KeybdEvent(Keys.Scroll, 0);
-						KeybdEvent(Keys.Scroll, 2);
-					}
 					KeybdEvent(Keys.Scroll, 0);
 					KeybdEvent(Keys.Scroll, 2);
 					self = false;
 				}
-				if (!self && MMain.MyConfs.Read("HotKeys", "OnlyKeyLayoutSwicth") == "Left Control" &&
-				   Key == Keys.LControlKey && wParam == (IntPtr)WinAPI.WM_KEYUP && !keyAfterCTRL &&
-				   !MMain.MyConfs.ReadBool("ExtCtrls", "UseExtCtrls")) {
-					self = true;
-					if (MMain.MyConfs.ReadBool("Functions", "EmulateLayoutSwitch")) {
-						KeybdEvent(Keys.LControlKey, 2); // Sends it up to make it work when using "EmulateLayoutSwitch" 
-					}
-					Logging.Log("Changing layout by LCtrl key.");
-					ChangeLayout();
-					KeybdEvent(Keys.LControlKey, 2); //fix for WinAPI.PostMessage, it somehow o_0 sends another ctrl...
-
-					self = false;
+				if (MMain.mahou.ChangeLayouByKey) {
+					SpecificKey(Key, wParam, MMain.mahou.Key1, 1);
+					SpecificKey(Key, wParam, MMain.mahou.Key2, 2);
+					SpecificKey(Key, wParam, MMain.mahou.Key3, 3);
+					SpecificKey(Key, wParam, MMain.mahou.Key4, 4);
+					if (!self && ctrl && (Key != Keys.LControlKey && Key != Keys.RControlKey && Key != Keys.ControlKey))
+						keyAfterCTRL = true;
+					else 
+						keyAfterCTRL = false;
 				}
-				if (!self && MMain.MyConfs.Read("HotKeys", "OnlyKeyLayoutSwicth") == "Right Control" &&
-				   Key == Keys.RControlKey && wParam == (IntPtr)WinAPI.WM_KEYUP && !keyAfterCTRL &&
-				   !MMain.MyConfs.ReadBool("ExtCtrls", "UseExtCtrls")) {
-					self = true;
-					if (MMain.MyConfs.ReadBool("Functions", "EmulateLayoutSwitch")) {
-						KeybdEvent(Keys.RControlKey, 2); // Sends it up to make it work when using "EmulateLayoutSwitch" 
-					}
-					Logging.Log("Changing layout by RCtrl key.");
-					ChangeLayout();
-					self = false;
-				}
-				#endregion
-				#region By Ctrls switch
-				keyAfterCTRL |= !self && wParam == (IntPtr)WinAPI.WM_KEYUP && ctrl;
-				if (!self && MMain.MyConfs.ReadBool("ExtCtrls", "UseExtCtrls") && wParam == (IntPtr)WinAPI.WM_KEYUP && !keyAfterCTRL) {
-					if (Key == Keys.RControlKey) {
-						Logging.Log("Switching to specific layout by RCtrl key.");
-						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, MMain.MyConfs.ReadUInt("ExtCtrls", "RCLocale"));
-					}
-					if (Key == Keys.LControlKey) {
-						Logging.Log("Switching to specific layout by LCtrl key.");
-						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, MMain.MyConfs.ReadUInt("ExtCtrls", "LCLocale"));
-					}
-				}
-				if (!self && ctrl && (Key != Keys.LControlKey && Key != Keys.RControlKey && Key != Keys.ControlKey))
-					keyAfterCTRL = true;
-				else 
-					keyAfterCTRL = false;
 				#endregion
 				#region Other, when KeyDown
 				if (nCode >= 0 && wParam == (IntPtr)WinAPI.WM_KEYDOWN && !self && !waitfornum) {
@@ -390,7 +423,7 @@ namespace Mahou
 								MMain.c_words.RemoveAt(MMain.c_words.Count - 1);
 							}
 						}
-						if (MMain.MyConfs.ReadBool("Functions", "Snippets")) {
+						if (MMain.MyConfs.ReadBool("Snippets", "SnippetsEnabled")) {
 							if (c_snip.Count != 0) {
 								c_snip.RemoveAt(c_snip.Count - 1);
 								Logging.Log("Removed one character from current snippet.");
@@ -407,7 +440,7 @@ namespace Mahou
 						MMain.c_word.Clear();
 						MMain.c_words.Clear();
 						Logging.Log("Words cleared.");
-						if (MMain.MyConfs.ReadBool("Functions", "Snippets")) {
+						if (MMain.mahou.SnippetsEnabled) {
 							c_snip.Clear();
 							Logging.Log("Snippet cleared.");
 						}
@@ -416,7 +449,7 @@ namespace Mahou
 						Logging.Log("Adding one new empty word to words, and adding to it [Space] key.");
 						MMain.c_words.Add(new List<YuKey>());
 						MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() { key = Keys.Space });
-						if (MMain.MyConfs.ReadBool("Functions", "EatOneSpace") && MMain.c_word.Count != 0 &&
+						if (MMain.mahou.AddOneSpace && MMain.c_word.Count != 0 &&
 						   MMain.c_word[MMain.c_word.Count - 1].key != Keys.Space) {
 							Logging.Log("Eat one space passed, next space will clear last word.");
 							MMain.c_word.Add(new YuKey() { key = Keys.Space });
@@ -501,7 +534,7 @@ namespace Mahou
 					MMain.c_word.Clear();
 					MMain.c_words.Clear();
 					Logging.Log("Last word & words cleared [with mouse click].");
-					if (MMain.MyConfs.ReadBool("Functions", "Snippets")) {
+					if (MMain.MyConfs.ReadBool("Snippets", "SnippetsEnabled")) {
 						c_snip.Clear();
 						Logging.Log("Current snippet cleared[with mouse click].");
 					}
@@ -516,6 +549,130 @@ namespace Mahou
 		}
 		#endregion
 		#region Functions/Struct
+		static void SpecificKey(Keys Key, IntPtr wParam, int specificKey, int specKeyId)
+		{
+//			Debug.WriteLine("Spekky->" + specificKey + " Ky->" + Key + " skId->" + specKeyId);
+//			Debug.WriteLine("Speekky->" + (Key == Keys.CapsLock));
+			if (!shift && specificKey == 1 && Key == Keys.CapsLock &&
+			    wParam == (IntPtr)WinAPI.WM_KEYDOWN && !self) {
+				self = true;
+				//Code below removes CapsLock original action, but if hold will not work and will stuck, press again to off.
+				KeybdEvent(Keys.CapsLock, 0);
+				KeybdEvent(Keys.CapsLock, 2);
+				self = false;
+			}
+			if (wParam == (IntPtr)WinAPI.WM_KEYUP && !self) {
+				#region Switch between layouts with one key
+				var specidlayout = MMain.MyConfs.Read("Layouts", "SpecificLayout" + specKeyId);
+				if (specidlayout == Languages.Russian.SwitchBetween ||
+				     specidlayout == Languages.English.SwitchBetween) {
+					if (!shift && specificKey == 1 && Key == Keys.CapsLock) {
+						self = true;
+						ChangeLayout();
+						if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
+							KeybdEvent(Keys.CapsLock, 0);
+							KeybdEvent(Keys.CapsLock, 2);
+						}
+						Logging.Log("Changing layout by CapsLock key.");
+						self = false;
+					}
+					if (specificKey == 2 && Key == Keys.LControlKey) {
+						self = true;
+//						if (MMain.mahou.EmulateLS) {
+//							KeybdEvent(Keys.LControlKey, 2); // Sends it up to make it work when using "EmulateLayoutSwitch" 
+//						}
+						Logging.Log("Changing layout by LCtrl key.");
+						ChangeLayout();
+						KeybdEvent(Keys.LControlKey, 2); //fix for WinAPI.PostMessage, it somehow o_0 sends another ctrl...
+
+						self = false;
+					}
+					if (specificKey == 3 && Key == Keys.RControlKey) {
+						self = true;
+//						if (MMain.mahou.EmulateLS) {
+//							KeybdEvent(Keys.RControlKey, 2); // Sends it up to make it work when using "EmulateLayoutSwitch" 
+//						}
+						Logging.Log("Changing layout by RCtrl key.");
+						ChangeLayout();
+						self = false;
+					}
+					if (specificKey == 4 && Key == Keys.LShiftKey) {
+						self = true;
+//						if (MMain.mahou.EmulateLS) {
+//							KeybdEvent(Keys.LShiftKey, 2); // Sends it up to make it work when using "EmulateLayoutSwitch" 
+//						}
+						Logging.Log("Changing layout by LShift key.");
+						ChangeLayout();
+//						KeybdEvent(Keys.LShiftKey, 2); //fix for WinAPI.PostMessage, it somehow o_0 sends another ctrl...
+
+						self = false;
+					}
+					if (specificKey == 5 && Key == Keys.RShiftKey) {
+						self = true;
+//						if (MMain.mahou.EmulateLS) {
+//							KeybdEvent(Keys.RShiftKey, 2); // Sends it up to make it work when using "EmulateLayoutSwitch" 
+//						}
+						Logging.Log("Changing layout by RShift key.");
+						ChangeLayout();
+						self = false;
+					}
+					if (specificKey == 6 && Key == Keys.LMenu) {
+						self = true;
+//						if (MMain.mahou.EmulateLS) {
+//							KeybdEvent(Keys.LMenu, 2); // Sends it up to make it work when using "EmulateLayoutSwitch" 
+//						}
+						Logging.Log("Changing layout by LAlt key.");
+						ChangeLayout();
+//						KeybdEvent(Keys.LMenu, 2); //fix for WinAPI.PostMessage, it somehow o_0 sends another ctrl...
+
+						self = false;
+					}
+					if (specificKey == 7 && Key == Keys.RMenu) {
+						self = true;
+//						if (MMain.mahou.EmulateLS) {
+//							KeybdEvent(Keys.RMenu, 2); // Sends it up to make it work when using "EmulateLayoutSwitch" 
+//						}
+						Logging.Log("Changing layout by RAlt key.");
+						ChangeLayout();
+						self = false;
+					}
+					#endregion
+				} else {
+					#region By layout switch
+					self = true;
+					if (specificKey == 1 && Key == Keys.CapsLock) {
+						Logging.Log("Switching to specific layout by Caps Lock key.");
+						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(MMain.MyConfs.Read("Layouts", "SpecificLayout" + specKeyId)).uId);
+					}
+					if (specificKey == 2 && Key == Keys.LControlKey && !keyAfterCTRL) {
+						Logging.Log("Switching to specific layout by  LCtrl key.");
+						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(MMain.MyConfs.Read("Layouts", "SpecificLayout" + specKeyId)).uId);
+					}
+					if (specificKey == 3 && Key == Keys.RControlKey && !keyAfterCTRL) {
+						Logging.Log("Switching to specific layout by RCtrl key.");
+						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(MMain.MyConfs.Read("Layouts", "SpecificLayout" + specKeyId)).uId);
+					}
+					if (specificKey == 4 && Key == Keys.LShiftKey) {
+						Logging.Log("Switching to specific layout by LShift key.");
+						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(MMain.MyConfs.Read("Layouts", "SpecificLayout" + specKeyId)).uId);
+					}
+					if (specificKey == 5 && Key == Keys.RShiftKey) {
+						Logging.Log("Switching to specific layout by RShift key.");
+						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(MMain.MyConfs.Read("Layouts", "SpecificLayout" + specKeyId)).uId);
+					}
+					if (specificKey == 6 && Key == Keys.LMenu) {
+						Logging.Log("Switching to specific layout by LAlt key.");
+						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(MMain.MyConfs.Read("Layouts", "SpecificLayout" + specKeyId)).uId);	
+					}
+					if (specificKey == 7 && Key == Keys.RMenu) {
+						Logging.Log("Switching to specific layout by RAlt key.");
+						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(MMain.MyConfs.Read("Layouts", "SpecificLayout" + specKeyId)).uId);
+					}
+					self = false;
+				}
+				#endregion
+			}
+		}
 		/// <summary>
 		/// Converts selected text.
 		/// </summary>
@@ -539,8 +696,8 @@ namespace Mahou
 			//by pressing "Convert Selection hotkey" without selected text.
 			NativeClipboard.Clear();
 			Logging.Log("Getting selected text.");
-			if (MMain.MyConfs.ReadBool("Functions", "MoreTries"))
-				for (int i = 0; i != MMain.MyConfs.ReadInt("Functions", "TriesCount"); i++) {
+			if (MMain.MyConfs.ReadBool("Timings", "SelectedTextGetMoreTries"))
+				for (int i = 0; i != MMain.MyConfs.ReadInt("Timings", "SelectedTextGetMoreTriesCount"); i++) {
 					ClipStr = MakeCopy();
 					if (!String.IsNullOrEmpty(ClipStr))
 						break;
@@ -556,18 +713,20 @@ namespace Mahou
 				});
 				var result = "";
 				int items = 0;
-				if (MMain.MyConfs.ReadBool("Functions", "CSSwitch")) {
+				if (MMain.MyConfs.ReadBool("Functions", "ConvertSelectionLayoutSwitching")) {
 					Logging.Log("Using CS-Switch mode.");
 					self = true;
 					var wasLocale = Locales.GetCurrentLocale() & 0xffff;
 					var wawasLocale = wasLocale & 0xffff;
-					var nowLocale = wasLocale == (MMain.MyConfs.ReadUInt("Locales", "locale1uId") & 0xffff)
-						? MMain.MyConfs.ReadUInt("Locales", "locale2uId") & 0xffff
-						: MMain.MyConfs.ReadUInt("Locales", "locale1uId") & 0xffff;
+					var nowLocale = wasLocale == (Locales.GetLocaleFromString(MMain.MyConfs.Read("Layouts", "MainLayout1")).uId & 0xffff)
+						? Locales.GetLocaleFromString(MMain.MyConfs.Read("Layouts", "MainLayout2")).uId & 0xffff
+						: Locales.GetLocaleFromString(MMain.MyConfs.Read("Layouts", "MainLayout1")).uId & 0xffff;
 					ChangeLayout();
 					var index = 0;
+					var oneliner = Regex.Replace(ClipStr, "\r?\n|\r", "\n");
+					System.IO.File.WriteAllText(MahouUI.nPath+"\\onel", oneliner);
 					// Finally fixed this regex.... →             ↓↓        ↓
-					foreach (char c in Regex.Replace(ClipStr, "\r?\n|\r", "\n")) {
+					foreach (char c in oneliner) {
 						items++;
 						wasLocale = wawasLocale;
 						var s = new StringBuilder(10);
@@ -583,7 +742,7 @@ namespace Mahou
 						var bytes2 = new byte[255];
 						if (state2 == 1)
 							bytes2[(int)Keys.ShiftKey] = 0xFF;
-						if (MMain.MyConfs.ReadBool("Functions", "ExperimentalCSSwitch")) {
+						if (MMain.MyConfs.ReadBool("Functions", "ConvertSelectionLayoutSwitchingPlus")) {
 							Logging.Log("Using Experimental CS-Switch mode.");
 							WinAPI.ToUnicodeEx((uint)scan, (uint)scan, bytes, s, s.Capacity, 0, (IntPtr)wasLocale);
 							Logging.Log("Char 1 is [" + s + "] in locale +[" + wasLocale + "].");
@@ -636,8 +795,8 @@ namespace Mahou
 					}
 				} else {
 					Logging.Log("Using default convert selection mode.");
-					var l1 = MMain.MyConfs.ReadUInt("Locales", "locale1uId");
-					var l2 = MMain.MyConfs.ReadUInt("Locales", "locale2uId");
+					var l1 = Locales.GetLocaleFromString(MMain.MyConfs.Read("Layouts", "MainLayout1")).uId;
+					var l2 = Locales.GetLocaleFromString(MMain.MyConfs.Read("Layouts", "MainLayout2")).uId;
 					var index = 0;
 					foreach (char c in ClipStr) {
 						var T = InAnother(c, l2 & 0xffff, l1 & 0xffff);
@@ -653,24 +812,13 @@ namespace Mahou
 						index++;
 					}
 					Logging.Log("Conversion of string [" + ClipStr + "] from locale [" + l1 + "] into locale [" + l2 + "] became [" + result + "].");
-					result = Regex.Replace(result, "\r\\D\n?|\n\\D\r?", "\n");
+//					result = Regex.Replace(result, "\r\\D\n?|\n\\D\r?", "\n");
 					//Inputs converted text
 					Logging.Log("Making input of [" + result + "] as string");
 					KInputs.MakeInput(KInputs.AddString(result));
 					items = result.Length;
 				}
-				if (MMain.MyConfs.ReadBool("Functions", "ReSelect")) {
-					//reselects text
-					Logging.Log("Reselecting text.");
-					for (int i = items; i != 0; i--) {
-						KInputs.MakeInput(new [] { 
-							KInputs.AddKey(Keys.LShiftKey, true),
-							KInputs.AddKey(Keys.Left, true),
-							KInputs.AddKey(Keys.Left, false),
-							KInputs.AddKey(Keys.LShiftKey, false)
-						});
-					}
-				}
+				ReSelect(items);
 			}
 			RePress();
 			NativeClipboard.Clear();
@@ -680,6 +828,79 @@ namespace Mahou
 			self = false;
 			} catch(Exception e) {
 				Logging.Log("Convert Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
+			}
+		}
+		static void ReSelect(int count) {
+			if (MMain.MyConfs.ReadBool("Functions", "ReSelect")) {
+				//reselects text
+				Logging.Log("Reselecting text.");
+				for (int i = count; i != 0; i--) {
+					KInputs.MakeInput(new [] { 
+						KInputs.AddKey(Keys.LShiftKey, true),
+						KInputs.AddKey(Keys.Left, true),
+						KInputs.AddKey(Keys.Left, false),
+						KInputs.AddKey(Keys.LShiftKey, false)
+					});
+				}
+			}
+		}
+		static void TransliterateSelection() {
+			try { //Used to catch errors
+			Locales.IfLessThan2();
+			self = true;
+			Logging.Log("Starting Transliterate selection.");
+			string ClipStr = "";
+			// Backup & Restore feature, now only text supported...
+			Logging.Log("Taking backup of clipboard text if possible.");
+			var doBackup = false || WinAPI.IsClipboardFormatAvailable(WinAPI.CF_UNICODETEXT);
+			var datas = new NativeClipboard.ClipboardData() {
+				data = new List<byte[]>(),
+				format = new List<uint>()
+			};
+			if (doBackup)
+				datas = NativeClipboard.GetClipboardDatas();
+			//This prevents from converting text that already exist in Clipboard
+			//by pressing "Convert Selection hotkey" without selected text.
+			NativeClipboard.Clear();
+			Logging.Log("Getting selected text.");
+			if (MMain.MyConfs.ReadBool("Timings", "SelectedTextGetMoreTries"))
+				for (int i = 0; i != MMain.MyConfs.ReadInt("Timings", "SelectedTextGetMoreTriesCount"); i++) {
+					ClipStr = MakeCopy();
+					if (!String.IsNullOrEmpty(ClipStr))
+						break;
+				}
+			else
+				ClipStr = MakeCopy();
+			if (!String.IsNullOrEmpty(ClipStr)) {
+				string output = "";
+				foreach (KeyValuePair<string, string> key in transliterationDict) {
+	                output = ClipStr.Replace(key.Key, key.Value);
+	            }
+//                Debug.WriteLine(output);
+//                Debug.WriteLine(ClipStr);
+//                Debug.WriteLine(output == ClipStr);
+                if (ClipStr == output)
+					foreach (KeyValuePair<string, string> key in transliterationDict) {
+		                	ClipStr = ClipStr.Replace(key.Value, key.Key);
+                	}
+                if (ClipStr == output)
+					foreach (KeyValuePair<string, string> key in transliterationDict) {
+		                	ClipStr = ClipStr.Replace(key.Key, key.Value);
+                	}
+//                Debug.WriteLine("AFT "+output);
+//                Debug.WriteLine("AFT "+ClipStr);
+//                Debug.WriteLine("AFT "+output == ClipStr);
+				KInputs.MakeInput(KInputs.AddString(ClipStr));
+				ReSelect(ClipStr.Length);
+			}
+			RePress();
+			NativeClipboard.Clear();
+			if (doBackup) {
+				NativeClipboard.RestoreData(datas);
+			}
+			self = false;
+			} catch(Exception e) {
+				Logging.Log("Transliterate Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
 			}
 		}
 		/// <summary>
@@ -694,7 +915,7 @@ namespace Mahou
 				KInputs.AddKey(Keys.Insert, false),
 				KInputs.AddKey(Keys.RControlKey, false)
 			});
-			Thread.Sleep(30);
+			Thread.Sleep(10);
 			return NativeClipboard.GetText();
 		}
 		/// <summary>
@@ -718,6 +939,11 @@ namespace Mahou
 				KeybdEvent(Keys.LControlKey, 0);
 				cwas = true;
 				ctrlRP = false;
+			}
+			if (winRP) {
+				KeybdEvent(Keys.LWin, 0);
+				wwas = true;
+				winRP = false;
 			}
 		}
 		/// <summary>
@@ -779,11 +1005,11 @@ namespace Mahou
 		static bool SymbolIgnoreRules(Keys key, bool upper, uint wasLocale)
 		{
 			Logging.Log("Passing through symbol ignore rules.");
-			if (MMain.MyConfs.ReadBool("EnabledHotkeys", "HKSymIgnEnabled") &&
-			    MMain.MyConfs.ReadBool("Functions", "SymIgnModeEnabled") &&
+			if (MMain.mahou.HKSymIgn.enabled &&
+			    MMain.MyConfs.ReadBool("Functions", "SymbolIgnoreModeEnabled") &&
 			    (wasLocale == 1033 || wasLocale == 1041) &&
-			    ((Locales.AllList().Length < 3 && MMain.MyConfs.ReadBool("Functions", "CycleMode")) ||
-			    !MMain.MyConfs.ReadBool("Functions", "CycleMode")) && (
+			    ((Locales.AllList().Length < 3 && !MMain.MyConfs.ReadBool("Layouts", "SwitchBetweenLayouts")) ||
+			    MMain.MyConfs.ReadBool("Layouts", "SwitchBetweenLayouts")) && (
 			        key == Keys.Oem5 ||
 			        key == Keys.OemOpenBrackets ||
 			        key == Keys.Oem6 ||
@@ -842,16 +1068,16 @@ namespace Mahou
 		static void ChangeLayout()
 		{
 			var nowLocale = Locales.GetCurrentLocale();
-			uint notnowLocale = nowLocale == MMain.MyConfs.ReadUInt("Locales", "locale1uId")
-                ? MMain.MyConfs.ReadUInt("Locales", "locale2uId")
-                : MMain.MyConfs.ReadUInt("Locales", "locale1uId");
-			if (!MMain.MyConfs.ReadBool("Functions", "CycleMode")) {
+			uint notnowLocale = nowLocale == Locales.GetLocaleFromString(MMain.MyConfs.Read("Layouts", "MainLayout1")).uId
+                ? Locales.GetLocaleFromString(MMain.MyConfs.Read("Layouts", "MainLayout2")).uId
+                : Locales.GetLocaleFromString(MMain.MyConfs.Read("Layouts", "MainLayout1")).uId;
+			if (MMain.MyConfs.ReadBool("Layouts", "SwitchBetweenLayouts")) {
 				Logging.Log("Changing layout using normal mode, WinAPI.PostMessage [WinAPI.WM_INPUTLANGCHANGEREQUEST] with LParam ["+notnowLocale+"].");
 				int tries = 0;
 				//Cycles while layout not changed
 				while (Locales.GetCurrentLocale() == nowLocale) {
 					WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, notnowLocale);
-					Thread.Sleep(30);//Give some time to switch layout
+					Thread.Sleep(10);//Give some time to switch layout
 					tries++;
 					if (tries == 3)
 						break;
@@ -864,8 +1090,8 @@ namespace Mahou
 		/// </summary>
 		static void CycleSwitch()
 		{
-			if (MMain.MyConfs.ReadBool("Functions", "EmulateLayoutSwitch")) {
-				if (MMain.MyConfs.ReadInt("Functions", "ELSType") == 0) {
+			if (MMain.mahou.EmulateLS) {
+				if (MMain.MyConfs.Read("Layouts", "EmulateLayoutSwitchType") == "Alt+Shift") {
 					Logging.Log("Changing layout using cycle mode by simulating key press [Alt+Shift].");
 					//Emulate Alt+Shift
 					KInputs.MakeInput(new [] {
@@ -874,7 +1100,7 @@ namespace Mahou
 						KInputs.AddKey(Keys.LShiftKey, false),
 						KInputs.AddKey(Keys.LMenu, false)
 					});
-				} else if (MMain.MyConfs.ReadInt("Functions", "ELSType") == 1) {
+				} else if (MMain.MyConfs.Read("Layouts", "EmulateLayoutSwitchType") == "Ctrl+Shift") {
 					Logging.Log("Changing layout using cycle mode by simulating key press [Ctrl+Shift].");
 					//Emulate Ctrl+Shift
 					KInputs.MakeInput(new [] {
@@ -943,6 +1169,14 @@ namespace Mahou
 			shiftRP = mods.Contains("Shift") ? true : false;
 			altRP = mods.Contains("Alt") ? true : false;
 			ctrlRP = mods.Contains("Control") ? true : false;
+			winRP = mods.Contains("Win") ? true : false;
+		}
+		static void RePressAfter(bool[] mods)
+		{
+			ctrlRP = mods[0];
+			shiftRP = mods[1];
+			altRP = mods[2];
+			winRP = mods[3];
 		}
 		/// <summary>
 		/// Sends modifiers up by modstoup array. 
@@ -965,6 +1199,10 @@ namespace Mahou
 				KMHook.KeybdEvent(Keys.RMenu, 2); // Right Alt Up
 				KMHook.KeybdEvent(Keys.LMenu, 2); // Left Alt Up
 			}
+			if (modstoup[3]) {
+				KMHook.KeybdEvent(Keys.LWin, 2); // Right Win Up
+				KMHook.KeybdEvent(Keys.RWin, 2); // Left Win Up
+			}
 			Logging.Log("All modifiers sended up.");
 			self = false;
 		}
@@ -974,7 +1212,7 @@ namespace Mahou
 		/// <param name="key">Key to be checked.</param>
 		static void IfKeyIsMod(Keys key)
 		{
-			var mods = new bool[3];
+			var mods = new bool[4];
 			switch (key) {
 				case Keys.ControlKey:
 				case Keys.LControlKey:
@@ -992,6 +1230,10 @@ namespace Mahou
 				case Keys.Alt:
 					mods[2] = true;
 					break;
+				case Keys.LWin:
+				case Keys.RWin:
+					mods[3] = true;
+					break;
 			}
 			SendModsUp(mods);
 		}
@@ -1000,8 +1242,8 @@ namespace Mahou
 		/// </summary>
 		public static void ReInitSnippets()
 		{
-			if (System.IO.File.Exists(MMain.mahou.moreConfigs.snipfile)) {
-				var snippets = System.IO.File.ReadAllText(MMain.mahou.moreConfigs.snipfile);
+			if (System.IO.File.Exists(MahouUI.snipfile)) {
+				var snippets = System.IO.File.ReadAllText(MahouUI.snipfile);
 				var snili = new List<string>();
 				var expli = new List<string>();
 				// One Regex is faster than two, because it makes it to process again snippets file. Benchmarks says that it in ~2 times faster.

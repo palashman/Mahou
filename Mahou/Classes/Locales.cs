@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -52,6 +53,19 @@ namespace Mahou
 				});
 			}
 			return locs.ToArray();
+		}
+		/// <summary>
+		/// Gets Locale from localeString.
+		/// </summary>
+		/// <param name="localeString">String which contains layout name and uid.</param>
+		/// <returns>Locale</returns>
+		public static Locale GetLocaleFromString(string localeString) {
+			var getLocale = new Regex(@"^(.+)\((\d+)");
+			var lang = getLocale.Match(localeString).Groups[1].Value;
+			uint id = 0;
+			if (!UInt32.TryParse(getLocale.Match(localeString).Groups[2].Value, out id)) 
+				throw new Exception("Locale string ["+localeString+"] does not contain a layout uID.");
+			return new Locale() { Lang = lang, uId = id};
 		}
 		/// <summary>
 		/// Check if you have enough layouts(>2).

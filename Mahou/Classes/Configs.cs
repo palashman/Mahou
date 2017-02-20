@@ -12,255 +12,180 @@ namespace Mahou
         /// <summary>
         /// Mahou.ini file path.
         /// </summary>
-        public static readonly string filePath = Path.Combine(Update.nPath, "Mahou.ini");
+        public static readonly string filePath = Path.Combine(MahouUI.nPath, "Mahou.ini");
         /// <summary>
         /// Initializes settings, if some of values or settings file, not exists it creates them with default value.
         /// </summary>
         public Configs()
         {
-            if (!File.Exists(filePath)) //Create an UTF-16 configuration file
-            {
+        	if (!File.Exists(filePath)) { //Create an UTF-16 configuration file
                 File.WriteAllText(filePath, "!Unicode(✔), Mahou settings file", Encoding.Unicode);
             }
-            int it = 0;      //int temp
-            uint uit = 0;    //uint temp
-            bool bt = false; //bool temp
-            #region Hotkeys section
-            if (!Int32.TryParse(this.Read("Hotkeys", "HKCLKey"), out it))
-                this.Write("Hotkeys", "HKCLKey", "19"); //Hotkey convert last word
-
-            if (String.IsNullOrEmpty(this.Read("Hotkeys", "HKCLMods")))
-                this.Write("Hotkeys", "HKCLMods", "None"); //Hotkey convert last word modifiers
-
-            if (!Int32.TryParse(this.Read("Hotkeys", "HKCSKey"), out it))
-                this.Write("Hotkeys", "HKCSKey", "145"); //Hotkey convert selection
-
-            if (String.IsNullOrEmpty(this.Read("Hotkeys", "HKCSMods")))
-                this.Write("Hotkeys", "HKCSMods", "None"); //Hotkey convert selection modifiers
-
-            if (!Int32.TryParse(this.Read("Hotkeys", "HKCLineKey"), out it))
-                this.Write("Hotkeys", "HKCLineKey", "19"); //Hotkey convert line
-
-            if (String.IsNullOrEmpty(this.Read("Hotkeys", "HKCLineMods"))) //Hotkey convert line modifiers
-                this.Write("Hotkeys", "HKCLineMods", "Shift");
-
-            if (String.IsNullOrEmpty(this.Read("Hotkeys", "OnlyKeyLayoutSwicth")))
-                this.Write("Hotkeys", "OnlyKeyLayoutSwicth", "CapsLock"); //One key to switch layout
-
-            if (!Int32.TryParse(this.Read("Hotkeys", "HKSymIgnKey"), out it))
-                this.Write("Hotkeys", "HKSymIgnKey", "122"); //Hotkey Symbol ignore mode
-
-            if (String.IsNullOrEmpty(this.Read("Hotkeys", "HKSymIgnMods"))) //Hotkey Symbol ignore mode modifiers
-                this.Write("Hotkeys", "HKSymIgnMods", "Shift + Control + Alt");
-
-            if (!Int32.TryParse(this.Read("Hotkeys", "HKConvertMore"), out it))
-                this.Write("Hotkeys", "HKConvertMore", "122"); //Hotkey Convert more words
-
-            if (String.IsNullOrEmpty(this.Read("Hotkeys", "HKConvertMoreMods"))) //Hotkey Convert more words modifiers
-                this.Write("Hotkeys", "HKConvertMoreMods", "Shift + Control");
-			#endregion
-            #region Locales section
-            if (!UInt32.TryParse(this.Read("Locales", "locale1uId"), out uit))
-                this.Write("Locales", "locale1uId", ""); //Locale 1 id
-
-            if (String.IsNullOrEmpty(this.Read("Locales", "locale1Lang")))
-                this.Write("Locales", "locale1Lang", ""); //Locale 1 name
-
-            if (!UInt32.TryParse(this.Read("Locales", "locale2uId"), out uit))
-                this.Write("Locales", "locale2uId", ""); //Locale 2 id
-
-            if (String.IsNullOrEmpty(this.Read("Locales", "locale2Lang")))
-                this.Write("Locales", "locale2Lang", ""); //Locale 2 name
-
-            if (String.IsNullOrEmpty(this.Read("Locales", "LANGUAGE")))
-                this.Write("Locales", "LANGUAGE", "EN"); //Language of user interface, messages etc.
-			#endregion
             #region Functions section
-            if (!Boolean.TryParse(this.Read("Functions", "IconVisibility"), out bt))
-                this.Write("Functions", "IconVisibility", "true"); //Tray icon visibility
-
-            if (!Boolean.TryParse(this.Read("Functions", "CycleMode"), out bt))
-                this.Write("Functions", "CycleMode", "false");
-
-            if (!Boolean.TryParse(this.Read("Functions", "EmulateLayoutSwitch"), out bt))
-                this.Write("Functions", "EmulateLayoutSwitch", "false");
-
-            if (!Int32.TryParse(this.Read("Functions", "ELSType"), out it))
-                this.Write("Functions", "ELSType", "0");
-
-            if (!Boolean.TryParse(this.Read("Functions", "CSSwitch"), out bt))
-                this.Write("Functions", "CSSwitch", "true");
-
-            if (!Boolean.TryParse(this.Read("Functions", "BlockCTRL"), out bt))
-                this.Write("Functions", "BlockCTRL", "false");
-
-            if (!Boolean.TryParse(this.Read("Functions", "RePress"), out bt))
-                this.Write("Functions", "RePress", "true");
-
-            if (!Boolean.TryParse(this.Read("Functions", "EatOneSpace"), out bt))
-                this.Write("Functions", "EatOneSpace", "false");
-            
-            if (!Boolean.TryParse(this.Read("Functions", "ReSelect"), out bt))
-                this.Write("Functions", "ReSelect", "true");
-
-            if (!Boolean.TryParse(this.Read("Functions", "SymIgnModeEnabled"), out bt))
-                this.Write("Functions", "SymIgnModeEnabled", "false");
-
-            if (!Boolean.TryParse(this.Read("Functions", "MoreTries"), out bt))
-                this.Write("Functions", "MoreTries", "false");
-
-            if (!Int32.TryParse(this.Read("Functions", "TriesCount"), out it))
-                this.Write("Functions", "TriesCount", "5");
-
-            if (!Boolean.TryParse(this.Read("Functions", "DisplayLang"), out bt))
-                this.Write("Functions", "DisplayLang", "false");
-
-            if (!Int32.TryParse(this.Read("Functions", "DLRefreshRate"), out it))
-                this.Write("Functions", "DLRefreshRate", "50");
-
-            if (!Boolean.TryParse(this.Read("Functions", "ExperimentalCSSwitch"), out bt))
-                this.Write("Functions", "ExperimentalCSSwitch", "false");
-            
-            if (!Boolean.TryParse(this.Read("Functions", "Snippets"), out bt))
-                this.Write("Functions", "Snippets", "false");
-            
-            if (!Boolean.TryParse(this.Read("Functions", "DTTOnChange"), out bt))
-                this.Write("Functions", "DTTOnChange", "false");
-            
-            if (!Boolean.TryParse(this.Read("Functions", "ScrollTip"), out bt))
-                this.Write("Functions", "ScrollTip", "false");
-            
-            if (!Boolean.TryParse(this.Read("Functions", "UpdatesEnabled"), out bt))
-                this.Write("Functions", "UpdatesEnabled", "false");
-            
-            if (!Boolean.TryParse(this.Read("Functions", "Logging"), out bt))
-                this.Write("Functions", "Logging", "false");
-            
-            if (!Boolean.TryParse(this.Read("Functions", "DiffLayoutColors"), out bt))
-                this.Write("Functions", "DiffLayoutColors", "false");
-            
-            if (!Boolean.TryParse(this.Read("Functions", "CrtDisplayLang"), out bt))
-                this.Write("Functions", "CrtDisplayLang", "false");
-
-            if (!Int32.TryParse(this.Read("Functions", "CrtDLRefreshRate"), out it))
-                this.Write("Functions", "CrtDLRefreshRate", "50");
-            
-            if (!Boolean.TryParse(this.Read("Functions", "TrayFlags"), out bt))
-                this.Write("Functions", "TrayFlags", "true");
-            
-            if (!Boolean.TryParse(this.Read("Functions", "CapsLockTimer"), out bt))
-                this.Write("Functions", "CapsLockTimer", "true");
-			#endregion
-            #region EnabledHotkeys section
-            if (!Boolean.TryParse(this.Read("EnabledHotkeys", "HKCLEnabled"), out bt))
-                this.Write("EnabledHotkeys", "HKCLEnabled", "true"); //Hotkey convert last word enabled
-
-            if (!Boolean.TryParse(this.Read("EnabledHotkeys", "HKCSEnabled"), out bt))
-                this.Write("EnabledHotkeys", "HKCSEnabled", "true"); //Hotkey convert selection enabled
-
-            if (!Boolean.TryParse(this.Read("EnabledHotkeys", "HKCLineEnabled"), out bt))
-                this.Write("EnabledHotkeys", "HKCLineEnabled", "true"); //Hotkey convert line enabled
-
-            if (!Boolean.TryParse(this.Read("EnabledHotkeys", "HKSymIgnEnabled"), out bt))
-                this.Write("EnabledHotkeys", "HKSymIgnEnabled", "true"); //Hotkey symbol ignore enabled
-			#endregion
-            #region ExtCtrls section
-            if (!Boolean.TryParse(this.Read("ExtCtrls", "UseExtCtrls"), out bt))
-                this.Write("ExtCtrls", "UseExtCtrls", "false"); //Use extended CTRLs feature
-
-            if (!UInt32.TryParse(this.Read("ExtCtrls", "LCLocale"), out uit))
-                this.Write("ExtCtrls", "LCLocale", ""); //Left CTRL switch to locale
-
-            if (String.IsNullOrEmpty(this.Read("ExtCtrls", "LCLocaleName")))
-                this.Write("ExtCtrls", "LCLocaleName", "");
-
-            if (!UInt32.TryParse(this.Read("ExtCtrls", "RCLocale"), out uit))
-                this.Write("ExtCtrls", "RCLocale", ""); //Right CTRL switch to locale
-
-            if (String.IsNullOrEmpty(this.Read("ExtCtrls", "RCLocaleName")))
-                this.Write("ExtCtrls", "RCLocaleName", "");
+            CheckBool("Functions", "TrayIconVisible", "true");
+            CheckBool("Functions", "ConvertSelectionLayoutSwitching", "true");
+            CheckBool("Functions", "ReSelect", "true");
+            CheckBool("Functions", "RePress", "true");
+            CheckBool("Functions", "AddOneSpaceToLastWord", "false");
+            CheckBool("Functions", "ConvertSelectionLayoutSwitchingPlus", "false");
+            CheckBool("Functions", "ScrollTip", "false");
+            CheckBool("Functions", "StartupUpdatesCheck", "false");
+            CheckBool("Functions", "Logging", "false");
+            CheckBool("Functions", "CapsLockTimer", "true");
+            CheckBool("Functions", "TrayFlags", "true");
+            CheckBool("Functions", "BlockMahouHotkeysWithCtrl", "false");
+            CheckBool("Functions", "SymbolIgnoreModeEnabled", "false");
             #endregion
+			#region Layouts section
+			CheckBool("Layouts", "SwitchBetweenLayouts", "true");
+			CheckBool("Layouts", "EmulateLayoutSwitch", "false");
+            CheckString("Layouts", "EmulateLayoutSwitchType", "Alt+Shift");
+			CheckBool("Layouts", "ChangeToSpecificLayoutByKey", "true");
+			CheckString("Layouts", "MainLayout1", "");
+			CheckString("Layouts", "MainLayout2", "");
+			CheckInt("Layouts", "SpecificKey1", "1");
+			CheckInt("Layouts", "SpecificKey2", "0");
+			CheckInt("Layouts", "SpecificKey3", "0");
+			CheckInt("Layouts", "SpecificKey4", "0");
+			CheckString("Layouts", "SpecificLayout1", "");
+			CheckString("Layouts", "SpecificLayout2", "");
+			CheckString("Layouts", "SpecificLayout3", "");
+			CheckString("Layouts", "SpecificLayout4", "");
+			#endregion
+			#region Appearence section
+            CheckBool("Appearence", "DisplayLangTooltipForMouse", "false");
+            CheckBool("Appearence", "DisplayLangTooltipForMouseOnChange", "false");
+            CheckBool("Appearence", "DisplayLangTooltipForCaret", "false");
+            CheckBool("Appearence", "DisplayLangTooltipForCaretOnChange", "false");
+            CheckBool("Appearence", "DifferentColorsForLayouts", "false");
+			CheckString("Appearence", "Language", "English");
+			// Language tooltip appearence for Layout 1
+			CheckString("Appearence", "Layout1ForeColor", "#000000");
+			CheckString("Appearence", "Layout1BackColor", "#FFFFFF");
+            CheckBool("Appearence", "Layout1TransparentBackColor", "false");
+			CheckString("Appearence", "Layout1Font", "Georgia; 8pt");
+			CheckInt("Appearence", "Layout1Height", "14");
+			CheckInt("Appearence", "Layout1Width", "26");
+			CheckInt("Appearence", "Layout1PositionX", "8");
+			CheckInt("Appearence", "Layout1PositionY", "0");
+			// Language tooltip appearence for Layout 2
+			CheckString("Appearence", "Layout2ForeColor", "#000000");
+			CheckString("Appearence", "Layout2BackColor", "#FFFFFF");
+            CheckBool("Appearence", "Layout2TransparentBackColor", "false");
+			CheckString("Appearence", "Layout2Font", "Georgia; 8pt");
+			CheckInt("Appearence", "Layout2Height", "14");
+			CheckInt("Appearence", "Layout2Width", "26");
+			CheckInt("Appearence", "Layout2PositionX", "8");
+			CheckInt("Appearence", "Layout2PositionY", "0");
+			// Language tooltip appearence for Mouse Language Tooltip
+			CheckString("Appearence", "MouseLTForeColor", "#000000");
+			CheckString("Appearence", "MouseLTBackColor", "#FFFFFF");
+            CheckBool("Appearence", "MouseLTTransparentBackColor", "false");
+			CheckString("Appearence", "MouseLTFont", "Georgia; 8pt");
+			CheckInt("Appearence", "MouseLTHeight", "14");
+			CheckInt("Appearence", "MouseLTWidth", "26");
+			CheckInt("Appearence", "MouseLTPositionX", "8");
+			CheckInt("Appearence", "MouseLTPositionY", "0");
+			// Language tooltip appearence for for Caret Language Tooltip
+			CheckString("Appearence", "CaretLTForeColor", "#000000");
+			CheckString("Appearence", "CaretLTBackColor", "#FFFFFF");
+            CheckBool("Appearence", "MouseLTTransparentBackColor", "false");
+            CheckBool("Appearence", "CaretLTTransparentBackColor", "false");
+			CheckString("Appearence", "CaretLTFont", "Georgia; 8pt");
+			CheckInt("Appearence", "CaretLTHeight", "14");
+			CheckInt("Appearence", "CaretLTWidth", "26");
+			CheckInt("Appearence", "CaretLTPositionX", "8");
+			CheckInt("Appearence", "CaretLTPositionY", "12");
+			#endregion
+			#region Timings section
+			CheckInt("Timings", "LangTooltipForMouseRefreshRate", "5");
+			CheckInt("Timings", "LangTooltipForCaretRefreshRate", "5");
+			CheckInt("Timings", "DoubleHotkey2ndPressWait", "350");
+			CheckInt("Timings", "FlagsInTrayRefreshRate", "10");
+			CheckInt("Timings", "ScrollLockStateRefreshRate", "5");
+			CheckInt("Timings", "CapsLockDisableRefreshRate", "5");
+			CheckBool("Timings", "SelectedTextGetMoreTries", "false");
+			CheckInt("Timings", "SelectedTextGetMoreTriesCount", "5");
+			#endregion
+			#region Snippets section
+			CheckBool("Snippets", "SnippetsEnabled", "false");
+			#endregion
+			#region Hotkeys section
+			// Toggle main window hotkey
+			CheckBool("Hotkeys", "ToggleMainWindow_Enabled", "true");
+			CheckBool("Hotkeys", "ToggleMainWindow_Double", "false");
+			CheckString("Hotkeys", "ToggleMainWindow_Modifiers", "Win + Control + Shift + Alt");
+			CheckInt("Hotkeys", "ToggleMainWindow_Key", "45");
+			// Convert last word hotkey
+			CheckBool("Hotkeys", "ConvertLastWord_Enabled", "true");
+			CheckBool("Hotkeys", "ConvertLastWord_Double", "false");
+			CheckString("Hotkeys", "ConvertLastWord_Modifiers", "");
+			CheckInt("Hotkeys", "ConvertLastWord_Key", "19");
+			// Convert selected text hotkey
+			CheckBool("Hotkeys", "ConvertSelectedText_Enabled", "true");
+			CheckBool("Hotkeys", "ConvertSelectedText_Double", "false");
+			CheckString("Hotkeys", "ConvertSelectedText_Modifiers", "");
+			CheckInt("Hotkeys", "ConvertSelectedText_Key", "145");
+			// Convert last line hotkey
+			CheckBool("Hotkeys", "ConvertLastLine_Enabled", "true");
+			CheckBool("Hotkeys", "ConvertLastLine_Double", "false");
+			CheckString("Hotkeys", "ConvertLastLine_Modifiers", "Shift");
+			CheckInt("Hotkeys", "ConvertLastLine_Key", "19");
+			// Convert last words hotkey
+			CheckBool("Hotkeys", "ConvertLastWords_Enabled", "true");
+			CheckBool("Hotkeys", "ConvertLastWords_Double", "false");
+			CheckString("Hotkeys", "ConvertLastWords_Modifiers", "Shift");
+			CheckInt("Hotkeys", "ConvertLastWords_Key", "122");
+			// Toggle symbol ignore mode hotkey
+			CheckBool("Hotkeys", "ToggleSymbolIgnoreMode_Enabled", "true");
+			CheckBool("Hotkeys", "ToggleSymbolIgnoreMode_Double", "false");
+			CheckString("Hotkeys", "ToggleSymbolIgnoreMode_Modifiers", "Shift + Control");
+			CheckInt("Hotkeys", "ToggleSymbolIgnoreMode_Key", "122");
+			// Selected text to title case hotkey
+			CheckBool("Hotkeys", "SelectedTextToTitleCase_Enabled", "false");
+			CheckBool("Hotkeys", "SelectedTextToTitleCase_Double", "true");
+			CheckString("Hotkeys", "SelectedTextToTitleCase_Modifiers", "Shift");
+			CheckInt("Hotkeys", "SelectedTextToTitleCase_Key", "0");
+			// Selected text To random case hotkey
+			CheckBool("Hotkeys", "SelectedTextToRandomCase_Enabled", "false");
+			CheckBool("Hotkeys", "SelectedTextToRandomCase_Double", "true");
+			CheckString("Hotkeys", "SelectedTextToRandomCase_Modifiers", "Alt");
+			CheckInt("Hotkeys", "SelectedTextToRandomCase_Key", "0");
+			// Selected text to swap case hotkey
+			CheckBool("Hotkeys", "SelectedTextToSwapCase_Enabled", "false");
+			CheckBool("Hotkeys", "SelectedTextToSwapCase_Double", "false");
+			CheckString("Hotkeys", "SelectedTextToSwapCase_Modifiers", "Win + Control + Shift + Alt");
+			CheckInt("Hotkeys", "SelectedTextToSwapCase_Key", "19");
+			// Selected text Transliteration hotkey
+			CheckBool("Hotkeys", "SelectedTextTransliteration_Enabled", "false");
+			CheckBool("Hotkeys", "SelectedTextTransliteration_Double", "false");
+			CheckString("Hotkeys", "SelectedTextTransliteration_Modifiers", "Win");
+			CheckInt("Hotkeys", "SelectedTextTransliteration_Key", "45");
+			// Exit Mahou hotkey
+			CheckBool("Hotkeys", "ExitMahou_Enabled", "true");
+			CheckBool("Hotkeys", "ExitMahou_Double", "false");
+			CheckString("Hotkeys", "ExitMahou_Modifiers", "Win + Control + Shift + Alt");
+			CheckInt("Hotkeys", "ExitMahou_Key", "123");
+			#endregion
             #region Proxy section
-            if (String.IsNullOrEmpty(this.Read("Proxy", "ServerPort")))
-                this.Write("Proxy", "ServerPort", "");
-            
-            if (String.IsNullOrEmpty(this.Read("Proxy", "UserName")))
-                this.Write("Proxy", "UserName", "");
-            
-            if (String.IsNullOrEmpty(this.Read("Proxy", "Password")))
-                this.Write("Proxy", "Password", "");
+            CheckString("Proxy", "ServerPort", "");
+            CheckString("Proxy", "UserName", "");
+            CheckString("Proxy", "Password", "");
             #endregion
-            #region Tooltip UI sections
-            if (!Int32.TryParse(this.Read("TTipUI", "Height"), out it))
-                this.Write("TTipUI", "Height", "14"); //Lang Tooltip height
-            
-            if (!Int32.TryParse(this.Read("TTipUI", "Width"), out it))
-                this.Write("TTipUI", "Width", "24"); //Lang Tooltip width
-            
-            if (String.IsNullOrEmpty(this.Read("TTipUI", "Font")))
-                this.Write("TTipUI", "Font", "Georgia; 8pt"); //Lang Tooltip font & it size
-            
-            if (!Int32.TryParse(this.Read("TTipUI", "xpos"), out it))
-                this.Write("TTipUI", "xpos", "8"); //Lang Tooltip x pos
-            
-            if (!Int32.TryParse(this.Read("TTipUI", "ypos"), out it))
-                this.Write("TTipUI", "ypos", "0"); //Lang Tooltip y pos
-            
-            if (!Boolean.TryParse(this.Read("TTipUI", "TransparentBack"), out bt))
-                this.Write("TTipUI", "TransparentBack", "false"); //Transparent Background in tooltip
-            
-            if (String.IsNullOrEmpty(this.Read("TTipUI", "DLForeColor")))
-                this.Write("TTipUI", "DLForeColor", "#FFFFFF");
-
-            if (String.IsNullOrEmpty(this.Read("TTipUI", "DLBackColor")))
-                this.Write("TTipUI", "DLBackColor", "#000000");
-            
-            if (String.IsNullOrEmpty(this.Read("TTipUI", "CrtDLForeColor")))
-                this.Write("TTipUI", "CrtDLForeColor", "#FFFFFF");
-
-            if (String.IsNullOrEmpty(this.Read("TTipUI", "CrtDLBackColor")))
-                this.Write("TTipUI", "CrtDLBackColor", "#000000");
-            
-            if (String.IsNullOrEmpty(this.Read("TTipUI", "L1DiffFGColor")))
-                this.Write("TTipUI", "L1DiffFGColor", "#8B5FFF"); //Layout 1 different ForeGround color
-
-            if (String.IsNullOrEmpty(this.Read("TTipUI", "L1DiffBGColor")))
-                this.Write("TTipUI", "L1DiffBGColor", "#FFFFFF");
-            
-            if (String.IsNullOrEmpty(this.Read("TTipUI", "L1DiffFont")))
-                this.Write("TTipUI", "L1DiffFont", "Georgia; 8pt"); //Layout 1 different font
-            
-            if (String.IsNullOrEmpty(this.Read("TTipUI", "L2DiffFGColor")))
-                this.Write("TTipUI", "L2DiffFGColor", "#E1E100");
-
-            if (String.IsNullOrEmpty(this.Read("TTipUI", "L2DiffBGColor")))
-                this.Write("TTipUI", "L2DiffBGColor", "#000000"); //Layout 2 different BackGround color
-            
-            if (String.IsNullOrEmpty(this.Read("TTipUI", "L2DiffFont")))
-                this.Write("TTipUI", "L2DiffFont", "Palatino Linotype; 9pt"); //Layout 2 different font
-            
-            if (!Int32.TryParse(this.Read("TTipUI", "CrtHeight"), out it))
-                this.Write("TTipUI", "CrtHeight", "14"); //Caret Lang Tooltip height
-            
-            if (!Int32.TryParse(this.Read("TTipUI", "CrtWidth"), out it))
-                this.Write("TTipUI", "CrtWidth", "24"); //Caret Lang Tooltip width
-            
-            if (String.IsNullOrEmpty(this.Read("TTipUI", "CrtFont")))
-                this.Write("TTipUI", "CrtFont", "Georgia; 8pt"); //Caret Lang Tooltip font & it size
-            
-            if (!Int32.TryParse(this.Read("TTipUI", "Crtxpos"), out it))
-                this.Write("TTipUI", "Crtxpos", "8"); //Caret Lang Tooltip x pos
-            
-            if (!Int32.TryParse(this.Read("TTipUI", "Crtypos"), out it))
-                this.Write("TTipUI", "Crtypos", "0"); //Caret Lang Tooltip y pos
-            #endregion
-            #region DoubleKey section
-            if (String.IsNullOrEmpty(this.Read("DoubleKey", "Use")))
-                this.Write("DoubleKey", "Use", "false");
-            
-            if (!Int32.TryParse(this.Read("DoubleKey", "Delay"), out it))
-                this.Write("DoubleKey", "Delay", "350");
-            #endregion
+        }
+        void CheckBool(string section, string key, string default_value) {
+            bool bt = false; //bool temp
+            if (!Boolean.TryParse(Read(section, key), out bt))
+                Write(section, key, default_value);
+        }
+        void CheckInt(string section, string key, string default_value) {
+            int it = 0; //int temp
+            if (!Int32.TryParse(Read(section, key), out it))
+                Write(section, key, default_value);
+        }
+        void CheckString(string section, string key, string default_value) {
+            if (String.IsNullOrEmpty(Read(section, key)))
+                Write(section, key, default_value);
         }
         /// <summary>
         /// Writes "value" to "key" in "section" in INI configuration.
@@ -295,18 +220,6 @@ namespace Mahou
             var SB = new StringBuilder(255);
             int i = WinAPI.GetPrivateProfileString(section, key, "", SB, 255, filePath);
             return Int32.Parse(SB.ToString());
-        }
-        /// <summary>
-        /// Reads "value" as uint from "key" in "section" from INI configuration .
-        /// </summary>
-        /// <param name="section">Section name in which key will be read.</param>
-        /// <param name="key">Key's name in which value will be read.</param>
-        /// <returns>uint</returns>
-        public uint ReadUInt(string section, string key) //Returns "key" value in "section" as int
-        {
-            var SB = new StringBuilder(255);
-            int i = WinAPI.GetPrivateProfileString(section, key, "", SB, 255, filePath);
-            return UInt32.Parse(SB.ToString());
         }
         /// <summary>
         /// Reads "value" as bool from "key" in "section" from INI configuration.
