@@ -124,10 +124,9 @@ namespace Mahou {
 			InitializeListBoxes();
 		    nud_CapsLockRefreshRate.Minimum = nud_DoubleHK2ndPressWaitTime.Minimum =
 		        nud_LangTTCaretRefreshRate.Minimum = nud_LangTTMouseRefreshRate.Minimum = 
-		    	nud_ScrollLockRefreshRate.Minimum = 1;
+		    	nud_ScrollLockRefreshRate.Minimum = nud_TrayFlagRefreshRate.Minimum = 1;
 			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version + " Beta";
 			nud_LangTTPositionX.Minimum = nud_LangTTPositionY.Minimum = -100;
-			ToggleDependentControlsEnabledState();
 			//↓ Dummy(none) hotkey, makes it possible WndProc to handle messages at startup
 			//↓ when form isn't was shown. 
 			WinAPI.RegisterHotKey(Handle, 0xffff ^ 0xffff, 0, 0); //HWND must be this form handle
@@ -428,7 +427,6 @@ namespace Mahou {
 		/// </summary>
 		void LoadConfigs() {
 			IfNotExist();
-			RefreshAllIcons();
 			#region Functions
 			chk_AutoStart.Checked = File.Exists(Path.Combine(
 				Environment.GetFolderPath(Environment.SpecialFolder.Startup),
@@ -496,6 +494,8 @@ namespace Mahou {
 			InitializeHotkeys();
 			InitializeTimers();
 			RefreshLanguage();
+			ToggleDependentControlsEnabledState();
+			RefreshAllIcons();
 			Logging.Log("All configurations loaded.");
 		}
 		/// <summary>
@@ -578,6 +578,9 @@ namespace Mahou {
 			nud_SelectedTextGetTriesCount.Enabled = chk_SelectedTextGetMoreTries.Checked;
 			lbl_ScrollLockRefreshRate.Enabled = nud_ScrollLockRefreshRate.Enabled = chk_HighlightScroll.Checked;
 			lbl_CapsLockRefreshRate.Enabled = nud_CapsLockRefreshRate.Enabled = chk_CapsLockDTimer.Checked;
+			lbl_FlagTrayRefreshRate.Enabled = nud_TrayFlagRefreshRate.Enabled = chk_FlagsInTray.Checked;
+			lbl_LangTTCaretRefreshRate.Enabled = nud_LangTTCaretRefreshRate.Enabled = chk_LangTooltipCaret.Checked;
+			lbl_LangTTMouseRefreshRate.Enabled = nud_LangTTMouseRefreshRate.Enabled = chk_LangTooltipMouse.Checked;
 		}
 		/// <summary>
 		/// Toggles visibility of main window.
