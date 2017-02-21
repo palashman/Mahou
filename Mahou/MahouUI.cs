@@ -122,6 +122,9 @@ namespace Mahou {
 			InitializeTrayIcon();
 			LoadConfigs();
 			InitializeListBoxes();
+		    nud_CapsLockRefreshRate.Minimum = nud_DoubleHK2ndPressWaitTime.Minimum =
+		        nud_LangTTCaretRefreshRate.Minimum = nud_LangTTMouseRefreshRate.Minimum = 
+		    	nud_ScrollLockRefreshRate.Minimum = 1;
 			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version + " Beta";
 			nud_LangTTPositionX.Minimum = nud_LangTTPositionY.Minimum = -100;
 			ToggleDependentControlsEnabledState();
@@ -372,7 +375,7 @@ namespace Mahou {
 			try {
 			MMain.MyConfs.Write("Layouts", "MainLayout1", cbb_MainLayout1.SelectedItem.ToString());
 			MMain.MyConfs.Write("Layouts", "MainLayout2", cbb_MainLayout2.SelectedItem.ToString());	
-			MMain.MyConfs.Write("Layouts", "EmulateLayoutSwitchType", cbb_EmulateType.SelectedIndex.ToString());		
+			MMain.MyConfs.Write("Layouts", "EmulateLayoutSwitchType", cbb_EmulateType.SelectedItem.ToString());		
 			// Keys
 			MMain.MyConfs.Write("Layouts", "SpecificKey1", cbb_Key1.SelectedIndex.ToString());
 			MMain.MyConfs.Write("Layouts", "SpecificKey2", cbb_Key2.SelectedIndex.ToString());
@@ -1154,7 +1157,7 @@ namespace Mahou {
 			chk_WinInHotKey.Checked = modifiers.Contains("Win");
 			txt_Hotkey_tempKey = key;
 			txt_Hotkey_tempModifiers = Regex.Replace(modifiers.Replace("Win",""), @"^[ +]+", "", RegexOptions.Multiline);
-			Debug.WriteLine(txt_Hotkey_tempModifiers);
+			// Debug.WriteLine(txt_Hotkey_tempModifiers);
 		}
 		
 		/// <summary>

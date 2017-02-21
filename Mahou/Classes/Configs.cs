@@ -47,7 +47,7 @@ namespace Mahou
 			CheckInt("Layouts", "SpecificKey2", "0");
 			CheckInt("Layouts", "SpecificKey3", "0");
 			CheckInt("Layouts", "SpecificKey4", "0");
-			CheckString("Layouts", "SpecificLayout1", "");
+			CheckString("Layouts", "SpecificLayout1", Languages.English.SwitchBetween);
 			CheckString("Layouts", "SpecificLayout2", "");
 			CheckString("Layouts", "SpecificLayout3", "");
 			CheckString("Layouts", "SpecificLayout4", "");
