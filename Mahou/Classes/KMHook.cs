@@ -829,6 +829,7 @@ namespace Mahou
 			} catch(Exception e) {
 				Logging.Log("Convert Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
 			}
+			Memory.Flush();
 		}
 		static void ReSelect(int count) {
 			if (MMain.MyConfs.ReadBool("Functions", "ReSelect")) {
@@ -902,6 +903,7 @@ namespace Mahou
 			} catch(Exception e) {
 				Logging.Log("Transliterate Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
 			}
+			Memory.Flush();
 		}
 		/// <summary>
 		/// Sends RCtrl + Insert to selected get text, and returns that text by using WinAPI.GetText().
@@ -994,6 +996,7 @@ namespace Mahou
 			} catch (Exception e) {
 				Logging.Log("Convert Last encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
 			}
+			Memory.Flush();
 		}
 		/// <summary>
 		/// Rules to ignore symbols in ConvertLast() function.
@@ -1061,6 +1064,7 @@ namespace Mahou
 				return true;
 			} else
 				return false;
+			Memory.Flush();
 		}
 		/// <summary>
 		/// Changes current layout.
@@ -1266,6 +1270,7 @@ namespace Mahou
 				snipps = snili.ToArray();
 				exps = expli.ToArray();
 			}
+			Memory.Flush();
 		}
 		/// <summary>
 		/// Sets hook wtih SetWindowsEx() function.

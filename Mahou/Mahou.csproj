@@ -131,6 +131,7 @@
     <Compile Include="Classes\Languages.cs" />
     <Compile Include="Classes\Locales.cs" />
     <Compile Include="Classes\Logging.cs" />
+    <Compile Include="Classes\Memory.cs" />
     <Compile Include="Classes\NativeClipboard.cs" />
     <Compile Include="Classes\TrayIcon.cs" />
     <Compile Include="Classes\Configs.cs" />

@@ -496,6 +496,7 @@ namespace Mahou {
 			RefreshLanguage();
 			ToggleDependentControlsEnabledState();
 			RefreshAllIcons();
+			Memory.Flush();
 			Logging.Log("All configurations loaded.");
 		}
 		/// <summary>
@@ -603,6 +604,7 @@ namespace Mahou {
 				MMain.StopHook();MMain.StartHook();
 				KMHook.win = KMHook.alt = KMHook.shift = KMHook.ctrl = false;
 			}
+			Memory.Flush();
 		}
 		/// <summary>
 		/// Refreshes all icon's images and tray icon visibility.
