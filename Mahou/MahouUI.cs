@@ -126,7 +126,7 @@ namespace Mahou {
 		    nud_CapsLockRefreshRate.Minimum = nud_DoubleHK2ndPressWaitTime.Minimum =
 		        nud_LangTTCaretRefreshRate.Minimum = nud_LangTTMouseRefreshRate.Minimum = 
 		    	nud_ScrollLockRefreshRate.Minimum = nud_TrayFlagRefreshRate.Minimum = 1;
-			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version + " Beta";
+			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version + " Beta 1";
 			nud_LangTTPositionX.Minimum = nud_LangTTPositionY.Minimum = -100;
 			//↓ Dummy(none) hotkey, makes it possible WndProc to handle messages at startup
 			//↓ when form isn't was shown. 
