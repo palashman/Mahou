@@ -1060,11 +1060,10 @@ namespace Mahou
 					KInputs.MakeInput(KInputs.AddString("?"));
 				if (!upper && key == Keys.OemQuestion)
 					KInputs.MakeInput(KInputs.AddString("/"));
-
+				Memory.Flush();
 				return true;
 			} else
 				return false;
-			Memory.Flush();
 		}
 		/// <summary>
 		/// Changes current layout.

@@ -620,9 +620,9 @@ namespace Mahou {
 				else if (HKSymIgn_tempEnabled && SymIgnEnabled && icon.trIcon.Icon != Properties.Resources.MahouTrayHD)
 					icon.trIcon.Icon = Properties.Resources.MahouTrayHD;
 			}
-			if (HKSymIgn_tempEnabled && SymIgnEnabled && Icon != Properties.Resources.MahouSymbolIgnoreMode)
+			if (HKSymIgn_tempEnabled && SymIgnEnabled)
 				Icon = Properties.Resources.MahouSymbolIgnoreMode;
-			else if (HKSymIgn_tempEnabled && SymIgnEnabled && Icon != Properties.Resources.MahouTrayHD)
+			else if (HKSymIgn_tempEnabled && !SymIgnEnabled )
 				Icon = Properties.Resources.MahouTrayHD;
 			if (TrayIconVisible && !icon.trIcon.Visible) {
 				icon.Show();
