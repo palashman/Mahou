@@ -10,6 +10,7 @@ namespace Mahou
 		/// Used to determine if lang display is used for caret display.
 		/// </summary>
 		public bool transparentBG, caretDisplay, mouseDisplay;
+		public string lastText = "NO";
 		public LangDisplay()
 		{
 			InitializeComponent();
@@ -22,11 +23,11 @@ namespace Mahou
 		/// <param name="to">Text to be changed to.</param>
 		public void ChangeLD(string to)
 		{
-			lbLang.Text = to;
-			if (transparentBG) {
-				Invalidate();
-				Update();
-			}
+			if (to == lastText) return;
+			lbLang.Text = lastText = to;
+			if (!transparentBG) return;
+			Invalidate();
+			Update();
 		}
 		/// <summary>
 		/// Toggles lang display label visibility.
@@ -41,6 +42,7 @@ namespace Mahou
 		/// </summary>
 		public void RefreshLang()
 		{
+			if (!Visible) return;
 			if (MMain.mahou.LDCaretTransparentBack_temp && caretDisplay)
 				transparentBG = true;
 			else if (MMain.mahou.LDMouseTransparentBack_temp && mouseDisplay)
@@ -105,6 +107,7 @@ namespace Mahou
 		/// </summary>
 		public void ShowInactiveTopmost()
 		{
+			if (Visible) return;
 			WinAPI.ShowWindow(Handle, WinAPI.SW_SHOWNOACTIVATE);
 			WinAPI.SetWindowPos(Handle.ToInt32(), WinAPI.HWND_TOPMOST,
 				Left, Top, Width, Height,
@@ -115,6 +118,7 @@ namespace Mahou
 		/// </summary>
 		public void HideWnd()
 		{
+			if (!Visible) return;
 			WinAPI.ShowWindow(Handle, 0);
 		}
 		protected override CreateParams CreateParams {
@@ -132,10 +136,9 @@ namespace Mahou
 		/// </summary>
 		protected override void OnPaint(PaintEventArgs e)
 		{
-			if (transparentBG) {
-				e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
-				e.Graphics.DrawString(lbLang.Text, lbLang.Font, new SolidBrush(lbLang.ForeColor), 0, 0);
-			}
+			if (!transparentBG) { base.OnPaint(e); return; }
+			e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+			e.Graphics.DrawString(lbLang.Text, lbLang.Font, new SolidBrush(lbLang.ForeColor), 0, 0);
 			base.OnPaint(e);
 		}
 	}

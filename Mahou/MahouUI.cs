@@ -20,6 +20,7 @@ namespace Mahou {
 		/// Directory where Mahou.exe is.
 		/// </summary>
 		public static string nPath = AppDomain.CurrentDomain.BaseDirectory;
+		public static bool LoggingEnabled = false;
 		static string[] UpdInfo;
 		static bool updating, was, isold = true, checking;
 		static Timer tmr = new Timer();
@@ -439,7 +440,7 @@ namespace Mahou {
 			chk_CSLayoutSwitchingPlus.Checked = MMain.MyConfs.ReadBool("Functions", "ConvertSelectionLayoutSwitchingPlus");
 			ScrollTip = chk_HighlightScroll.Checked = MMain.MyConfs.ReadBool("Functions", "ScrollTip");
 			chk_StartupUpdatesCheck.Checked = MMain.MyConfs.ReadBool("Functions", "StartupUpdatesCheck");
-			chk_Logging.Checked = MMain.MyConfs.ReadBool("Functions", "Logging");
+			LoggingEnabled = chk_Logging.Checked = MMain.MyConfs.ReadBool("Functions", "Logging");
 			TrayFlags = chk_FlagsInTray.Checked = MMain.MyConfs.ReadBool("Functions", "TrayFlags");
 			chk_CapsLockDTimer.Checked = MMain.MyConfs.ReadBool("Functions", "CapsLockTimer");
 			chk_BlockHKWithCtrl.Checked = MMain.MyConfs.ReadBool("Functions", "BlockMahouHotkeysWithCtrl");
@@ -778,21 +779,26 @@ namespace Mahou {
 			crtCheck.Tick += (_, __) => {
 				var crtOnly = new Point(0,0);
 				var curCrtPos = CaretPos.GetCaretPointToScreen(out crtOnly);
-				if (DiffColorsForLayouts) {
-				var cLuid = Locales.GetCurrentLocale();
-				if (cLuid == Locales.GetLocaleFromString(cbb_MainLayout1.SelectedItem.ToString()).uId) {
-					caretLangDisplay.Location = new Point(curCrtPos.X + Layout1X_Pos_temp, curCrtPos.Y + Layout1Y_Pos_temp);
-				} else if (cLuid == Locales.GetLocaleFromString(cbb_MainLayout2.SelectedItem.ToString()).uId) {
-					caretLangDisplay.Location = new Point(curCrtPos.X +Layout2X_Pos_temp, curCrtPos.Y + Layout2Y_Pos_temp);
-				}
+				uint cLuid = 0;
+				if (LDForCaretOnChange || DiffColorsForLayouts)
+					cLuid = Locales.GetCurrentLocale();
+				if (DiffColorsForLayouts && cLuid != 0) {
+					if (cLuid == Locales.GetLocaleFromString(MainLayout1).uId) {
+						caretLangDisplay.Location = new Point(curCrtPos.X + Layout1X_Pos_temp, 
+						                                      curCrtPos.Y + Layout1Y_Pos_temp);
+					} else if (cLuid == Locales.GetLocaleFromString(MainLayout2).uId) {
+						caretLangDisplay.Location = new Point(curCrtPos.X + Layout2X_Pos_temp, 
+						                                      curCrtPos.Y + Layout2Y_Pos_temp);
+					}
 				} else
-					caretLangDisplay.Location = new Point(curCrtPos.X + LDCaretX_Pos_temp, curCrtPos.Y + LDCaretY_Pos_temp);
-				if (LDForCaretOnChange) {
+					caretLangDisplay.Location = new Point(curCrtPos.X + LDCaretX_Pos_temp, 
+					                                      curCrtPos.Y + LDCaretY_Pos_temp);
+				if (LDForCaretOnChange && cLuid != 0) {
 					if (onepassC) {
-						latestCL = Locales.GetCurrentLocale();
+						latestCL = cLuid;
 						onepassC = false;
 					}
-					if (latestCL != Locales.GetCurrentLocale()) {
+					if (latestCL != cLuid) {
 						caretLangDisplay.ShowInactiveTopmost();
 						res.Start();
 					}
@@ -807,11 +813,12 @@ namespace Mahou {
 			ICheck.Interval = MMain.MyConfs.ReadInt("Timings", "LangTooltipForMouseRefreshRate");
 			ICheck.Tick += (_, __) => {
 				if (LDForMouseOnChange) {
+					var cLuid = Locales.GetCurrentLocale();
 					if (onepass) {
-						latestL = Locales.GetCurrentLocale();
+						latestL = cLuid;
 						onepass = false;
 					}
-					if (latestL != Locales.GetCurrentLocale()) {
+					if (latestL != cLuid) {
 						mouseLangDisplay.ShowInactiveTopmost();
 						res.Start();
 					}
@@ -837,7 +844,7 @@ namespace Mahou {
 				if (ScrollTip && !KMHook.self) {
 					KMHook.self = true;
 					if (Locales.GetCurrentLocale() == 
-					    Locales.GetLocaleFromString(cbb_MainLayout1.SelectedItem.ToString()).uId) {
+					    Locales.GetLocaleFromString(MainLayout1).uId) {
 						if (!Control.IsKeyLocked(Keys.Scroll)) { // Turn on 
 							KMHook.KeybdEvent(Keys.Scroll, 0);
 							KMHook.KeybdEvent(Keys.Scroll, 2);
