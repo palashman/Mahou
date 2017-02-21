@@ -343,10 +343,10 @@ namespace Mahou {
 		/// If configs were deleted, create new with default values.
 		/// </summary>
 		public void IfNotExist() {
-			if (!File.Exists(Configs.filePath)) {
-				MMain.MyConfs = new Configs();
-				LoadTemps();
-			}
+//			if (File.Exists(Configs.filePath)) {
+//				MMain.MyConfs = new Configs();
+//				LoadTemps();
+//			}
 		}
 		/// <summary>
 		/// Saves current settings to INI.
@@ -614,25 +614,25 @@ namespace Mahou {
 			if (TrayFlags) {
 				ChangeTrayIconToFlag();
 			} else {
-				if (HKSymIgn_tempEnabled && SymIgnEnabled)
-					Icon = icon.trIcon.Icon = Properties.Resources.MahouSymbolIgnoreMode;
-				else
-					Icon = icon.trIcon.Icon = Properties.Resources.MahouTrayHD;
+				if (HKSymIgn_tempEnabled && SymIgnEnabled && icon.trIcon.Icon != Properties.Resources.MahouSymbolIgnoreMode)
+					icon.trIcon.Icon = Properties.Resources.MahouSymbolIgnoreMode;
+				else if (HKSymIgn_tempEnabled && SymIgnEnabled && icon.trIcon.Icon != Properties.Resources.MahouTrayHD)
+					icon.trIcon.Icon = Properties.Resources.MahouTrayHD;
 			}
-			if (TrayIconVisible) {
+			if (HKSymIgn_tempEnabled && SymIgnEnabled && Icon != Properties.Resources.MahouSymbolIgnoreMode)
+				Icon = Properties.Resources.MahouSymbolIgnoreMode;
+			else if (HKSymIgn_tempEnabled && SymIgnEnabled && Icon != Properties.Resources.MahouTrayHD)
+				Icon = Properties.Resources.MahouTrayHD;
+			if (TrayIconVisible && !icon.trIcon.Visible) {
 				icon.Show();
-			} else {
+			} else if(!TrayIconVisible && icon.trIcon.Visible) {
 				icon.Hide();
 			}
 		}
 		/// <summary>
 		/// Changes tray icon image to country flag based on current layout.
 		/// </summary>
-		void ChangeTrayIconToFlag() {				
-			if (HKSymIgn_tempEnabled && SymIgnEnabled)
-				Icon = Properties.Resources.MahouSymbolIgnoreMode;
-			else
-				Icon = Properties.Resources.MahouTrayHD;
+		void ChangeTrayIconToFlag() {
 			var lcid = (int)(Locales.GetCurrentLocale() & 0xffff);
 			if (lcid > 0) {
 				var flagname = "jp";
