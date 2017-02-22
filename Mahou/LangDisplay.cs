@@ -9,7 +9,7 @@ namespace Mahou
 		/// <summary>
 		/// Used to determine if lang display is used for caret display.
 		/// </summary>
-		public bool transparentBG, caretDisplay, mouseDisplay;
+		public bool lastTransparentBG, transparentBG, caretDisplay, mouseDisplay;
 		public string lastText = "NO";
 		public LangDisplay()
 		{
@@ -43,38 +43,37 @@ namespace Mahou
 		public void RefreshLang()
 		{
 			if (!Visible) return;
+			uint cLid = Locales.GetCurrentLocale();
 			if (MMain.mahou.LDCaretTransparentBack_temp && caretDisplay)
 				transparentBG = true;
 			else if (MMain.mahou.LDMouseTransparentBack_temp && mouseDisplay)
 				transparentBG = true;
 			else transparentBG = false;
-			if (MMain.mahou.DiffColorsForLayouts) {
-				if (MMain.mahou.Layout1TransparentBack_temp && caretDisplay)
-					transparentBG = true;
-				else if (MMain.mahou.Layout2TransparentBack_temp && mouseDisplay)
-					transparentBG = true;
-				else transparentBG = false;
-				var cLuid = Locales.GetCurrentLocale();
-				if (cLuid == Locales.GetLocaleFromString(MMain.mahou.cbb_MainLayout1.SelectedItem.ToString()).uId) {
-					lbLang.ForeColor = MMain.mahou.Layout1Fore_temp;
-					lbLang.BackColor = MMain.mahou.Layout1Back_temp;
-					lbLang.Font = MMain.mahou.Layout1Font_temp;
-					lbLang.Height = MMain.mahou.Layout1Height_temp;
-					lbLang.Width = MMain.mahou.Layout1Width_temp;
-				} else if (cLuid == Locales.GetLocaleFromString(MMain.mahou.cbb_MainLayout2.SelectedItem.ToString()).uId) {
-					lbLang.ForeColor = MMain.mahou.Layout2Fore_temp;
-					lbLang.BackColor = MMain.mahou.Layout2Back_temp;
-					lbLang.Font = MMain.mahou.Layout2Font_temp;
-					lbLang.Height = MMain.mahou.Layout2Height_temp;
-					lbLang.Width = MMain.mahou.Layout2Width_temp;
-				}			
-			}
-			if (transparentBG)
-				TransparencyKey = BackColor = lbLang.BackColor = Color.Pink;
-			Size = lbLang.Size;
-			var cLid = (int)(Locales.GetCurrentLocale() & 0xffff);
-			if (cLid > 0) {
-				var clangname = new System.Globalization.CultureInfo(cLid);
+			if ((cLid & 0xffff) > 0) {
+				if (MMain.mahou.DiffColorsForLayouts) {
+					if (cLid == Locales.GetLocaleFromString(MMain.mahou.MainLayout1).uId) {
+						transparentBG = MMain.mahou.Layout1TransparentBack_temp;
+						lbLang.ForeColor = MMain.mahou.Layout1Fore_temp;
+						lbLang.BackColor = MMain.mahou.Layout1Back_temp;
+						lbLang.Font = MMain.mahou.Layout1Font_temp;
+						lbLang.Height = MMain.mahou.Layout1Height_temp;
+						lbLang.Width = MMain.mahou.Layout1Width_temp;
+					} else if (cLid == Locales.GetLocaleFromString(MMain.mahou.MainLayout2).uId) {
+						transparentBG = MMain.mahou.Layout2TransparentBack_temp;
+						lbLang.ForeColor = MMain.mahou.Layout2Fore_temp;
+						lbLang.BackColor = MMain.mahou.Layout2Back_temp;
+						lbLang.Font = MMain.mahou.Layout2Font_temp;
+						lbLang.Height = MMain.mahou.Layout2Height_temp;
+						lbLang.Width = MMain.mahou.Layout2Width_temp;
+					}
+				}
+				if (transparentBG)
+					TransparencyKey = BackColor = lbLang.BackColor = Color.Pink;
+				if (lastTransparentBG != transparentBG)
+					SetVisInvis();
+				lastTransparentBG = transparentBG;
+				Size = lbLang.Size;
+				var clangname = new System.Globalization.CultureInfo((int)(cLid & 0xffff));
 				ChangeLD(clangname.ThreeLetterISOLanguageName.Substring(0, 1).ToUpper() + clangname.ThreeLetterISOLanguageName.Substring(1));
 			} else {
 				Logging.Log("Language tooltip text NOT changed, locale id = [" + cLid + "].", 2);
