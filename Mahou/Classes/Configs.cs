@@ -98,12 +98,12 @@ namespace Mahou
 			CheckInt("Appearence", "CaretLTPositionY", "12");
 			#endregion
 			#region Timings section
-			CheckInt("Timings", "LangTooltipForMouseRefreshRate", "5");
-			CheckInt("Timings", "LangTooltipForCaretRefreshRate", "5");
+			CheckInt("Timings", "LangTooltipForMouseRefreshRate", "25");
+			CheckInt("Timings", "LangTooltipForCaretRefreshRate", "25");
 			CheckInt("Timings", "DoubleHotkey2ndPressWait", "350");
-			CheckInt("Timings", "FlagsInTrayRefreshRate", "10");
-			CheckInt("Timings", "ScrollLockStateRefreshRate", "5");
-			CheckInt("Timings", "CapsLockDisableRefreshRate", "5");
+			CheckInt("Timings", "FlagsInTrayRefreshRate", "100");
+			CheckInt("Timings", "ScrollLockStateRefreshRate", "100");
+			CheckInt("Timings", "CapsLockDisableRefreshRate", "100");
 			CheckBool("Timings", "SelectedTextGetMoreTries", "false");
 			CheckInt("Timings", "SelectedTextGetMoreTriesCount", "5");
 			#endregion
@@ -193,8 +193,7 @@ namespace Mahou
         /// <param name="section">Section name in which key will be written.</param>
         /// <param name="key">Key name to be written.</param>
         /// <param name="value">Key's value to be written.</param>
-        public void Write(string section, string key, string value)
-        {
+        public void Write(string section, string key, string value) {
             WinAPI.WritePrivateProfileString(section, key, value, filePath);
         }
         /// <summary>
@@ -203,8 +202,7 @@ namespace Mahou
         /// <param name="section">Section name in which key will be read.</param>
         /// <param name="key">Key's name in which value will be read.</param>
         /// <returns>string</returns>
-        public string Read(string section, string key)
-        {
+        public string Read(string section, string key) {
             var SB = new StringBuilder(255);
             int i = WinAPI.GetPrivateProfileString(section, key, "", SB, 255, filePath);
             return SB.ToString();
@@ -215,8 +213,7 @@ namespace Mahou
         /// <param name="section">Section name in which key will be read.</param>
         /// <param name="key">Key's name in which value will be read.</param>
         /// <returns>int</returns>
-        public int ReadInt(string section, string key) //Returns "key" value in "section" as int
-        {
+        public int ReadInt(string section, string key) {
             var SB = new StringBuilder(255);
             int i = WinAPI.GetPrivateProfileString(section, key, "", SB, 255, filePath);
             return Int32.Parse(SB.ToString());
@@ -227,8 +224,7 @@ namespace Mahou
         /// <param name="section">Section name in which key will be read.</param>
         /// <param name="key">Key's name in which value will be read.</param>
         /// <returns>bool</returns>
-        public bool ReadBool(string section, string key) //Returns "key" value in "section" as bool
-        {
+        public bool ReadBool(string section, string key) {
             var SB = new StringBuilder(255);
             int i = WinAPI.GetPrivateProfileString(section, key, "", SB, 255, filePath);
             return Boolean.Parse(SB.ToString().ToLower());
