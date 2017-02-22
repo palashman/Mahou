@@ -20,7 +20,7 @@ namespace Mahou {
 		/// Directory where Mahou.exe is.
 		/// </summary>
 		public static string nPath = AppDomain.CurrentDomain.BaseDirectory;
-		public static bool LoggingEnabled = false;
+		public static bool LoggingEnabled;
 		static string[] UpdInfo;
 		static bool updating, was, isold = true, checking;
 		static Timer tmr = new Timer();
@@ -29,12 +29,15 @@ namespace Mahou {
 		static int progress = 0, _progress = 0;
 		int titlebar = 12;
 		public bool messagebox;
+		public int DoubleHKInterval = 200, SelectedTextGetMoreTriesCount;
 		#region Temporary variables
 		/// <summary>
 		/// In memory settings, for timers/hooks.
 		/// </summary>
 		public bool DiffColorsForLayouts, LDForCaretOnChange, LDForMouseOnChange, ScrollTip, AddOneSpace,
-					TrayFlags, SymIgnEnabled, TrayIconVisible, SnippetsEnabled, ChangeLayouByKey, EmulateLS;
+					TrayFlags, SymIgnEnabled, TrayIconVisible, SnippetsEnabled, ChangeLayouByKey, EmulateLS,
+					RePress, BlockHKWithCtrl, blueIcon, SwitchBetweenLayouts, SelectedTextGetMoreTries, ReSelect,
+					ConvertSelectionLS, ConvertSelectionLSPlus;
 		/// <summary>
 		/// Temporary modifiers of hotkeys.
 		/// </summary>
@@ -94,7 +97,7 @@ namespace Mahou {
 		/// <summary>
 		/// Temporary layouts.
 		/// </summary>
-		public string Layout1, Layout2, Layout3, Layout4, MainLayout1, MainLayout2;
+		public string Layout1, Layout2, Layout3, Layout4, MainLayout1, MainLayout2, EmulateLSType;
 		/// <summary>
 		/// Temporary specific keys.
 		/// </summary>
@@ -138,21 +141,14 @@ namespace Mahou {
 				uche.Name = "Startup Check";
 				uche.Start();
 			}
+			Memory.Flush();
 		}
 		#region WndProc & Functions
-		protected override void WndProc(ref Message m) {
-			if (m.Msg == MMain.ao) { // ao = Already Opened
-				ToggleVisibility();
-        		Logging.Log("Another instance detected, closing it.");
-			}
-			base.WndProc(ref m);
-		}
 		/// <summary>
 		/// Restores temporary variables from settings.
 		/// </summary>
 		void LoadTemps() {
 			//This creates(silently) new config file if existed one disappeared o_O
-			IfNotExist();
 			// Restores temps
 			#region Hotkey enableds
 			Mainhk_tempEnabled = MMain.MyConfs.ReadBool("Hotkeys", "ToggleMainWindow_Enabled");
@@ -341,19 +337,11 @@ namespace Mahou {
 			Logging.Log("Saved from temps.");
 		}
 		/// <summary>
-		/// If configs were deleted, create new with default values.
-		/// </summary>
-		public void IfNotExist() {
-//			if (File.Exists(Configs.filePath)) {
-//				MMain.MyConfs = new Configs();
-//				LoadTemps();
-//			}
-		}
-		/// <summary>
 		/// Saves current settings to INI.
 		/// </summary>
 		void SaveConfigs() {
-			IfNotExist();
+			var tmpLangTTAppearenceIndex = lsb_LangTTAppearenceForList.SelectedIndex;
+			var tmpHotkeysIndex = lsb_Hotkeys.SelectedIndex;
 			#region Functions
 			MMain.MyConfs.Write("Functions", "TrayIconVisible", chk_TrayIcon.Checked.ToString());
 			MMain.MyConfs.Write("Functions", "ConvertSelectionLayoutSwitching", chk_CSLayoutSwitching.Checked.ToString());
@@ -422,32 +410,33 @@ namespace Mahou {
 			#endregion
 			Logging.Log("All configurations saved.");
 			LoadConfigs();
+			lsb_LangTTAppearenceForList.SelectedIndex = tmpLangTTAppearenceIndex;
+			lsb_Hotkeys.SelectedIndex = tmpHotkeysIndex;
 		}
 		/// <summary>
 		/// Refresh all controls state from configs.
 		/// </summary>
 		void LoadConfigs() {
-			IfNotExist();
 			#region Functions
 			chk_AutoStart.Checked = File.Exists(Path.Combine(
 				Environment.GetFolderPath(Environment.SpecialFolder.Startup),
 				"Mahou.lnk")) ? true : false;
 			TrayIconVisible = chk_TrayIcon.Checked = MMain.MyConfs.ReadBool("Functions", "TrayIconVisible");
-			chk_CSLayoutSwitching.Checked = MMain.MyConfs.ReadBool("Functions", "ConvertSelectionLayoutSwitching");
-			chk_ReSelect.Checked = MMain.MyConfs.ReadBool("Functions", "ReSelect");
-			chk_RePress.Checked = MMain.MyConfs.ReadBool("Functions", "RePress");
+			ConvertSelectionLS = chk_CSLayoutSwitching.Checked = MMain.MyConfs.ReadBool("Functions", "ConvertSelectionLayoutSwitching");
+			ReSelect = chk_ReSelect.Checked = MMain.MyConfs.ReadBool("Functions", "ReSelect");
+			RePress = chk_RePress.Checked = MMain.MyConfs.ReadBool("Functions", "RePress");
 			AddOneSpace = chk_AddOneSpace.Checked = MMain.MyConfs.ReadBool("Functions", "AddOneSpaceToLastWord");
-			chk_CSLayoutSwitchingPlus.Checked = MMain.MyConfs.ReadBool("Functions", "ConvertSelectionLayoutSwitchingPlus");
+			ConvertSelectionLSPlus = chk_CSLayoutSwitchingPlus.Checked = MMain.MyConfs.ReadBool("Functions", "ConvertSelectionLayoutSwitchingPlus");
 			ScrollTip = chk_HighlightScroll.Checked = MMain.MyConfs.ReadBool("Functions", "ScrollTip");
 			chk_StartupUpdatesCheck.Checked = MMain.MyConfs.ReadBool("Functions", "StartupUpdatesCheck");
 			LoggingEnabled = chk_Logging.Checked = MMain.MyConfs.ReadBool("Functions", "Logging");
 			TrayFlags = chk_FlagsInTray.Checked = MMain.MyConfs.ReadBool("Functions", "TrayFlags");
 			chk_CapsLockDTimer.Checked = MMain.MyConfs.ReadBool("Functions", "CapsLockTimer");
-			chk_BlockHKWithCtrl.Checked = MMain.MyConfs.ReadBool("Functions", "BlockMahouHotkeysWithCtrl");
+			BlockHKWithCtrl = chk_BlockHKWithCtrl.Checked = MMain.MyConfs.ReadBool("Functions", "BlockMahouHotkeysWithCtrl");
 			SymIgnEnabled = MMain.MyConfs.ReadBool("Functions", "SymbolIgnoreModeEnabled");
 			#endregion
 			#region Layouts
-			chk_SwitchBetweenLayouts.Checked = MMain.MyConfs.ReadBool("Layouts", "SwitchBetweenLayouts");
+			SwitchBetweenLayouts = chk_SwitchBetweenLayouts.Checked = MMain.MyConfs.ReadBool("Layouts", "SwitchBetweenLayouts");
 			EmulateLS = chk_EmulateLS.Checked = MMain.MyConfs.ReadBool("Layouts", "EmulateLayoutSwitch");
 			ChangeLayouByKey = chk_SpecificLS.Checked = MMain.MyConfs.ReadBool("Layouts", "ChangeToSpecificLayoutByKey");
 			MainLayout1 = MMain.MyConfs.Read("Layouts", "MainLayout1");
@@ -472,12 +461,12 @@ namespace Mahou {
 			#region Timings
 			nud_LangTTMouseRefreshRate.Value = MMain.MyConfs.ReadInt("Timings", "LangTooltipForMouseRefreshRate");
 			nud_LangTTCaretRefreshRate.Value = MMain.MyConfs.ReadInt("Timings", "LangTooltipForCaretRefreshRate");
-			nud_DoubleHK2ndPressWaitTime.Value = MMain.MyConfs.ReadInt("Timings", "DoubleHotkey2ndPressWait");
+			nud_DoubleHK2ndPressWaitTime.Value = DoubleHKInterval =  MMain.MyConfs.ReadInt("Timings", "DoubleHotkey2ndPressWait");
 			nud_TrayFlagRefreshRate.Value = MMain.MyConfs.ReadInt("Timings", "FlagsInTrayRefreshRate");
 			nud_ScrollLockRefreshRate.Value = MMain.MyConfs.ReadInt("Timings", "ScrollLockStateRefreshRate");
 			nud_CapsLockRefreshRate.Value = MMain.MyConfs.ReadInt("Timings", "CapsLockDisableRefreshRate");
 			nud_ScrollLockRefreshRate.Value = MMain.MyConfs.ReadInt("Timings", "ScrollLockStateRefreshRate");
-			chk_SelectedTextGetMoreTries.Checked = MMain.MyConfs.ReadBool("Timings", "SelectedTextGetMoreTries");
+			SelectedTextGetMoreTries = chk_SelectedTextGetMoreTries.Checked = MMain.MyConfs.ReadBool("Timings", "SelectedTextGetMoreTries");
 			nud_SelectedTextGetTriesCount.Value = MMain.MyConfs.ReadInt("Timings", "SelectedTextGetMoreTriesCount");
 			#endregion
 			#region Snippets
@@ -536,7 +525,8 @@ namespace Mahou {
 			}
 			try {
 				cbb_Language.SelectedIndex = cbb_Language.Items.IndexOf(MMain.MyConfs.Read("Appearence", "Language"));
-				cbb_EmulateType.SelectedIndex = cbb_EmulateType.Items.IndexOf(MMain.MyConfs.Read("Layouts", "EmulateLayoutSwitchType"));
+				EmulateLSType = MMain.MyConfs.Read("Layouts", "EmulateLayoutSwitchType");
+				cbb_EmulateType.SelectedIndex = cbb_EmulateType.Items.IndexOf(EmulateLSType);
 				cbb_Layout1.SelectedIndex = cbb_Layout1.Items.IndexOf(Layout1);
 				cbb_Layout2.SelectedIndex = cbb_Layout2.Items.IndexOf(Layout2);
 				cbb_Layout3.SelectedIndex = cbb_Layout3.Items.IndexOf(Layout3);
@@ -590,13 +580,11 @@ namespace Mahou {
 		public void ToggleVisibility() {
 			Logging.Log("Mahou Main window visibility changed to ["+!Visible+"].");
 			if (Visible) {
-				Visible = false; Invalidate();
+				Visible = false;
 			} else {
 				TopMost = Visible = true;
-				System.Threading.Thread.Sleep(5);
 				TopMost = false;
 			}
-			Refresh();
 			// Sometimes when logging is enabled, hooks may die without error...
 			// This fixes it, but you need manually to show/hide main window:
 			// 1. Click tray icon. 2. Start Mahou.exe
@@ -611,7 +599,6 @@ namespace Mahou {
 		/// Refreshes all icon's images and tray icon visibility.
 		/// </summary>
 		public void RefreshAllIcons() {
-			IfNotExist();
 			if (TrayFlags) {
 				ChangeTrayIconToFlag();
 			} else {
@@ -620,10 +607,14 @@ namespace Mahou {
 				else if (HKSymIgn_tempEnabled && SymIgnEnabled && icon.trIcon.Icon != Properties.Resources.MahouTrayHD)
 					icon.trIcon.Icon = Properties.Resources.MahouTrayHD;
 			}
-			if (HKSymIgn_tempEnabled && SymIgnEnabled)
+			if (!blueIcon && HKSymIgn_tempEnabled && SymIgnEnabled) {
+				blueIcon = true;
 				Icon = Properties.Resources.MahouSymbolIgnoreMode;
-			else if (HKSymIgn_tempEnabled && !SymIgnEnabled )
+			}
+			else if (blueIcon && HKSymIgn_tempEnabled && !SymIgnEnabled ) {
 				Icon = Properties.Resources.MahouTrayHD;
+				blueIcon = false;
+			}
 			if (TrayIconVisible && !icon.trIcon.Visible) {
 				icon.Show();
 			} else if(!TrayIconVisible && icon.trIcon.Visible) {
@@ -700,16 +691,14 @@ namespace Mahou {
 		/// Refreshes language tooltips (caret/mouse) colors, size and font.
 		/// </summary>
 		public void RefreshLangDisplays() {
+			mouseLangDisplay = new LangDisplay();
+			caretLangDisplay = new LangDisplay();
 			mouseLangDisplay.mouseDisplay = true;
 			mouseLangDisplay.ChangeColors(LDMouseFont_temp, LDMouseFore_temp, LDMouseBack_temp);
 			mouseLangDisplay.ChangeSize(LDMouseHeight_temp, LDMouseWidth_temp);
-//			mouseLangDisplay.RefreshLang();
-			mouseLangDisplay.SetVisInvis();
 			caretLangDisplay.caretDisplay = true;
 			caretLangDisplay.ChangeColors(LDCaretFont_temp, LDCaretFore_temp, LDCaretBack_temp);
 			caretLangDisplay.ChangeSize(LDCaretHeight_temp, LDCaretWidth_temp);
-//			caretLangDisplay.RefreshLang();
-			caretLangDisplay.SetVisInvis();
 			caretLangDisplay.AddOwnedForm(mouseLangDisplay); //Prevents flickering when tooltips are one on another 
 		}
 		/// <summary>
@@ -764,16 +753,17 @@ namespace Mahou {
 			ICheck.Stop();
 			ScrlCheck.Stop();
 			res.Stop();
+			old.Stop();
 			capsCheck.Stop();
 			flagsCheck.Stop();
 			ICheck = new Timer();
-			crtCheck  =  new Timer();
+			crtCheck = new Timer();
 			ScrlCheck = new Timer();
-			res =  new Timer();
-			capsCheck =  new Timer();
-			flagsCheck =  new Timer();
-			old =  new Timer();
-			KMHook.doublekey =  new Timer();
+			res = new Timer();
+			capsCheck = new Timer();
+			flagsCheck = new Timer();
+			old = new Timer();
+			KMHook.doublekey = new Timer();
 			#endregion
 			crtCheck.Interval = MMain.MyConfs.ReadInt("Timings", "LangTooltipForCaretRefreshRate");
 			crtCheck.Tick += (_, __) => {
@@ -950,7 +940,6 @@ namespace Mahou {
 		public void ExitProgram() {
 			Logging.Log("Exit by user demand.");
 			icon.Hide();
-			Refresh();
 			Application.Exit();
 		}
 		/// <summary>
@@ -1410,14 +1399,14 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 		public void StartupCheck() {
 			Logging.Log("Startup check for updates.");
 			System.Threading.Tasks.Task.Factory.StartNew(GetUpdateInfo).Wait();
+			SetUInfo();
 			try {
-				if (flVersion("v" + Application.ProductVersion) < flVersion(UpdInfo[2])) {
+				if (flVersion("v" + Application.ProductVersion) > flVersion(UpdInfo[2])) {
 					Logging.Log("New version available, showing dialog...");
-					if (MessageBox.Show(new Form() { TopMost = true }, "??","..",
+					if (MessageBox.Show(new Form() { TopMost = true }, UpdInfo[1], UpdInfo[0],
 //						     UpdInfo[0] + '\n' + UpdInfo[1], "Mahou - " + MMain.UI[33],
-						     MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.OK) {
-						ShowDialog();
-						StartPosition = FormStartPosition.CenterScreen;
+						     MessageBoxButtons.OK, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.OK) {
+						// TODO Add update window show on ok click
 					}
 				}
 			} catch(Exception e) {
