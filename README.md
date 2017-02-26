@@ -23,6 +23,13 @@ Mahou работает совершенно по-другому: в отличи
 
 ###### Возможности по версиям:
 
+**v2.0.0.0**<br/>
+- Обновлен интерфейс.
+- Сильно улучшены функции использующие таймеры.
+- Добавлена очистка памяти, теперь Mahou потребляет ~5МБ ОЗУ.
+- Добавлены функции конверсии регистра текста.
+- Много исправлений.
+
 **v1.5.2.0**<br/>
 - Добавлено фунция отображения флагов стран в трее.
 
@@ -140,6 +147,12 @@ Even selected text switches just between **selected** layouts, though if you lik
 4. Starting from v1.0.4.4 in Convert selection unrecognized text by all selected layout in settings (example: ♥) just rewrites.
 
 ###### By version features:
+
+**v2.0.0.0**<br/>
+- Updated interface.
+- Greatly increased speed of functions that using timers.
+- Added memory clearing, now Mahou uses ~5МБ RAM.
+- Added functions to convert text case.
 
 **v1.5.2.0**<br/>
 - ِAdded feature to display country flags in tray.
