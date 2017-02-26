@@ -413,7 +413,6 @@ namespace Mahou
 		static void CheckHotkey(Hotkey thishk, Hotkey actionhk, ref bool hkOK, Action hotkeyAction) {
 			if (!actionhk.Double)
 				hkOK = true;
-			Debug.WriteLine(thishk.keyCode+" ."+thishk.modifs);
 			if (thishk.Equals(actionhk) && actionhk.enabled) {
 				if (hkOK) {
 					Logging.Log("Hotkey fired.");
