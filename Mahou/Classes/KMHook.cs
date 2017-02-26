@@ -18,7 +18,11 @@ namespace Mahou
 			awas, swas, cwas, wwas, afterEOS, //*was = alt/shift/ctrl was
 			keyAfterCTRL, hklOK, hksOK, hklineOK, hkSIOK, hkExitOK,
 			hksTTCOK, hksTRCOK, hksTSCOK, hksTrslOK, hkShWndOK, hkcwdsOK,
-			hotkeywithmodsfired, csdoing, incapt, waitfornum;
+			hotkeywithmodsfired, csdoing, incapt, waitfornum, doBackup;
+		static NativeClipboard.ClipboardData datas = new NativeClipboard.ClipboardData() {
+				data = new List<byte[]>(),
+				format = new List<uint>()
+			};
 		static List<Keys> tempNumpads = new List<Keys>();
 		static List<char> c_snip = new List<char>();
 		public static System.Windows.Forms.Timer doublekey = new System.Windows.Forms.Timer();
@@ -32,8 +36,8 @@ namespace Mahou
 				{"Є", "EH"}, {"ю", "yu"}, {"я", "ya"}, {"є", "eh"}, {"Ж", "ZH"},
 				{"ч", "ch"}, {"ш", "sh"}, {"щ", "sch"}, {"Й", "JJ"}, {"ж", "zh"},
 				{"Э", "EH"}, {"Ю", "YU"}, {"Я", "YA"}, {"й", "jj"}, {"ё", "jo"}, 
-				{"э", "eh"}, {"вв", "w"}, {"ь", "j"},
-				{"І", "И"}, {"і", "и"}, {"№", "#"}, {"А", "A"}, {"Б", "B"},
+				{"э", "eh"}, {"вв", "w"}, 
+				{"ь", "j"}, {"№", "#"}, {"А", "A"}, {"Б", "B"},
 				{"В", "V"}, {"Г", "G"}, {"Д", "D"}, {"Е", "E"},  {"З", "Z"}, 
 				{"И", "I"}, {"К", "K"}, {"Л", "L"}, {"М", "M"}, {"Н", "N"},
 				{"О", "O"}, {"П", "P"}, {"Р", "R"}, {"С", "S"}, {"Т", "T"},
@@ -162,6 +166,9 @@ namespace Mahou
 								}
 			           		    });
 					}
+					CheckHotkey(thishk, MMain.mahou.HKTitleCase, ref hksTTCOK, ToTitleSelection);
+					CheckHotkey(thishk, MMain.mahou.HKSwapCase, ref hksTSCOK, ToSwapSelection);
+					CheckHotkey(thishk, MMain.mahou.HKRandomCase, ref hksTRCOK, ToRandomSelection);
 					CheckHotkey(thishk, MMain.mahou.HKConMorWor, ref hkcwdsOK, () => { waitfornum = true; });
 					CheckHotkey(thishk, MMain.mahou.Mainhk, ref hkShWndOK, MMain.mahou.ToggleVisibility);
 					CheckHotkey(thishk, MMain.mahou.ExitHk, ref hkExitOK, MMain.mahou.ExitProgram);
@@ -404,7 +411,8 @@ namespace Mahou
 		#endregion
 		#region Functions/Struct
 		static void CheckHotkey(Hotkey thishk, Hotkey actionhk, ref bool hkOK, Action hotkeyAction) {
-			hkOK = !actionhk.Double;
+			if (!actionhk.Double)
+				hkOK = true;
 			if (thishk.Equals(actionhk) && actionhk.enabled) {
 				if (hkOK) {
 					Logging.Log("Hotkey fired.");
@@ -538,141 +546,116 @@ namespace Mahou
 		static void ConvertSelection()
 		{
 			try { //Used to catch errors
-			Locales.IfLessThan2();
-			self = true;
-			Logging.Log("Starting Convert selection.");
-			string ClipStr = "";
-			// Backup & Restore feature, now only text supported...
-			Logging.Log("Taking backup of clipboard text if possible.");
-			var doBackup = false || WinAPI.IsClipboardFormatAvailable(WinAPI.CF_UNICODETEXT);
-			var datas = new NativeClipboard.ClipboardData() {
-				data = new List<byte[]>(),
-				format = new List<uint>()
-			};
-			if (doBackup)
-				datas = NativeClipboard.GetClipboardDatas();
-			//This prevents from converting text that already exist in Clipboard
-			//by pressing "Convert Selection hotkey" without selected text.
-			NativeClipboard.Clear();
-			Logging.Log("Getting selected text.");
-			if (MMain.mahou.SelectedTextGetMoreTries)
-				for (int i = 0; i != MMain.mahou.SelectedTextGetMoreTriesCount; i++) {
-					ClipStr = MakeCopy();
-					if (!String.IsNullOrEmpty(ClipStr))
-						break;
-				}
-			else
-				ClipStr = MakeCopy();
-			if (!String.IsNullOrEmpty(ClipStr)) {
-				csdoing = true;
-				Logging.Log("Starting conversion of [" + ClipStr + "].");
-				KInputs.MakeInput(new [] {
-					KInputs.AddKey(Keys.Back, true),
-					KInputs.AddKey(Keys.Back, false)
-				});
-				var result = "";
-				int items = 0;
-				if (MMain.mahou.ConvertSelectionLS) {
-					Logging.Log("Using CS-Switch mode.");
-					self = true;
-					var wasLocale = Locales.GetCurrentLocale() & 0xffff;
-					var wawasLocale = wasLocale & 0xffff;
-					var nowLocale = wasLocale == (Locales.GetLocaleFromString(MMain.mahou.MainLayout1).uId & 0xffff)
-						? Locales.GetLocaleFromString(MMain.mahou.MainLayout2).uId & 0xffff
-						: Locales.GetLocaleFromString(MMain.mahou.MainLayout1).uId & 0xffff;
-					ChangeLayout();
-					var index = 0;
-					var oneliner = Regex.Replace(ClipStr, "\r?\n|\r", "\n");
-//					System.IO.File.WriteAllText(MahouUI.nPath+"\\onel", oneliner);
-					// Finally fixed this regex.... →             ↓↓        ↓
-					foreach (char c in oneliner) {
-						items++;
-						wasLocale = wawasLocale;
-						var s = new StringBuilder(10);
-						var sb = new StringBuilder(10);
-						var yk = new YuKey();
-						var scan = WinAPI.VkKeyScanEx(c, (IntPtr)wasLocale);
-						var state = ((scan >> 8) & 0xff);
-						var bytes = new byte[255];
-						if (state == 1)
-							bytes[(int)Keys.ShiftKey] = 0xFF;
-						var scan2 = WinAPI.VkKeyScanEx(c, (IntPtr)nowLocale);
-						var state2 = ((scan2 >> 8) & 0xff);
-						var bytes2 = new byte[255];
-						if (state2 == 1)
-							bytes2[(int)Keys.ShiftKey] = 0xFF;
-						if (MMain.mahou.ConvertSelectionLSPlus) {
-							Logging.Log("Using Experimental CS-Switch mode.");
-							WinAPI.ToUnicodeEx((uint)scan, (uint)scan, bytes, s, s.Capacity, 0, (IntPtr)wasLocale);
-							Logging.Log("Char 1 is [" + s + "] in locale +[" + wasLocale + "].");
-							if (ClipStr[index].ToString() == s.ToString()) {
-								Logging.Log("Making input of [" + scan + "] in locale +[" + nowLocale + "].");
-								KInputs.MakeInput(KInputs.AddString(InAnother(c, wasLocale, nowLocale)));
-								index++;
-								continue;
+				self = true;
+				Logging.Log("Starting Convert selection.");
+				string ClipStr = GetClipStr();
+				if (!String.IsNullOrEmpty(ClipStr)) {
+					csdoing = true;
+					Logging.Log("Starting conversion of [" + ClipStr + "].");
+					KInputs.MakeInput(new [] {
+						KInputs.AddKey(Keys.Back, true),
+						KInputs.AddKey(Keys.Back, false)
+					});
+					var result = "";
+					int items = 0;
+					if (MMain.mahou.ConvertSelectionLS) {
+						Logging.Log("Using CS-Switch mode.");
+						self = true;
+						var wasLocale = Locales.GetCurrentLocale() & 0xffff;
+						var wawasLocale = wasLocale & 0xffff;
+						var nowLocale = wasLocale == (Locales.GetLocaleFromString(MMain.mahou.MainLayout1).uId & 0xffff)
+							? Locales.GetLocaleFromString(MMain.mahou.MainLayout2).uId & 0xffff
+							: Locales.GetLocaleFromString(MMain.mahou.MainLayout1).uId & 0xffff;
+						ChangeLayout();
+						var index = 0;
+						foreach (char c in ClipStr) {
+							items++;
+							wasLocale = wawasLocale;
+							var s = new StringBuilder(10);
+							var sb = new StringBuilder(10);
+							var yk = new YuKey();
+							var scan = WinAPI.VkKeyScanEx(c, (IntPtr)wasLocale);
+							var state = ((scan >> 8) & 0xff);
+							var bytes = new byte[255];
+							if (state == 1)
+								bytes[(int)Keys.ShiftKey] = 0xFF;
+							var scan2 = WinAPI.VkKeyScanEx(c, (IntPtr)nowLocale);
+							var state2 = ((scan2 >> 8) & 0xff);
+							var bytes2 = new byte[255];
+							if (state2 == 1)
+								bytes2[(int)Keys.ShiftKey] = 0xFF;
+							if (MMain.mahou.ConvertSelectionLSPlus) {
+								Logging.Log("Using Experimental CS-Switch mode.");
+								WinAPI.ToUnicodeEx((uint)scan, (uint)scan, bytes, s, s.Capacity, 0, (IntPtr)wasLocale);
+								Logging.Log("Char 1 is [" + s + "] in locale +[" + wasLocale + "].");
+								if (ClipStr[index].ToString() == s.ToString()) {
+									Logging.Log("Making input of [" + scan + "] in locale +[" + nowLocale + "].");
+									KInputs.MakeInput(KInputs.AddString(InAnother(c, wasLocale, nowLocale)));
+									index++;
+									continue;
+								}
+								WinAPI.ToUnicodeEx((uint)scan2, (uint)scan2, bytes2, sb, sb.Capacity, 0, (IntPtr)nowLocale);
+								Logging.Log("Char 2 is [" + sb + "] in locale +[" + nowLocale + "].");
+								if (ClipStr[index].ToString() == sb.ToString()) {
+									Logging.Log("Char 1, 2 and original are equivalent.");
+									WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, wasLocale);
+									wasLocale = nowLocale;
+									scan = scan2;
+									state = state2;
+								}
 							}
-							WinAPI.ToUnicodeEx((uint)scan2, (uint)scan2, bytes2, sb, sb.Capacity, 0, (IntPtr)nowLocale);
-							Logging.Log("Char 2 is [" + sb + "] in locale +[" + nowLocale + "].");
-							if (ClipStr[index].ToString() == sb.ToString()) {
-								Logging.Log("Char 1, 2 and original are equivalent.");
-								WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, wasLocale);
-								wasLocale = nowLocale;
-								scan = scan2;
-								state = state2;
-							}
-						}
-						if (c == '\n') {
-							yk.key = Keys.Enter;
-							yk.upper = false;
-						} else {
-							if (scan != -1) {
-								var key = (Keys)(scan & 0xff);
-								bool upper = false || state == 1;
-								yk = new YuKey() { key = key, upper = upper };
-								Logging.Log("Key of char [" + c + "] = {" + key + "}, upper = +[" + state + "].");
+							if (c == '\n') {
+								yk.key = Keys.Enter;
+								yk.upper = false;
 							} else {
-								yk = new YuKey() { key = Keys.None };
+								if (scan != -1) {
+									var key = (Keys)(scan & 0xff);
+									bool upper = false || state == 1;
+									yk = new YuKey() { key = key, upper = upper };
+									Logging.Log("Key of char [" + c + "] = {" + key + "}, upper = +[" + state + "].");
+								} else {
+									yk = new YuKey() { key = Keys.None };
+								}
 							}
-						}
-						if (yk.key == Keys.None) { // retype unrecognized as unicode
-							var unrecognized = ClipStr[items - 1].ToString();
-							WinAPI.INPUT unr = KInputs.AddString(unrecognized)[0];
-							Logging.Log("Key of char [" + c + "] = not exist, using input as string.");
-							KInputs.MakeInput(new [] { unr });
-						} else {
-							if (!SymbolIgnoreRules(yk.key, yk.upper, wasLocale)) {
-								Logging.Log("Making input of [" + yk.key + "] key with upper = [" + yk.upper + "].");
-								if (yk.upper)
-									KInputs.MakeInput(new [] { KInputs.AddKey(Keys.LShiftKey, true) });
-								KInputs.MakeInput(new [] { KInputs.AddKey(yk.key, true) });
-								KInputs.MakeInput(new [] { KInputs.AddKey(yk.key, false) });
-								if (yk.upper)
-									KInputs.MakeInput(new [] { KInputs.AddKey(Keys.LShiftKey, false) });
+							if (yk.key == Keys.None) { // retype unrecognized as unicode
+								var unrecognized = ClipStr[items - 1].ToString();
+								WinAPI.INPUT unr = KInputs.AddString(unrecognized)[0];
+								Logging.Log("Key of char [" + c + "] = not exist, using input as string.");
+								KInputs.MakeInput(new [] { unr });
+							} else {
+								if (!SymbolIgnoreRules(yk.key, yk.upper, wasLocale)) {
+									Logging.Log("Making input of [" + yk.key + "] key with upper = [" + yk.upper + "].");
+									if (yk.upper)
+										KInputs.MakeInput(new [] { KInputs.AddKey(Keys.LShiftKey, true) });
+									KInputs.MakeInput(new [] { KInputs.AddKey(yk.key, true) });
+									KInputs.MakeInput(new [] { KInputs.AddKey(yk.key, false) });
+									if (yk.upper)
+										KInputs.MakeInput(new [] { KInputs.AddKey(Keys.LShiftKey, false) });
+								}
 							}
+							index++;
 						}
-						index++;
+					} else {
+						Logging.Log("Using default convert selection mode.");
+						var l1 = Locales.GetLocaleFromString(MMain.mahou.MainLayout1).uId;
+						var l2 = Locales.GetLocaleFromString(MMain.mahou.MainLayout2).uId;
+						var index = 0;
+						foreach (char c in ClipStr) {
+							var T = InAnother(c, l2 & 0xffff, l1 & 0xffff);
+							if (T == "")
+								T = InAnother(c, l1 & 0xffff, l2 & 0xffff);
+							if (T == "")
+								T = ClipStr[index].ToString();							
+							result += T;
+							index++;
+						}
+						Logging.Log("Conversion of string [" + ClipStr + "] from locale [" + l1 + "] into locale [" + l2 + "] became [" + result + "].");
+						//Inputs converted text
+						Logging.Log("Making input of [" + result + "] as string");
+						KInputs.MakeInput(KInputs.AddString(result));
+						items = result.Length;
 					}
-				} else {
-					Logging.Log("Using default convert selection mode.");
-					var l1 = Locales.GetLocaleFromString(MMain.mahou.MainLayout1).uId;
-					var l2 = Locales.GetLocaleFromString(MMain.mahou.MainLayout2).uId;
-					var index = 0;
-					foreach (char c in ClipStr) {
-						var T = InAnother(c, l2 & 0xffff, l1 & 0xffff);
-						if (T == "")
-							T = InAnother(c, l1 & 0xffff, l2 & 0xffff);
-						if (T == "")
-							T = ClipStr[index].ToString();							
-						result += T;
-						index++;
-					}
-					Logging.Log("Conversion of string [" + ClipStr + "] from locale [" + l1 + "] into locale [" + l2 + "] became [" + result + "].");
-					//Inputs converted text
-					Logging.Log("Making input of [" + result + "] as string");
-					KInputs.MakeInput(KInputs.AddString(result));
-					items = result.Length;
-				}
-				ReSelect(items);
+					ReSelect(items);
 			}
 			NativeClipboard.Clear();
 			if (doBackup) {
@@ -681,6 +664,150 @@ namespace Mahou
 			self = false;
 			} catch(Exception e) {
 				Logging.Log("Convert Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
+			}
+			Memory.Flush();
+		}
+		static void TransliterateSelection() {
+			try { //Used to catch errors
+				Locales.IfLessThan2();
+				self = true;
+				Logging.Log("Starting Transliterate selection.");
+				string ClipStr = GetClipStr();
+				if (!String.IsNullOrEmpty(ClipStr)) {
+					string output = "";
+					foreach (KeyValuePair<string, string> key in transliterationDict) {
+		                output = ClipStr.Replace(key.Key, key.Value);
+		            }
+	                if (ClipStr == output)
+						foreach (KeyValuePair<string, string> key in transliterationDict) {
+			                	ClipStr = ClipStr.Replace(key.Value, key.Key);
+	                	}
+	                if (ClipStr == output)
+						foreach (KeyValuePair<string, string> key in transliterationDict) {
+			                	ClipStr = ClipStr.Replace(key.Key, key.Value);
+	                	}
+					KInputs.MakeInput(KInputs.AddString(ClipStr));
+					ReSelect(ClipStr.Length);
+				}
+				NativeClipboard.Clear();
+				if (doBackup) {
+					NativeClipboard.RestoreData(datas);
+				}
+				self = false;
+				} catch(Exception e) {
+					Logging.Log("Transliterate Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
+				}
+			Memory.Flush();
+		}
+		static void ToTitleSelection() {
+			try {
+				self = true;
+				string ClipStr = GetClipStr();
+				if (!String.IsNullOrEmpty(ClipStr)) {
+					string[] ClipStrLines = ClipStr.Split('\n');
+					int lines = 0;
+					foreach (var line in ClipStrLines) {
+						lines++;
+						string[] ClipStrWords = line.Split(' ');
+						int words = 0;
+						foreach (var word in ClipStrWords) {
+							words++;
+							string Tword = "";
+							if (word.Length > 0)
+								Tword += word[0].ToString().ToUpper();
+							if (word .Length > 1)
+								foreach(char ch in word.Substring(1, word.Length - 1)) {
+									Tword += char.ToLower(ch);
+								}
+							if (words != ClipStrWords.Length)
+								Tword += ' ';
+							Logging.Log("Inputting word ["+Tword+"] as Title case");
+							KInputs.MakeInput(KInputs.AddString(Tword));
+						}
+						if (lines != ClipStrLines.Length)
+							KInputs.MakeInput(KInputs.AddString("\n"));
+					}
+					ReSelect(ClipStr.Length);
+				}
+				self = false;
+			} catch(Exception e) {
+				Logging.Log("To Title Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
+			}
+			Memory.Flush();
+		}
+		static void ToSwapSelection() {
+			try {
+				self = true;
+				string ClipStr = GetClipStr();
+				if (!String.IsNullOrEmpty(ClipStr)) {
+					string[] ClipStrLines = ClipStr.Split('\n');
+					int lines = 0;
+					foreach (var line in ClipStrLines) {
+						lines++;
+						string[] ClipStrWords = line.Split(' ');
+						int words = 0;
+						foreach (var word in ClipStrWords) {
+							words++;
+							string Sword = "";
+							foreach(char ch in word) {
+								if (char.IsUpper(ch))
+									Sword += char.ToLower(ch);
+								else if (char.IsLower(ch))
+									Sword += char.ToUpper(ch);
+								else
+									Sword += ch;
+							}
+							if (words != ClipStrWords.Length)
+								Sword += ' ';
+							Logging.Log("Inputting word ["+Sword+"] as sWAP case");
+							KInputs.MakeInput(KInputs.AddString(Sword));
+						}
+						if (lines != ClipStrLines.Length)
+							KInputs.MakeInput(KInputs.AddString("\n"));
+					}
+					ReSelect(ClipStr.Length);
+				}
+				self = false;
+			} catch(Exception e) {
+				Logging.Log("To sWAP Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
+			}
+			Memory.Flush();
+		}
+		static void ToRandomSelection() {
+			try {
+				self = true;
+				string ClipStr = GetClipStr();
+				if (!String.IsNullOrEmpty(ClipStr)) {
+					string[] ClipStrLines = ClipStr.Split('\n');
+					int lines = 0;
+					foreach (var line in ClipStrLines) {
+						lines++;
+						string[] ClipStrWords = line.Split(' ');
+						int words = 0;
+						foreach (var word in ClipStrWords) {
+							words++;
+							Random rand = new Random();
+							string Rword = "";
+							foreach(char ch in word) {
+								if (rand.NextDouble() >= 0.5) {
+									Rword += char.ToLower(ch);
+								} else {
+									Rword += char.ToUpper(ch);
+								}
+							}
+							if (words != ClipStrWords.Length)
+								Rword += ' ';
+							Logging.Log("Inputting word ["+Rword+"] as RaNdoM case");
+							KInputs.MakeInput(KInputs.AddString(Rword));
+						}
+						if (lines != ClipStrLines.Length)
+							KInputs.MakeInput(KInputs.AddString("\n"));
+					}
+					ReSelect(ClipStr.Length);
+				}
+				self = false;
+			} catch(Exception e) {
+				Logging.Log("To RaNdoM Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
 			}
 			Memory.Flush();
 		}
@@ -698,59 +825,6 @@ namespace Mahou
 				}
 			}
 		}
-		static void TransliterateSelection() {
-			try { //Used to catch errors
-			Locales.IfLessThan2();
-			self = true;
-			Logging.Log("Starting Transliterate selection.");
-			string ClipStr = "";
-			// Backup & Restore feature, now only text supported...
-			Logging.Log("Taking backup of clipboard text if possible.");
-			var doBackup = false || WinAPI.IsClipboardFormatAvailable(WinAPI.CF_UNICODETEXT);
-			var datas = new NativeClipboard.ClipboardData() {
-				data = new List<byte[]>(),
-				format = new List<uint>()
-			};
-			if (doBackup)
-				datas = NativeClipboard.GetClipboardDatas();
-			//This prevents from converting text that already exist in Clipboard
-			//by pressing "Convert Selection hotkey" without selected text.
-			NativeClipboard.Clear();
-			Logging.Log("Getting selected text.");
-			if (MMain.mahou.SelectedTextGetMoreTries)
-				for (int i = 0; i != MMain.mahou.SelectedTextGetMoreTriesCount; i++) {
-					ClipStr = MakeCopy();
-					if (!String.IsNullOrEmpty(ClipStr))
-						break;
-				}
-			else
-				ClipStr = MakeCopy();
-			if (!String.IsNullOrEmpty(ClipStr)) {
-				string output = "";
-				foreach (KeyValuePair<string, string> key in transliterationDict) {
-	                output = ClipStr.Replace(key.Key, key.Value);
-	            }
-                if (ClipStr == output)
-					foreach (KeyValuePair<string, string> key in transliterationDict) {
-		                	ClipStr = ClipStr.Replace(key.Value, key.Key);
-                	}
-                if (ClipStr == output)
-					foreach (KeyValuePair<string, string> key in transliterationDict) {
-		                	ClipStr = ClipStr.Replace(key.Key, key.Value);
-                	}
-				KInputs.MakeInput(KInputs.AddString(ClipStr));
-				ReSelect(ClipStr.Length);
-			}
-			NativeClipboard.Clear();
-			if (doBackup) {
-				NativeClipboard.RestoreData(datas);
-			}
-			self = false;
-			} catch(Exception e) {
-				Logging.Log("Transliterate Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
-			}
-			Memory.Flush();
-		}
 		/// <summary>
 		/// Sends RCtrl + Insert to selected get text, and returns that text by using WinAPI.GetText().
 		/// </summary>
@@ -766,12 +840,35 @@ namespace Mahou
 			Thread.Sleep(10);
 			return NativeClipboard.GetText();
 		}
+		static string GetClipStr() {
+			Locales.IfLessThan2();
+			string ClipStr = "";
+			// Backup & Restore feature, now only text supported...
+			Logging.Log("Taking backup of clipboard text if possible.");
+			doBackup = false || WinAPI.IsClipboardFormatAvailable(WinAPI.CF_UNICODETEXT);			
+			if (doBackup)
+				datas = NativeClipboard.GetClipboardDatas();
+			//This prevents from converting text that already exist in Clipboard
+			//by pressing "Convert Selection hotkey" without selected text.
+			NativeClipboard.Clear();
+			Logging.Log("Getting selected text.");
+			if (MMain.mahou.SelectedTextGetMoreTries)
+				for (int i = 0; i != MMain.mahou.SelectedTextGetMoreTriesCount; i++) {
+					ClipStr = MakeCopy();
+					if (!String.IsNullOrEmpty(ClipStr))
+						break;
+				}
+			else
+				ClipStr = MakeCopy();
+			if (String.IsNullOrEmpty(ClipStr))
+				return ClipStr;
+			return Regex.Replace(ClipStr, "\r?\n|\r", "\n");
+		}
 		/// <summary>
 		/// Re-presses modifiers you hold when hotkey fired(due to SendModsUp()).
 		/// </summary>
 		static void RePress() 
 		{
-//			Debug.WriteLine("Going to repress\nct={0}\tsh={1}\tal={2},\twi={3}", ctrlRP, shiftRP, altRP, winRP);
 			//Repress's modifiers by RePress variables
 			if (shiftRP) {
 				KeybdEvent(Keys.LShiftKey, 0);

@@ -866,6 +866,20 @@ namespace Mahou {
 					KMHook.hklineOK = false;
 				if (KMHook.hkSIOK)
 					KMHook.hkSIOK = false;
+				if (KMHook.hkShWndOK)
+					KMHook.hkShWndOK = false;
+				if (KMHook.hkExitOK)
+					KMHook.hkExitOK = false;
+				if (KMHook.hkcwdsOK)
+					KMHook.hkcwdsOK = false;
+				if (KMHook.hksTRCOK)
+					KMHook.hksTRCOK = false;
+				if (KMHook.hksTrslOK)
+					KMHook.hksTrslOK = false;
+				if (KMHook.hksTTCOK)
+					KMHook.hksTTCOK = false;
+				if (KMHook.hksTSCOK)
+					KMHook.hksTSCOK = false;
 				KMHook.doublekey.Stop();
 			};
 			flagsCheck.Interval = MMain.MyConfs.ReadInt("Timings", "FlagsInTrayRefreshRate");
