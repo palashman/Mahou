@@ -46,6 +46,12 @@ namespace Mahou
 					Logging.Log("Too less layouts/locales. Program will exit.");
 					Locales.IfLessThan2();
 				} else {
+					if (MyConfs.ReadBool("FirstStart", "First")) {
+						if (System.Globalization.CultureInfo.InstalledUICulture.TwoLetterISOLanguageName == "ru") {
+							MyConfs.Write("Appearence", "Language", "Русский");
+							MyConfs.Write("FirstStart", "First", "False");
+						}
+					}
 //					InitLanguage();
 					mahou = new MahouUI();
 					//Refreshes icon text language at startup
@@ -56,7 +62,10 @@ namespace Mahou
 					if (args[0] == "_!_updated_!_") {
 						Logging.Log("Mahou updated.");
 						mahou.ToggleVisibility();
-//						MessageBox.Show(Msgs[0], Msgs[1], MessageBoxButtons.OK, MessageBoxIcon.Information);
+						if (mahou.Lang == "English")
+							MessageBox.Show(Languages.English.UpdateComplete, Languages.English.UpdateComplete, MessageBoxButtons.OK, MessageBoxIcon.Information);
+						if (mahou.Lang == "Русский")
+							MessageBox.Show(Languages.Russian.UpdateComplete, Languages.Russian.UpdateComplete, MessageBoxButtons.OK, MessageBoxIcon.Information);
 					}
 					StartHook();
 					foreach (Locales.Locale lc in MMain.locales) {	

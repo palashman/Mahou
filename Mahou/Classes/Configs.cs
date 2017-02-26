@@ -21,6 +21,9 @@ namespace Mahou
         	if (!File.Exists(filePath)) { //Create an UTF-16 configuration file
                 File.WriteAllText(filePath, "!Unicode(✔), Mahou settings file", Encoding.Unicode);
             }
+        	#region FirstStart section
+            CheckBool("FirstStart", "First", "true");
+        	#endregion
             #region Functions section
             CheckBool("Functions", "TrayIconVisible", "true");
             CheckBool("Functions", "ConvertSelectionLayoutSwitching", "true");

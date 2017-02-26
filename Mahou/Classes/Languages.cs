@@ -75,7 +75,7 @@ namespace Mahou.Languages
 		public static readonly string SelectedToRandomCase = "Selected text words to RanDoM cASe";
 		public static readonly string SelectedToSwapCase = "Selected text words to sWAP cASE";
 		public static readonly string SelectedTransliteration = "Selected text transliteration";
-		public static readonly string ExitMahou = "Exit Mahou";
+		public static readonly string ExitMahou = "Exit";
 		public static readonly string Enabled = "Enabled";
 		public static readonly string DoubleHK= "Double hotkey";
 		#endregion
@@ -93,6 +93,16 @@ namespace Mahou.Languages
 		public static readonly string DbgInf_Copied = "Copied!";
 		public static readonly string Site = "Site";
 		public static readonly string Releases = "Releases";
+		public static readonly string About = "Hotkeys:\n"+"Press Pause (by Default) to convert last inputted word.\n" +"" +
+			"Press Scroll Lock (by Default) while selected text is focused to convert it.\n"+
+			"Press Shift+Pause (by Default) to convert last inputted line.\n"+
+            "Press Ctrl+Alt+Win+Shift+Insert to show Mahou main window.\n"+
+			"Press Ctrl+Alt+Win+Shift+F12 to shutdown Mahou.\n\n"+
+			"*Note that if you typing in not of selected in settings layouts,"+
+			" conversion will switch typed text to Language 1 (Ignored if Switch between layouts is OFF).\n\n"+
+          "**If you have problems with symbols conversion (selection) try \"switching languages (1=>2 & 2=>1)\""+
+			" or \"Convert selection layout switching\"/ or Plus option."+
+			"To reset settings just delete Mahou.ini in Mahou folder.\n\nRegards.";
 		#endregion
 		#region Misc
 		public static readonly string Keys = "Keys";
@@ -101,6 +111,9 @@ namespace Mahou.Languages
 		public static readonly string Layouts = "Layouts";
 		public static readonly string Layout = "Layout";
 		public static readonly string Hotkey = "Hotkey";
+		public static readonly string UpdateFound = "New version avaible!";
+		public static readonly string UpdateComplete = "Mahou succesfully updated!";
+		public static readonly string Mahou = "Mahou(魔法) - magic layout switcher.";
 		#endregion
 		#region Buttons
 		public static readonly string ButtonOK = "OK";
@@ -229,6 +242,9 @@ namespace Mahou.Languages
 		#endregion
 		#region Updates
 		public static readonly string CheckForUpdates = "Проверить обновления:";
+		public static readonly string CheckingForUpdates = "Проверяю...";
+		public static readonly string YouHaveLatest = "У Вас последняя версия.";
+		public static readonly string TimeToUpdate = "Думаю пора обновиться.";
 		public static readonly string UpdateMahou = "Обновить Mahou к <версии>";
 		public static readonly string DownloadUpdate = "Скачать обновление";
 		public static readonly string ProxyConfig = "Конфигурация прокси";
@@ -241,6 +257,14 @@ namespace Mahou.Languages
 		public static readonly string DbgInf_Copied = "Скопировано!";
 		public static readonly string Site = "Сайт";
 		public static readonly string Releases = "Релизы";
+		public static readonly string About = "Горячие клавиши:\nНажмите Pause (по умолчанию) для конвертации последнего введённого слова.\n"+
+			"Нажмите Scroll (по умолчанию) пока выделенный текст в фокусе чтобы конвертировать его.\n"+
+			"Нажмите Shift+Pause (по умолчанию) для конвертации последней введённой линии.\n"+
+            "Нажмите Ctrl+Alt+Win+Shift+Insert чтобы показать/скрыть главное окно.\n"+
+			"Нажмите Ctrl+Alt+Win+Shift+F12 чтобы завершить Mahou.\n"+
+			"\n*Заметьте что если you вводите текст не из выбранных раскладок в настройках, то конвертация конвертирует текст в Язык 1 (Не актуально если включён Циклич. режим).\n\n"+
+            "**Если у Вас проблемы с символами при Конвертации выделения попробуйте \"переключить языки местами (1=>2 & 2=>1)\" или включите \"Смена раскладки в конверсиях выделенного\" или плюс.\n\n"+
+			"\n\nУдачи.";
 		#endregion
 		#region Misc
 		public static readonly string Keys = "Клавиши";
@@ -249,6 +273,10 @@ namespace Mahou.Languages
 		public static readonly string Layouts = "Раскладки";
 		public static readonly string Layout = "Раскладка";
 		public static readonly string Hotkey = "Горячая клавиша";
+		public static readonly string UpdateFound = "Новая версия доступна!";
+		public static readonly string UpdateComplete = "Mahou успешно обновлен!";
+		public static readonly string ShowHide = "Показать/Скрыть";
+		public static readonly string Mahou = "Mahou(魔法) - волшебный переключатель раскладок.";
 		#endregion
 		#region Buttons
 		public static readonly string ButtonOK = "ОК";

@@ -26,9 +26,10 @@ namespace Mahou {
 		static Timer tmr = new Timer();
 		static Timer old = new Timer();
 		static Timer animate = new Timer();
+		static Timer showUpdWnd = new Timer();
 		static int progress = 0, _progress = 0;
 		int titlebar = 12;
-		public bool messagebox;
+		public static int AtUpdateShow;
 		public int DoubleHKInterval = 200, SelectedTextGetMoreTriesCount;
 		#region Temporary variables
 		/// <summary>
@@ -102,6 +103,7 @@ namespace Mahou {
 		/// Temporary specific keys.
 		/// </summary>
 		public int Key1, Key2, Key3, Key4;
+		public string Lang = "";
 		#endregion
 		public TrayIcon icon;
 		public Timer ICheck = new Timer();
@@ -129,7 +131,7 @@ namespace Mahou {
 		    nud_CapsLockRefreshRate.Minimum = nud_DoubleHK2ndPressWaitTime.Minimum =
 		        nud_LangTTCaretRefreshRate.Minimum = nud_LangTTMouseRefreshRate.Minimum = 
 		    	nud_ScrollLockRefreshRate.Minimum = nud_TrayFlagRefreshRate.Minimum = 1;
-			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version + " Beta 1";
+			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version;
 			nud_LangTTPositionX.Minimum = nud_LangTTPositionY.Minimum = -100;
 			//↓ Dummy(none) hotkey, makes it possible WndProc to handle messages at startup
 			//↓ when form isn't was shown. 
@@ -140,10 +142,34 @@ namespace Mahou {
 				var uche = new System.Threading.Thread(StartupCheck);
 				uche.Name = "Startup Check";
 				uche.Start();
-			}
+				showUpdWnd.Tick += (_, __) => {
+					if (AtUpdateShow == 1) {
+						tabs.SelectedIndex = 6;
+						SetUInfo();
+						Visible = TopMost = true;
+						grb_DownloadUpdate.Enabled = true;
+						btn_DownloadUpdate.PerformClick();
+						showUpdWnd.Stop();
+						showUpdWnd.Dispose();
+					}
+					if (AtUpdateShow == 2) {
+						showUpdWnd.Stop();
+						showUpdWnd.Dispose();
+					}
+				};
+				showUpdWnd.Interval = 1000;
+				showUpdWnd.Start();
+			} else { showUpdWnd.Dispose(); }
 			Memory.Flush();
 		}
 		#region WndProc & Functions
+		protected override void WndProc(ref Message m) {
+			if (m.Msg == MMain.ao) { // ao = Already Opened
+				ToggleVisibility();
+        		Logging.Log("Another instance detected, closing it.");
+			}
+			base.WndProc(ref m);
+		}
 		/// <summary>
 		/// Restores temporary variables from settings.
 		/// </summary>
@@ -417,6 +443,7 @@ namespace Mahou {
 		/// Refresh all controls state from configs.
 		/// </summary>
 		void LoadConfigs() {
+			Lang = MMain.MyConfs.Read("Appearence", "Language");
 			#region Functions
 			chk_AutoStart.Checked = File.Exists(Path.Combine(
 				Environment.GetFolderPath(Environment.SpecialFolder.Startup),
@@ -502,13 +529,13 @@ namespace Mahou {
 			cbb_MainLayout1.Items.Clear();
 			cbb_MainLayout2.Items.Clear();
 			MMain.lcnmid.Clear();
-			if (MMain.MyConfs.Read("Appearence", "Language") == "English") {
+			if (Lang == "English") {
 				cbb_Layout1.Items.Add(Languages.English.SwitchBetween);
 				cbb_Layout2.Items.Add(Languages.English.SwitchBetween);
 				cbb_Layout3.Items.Add(Languages.English.SwitchBetween);
 				cbb_Layout4.Items.Add(Languages.English.SwitchBetween);
 			}
-			if (MMain.MyConfs.Read("Appearence", "Language") == "Русский") {
+			if (Lang == "Русский") {
 				cbb_Layout1.Items.Add(Languages.Russian.SwitchBetween);
 				cbb_Layout2.Items.Add(Languages.Russian.SwitchBetween);
 				cbb_Layout3.Items.Add(Languages.Russian.SwitchBetween);
@@ -524,7 +551,7 @@ namespace Mahou {
 				MMain.lcnmid.Add(lc.Lang + "(" + lc.uId + ")");
 			}
 			try {
-				cbb_Language.SelectedIndex = cbb_Language.Items.IndexOf(MMain.MyConfs.Read("Appearence", "Language"));
+				cbb_Language.SelectedIndex = cbb_Language.Items.IndexOf(Lang);
 				EmulateLSType = MMain.MyConfs.Read("Layouts", "EmulateLayoutSwitchType");
 				cbb_EmulateType.SelectedIndex = cbb_EmulateType.Items.IndexOf(EmulateLSType);
 				cbb_Layout1.SelectedIndex = cbb_Layout1.Items.IndexOf(Layout1);
@@ -1415,13 +1442,12 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			System.Threading.Tasks.Task.Factory.StartNew(GetUpdateInfo).Wait();
 			SetUInfo();
 			try {
-				if (flVersion("v" + Application.ProductVersion) > flVersion(UpdInfo[2])) {
+				if (flVersion("v" + Application.ProductVersion) < flVersion(UpdInfo[2])) {
 					Logging.Log("New version available, showing dialog...");
-					if (MessageBox.Show(new Form() { TopMost = true }, UpdInfo[1], UpdInfo[0],
-//						     UpdInfo[0] + '\n' + UpdInfo[1], "Mahou - " + MMain.UI[33],
-						     MessageBoxButtons.OK, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.OK) {
-						// TODO Add update window show on ok click
-					}
+					if (MessageBox.Show(new Form() { TopMost = false, Visible = false }, UpdInfo[1], UpdInfo[0],
+						     MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.OK) {
+						AtUpdateShow = 1;
+					} else { AtUpdateShow = 2; }
 				}
 			} catch(Exception e) {
 				Logging.Log("Unexpected error: \n" + e.Message +"\n" + e.StackTrace);
@@ -1433,12 +1459,12 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 		void SetUInfo() {
 			grb_MahouReleaseTitle.Text = UpdInfo[0];
 			txt_UpdateDetails.Text = UpdInfo[1];
+			btn_DownloadUpdate.Text = Regex.Replace(btn_DownloadUpdate.Text, @"\<.+?\>", UpdInfo[2]);
 		}
 		/// <summary>
 		/// Refreshes language.
 		/// </summary>
 		void RefreshLanguage() {
-			var Lang = MMain.MyConfs.Read("Appearence", "Language");
 				if (Lang == "Русский") {
 				#region Tabs
 				tab_functions.Text = Languages.Russian.tab_Functions;
@@ -1545,6 +1571,9 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				btn_Apply.Text = Languages.Russian.ButtonApply;
 				btn_Cancel.Text = Languages.Russian.ButtonCancel;
 				btn_OK.Text = Languages.Russian.ButtonOK;
+				#endregion
+				#region Misc
+				icon.RefreshText(Languages.Russian.Mahou, Languages.Russian.ShowHide, Languages.Russian.ExitMahou);
 				#endregion
             } else {
 
@@ -1654,6 +1683,9 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				btn_Cancel.Text = Languages.English.ButtonCancel;
 				btn_OK.Text = Languages.English.ButtonOK;
 				#endregion
+				#region Misc
+				icon.RefreshText(Languages.English.Mahou, "Show/Hide", Languages.English.ExitMahou);
+				#endregion
 			}
 			Logging.Log("Language changed.");
 		}
@@ -1722,9 +1754,9 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 	             }
 				Clipboard.SetText(debuginfo);
 				var btDgtTxtWas = btn_DebugInfo.Text;
-				if (MMain.MyConfs.Read("Appearence", "Language") == "English")
+				if (Lang == "English")
 					btn_DebugInfo.Text = Languages.English.DbgInf_Copied;
-				if (MMain.MyConfs.Read("Appearence", "Language") == "Русский")
+				if (Lang == "Русский")
 					btn_DebugInfo.Text = Languages.Russian.DbgInf_Copied;
 				var tmr = new Timer();
 				tmr.Tick += (_,__) => { 
@@ -1818,7 +1850,10 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			if (!checking) {
 				checking = true;
 				var btChkTextWas = btn_CheckForUpdates.Text;
-				btn_CheckForUpdates.Text = "Checking for updates...";
+				if (Lang == "English")
+					btn_CheckForUpdates.Text = "Checking for updates...";
+				if (Lang == "Русский")
+					btn_CheckForUpdates.Text = Languages.Russian.CheckingForUpdates;
 				UpdInfo = null;
 				System.Threading.Tasks.Task.Factory.StartNew(GetUpdateInfo).Wait();
 				tmr.Tick += (_, __) => {
@@ -1837,15 +1872,20 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 					};
 					tmr.Start();
 				} else {
-					if (flVersion("v" + Application.ProductVersion) > // TODO Change to < 
+					if (flVersion("v" + Application.ProductVersion) <
 					   flVersion(UpdInfo[2])) {
-						btn_CheckForUpdates.Text = "I think it is time to update.";
+						if (Lang == "English")
+							btn_CheckForUpdates.Text = "I think it is time to update.";
+						if (Lang == "Русский")
+							btn_CheckForUpdates.Text = Languages.Russian.TimeToUpdate;
 						tmr.Start();
 						SetUInfo();
-						btn_DownloadUpdate.Text = "Update Mahou to " + UpdInfo[2];
 						grb_DownloadUpdate.Enabled = true;
 					} else {
-						btn_CheckForUpdates.Text = "You have latest version.";
+						if (Lang == "English")
+							btn_CheckForUpdates.Text = "You have latest version.";
+						if (Lang == "Русский")
+							btn_CheckForUpdates.Text = Languages.Russian.YouHaveLatest;
 						tmr.Start();
 						grb_DownloadUpdate.Enabled = false;
 						SetUInfo();
