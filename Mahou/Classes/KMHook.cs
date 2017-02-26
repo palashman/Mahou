@@ -141,6 +141,10 @@ namespace Mahou
 				if (!self && (wParam == (IntPtr)WinAPI.WM_KEYUP || wParam == (IntPtr)WinAPI.WM_SYSKEYUP)) {
 					if (!MMain.MahouActive()) {
 						CheckHotkey(thishk, MMain.mahou.HKCSelection, ref hksOK, ConvertSelection);
+						CheckHotkey(thishk, MMain.mahou.HKTitleCase, ref hksTTCOK, ToTitleSelection);
+						CheckHotkey(thishk, MMain.mahou.HKSwapCase, ref hksTSCOK, ToSwapSelection);
+						CheckHotkey(thishk, MMain.mahou.HKRandomCase, ref hksTRCOK, ToRandomSelection);
+						CheckHotkey(thishk, MMain.mahou.HKConMorWor, ref hkcwdsOK, () => { waitfornum = true; });
 						CheckHotkey(thishk, MMain.mahou.HKTransliteration, ref hksTrslOK, TransliterateSelection);
 						CheckHotkey(thishk, MMain.mahou.HKCLast, ref hklOK, () => ConvertLast(MMain.c_word));
 						CheckHotkey(thishk, MMain.mahou.HKCLine, ref hklineOK, () => { 
@@ -166,10 +170,6 @@ namespace Mahou
 								}
 			           		    });
 					}
-					CheckHotkey(thishk, MMain.mahou.HKTitleCase, ref hksTTCOK, ToTitleSelection);
-					CheckHotkey(thishk, MMain.mahou.HKSwapCase, ref hksTSCOK, ToSwapSelection);
-					CheckHotkey(thishk, MMain.mahou.HKRandomCase, ref hksTRCOK, ToRandomSelection);
-					CheckHotkey(thishk, MMain.mahou.HKConMorWor, ref hkcwdsOK, () => { waitfornum = true; });
 					CheckHotkey(thishk, MMain.mahou.Mainhk, ref hkShWndOK, MMain.mahou.ToggleVisibility);
 					CheckHotkey(thishk, MMain.mahou.ExitHk, ref hkExitOK, MMain.mahou.ExitProgram);
 				}
@@ -413,6 +413,7 @@ namespace Mahou
 		static void CheckHotkey(Hotkey thishk, Hotkey actionhk, ref bool hkOK, Action hotkeyAction) {
 			if (!actionhk.Double)
 				hkOK = true;
+			Debug.WriteLine(thishk.keyCode+" ."+thishk.modifs);
 			if (thishk.Equals(actionhk) && actionhk.enabled) {
 				if (hkOK) {
 					Logging.Log("Hotkey fired.");
