@@ -1403,11 +1403,18 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				}
 			} catch {
 				Logging.Log("Check for updates failed, error message:", 1);
-				Info = new List<string>{
-//					MMain.UI[31],
-//					MMain.UI[35],
-//					MMain.UI[31]
-				};
+				if (Lang == "Русский")
+					Info = new List<string>{
+						Languages.Russian.Error,
+						Languages.Russian.NetError,
+						"ERROR"
+					};
+				if (Lang == "English")
+					Info = new List<string>{
+						Languages.English.Error,
+						Languages.English.NetError,
+						"ERROR"
+					};
 			}
 			UpdInfo = Info.ToArray();
 		}
@@ -1567,6 +1574,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				btn_DebugInfo.Text = Languages.Russian.DbgInf;
 				lnk_Site.Text = Languages.Russian.Site;
 				lnk_Releases.Text = Languages.Russian.Releases;
+				txt_Help.Text = Languages.Russian.Mahou + "\r\n" + Languages.Russian.About;
 				#endregion
 				#region Buttons
 				btn_Apply.Text = Languages.Russian.ButtonApply;
@@ -1678,6 +1686,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				btn_DebugInfo.Text = Languages.English.DbgInf;
 				lnk_Site.Text = Languages.English.Site;
 				lnk_Releases.Text = Languages.English.Releases;
+				txt_Help.Text = Languages.English.Mahou + "\r\n" + Languages.English.About;
 				#endregion
 				#region Buttons
 				btn_Apply.Text = Languages.English.ButtonApply;
@@ -1859,18 +1868,13 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				System.Threading.Tasks.Task.Factory.StartNew(GetUpdateInfo).Wait();
 				tmr.Tick += (_, __) => {
 					btn_CheckForUpdates.Text = btChkTextWas;
+					SetUInfo();
 					checking = false;
+					tmr.Interval = 3000;
 					tmr.Stop();
 				};
-				if (UpdInfo[2] == "Error") {
-					btn_CheckForUpdates.Text = "Error";
-					tmr.Start();
-					SetUInfo();
-					tmr.Tick += (_, __) => {
-						grb_MahouReleaseTitle.Text = "Error";
-						txt_UpdateDetails.Text = "Can't access github.com, check your internet connection.";
-						tmr.Stop();
-					};
+				if (UpdInfo[2] == "ERROR") {
+					tmr.Interval = 1000;
 					tmr.Start();
 				} else {
 					if (flVersion("v" + Application.ProductVersion) <

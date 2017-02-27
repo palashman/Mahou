@@ -85,24 +85,27 @@ namespace Mahou.Languages
 		public static readonly string DownloadUpdate = "Download update";
 		public static readonly string ProxyConfig = "Proxy configuration";
 		public static readonly string ProxyServer = "Server:Port";
-		public static readonly string ProxyLogin = "Login";
-		public static readonly string ProxyPass = "Password";
+		public static readonly string ProxyLogin = "Login:";
+		public static readonly string ProxyPass = "Password:";
+		public static readonly string Error = "Error...";
+		public static readonly string NetError = "Connection to github.com can't be established, "+
+			"check your network connection or proxy settings...";
 		#endregion
 		#region About
 		public static readonly string DbgInf = "Debug info";
 		public static readonly string DbgInf_Copied = "Copied!";
 		public static readonly string Site = "Site";
 		public static readonly string Releases = "Releases";
-		public static readonly string About = "Hotkeys:\n"+"Press Pause (by Default) to convert last inputted word.\n" +"" +
-			"Press Scroll Lock (by Default) while selected text is focused to convert it.\n"+
-			"Press Shift+Pause (by Default) to convert last inputted line.\n"+
-            "Press Ctrl+Alt+Win+Shift+Insert to show Mahou main window.\n"+
-			"Press Ctrl+Alt+Win+Shift+F12 to shutdown Mahou.\n\n"+
+		public static readonly string About = "Hotkeys:\r\n"+"Press Pause (by Default) to convert last inputted word.\r\n" +"" +
+			"Press Scroll Lock (by Default) while selected text is focused to convert it.\r\n"+
+			"Press Shift+Pause (by Default) to convert last inputted line.\r\n"+
+            "Press Ctrl+Alt+Win+Shift+Insert to show Mahou main window.\r\n"+
+			"Press Ctrl+Alt+Win+Shift+F12 to shutdown Mahou.\r\n\r\n"+
 			"*Note that if you typing in not of selected in settings layouts,"+
-			" conversion will switch typed text to Language 1 (Ignored if Switch between layouts is OFF).\n\n"+
+			" conversion will switch typed text to Language 1 (Ignored if Switch between layouts is OFF).\r\n\r\n"+
           "**If you have problems with symbols conversion (selection) try \"switching languages (1=>2 & 2=>1)\""+
 			" or \"Convert selection layout switching\"/ or Plus option."+
-			"To reset settings just delete Mahou.ini in Mahou folder.\n\nRegards.";
+			"To reset settings just delete Mahou.ini in Mahou folder.\r\n\r\nRegards.";
 		#endregion
 		#region Misc
 		public static readonly string Keys = "Keys";
@@ -249,22 +252,25 @@ namespace Mahou.Languages
 		public static readonly string DownloadUpdate = "Скачать обновление";
 		public static readonly string ProxyConfig = "Конфигурация прокси";
 		public static readonly string ProxyServer = "Сервер:порт";
-		public static readonly string ProxyLogin = "Логин";
-		public static readonly string ProxyPass = "Пароль";
+		public static readonly string ProxyLogin = "Логин:";
+		public static readonly string ProxyPass = "Пароль:";
+		public static readonly string Error = "Ошибка...";
+		public static readonly string NetError = "Соединение с github.com не может быть установлено, "+
+			"проверьте подключение к интернету или ваши настройки прокси...";
 		#endregion
 		#region About
 		public static readonly string DbgInf = "Отладочная информация";
 		public static readonly string DbgInf_Copied = "Скопировано!";
 		public static readonly string Site = "Сайт";
 		public static readonly string Releases = "Релизы";
-		public static readonly string About = "Горячие клавиши:\nНажмите Pause (по умолчанию) для конвертации последнего введённого слова.\n"+
-			"Нажмите Scroll (по умолчанию) пока выделенный текст в фокусе чтобы конвертировать его.\n"+
-			"Нажмите Shift+Pause (по умолчанию) для конвертации последней введённой линии.\n"+
-            "Нажмите Ctrl+Alt+Win+Shift+Insert чтобы показать/скрыть главное окно.\n"+
-			"Нажмите Ctrl+Alt+Win+Shift+F12 чтобы завершить Mahou.\n"+
-			"\n*Заметьте что если you вводите текст не из выбранных раскладок в настройках, то конвертация конвертирует текст в Язык 1 (Не актуально если включён Циклич. режим).\n\n"+
-            "**Если у Вас проблемы с символами при Конвертации выделения попробуйте \"переключить языки местами (1=>2 & 2=>1)\" или включите \"Смена раскладки в конверсиях выделенного\" или плюс.\n\n"+
-			"\n\nУдачи.";
+		public static readonly string About = "Горячие клавиши:\r\nНажмите Pause (по умолчанию) для конвертации последнего введённого слова.\r\n"+
+			"Нажмите Scroll (по умолчанию) пока выделенный текст в фокусе чтобы конвертировать его.\r\n"+
+			"Нажмите Shift+Pause (по умолчанию) для конвертации последней введённой линии.\r\n"+
+            "Нажмите Ctrl+Alt+Win+Shift+Insert чтобы показать/скрыть главное окно.\r\n"+
+			"Нажмите Ctrl+Alt+Win+Shift+F12 чтобы завершить Mahou.\r\n"+
+			"\r\n*Заметьте что если you вводите текст не из выбранных раскладок в настройках, то конвертация конвертирует текст в Язык 1 (Не актуально если включён Циклич. режим).\r\n\r\n"+
+            "**Если у Вас проблемы с символами при Конвертации выделения попробуйте \"переключить языки местами (1=>2 & 2=>1)\" или включите \"Смена раскладки в конверсиях выделенного\" или плюс.\r\n"+
+			"\r\nУдачи.";
 		#endregion
 		#region Misc
 		public static readonly string Keys = "Клавиши";

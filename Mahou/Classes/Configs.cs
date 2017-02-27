@@ -148,22 +148,22 @@ namespace Mahou
 			CheckBool("Hotkeys", "SelectedTextToTitleCase_Enabled", "false");
 			CheckBool("Hotkeys", "SelectedTextToTitleCase_Double", "true");
 			CheckString("Hotkeys", "SelectedTextToTitleCase_Modifiers", "Shift");
-			CheckInt("Hotkeys", "SelectedTextToTitleCase_Key", "0");
+			CheckInt("Hotkeys", "SelectedTextToTitleCase_Key", "16");
 			// Selected text To random case hotkey
 			CheckBool("Hotkeys", "SelectedTextToRandomCase_Enabled", "false");
 			CheckBool("Hotkeys", "SelectedTextToRandomCase_Double", "true");
 			CheckString("Hotkeys", "SelectedTextToRandomCase_Modifiers", "Alt");
-			CheckInt("Hotkeys", "SelectedTextToRandomCase_Key", "0");
+			CheckInt("Hotkeys", "SelectedTextToRandomCase_Key", "17");
 			// Selected text to swap case hotkey
 			CheckBool("Hotkeys", "SelectedTextToSwapCase_Enabled", "false");
 			CheckBool("Hotkeys", "SelectedTextToSwapCase_Double", "false");
-			CheckString("Hotkeys", "SelectedTextToSwapCase_Modifiers", "Win + Control + Shift + Alt");
+			CheckString("Hotkeys", "SelectedTextToSwapCase_Modifiers", "Win");
 			CheckInt("Hotkeys", "SelectedTextToSwapCase_Key", "19");
 			// Selected text Transliteration hotkey
 			CheckBool("Hotkeys", "SelectedTextTransliteration_Enabled", "false");
 			CheckBool("Hotkeys", "SelectedTextTransliteration_Double", "false");
 			CheckString("Hotkeys", "SelectedTextTransliteration_Modifiers", "Win");
-			CheckInt("Hotkeys", "SelectedTextTransliteration_Key", "45");
+			CheckInt("Hotkeys", "SelectedTextTransliteration_Key", "191");
 			// Exit Mahou hotkey
 			CheckBool("Hotkeys", "ExitMahou_Enabled", "true");
 			CheckBool("Hotkeys", "ExitMahou_Double", "false");
