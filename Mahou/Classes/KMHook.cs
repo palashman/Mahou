@@ -1068,7 +1068,24 @@ namespace Mahou
 			} else {
 				Logging.Log("Changing layout using cycle mode by sending Message [WinAPI.WM_INPUTLANGCHANGEREQUEST] with LParam [HKL_NEXT] using WinAPI.PostMessage to ActiveWindow");
 				//Use WinAPI.PostMessage to switch to next layout
-				WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, WinAPI.HKL_NEXT);
+				var cur = Locales.GetCurrentLocale(); Thread.Sleep(5);
+				var curind = MMain.locales.ToList().FindIndex(lid => lid.uId == cur);
+				int lidc = 0;
+				foreach (var l in MMain.locales) {
+					if (curind == MMain.locales.Length - 1) {
+						Logging.Log("Locales BREAK!");
+						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, MMain.locales[0].uId);
+						break;
+					}
+					Logging.Log("LIDC = "+lidc +" curid = "+curind + " Lidle = " +(MMain.locales.Length - 1));
+					if (lidc > curind)
+						if (l.uId != cur) {
+							Logging.Log("Locales +1 Next BREAK!");
+							WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, l.uId);
+							break;
+					}
+					lidc++;
+				}
 			}
 		}
 		/// <summary>
