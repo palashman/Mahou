@@ -1712,19 +1712,29 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 		#endregion
 		#region Links
 		void Lnk_RepositoryLinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-			Process.Start("http://github.com/BladeMight/Mahou");
+			try {
+				Process.Start("http://github.com/BladeMight/Mahou");
+			} catch (Exception ex) { Logging.Log("No program to open http:// opening skiped. Details:\r\n"+ex.Message + "\r\n" + ex.StackTrace, 2); }
 		}
 		void Lnk_SiteLinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-			Process.Start("http://blademight.github.io/Mahou/");
+			try {
+				Process.Start("http://blademight.github.io/Mahou/");
+			} catch (Exception ex) { Logging.Log("No program to open http:// opening skiped. Details:\r\n"+ex.Message + "\r\n" + ex.StackTrace, 2); }
 		}
 		void Lnk_WikiLinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-			Process.Start("http://github.com/BladeMight/Mahou/wiki");
+			try {
+				Process.Start("http://github.com/BladeMight/Mahou/wiki");
+			} catch (Exception ex) { Logging.Log("No program to open http:// opening skiped. Details:\r\n"+ex.Message + "\r\n" + ex.StackTrace, 2); }
 		}
 		void Lnk_ReleasesLinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-			Process.Start("http://github.com/BladeMight/Mahou/releases");
+			try {
+				Process.Start("http://github.com/BladeMight/Mahou/releases");
+			} catch (Exception ex) { Logging.Log("No program to open http:// opening skiped. Details:\r\n"+ex.Message + "\r\n" + ex.StackTrace, 2); }
 		}
 		void Lnk_EmailLinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-			Process.Start("mailto:BladeMight@gmail.com");
+			try {
+				Process.Start("mailto:BladeMight@gmail.com");
+			} catch (Exception ex) { Logging.Log("No program to open http:// opening skiped. Details:\r\n"+ex.Message + "\r\n" + ex.StackTrace, 2); }
 		}
 		#endregion
 		#region Mahou UI controls events
