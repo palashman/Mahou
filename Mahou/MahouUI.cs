@@ -1317,6 +1317,7 @@ namespace Mahou {
 				int MahouPID = Process.GetCurrentProcess().Id;
 				//Downloaded archive
 				var arch = Regex.Match(UpdInfo[3], @"[^\\\/]+$").Groups[0].Value;
+				flagsCheck.Stop();
 				//This prevent Mahou icon from stucking in tray
 				MMain.mahou.icon.Hide();
 				//Batch script to create other script o.0,
@@ -1327,19 +1328,18 @@ namespace Mahou {
 					@"@ECHO OFF
 chcp 65001
 SET MAHOUDIR=" + nPath + @"
-PING -n 1 127.0.0.1 >nul
 TASKKILL /PID " + MahouPID + @" /F
-PING -n 3 127.0.0.1 >nul
-DEL /Q /F """ + nPath + @"" + AppDomain.CurrentDomain.FriendlyName + @"""
-
+TASKKILL /IM Mahou.exe /F
+DEL /Q /F /A """ + nPath + @"" + AppDomain.CurrentDomain.FriendlyName + @"""
+DEL /Q /F /A """ + nPath + @"" + AppDomain.CurrentDomain.FriendlyName + @"""
+DEL /Q /F /A """ + nPath + @"" + AppDomain.CurrentDomain.FriendlyName + @"""
 ECHO With CreateObject(""Shell.Application"") > ""%MAHOUDIR%unzip.vbs""
-ECHO    .NameSpace(WScript.Arguments(1)).CopyHere .NameSpace(WScript.Arguments(0) ).items >> ""%MAHOUDIR%unzip.vbs""
+ECHO    .NameSpace(WScript.Arguments(1)).CopyHere .NameSpace(WScript.Arguments(0)).items, 16 >> ""%MAHOUDIR%unzip.vbs""
 ECHO End With >> ""%MAHOUDIR%unzip.vbs""
 
 CSCRIPT ""%MAHOUDIR%unzip.vbs"" ""%MAHOUDIR%" + arch + @""" ""%MAHOUDIR%""
 
 START """" ""%MAHOUDIR%Mahou.exe"" ""_!_updated_!_""
-
 DEL ""%MAHOUDIR%" + arch + @"""
 DEL ""%MAHOUDIR%unzip.vbs""
 DEL ""%MAHOUDIR%UpdateMahou.cmd""";
