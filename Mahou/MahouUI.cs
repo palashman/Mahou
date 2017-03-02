@@ -1328,6 +1328,7 @@ namespace Mahou {
 chcp 65001
 SET MAHOUDIR=" + nPath + @"
 TASKKILL /PID " + MahouPID + @" /F
+PING -n 3 127.0.0.1 >nul
 DEL /Q /F """ + nPath + @"Mahou.exe""
 
 ECHO With CreateObject(""Shell.Application"") > ""%MAHOUDIR%unzip.vbs""
