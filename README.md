@@ -23,6 +23,9 @@ Mahou работает совершенно по-другому: в отличи
 
 ###### Возможности по версиям:
 
+**v2.0.0.3**<br/>
+- Улучшено циклическое переключение раскладок. Теперь поддерживает приложения вроде WordPad и Skype(форма ввода сообщения).
+
 **v2.0.0.0**<br/>
 - Обновлен интерфейс.
 - Сильно улучшены функции использующие таймеры.
@@ -147,6 +150,9 @@ Even selected text switches just between **selected** layouts, though if you lik
 4. Starting from v1.0.4.4 in Convert selection unrecognized text by all selected layout in settings (example: ♥) just rewrites.
 
 ###### By version features:
+
+**v2.0.0.3**<br/>
+- Improved layout switching by cycle. Now it supports apps like WordPad and Skype(message entry form).
 
 **v2.0.0.0**<br/>
 - Updated interface.
