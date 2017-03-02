@@ -1327,6 +1327,7 @@ namespace Mahou {
 					@"@ECHO OFF
 chcp 65001
 SET MAHOUDIR=" + nPath + @"
+PING -n 1 127.0.0.1 >nul
 TASKKILL /PID " + MahouPID + @" /F
 PING -n 3 127.0.0.1 >nul
 DEL /Q /F """ + nPath + @"" + AppDomain.CurrentDomain.FriendlyName + @"""
