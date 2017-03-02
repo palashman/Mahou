@@ -858,7 +858,7 @@ namespace Mahou
 				KInputs.AddKey(Keys.Insert, false),
 				KInputs.AddKey(Keys.RControlKey, false)
 			});
-			Thread.Sleep(10);
+			Thread.Sleep(30);
 			return NativeClipboard.GetText();
 		}
 		static string GetClipStr() {
