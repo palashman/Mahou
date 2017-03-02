@@ -1329,7 +1329,7 @@ chcp 65001
 SET MAHOUDIR=" + nPath + @"
 TASKKILL /PID " + MahouPID + @" /F
 PING -n 3 127.0.0.1 >nul
-DEL /Q /F """ + nPath + @"Mahou.exe""
+DEL /Q /F """ + nPath + @"" + AppDomain.CurrentDomain.FriendlyName + @"""
 
 ECHO With CreateObject(""Shell.Application"") > ""%MAHOUDIR%unzip.vbs""
 ECHO    .NameSpace(WScript.Arguments(1)).CopyHere .NameSpace(WScript.Arguments(0) ).items >> ""%MAHOUDIR%unzip.vbs""
