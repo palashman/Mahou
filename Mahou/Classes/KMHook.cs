@@ -16,7 +16,7 @@ namespace Mahou
 		public static bool self, win, alt, ctrl, shift,
 			shiftRP, ctrlRP, altRP, winRP, //RP = Re-Press
 			awas, swas, cwas, wwas, afterEOS, //*was = alt/shift/ctrl was
-			keyAfterCTRL, hklOK, hksOK, hklineOK, hkSIOK, hkExitOK,
+			keyAfterCTRL, keyAfterALT, keyAfterSHIFT, hklOK, hksOK, hklineOK, hkSIOK, hkExitOK,
 			hksTTCOK, hksTRCOK, hksTSCOK, hksTrslOK, hkShWndOK, hkcwdsOK,
 			hotkeywithmodsfired, csdoing, incapt, waitfornum, doBackup;
 		static NativeClipboard.ClipboardData datas = new NativeClipboard.ClipboardData() {
@@ -250,6 +250,7 @@ namespace Mahou
 				}
 				#endregion
 				#region One key layout switch
+//				Debug.WriteLine("SELFY + "+self);
 				// Additional fix for scroll tip.
 				if (!self && MMain.mahou.ScrollTip &&
 				   Key == Keys.Scroll && wParam == (IntPtr)WinAPI.WM_KEYDOWN) {
@@ -258,15 +259,32 @@ namespace Mahou
 					KeybdEvent(Keys.Scroll, 2);
 					self = false;
 				}
-				if (MMain.mahou.ChangeLayouByKey) {
-					SpecificKey(Key, wParam, MMain.mahou.Key1, 1);
-					SpecificKey(Key, wParam, MMain.mahou.Key2, 2);
-					SpecificKey(Key, wParam, MMain.mahou.Key3, 3);
-					SpecificKey(Key, wParam, MMain.mahou.Key4, 4);
-					if (!self && ctrl && (Key != Keys.LControlKey && Key != Keys.RControlKey && Key != Keys.ControlKey))
+				
+				if (!self && MMain.mahou.ChangeLayouByKey) {
+					if (Key == Keys.LControlKey || Key == Keys.RControlKey ||
+				   	Key == Keys.LShiftKey || Key == Keys.RShiftKey ||
+				    Key == Keys.LMenu || Key == Keys.RMenu ||
+				    Key == Keys.LWin || Key == Keys.RWin ||
+				    Key == Keys.CapsLock) {
+//						Debug.WriteLine("WHY LEFT CONTROL??? ->" + Key + " WPaRAm->" + wParam);
+						SpecificKey(Key, wParam, MMain.mahou.Key1, 1);
+						SpecificKey(Key, wParam, MMain.mahou.Key2, 2);
+						SpecificKey(Key, wParam, MMain.mahou.Key3, 3);
+						SpecificKey(Key, wParam, MMain.mahou.Key4, 4);
+//						Debug.WriteLine("!!!!!BREAK");
+					}
+					if (ctrl && (Key != Keys.LControlKey && Key != Keys.RControlKey && Key != Keys.ControlKey))
 						keyAfterCTRL = true;
 					else 
 						keyAfterCTRL = false;
+					if (alt && (Key != Keys.LMenu && Key != Keys.RMenu && Key != Keys.Menu))
+						keyAfterALT = true;
+					else 
+						keyAfterALT = false;
+					if (shift && (Key != Keys.LShiftKey && Key != Keys.RShiftKey && Key != Keys.Shift))
+						keyAfterSHIFT = true;
+					else 
+						keyAfterSHIFT = false;
 				}
 				#endregion
 				#region Other, when KeyDown
@@ -467,8 +485,6 @@ namespace Mahou
 						self = true;
 						Logging.Log("Changing layout by LCtrl key.");
 						ChangeLayout();
-						KeybdEvent(Keys.LControlKey, 2); //fix for WinAPI.PostMessage, it somehow o_0 sends another ctrl...
-
 						self = false;
 					}
 					if (specificKey == 3 && Key == Keys.RControlKey) {
@@ -481,7 +497,6 @@ namespace Mahou
 						self = true;
 						Logging.Log("Changing layout by LShift key.");
 						ChangeLayout();
-
 						self = false;
 					}
 					if (specificKey == 5 && Key == Keys.RShiftKey) {
@@ -494,7 +509,6 @@ namespace Mahou
 						self = true;
 						Logging.Log("Changing layout by LAlt key.");
 						ChangeLayout();
-
 						self = false;
 					}
 					if (specificKey == 7 && Key == Keys.RMenu) {
@@ -510,34 +524,41 @@ namespace Mahou
 					if (specificKey == 1 && Key == Keys.CapsLock) {
 						Logging.Log("Switching to specific layout by Caps Lock key.");
 						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(speclayout).uId);
+						KeybdEvent(Keys.LControlKey, 2); //fix for WinAPI.PostMessage, it somehow o_0 sends another ctrl...
 					}
 					if (specificKey == 2 && Key == Keys.LControlKey && !keyAfterCTRL) {
 						Logging.Log("Switching to specific layout by  LCtrl key.");
 						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(speclayout).uId);
+						KeybdEvent(Keys.LControlKey, 2); //fix for WinAPI.PostMessage, it somehow o_0 sends another ctrl...
 					}
 					if (specificKey == 3 && Key == Keys.RControlKey && !keyAfterCTRL) {
 						Logging.Log("Switching to specific layout by RCtrl key.");
 						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(speclayout).uId);
+						KeybdEvent(Keys.LControlKey, 2); //fix for WinAPI.PostMessage, it somehow o_0 sends another ctrl...
 					}
-					if (specificKey == 4 && Key == Keys.LShiftKey) {
+					if (specificKey == 4 && Key == Keys.LShiftKey && !keyAfterSHIFT) {
 						Logging.Log("Switching to specific layout by LShift key.");
 						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(speclayout).uId);
 					}
-					if (specificKey == 5 && Key == Keys.RShiftKey) {
+					if (specificKey == 5 && Key == Keys.RShiftKey && !keyAfterSHIFT) {
 						Logging.Log("Switching to specific layout by RShift key.");
 						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(speclayout).uId);
 					}
-					if (specificKey == 6 && Key == Keys.LMenu) {
+					if (specificKey == 6 && Key == Keys.LMenu && !keyAfterALT) {
 						Logging.Log("Switching to specific layout by LAlt key.");
 						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(speclayout).uId);	
 					}
-					if (specificKey == 7 && Key == Keys.RMenu) {
+					if (specificKey == 7 && Key == Keys.RMenu && !keyAfterALT) {
 						Logging.Log("Switching to specific layout by RAlt key.");
 						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(speclayout).uId);
 					}
 					self = false;
 				}
 				#endregion
+				self = true;
+				KeybdEvent(Keys.LControlKey, 2);  //fix for WinAPI.PostMessage, it SOMEHOW o_0 sends LEFT ctrl after layout change...
+								// I'd be really happy if someone could tell me why it SEND THAT ****** Left Control after postmessage???
+				self = false;
 			}
 		}
 		/// <summary>
