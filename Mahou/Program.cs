@@ -49,6 +49,7 @@ namespace Mahou
 					if (MyConfs.ReadBool("FirstStart", "First")) {
 						if (System.Globalization.CultureInfo.InstalledUICulture.TwoLetterISOLanguageName == "ru") {
 							MyConfs.Write("Appearence", "Language", "Русский");
+							MyConfs.Write("Layouts", "SpecificLayout1", Languages.Russian.SwitchBetween);
 							MyConfs.Write("FirstStart", "First", "False");
 						}
 					}
