@@ -123,44 +123,35 @@ namespace Mahou.Languages
 		public static readonly string ButtonApply = "Apply";
 		public static readonly string ButtonCancel = "Cancel";
 		#endregion
-//		#region Tooltips
-//		public static readonly string TT_SwitchBetween = "While this option disabled, [Convert word] and [Convert line] and [Convert selection with \"CS-Switch\" enabled]\n" +
-//		                                  "will just cycle between all locales instead of switching between selected in settings.\nThis mode works for almost all programs.\n" +
-//		                                  "If there is program in which [Convert word] or [Convert line] or [Convert selection with \"CS-Switch\" enabled] not work,\ntry with this option enabled.\n" +
-//		                                  "If you have just 2 layouts (input languages) it is HIGHLY RECOMMENDED to turn it ON, and \"Emulate layout switching\" too to ON.";
-//		public static readonly string TT_Link = "Go to GitHub repository to view source or report issue.";
-//		public static readonly string TT_TrayIcon = "Toggles visibility of icon in a tray.\nIf it is hidden, to show configs window hit CTRL+ALT+SHIFT+INSERT or just run Mahou.exe again.";
-//		public static readonly string TT_BlockCtrl = "Blocks hotkeys that use Control,\nwhen \"Switch layout by key\" is set to Left/Right Control.";
-//		public static readonly string TT_EmulateLS = "If this option enabled, Cycle Mode will use Emulation of Alt+Shift/Win+Space instead \"sending window message\" that changes layout.";
-//		public static readonly string TT_ConvertSelectionSwitch = "If this option enabled, Covert selection will use layout switching.\nAll characters will be rewritten as they must (no problems with symbols).\nThere also an CS-Switch+ in More Configs page 2.";
-//		public static readonly string TT_RePress = "If enabled, modifiers will be repressed after conversion.\nDue to new hotkey management modifiers NEVER stuck (recommended).";
-//		public static readonly string TT_Add1Space = "If enabled, pressing ONE space AFTER word will not clear last word.";
-//		public static readonly string TT_ReSelect = "Enabling this, will reselect text after \"Convert selection\".";
-//		public static readonly string TT_EmulationType = "Select type for Emulate change layout.\nWin+Space works only in Windows 10!!\nWin+Space also will work better in Metro apps.";
-//		public static readonly string TT_SymbolIgnore = "If enabled, symbols []{};':\"./<>? will be ignored and will not be converted.\nWorks in Convert word, Convert line, Convert selection with Cycle Mode and CS-Switch enabled.\nWon't work if you have >2 layouts an Cycle Mode enabled!";
-//		public static readonly string TT_MoreTriesToGetSelectedText = "Enables more tries to get selected text in Convert selection.";
-//		public static readonly string TT_LDForMouse = "If enabled, mouse cursor hovers text it will display a small tip of what language is now using.";
-//		public static readonly string TT_LDForMouseRefreshRate = "Speed of checking cursor type (if it equals \"I\" ).";
-//		public static readonly string TT_LDSize = "Size of language tooltip.";
-//		public static readonly string TT_LDPosition = "Position relative to mouse/caret position.";
-//		public static readonly string TT_DoubleHK = "Enables double hotkey ability,\nand makes it possible to set modifies to hotkey.";
-//		public static readonly string TT_DoubleHKDelay = "Time to wait second hotkey press (ms)";
-//		public static readonly string TT_ConvertSelectionSwitchPlus = "Combines some abilities of Convert selection with enabled CS-Switch and when it disabled (Enable CS-Switch for it to work).\nIt can:\n1.Conversion from multiple languages at once.\n2.Ignore symbols feature work in it.\n3.Auto get language of text (not all symbols, the ones that exist in both layouts) can be rightly recognized if wrong layout selected from begin)\n4.Ability to convert symbols that exist in both layouts different if change layout before conversion.";
-//		public static readonly string TT_LDTransparentBG = "Makes background of language tooltips transparent.\nDon't forget to change text color (because \"White\" is default).\nSome fonts may look bad, try changing to another (\"Georgia\" or \"Palatino Linotype\" is recommend).";
-//		public static readonly string TT_Snippets = "If this enabled, pressing Space will expand small (which starts with \"->\") word, to big (which is between \"====>\" and \"<====\") word/text fragment.";
-//		public static readonly string TT_LDOnlyOnChange = "Display language tooltip only on layout change.\nTime of displaying is 7x[Refresh rate].";
-//		public static readonly string TT_ScrollTip = "Highlight Scroll Lock when active language 1, selected in main window.";
-//		public static readonly string TT_StartupUpdateCheck = "If enabled Mahou will check for updates at startup.";
-//		public static readonly string TT_ConvertWords = "Allow to convert specific last word count by pressing hotkey and then 0-9 (0 = 10) on keyboard.";
-//		public static readonly string TT_Logging = "Designed ONLY to search for errors, BIG PERFORMANCE IMPACT, logs are saved in Mahou's folder, in folder Logs.";
-//		public static readonly string TT_LDForCaret = "Displays language tooltip around caret (carriage).";
-//		public static readonly string TT_LDDifferentAppearence = "If enabled language tooltips will use different color for different layouts (1&2).";
-//		public static readonly string TT_CaretRefreshRate = "Speed of checking caret availability.";
-//		public static readonly string TT_FGColor = "Foreground/Text color.";
-//		public static readonly string TT_BGColor = "Background color.";
-//		public static readonly string TT_CapsDis = "If enabled and change layout by key set to CapsLock then timer which will disable CapsLock if it is active will launch.";
-//		public static readonly string TT_CountryFlags = "If enabled Mahou will display country flags in tray icon.\nYou can add or change flags to yours, to make this create folder Flags in folder where Mahou.exe is, and paste there png with name of 2 letters which you can see in language tooltip.";
-//		#endregion
+		#region Tooltips
+		public static readonly string TT_SwitchBetween = "While this option disabled, [Convert word] and [Convert line] and [Convert selection with \"Convert selection layout switching\" enabled]\n" +
+		                                  "will just cycle between all locales instead of switching between selected in settings."+
+		                                  "If there is program in which [Convert word] or [Convert line] or [Convert selection with \"CS-Switch\" enabled] not work,\ntry with this option enabled.\n";
+		public static readonly string TT_ConvertSelectionSwitch = "If enabled, Convers selection will use layout switching.\nAll symbols will be written as the must(if layout before switching was the one where they are written it).\nThere also a plus version of that function.";
+		public static readonly string TT_BlockCtrl = "Blocks hotkeys that use Control,\nwhen \"Switch layout by key\" is set to Left/Right Control.";
+		public static readonly string TT_CapsDis = "If enabled, timer which disables CapsLock(led) will work.";
+		public static readonly string TT_EmulateLS = "If enabled, layout switching will emulate press of keys selected on right.";
+		public static readonly string TT_RePress = "If enabled, modifiers(Ctrl/Alt/Shift/Win) will be pressed again conversion(recommended).";
+		public static readonly string TT_Add1Space = "If enabled, ONE space will be adding to last word.";
+		public static readonly string TT_ReSelect = "If enabled, any \"Convert selected\" will select text again after conversion.";
+		public static readonly string TT_ScrollTip = "Highlight Scroll Lock when active language 1, selected in Layouts tab.\nUnnesesary to keep enabled \"Switch between layouts\" function enabled for this function to work, just select layout #1 below it and the disable it if you need to.";
+		public static readonly string TT_LDOnlyOnChange = "Display language tooltip only on layout change.\nDisplay time - 2x[Refresh rate for mouse + for caret].";
+		public static readonly string TT_ConvertSelectionSwitchPlus = "Combines some abilities of Convert selection with enabled \"Convert selection layout switching\" and when it disabled."+
+										"\nIt can:"+
+										"\n1.Conversion text from different layouts to different layouts at once."+
+										"\n2.gnore symbols feature work in it."+
+										"\n3.Auto get layout of text (symbols, that exist in both layouts are not supported)."+
+										"\n4.Convert unsupported symbols differently, if you change layout before conversion.";
+		public static readonly string TT_LDForMouse = "If enabled, when hovering text form with, around mouse will be displayed language tooltip.";
+		public static readonly string TT_LDForCaret = "If enabled, around caret will be displayed language tooltip.";
+		public static readonly string TT_Snippets = "If enabled, pressing SPACE will expand small (which starts with \"->\") word, to big (which is between \"====>\" and \"<====\") word/text fragment.";
+		public static readonly string TT_Logging = "Designed ONLY to search for errors, BIG PERFORMANCE IMPACT, logs are saved in Mahou's folder, in folder Logs.";
+		public static readonly string TT_LDDifferentAppearence = "If enabled, you can select different appearence for main layouts(1&2), for others will be used from \"around mouse\" or \"around caret\".";
+		public static readonly string TT_CountryFlags = "If enabled, tray icon will display country flags.";
+		public static readonly string TT_SymbolIgnore = "If enabled, symbols []{};':\"./<>? will be ignored.\nWorks in Convert last word, line, selection with  \"Conver selection layout switching\" enabled or plus.\n"+
+										"WON'T WORK IF YOU HAVE MORE THAN 2 LAYOUTS AND FUNCTION \"Switch between layouts\" disabled!";
+		public static readonly string TT_ConvertWords= "Allow to convert specific last word count by pressing hotkey and then 0-9 (0 = 10) on keyboard.";
+		#endregion
 	}
 	/// <summary>
 	/// Russian language for MahouUI.
@@ -269,7 +260,7 @@ namespace Mahou.Languages
             "Нажмите Ctrl+Alt+Win+Shift+Insert чтобы показать/скрыть главное окно.\r\n"+
 			"Нажмите Ctrl+Alt+Win+Shift+F12 чтобы завершить Mahou.\r\n"+
 			"\r\n*Заметьте что если you вводите текст не из выбранных раскладок в настройках, то конвертация конвертирует текст в Язык 1 (Не актуально если включён Циклич. режим).\r\n\r\n"+
-            "**Если у Вас проблемы с символами при Конвертации выделения попробуйте \"переключить языки местами (1=>2 & 2=>1)\" или включите \"Смена раскладки в конверсиях выделенного\" или плюс.\r\n"+
+            "**Если у Вас проблемы с символами при Конвертации выделения попробуйте \"переключить языки местами (1=>2 & 2=>1)\" или включите \"Смена раскладки в конверт выделенния\" или плюс.\r\n"+
 			"\r\nУдачи.";
 		#endregion
 		#region Misc
@@ -289,43 +280,34 @@ namespace Mahou.Languages
 		public static readonly string ButtonApply = "Применить";
 		public static readonly string ButtonCancel = "Отмена";
 		#endregion
-//		#region Tooltips
-//		public static readonly string TT_SwitchBetween = "Пока включена, [Конверт слова] and [Конверт линии] and [Конверт выделения с \"КВ-Ключ\" включённой]\n" +
-//		                                  "будет переключать раскладку циклично, вместо переключения между выбранными в настройках.\nЭтот режим работает с бОльшим количеством программ.\n" +
-//		                                  "Если есть программа в которой [Конверт слова] или [Конверт линии] или [Конверт выделения с \"КВ-Ключ\" включённой] не работают,\nто попробуйте включить эту функцию.\n" +
-//		                                  "Если у вас только 2 раскладки ОЧЕНЬ РЕКОМЕНДУЕТСЯ включить ее, и \"Эму\".";
-		//		public static readonly string TT_Link = "Go to GitHub repository to view source or report issue.";
-		//		public static readonly string TT_TrayIcon = "Toggles visibility of icon in a tray.\nIf it is hidden, to show configs window hit CTRL+ALT+SHIFT+INSERT or just run Mahou.exe again.";
-		//		public static readonly string TT_BlockCtrl = "Blocks hotkeys that use Control,\nwhen \"Switch layout by key\" is set to Left/Right Control.";
-		//		public static readonly string TT_EmulateLS = "If this option enabled, Cycle Mode will use Emulation of Alt+Shift/Win+Space instead \"sending window message\" that changes layout.";
-		//		public static readonly string TT_ConvertSelectionSwitch = "If this option enabled, Covert selection will use layout switching.\nAll characters will be rewritten as they must (no problems with symbols).\nThere also an CS-Switch+ in More Configs page 2.";
-		//		public static readonly string TT_RePress = "If enabled, modifiers will be repressed after conversion.\nDue to new hotkey management modifiers NEVER stuck (recommended).";
-		//		public static readonly string TT_Add1Space = "If enabled, pressing ONE space AFTER word will not clear last word.";
-		//		public static readonly string TT_ReSelect = "Enabling this, will reselect text after \"Convert selection\".";
-		//		public static readonly string TT_EmulationType = "Select type for Emulate change layout.\nWin+Space works only in Windows 10!!\nWin+Space also will work better in Metro apps.";
-		//		public static readonly string TT_SymbolIgnore = "If enabled, symbols []{};':\"./<>? will be ignored and will not be converted.\nWorks in Convert word, Convert line, Convert selection with Cycle Mode and CS-Switch enabled.\nWon't work if you have >2 layouts an Cycle Mode enabled!";
-		//		public static readonly string TT_MoreTriesToGetSelectedText = "Enables more tries to get selected text in Convert selection.";
-		//		public static readonly string TT_LDForMouse = "If enabled, mouse cursor hovers text it will display a small tip of what language is now using.";
-		//		public static readonly string TT_LDForMouseRefreshRate = "Speed of checking cursor type (if it equals \"I\" ).";
-		//		public static readonly string TT_LDSize = "Size of language tooltip.";
-		//		public static readonly string TT_LDPosition = "Position relative to mouse/caret position.";
-		//		public static readonly string TT_DoubleHK = "Enables double hotkey ability,\nand makes it possible to set modifies to hotkey.";
-		//		public static readonly string TT_DoubleHKDelay = "Time to wait second hotkey press (ms)";
-		//		public static readonly string TT_ConvertSelectionSwitchPlus = "Combines some abilities of Convert selection with enabled CS-Switch and when it disabled (Enable CS-Switch for it to work).\nIt can:\n1.Conversion from multiple languages at once.\n2.Ignore symbols feature work in it.\n3.Auto get language of text (not all symbols, the ones that exist in both layouts) can be rightly recognized if wrong layout selected from begin)\n4.Ability to convert symbols that exist in both layouts different if change layout before conversion.";
-		//		public static readonly string TT_LDTransparentBG = "Makes background of language tooltips transparent.\nDon't forget to change text color (because \"White\" is default).\nSome fonts may look bad, try changing to another (\"Georgia\" or \"Palatino Linotype\" is recommend).";
-		//		public static readonly string TT_Snippets = "If this enabled, pressing Space will expand small (which starts with \"->\") word, to big (which is between \"====>\" and \"<====\") word/text fragment.";
-		//		public static readonly string TT_LDOnlyOnChange = "Display language tooltip only on layout change.\nTime of displaying is 7x[Refresh rate].";
-		//		public static readonly string TT_ScrollTip = "Highlight Scroll Lock when active language 1, selected in main window.";
-		//		public static readonly string TT_StartupUpdateCheck = "If enabled Mahou will check for updates at startup.";
-		//		public static readonly string TT_ConvertWords= "Allow to convert specific last word count by pressing hotkey and then 0-9 (0 = 10) on keyboard.";
-		//		public static readonly string TT_Logging = "Designed ONLY to search for errors, BIG PERFORMANCE IMPACT, logs are saved in Mahou's folder, in folder Logs.";
-		//		public static readonly string TT_LDForCaret = "Displays language tooltip around caret (carriage).";
-		//		public static readonly string TT_LDDifferentAppearence = "If enabled language tooltips will use different color for different layouts (1&2).";
-		//		public static readonly string TT_CaretRefreshRate = "Speed of checking caret availability.";
-		//		public static readonly string TT_FGColor = "Foreground/Text color.";
-		//		public static readonly string TT_BGColor = "Background color.";
-		//		public static readonly string TT_CapsDis = "If enabled and change layout by key set to CapsLock then timer which will disable CapsLock if it is active will launch.";
-		//		public static readonly string TT_CountryFlags = "If enabled Mahou will display country flags in tray icon.\nYou can add or change flags to yours, to make this create folder Flags in folder where Mahou.exe is, and paste there png with name of 2 letters which you can see in language tooltip.";
-//		#endregion
+		#region Tooltips
+		public static readonly string TT_SwitchBetween = "Пока включена, [Конверт слова] and [Конверт линии] and [Конверт выделения с \"Смена раскладки в конверт выделенния\" включённой]\n" +
+		                                  "будет переключать раскладку циклично, вместо переключения между выбранными в настройках." +
+		                                  "Если есть программа в которой [Конверт слова] или [Конверт линии] или [Конверт выделения с \"Смена раскладки в конверт выделенния\" включённой] не работают,\nто попробуйте включить эту функцию.\n";
+		public static readonly string TT_ConvertSelectionSwitch = "Если включена, Конверт выделения Будет использовать переключение раскладки.\nВсе символы будут напечатаны правильно(если перед переключением стояла раскладка в которой они были написаны).\nТакже есть улучшение функции, \"плюс\".";
+		public static readonly string TT_BlockCtrl = "Блокирует горячие клавиши содержащие Control,\nможет быть полезно если \"Переключать язык клавишей\" установлен на Left/Right Control.";
+		public static readonly string TT_CapsDis = "Если включено, то будет работать таймер который будет выключать CapsLock(лампочку).";
+		public static readonly string TT_EmulateLS = "Если включено, переключение раскладку будет эмулировать нажатие клавиш выбранный правее для переключения раскладки.";
+		public static readonly string TT_RePress = "Если включено, то модификаторы(Ctrl/Alt/Shift/Win) будут нажаты заново после действия горячей клавиши.(рекомендуется).";
+		public static readonly string TT_Add1Space = "Если включено, то ОДИН пробел будет добавлятся в последнее слово.";
+		public static readonly string TT_ReSelect = "Если включено, любые \"Конверт выделения\" будут выделять тескт заново.";
+		public static readonly string TT_ScrollTip = "Подсвечивать лампочку Scroll Lock когда активна раскладка 1, выбранная во вкладке Раскладки.\nНе обязательно оставлять включенным функцию \"Переключать между раскладками\", нужно просто выбрать раскладку #1 ниже неё.";
+		public static readonly string TT_LDOnlyOnChange = "Отображать подсказку языка только при смене раскладки.\nВремя оторбражения - 2x[Скорость обновления возле каретки + возле мыши].";
+		public static readonly string TT_ConvertSelectionSwitchPlus = "Совмещает способности Конверт выделения с включенным \"Смена раскладки в Конверт выделения\" и когда она выключена."+
+										"\nВозможности:"+
+										"\n1.Конвертировать текст с разных языков на разные языки за 1 конвертацию."+
+										"\n2.Игнорирование символов работает здесь."+
+										"\n3.Авто-разпознавание раскладки текста(символы которые есть в обоих раскладках не поддерживаются)"+
+										"\n4.Конвертировать не поддерживаемые символы по разному если менять раскладку перед конвертацией.";
+		public static readonly string TT_LDForMouse = "Если включена, то при наведении на текстовую форму мышью будет отображаться подсказка языка.";
+		public static readonly string TT_LDForCaret = "Если включена, то возле текстового курсора будет отображаться подсказка языка.";
+		public static readonly string TT_Snippets = "Если включено, нажатие ПРОБЕЛА увеличит маленькое слово(которое имеет суффикс \"->\"), в большой кусок текста(который между \"====>\" и \"<====\").";
+		public static readonly string TT_Logging = "Создано ТОЛЬКО поиска ошибок, БОЛЬШОЕ ВЛИЯНИЕ НА СКОРОСТЬ РАБОТЫ, журналы сохраняются в папке где Mahou.exe в папке \"Logs\".";
+		public static readonly string TT_LDDifferentAppearence = "Если включено то вы сможете выбрать разный вид для двух раскладок(1&2), для других будут использоваться стандартные из \"возле мыши\" или \"возле каретки\".";
+		public static readonly string TT_CountryFlags = "Если включено, иконка в трее будет показывать флаги стран.";
+		public static readonly string TT_SymbolIgnore = "Если включено, символы []{};':\"./<>? будут проигнорированы.\nРаботает в Конверт слова, линии, выделения с включенным \"Смена раскладки в Конверт выделения\" или плюс.\n"+
+										"НЕ БУДЕТ РАБОТАТЬ если у Вас больше 2 раскладок и функция \"Преключать между раскладками\" выключена!";
+		public static readonly string TT_ConvertWords= "Дает возможность конвертировать специфическое количество последних слов, после горячей клавиши нажмите 0-9(0 = 10) на клавиатуре.";				
+		#endregion
 	}
 }

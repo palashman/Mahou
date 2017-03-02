@@ -122,6 +122,8 @@ namespace Mahou
 		private System.Windows.Forms.CheckBox chk_SelectedTextGetMoreTries;
 		private System.Windows.Forms.ComboBox cbb_Language;
 		private System.Windows.Forms.Label lbl_Language;
+		private System.Windows.Forms.ToolTip HelpMeUnderstand;
+		private System.Windows.Forms.Label lbl_HotkeyHelp;
 		
 		/// <summary>
 		/// Disposes resources used by the form.
@@ -144,6 +146,7 @@ namespace Mahou
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.tabs = new System.Windows.Forms.TabControl();
 			this.tab_functions = new System.Windows.Forms.TabPage();
 			this.chk_BlockHKWithCtrl = new System.Windows.Forms.CheckBox();
@@ -229,6 +232,7 @@ namespace Mahou
 			this.chk_Snippets = new System.Windows.Forms.CheckBox();
 			this.tab_hotkeys = new System.Windows.Forms.TabPage();
 			this.grb_Hotkey = new System.Windows.Forms.GroupBox();
+			this.lbl_HotkeyHelp = new System.Windows.Forms.Label();
 			this.chk_DoubleHotkey = new System.Windows.Forms.CheckBox();
 			this.chk_HotKeyEnabled = new System.Windows.Forms.CheckBox();
 			this.txt_Hotkey = new System.Windows.Forms.TextBox();
@@ -259,6 +263,7 @@ namespace Mahou
 			this.btn_OK = new System.Windows.Forms.Button();
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
+			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -338,6 +343,7 @@ namespace Mahou
 			this.chk_BlockHKWithCtrl.TabIndex = 12;
 			this.chk_BlockHKWithCtrl.Text = "Block Mahou hotkeys with Ctrl.";
 			this.chk_BlockHKWithCtrl.UseVisualStyleBackColor = true;
+			this.chk_BlockHKWithCtrl.MouseHover += new System.EventHandler(this.Chk_BlockHKWithCtrlMouseHover);
 			// 
 			// chk_FlagsInTray
 			// 
@@ -348,6 +354,7 @@ namespace Mahou
 			this.chk_FlagsInTray.TabIndex = 11;
 			this.chk_FlagsInTray.Text = "Display country flags in tray icon.";
 			this.chk_FlagsInTray.UseVisualStyleBackColor = true;
+			this.chk_FlagsInTray.MouseHover += new System.EventHandler(this.Chk_FlagsInTrayMouseHover);
 			// 
 			// chk_CapsLockDTimer
 			// 
@@ -359,6 +366,7 @@ namespace Mahou
 			this.chk_CapsLockDTimer.Text = "Activate Caps Lock disabler timer.";
 			this.chk_CapsLockDTimer.UseVisualStyleBackColor = true;
 			this.chk_CapsLockDTimer.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
+			this.chk_CapsLockDTimer.MouseHover += new System.EventHandler(this.Chk_CapsLockDTimerMouseHover);
 			// 
 			// chk_Logging
 			// 
@@ -369,6 +377,7 @@ namespace Mahou
 			this.chk_Logging.TabIndex = 9;
 			this.chk_Logging.Text = "Enable logging for debugging.";
 			this.chk_Logging.UseVisualStyleBackColor = true;
+			this.chk_Logging.MouseHover += new System.EventHandler(this.Chk_LoggingMouseHover);
 			// 
 			// chk_StartupUpdatesCheck
 			// 
@@ -390,6 +399,7 @@ namespace Mahou
 			this.chk_HighlightScroll.Text = "Highlight Scroll-Lock when layout 1 is active.";
 			this.chk_HighlightScroll.UseVisualStyleBackColor = true;
 			this.chk_HighlightScroll.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
+			this.chk_HighlightScroll.MouseHover += new System.EventHandler(this.Chk_HighlightScrollMouseHover);
 			// 
 			// chk_CSLayoutSwitchingPlus
 			// 
@@ -400,6 +410,7 @@ namespace Mahou
 			this.chk_CSLayoutSwitchingPlus.TabIndex = 6;
 			this.chk_CSLayoutSwitchingPlus.Text = "Convert selection layout switching+ (experimental).";
 			this.chk_CSLayoutSwitchingPlus.UseVisualStyleBackColor = true;
+			this.chk_CSLayoutSwitchingPlus.MouseHover += new System.EventHandler(this.Chk_CSLayoutSwitchingPlusMouseHover);
 			// 
 			// chk_AddOneSpace
 			// 
@@ -410,6 +421,7 @@ namespace Mahou
 			this.chk_AddOneSpace.TabIndex = 5;
 			this.chk_AddOneSpace.Text = "Add one space to last word.";
 			this.chk_AddOneSpace.UseVisualStyleBackColor = true;
+			this.chk_AddOneSpace.MouseHover += new System.EventHandler(this.Chk_AddOneSpaceMouseHover);
 			// 
 			// chk_RePress
 			// 
@@ -420,6 +432,7 @@ namespace Mahou
 			this.chk_RePress.TabIndex = 4;
 			this.chk_RePress.Text = "Re-press modifiers after hotkey action.";
 			this.chk_RePress.UseVisualStyleBackColor = true;
+			this.chk_RePress.MouseHover += new System.EventHandler(this.Chk_RePressMouseHover);
 			// 
 			// chk_ReSelect
 			// 
@@ -430,6 +443,7 @@ namespace Mahou
 			this.chk_ReSelect.TabIndex = 3;
 			this.chk_ReSelect.Text = "Re-select text after convert selection.";
 			this.chk_ReSelect.UseVisualStyleBackColor = true;
+			this.chk_ReSelect.MouseHover += new System.EventHandler(this.Chk_ReSelectMouseHover);
 			// 
 			// chk_CSLayoutSwitching
 			// 
@@ -441,6 +455,7 @@ namespace Mahou
 			this.chk_CSLayoutSwitching.Text = "Convert selection layout switching.";
 			this.chk_CSLayoutSwitching.UseVisualStyleBackColor = true;
 			this.chk_CSLayoutSwitching.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
+			this.chk_CSLayoutSwitching.MouseHover += new System.EventHandler(this.Chk_CSLayoutSwitchingMouseHover);
 			// 
 			// chk_TrayIcon
 			// 
@@ -705,6 +720,7 @@ namespace Mahou
 			this.chk_EmulateLS.Text = "Emulate layout switching.";
 			this.chk_EmulateLS.UseVisualStyleBackColor = true;
 			this.chk_EmulateLS.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
+			this.chk_EmulateLS.MouseHover += new System.EventHandler(this.Chk_EmulateLSMouseHover);
 			// 
 			// lbl_LayoutNum2
 			// 
@@ -752,6 +768,7 @@ namespace Mahou
 			this.chk_SwitchBetweenLayouts.Text = "Switch between layouts:";
 			this.chk_SwitchBetweenLayouts.UseVisualStyleBackColor = true;
 			this.chk_SwitchBetweenLayouts.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
+			this.chk_SwitchBetweenLayouts.MouseHover += new System.EventHandler(this.Chk_SwitchBetweenLayoutsMouseHover);
 			// 
 			// tab_appearence
 			// 
@@ -801,6 +818,7 @@ namespace Mahou
 			this.chk_LangTTDiffLayoutColors.TabIndex = 13;
 			this.chk_LangTTDiffLayoutColors.Text = "Use different appearence for layouts.";
 			this.chk_LangTTDiffLayoutColors.UseVisualStyleBackColor = true;
+			this.chk_LangTTDiffLayoutColors.MouseHover += new System.EventHandler(this.Chk_LangTTDiffLayoutColorsMouseHover);
 			// 
 			// chk_LangTTCaretOnChange
 			// 
@@ -811,6 +829,7 @@ namespace Mahou
 			this.chk_LangTTCaretOnChange.TabIndex = 12;
 			this.chk_LangTTCaretOnChange.Text = "Display only on layout change.";
 			this.chk_LangTTCaretOnChange.UseVisualStyleBackColor = true;
+			this.chk_LangTTCaretOnChange.MouseHover += new System.EventHandler(this.Chk_LangTTOnChange);
 			// 
 			// chk_LangTTMouseOnChange
 			// 
@@ -821,6 +840,7 @@ namespace Mahou
 			this.chk_LangTTMouseOnChange.TabIndex = 11;
 			this.chk_LangTTMouseOnChange.Text = "Display only on layout change.";
 			this.chk_LangTTMouseOnChange.UseVisualStyleBackColor = true;
+			this.chk_LangTTMouseOnChange.MouseHover += new System.EventHandler(this.Chk_LangTTOnChange);
 			// 
 			// grb_LangTTAppearence
 			// 
@@ -1017,6 +1037,7 @@ namespace Mahou
 			this.chk_LangTooltipCaret.Text = "Display current language tooltip around caret.";
 			this.chk_LangTooltipCaret.UseVisualStyleBackColor = true;
 			this.chk_LangTooltipCaret.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
+			this.chk_LangTooltipCaret.MouseHover += new System.EventHandler(this.Chk_LangTooltipCaretMouseHover);
 			// 
 			// chk_LangTooltipMouse
 			// 
@@ -1028,6 +1049,7 @@ namespace Mahou
 			this.chk_LangTooltipMouse.Text = "Display current language tooltip around mouse.";
 			this.chk_LangTooltipMouse.UseVisualStyleBackColor = true;
 			this.chk_LangTooltipMouse.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
+			this.chk_LangTooltipMouse.MouseHover += new System.EventHandler(this.Chk_LangTooltipMouseMouseHover);
 			// 
 			// tab_timings
 			// 
@@ -1260,6 +1282,7 @@ namespace Mahou
 			this.chk_Snippets.Text = "Enable snippets.";
 			this.chk_Snippets.UseVisualStyleBackColor = true;
 			this.chk_Snippets.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
+			this.chk_Snippets.MouseHover += new System.EventHandler(this.Chk_SnippetsMouseHover);
 			// 
 			// tab_hotkeys
 			// 
@@ -1275,6 +1298,7 @@ namespace Mahou
 			// 
 			// grb_Hotkey
 			// 
+			this.grb_Hotkey.Controls.Add(this.lbl_HotkeyHelp);
 			this.grb_Hotkey.Controls.Add(this.chk_DoubleHotkey);
 			this.grb_Hotkey.Controls.Add(this.chk_HotKeyEnabled);
 			this.grb_Hotkey.Controls.Add(this.txt_Hotkey);
@@ -1285,6 +1309,13 @@ namespace Mahou
 			this.grb_Hotkey.TabIndex = 1;
 			this.grb_Hotkey.TabStop = false;
 			this.grb_Hotkey.Text = "Hotkey";
+			// 
+			// lbl_HotkeyHelp
+			// 
+			this.lbl_HotkeyHelp.Location = new System.Drawing.Point(9, 172);
+			this.lbl_HotkeyHelp.Name = "lbl_HotkeyHelp";
+			this.lbl_HotkeyHelp.Size = new System.Drawing.Size(274, 81);
+			this.lbl_HotkeyHelp.TabIndex = 7;
 			// 
 			// chk_DoubleHotkey
 			// 
@@ -1613,6 +1644,15 @@ namespace Mahou
 			this.btn_Apply.Text = "Apply";
 			this.btn_Apply.UseVisualStyleBackColor = true;
 			this.btn_Apply.Click += new System.EventHandler(this.Btn_ApplyClick);
+			// 
+			// HelpMeUnderstand
+			// 
+			this.HelpMeUnderstand.AutomaticDelay = 20000;
+			this.HelpMeUnderstand.AutoPopDelay = 200000;
+			this.HelpMeUnderstand.InitialDelay = 20000;
+			this.HelpMeUnderstand.ReshowDelay = 500;
+			this.HelpMeUnderstand.ShowAlways = true;
+			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			// 
 			// MahouUI
 			// 

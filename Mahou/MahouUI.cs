@@ -1819,6 +1819,23 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 		void Lsb_HotkeysSelectedIndexChanged(object sender, EventArgs e) {
 			UpdateHotkeyControlsSwitch();
 			UpdateHotkeyTemps();
+			switch (lsb_Hotkeys.SelectedIndex) {
+				case 4:
+					if (Lang == "English")
+						lbl_HotkeyHelp.Text = Languages.English.TT_ConvertWords;
+					else if (Lang == "Русский")
+						lbl_HotkeyHelp.Text = Languages.Russian.TT_ConvertWords;
+					break;
+				case 5:
+					if (Lang == "English")
+						lbl_HotkeyHelp.Text = Languages.English.TT_SymbolIgnore;
+					else if (Lang == "Русский")
+						lbl_HotkeyHelp.Text = Languages.Russian.TT_SymbolIgnore;
+					break;
+				default:
+					lbl_HotkeyHelp.Text = "";
+					break;
+			}
 		}
 		void Txt_HotkeyKeyDown(object sender, KeyEventArgs e) {
 			if (GetSelectedHotkeyDoubleTemp()) {
@@ -1953,6 +1970,144 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				}
 			}
 		}
+		#region Tooltips
+		void Chk_CSLayoutSwitchingMouseHover(object sender, EventArgs e) {
+			var chk = sender as CheckBox;
+			HelpMeUnderstand.ToolTipTitle = chk.Text;
+			if (Lang == "English")
+				HelpMeUnderstand.Show(Languages.English.TT_ConvertSelectionSwitch, chk);
+			else if (Lang == "Русский")
+				HelpMeUnderstand.Show(Languages.Russian.TT_ConvertSelectionSwitch, chk);
+		}
+		void Chk_ReSelectMouseHover(object sender, EventArgs e) {
+			var chk = sender as CheckBox;
+			HelpMeUnderstand.ToolTipTitle = chk.Text;
+			if (Lang == "English")
+				HelpMeUnderstand.Show(Languages.English.TT_ReSelect, chk);
+			else if (Lang == "Русский")
+				HelpMeUnderstand.Show(Languages.Russian.TT_ReSelect, chk);
+		}
+		void Chk_RePressMouseHover(object sender, EventArgs e) {
+			var chk = sender as CheckBox;
+			HelpMeUnderstand.ToolTipTitle = chk.Text;
+			if (Lang == "English")
+				HelpMeUnderstand.Show(Languages.English.TT_RePress, chk);
+			else if (Lang == "Русский")
+				HelpMeUnderstand.Show(Languages.Russian.TT_RePress, chk);
+		}
+		void Chk_AddOneSpaceMouseHover(object sender, EventArgs e) {
+			var chk = sender as CheckBox;
+			HelpMeUnderstand.ToolTipTitle = chk.Text;
+			if (Lang == "English")
+				HelpMeUnderstand.Show(Languages.English.TT_Add1Space, chk);
+			else if (Lang == "Русский")
+				HelpMeUnderstand.Show(Languages.Russian.TT_Add1Space, chk);
+		}
+		void Chk_CSLayoutSwitchingPlusMouseHover(object sender, EventArgs e) {
+			var chk = sender as CheckBox;
+			HelpMeUnderstand.ToolTipTitle = chk.Text;
+			if (Lang == "English")
+				HelpMeUnderstand.Show(Languages.English.TT_ConvertSelectionSwitchPlus, chk);
+			else if (Lang == "Русский")
+				HelpMeUnderstand.Show(Languages.Russian.TT_ConvertSelectionSwitchPlus, chk);
+		}
+		void Chk_HighlightScrollMouseHover(object sender, EventArgs e) {
+			var chk = sender as CheckBox;
+			HelpMeUnderstand.ToolTipTitle = chk.Text;
+			if (Lang == "English")
+				HelpMeUnderstand.Show(Languages.English.TT_ScrollTip, chk);
+			else if (Lang == "Русский")
+				HelpMeUnderstand.Show(Languages.Russian.TT_ScrollTip, chk);
+		}
+		void Chk_LoggingMouseHover(object sender, EventArgs e) {
+			var chk = sender as CheckBox;
+			HelpMeUnderstand.ToolTipTitle = chk.Text;
+			if (Lang == "English")
+				HelpMeUnderstand.Show(Languages.English.TT_Logging, chk);
+			else if (Lang == "Русский")
+				HelpMeUnderstand.Show(Languages.Russian.TT_Logging, chk);
+		}
+		void Chk_CapsLockDTimerMouseHover(object sender, EventArgs e) {
+			var chk = sender as CheckBox;
+			HelpMeUnderstand.ToolTipTitle = chk.Text;
+			if (Lang == "English")
+				HelpMeUnderstand.Show(Languages.English.TT_CapsDis, chk);
+			else if (Lang == "Русский")
+				HelpMeUnderstand.Show(Languages.Russian.TT_CapsDis, chk);
+		}
+		void Chk_FlagsInTrayMouseHover(object sender, EventArgs e) {
+			var chk = sender as CheckBox;
+			HelpMeUnderstand.ToolTipTitle = chk.Text;
+			if (Lang == "English")
+				HelpMeUnderstand.Show(Languages.English.TT_CountryFlags, chk);
+			else if (Lang == "Русский")
+				HelpMeUnderstand.Show(Languages.Russian.TT_CountryFlags, chk);
+		}
+		void Chk_SwitchBetweenLayoutsMouseHover(object sender, EventArgs e) {
+			var chk = sender as CheckBox;
+			HelpMeUnderstand.ToolTipTitle = chk.Text;
+			if (Lang == "English")
+				HelpMeUnderstand.Show(Languages.English.TT_SwitchBetween, chk);
+			else if (Lang == "Русский")
+				HelpMeUnderstand.Show(Languages.Russian.TT_SwitchBetween, chk);
+		}
+		void Chk_EmulateLSMouseHover(object sender, EventArgs e) {
+			var chk = sender as CheckBox;
+			HelpMeUnderstand.ToolTipTitle = chk.Text;
+			if (Lang == "English")
+				HelpMeUnderstand.Show(Languages.English.TT_EmulateLS, chk);
+			else if (Lang == "Русский")
+				HelpMeUnderstand.Show(Languages.Russian.TT_EmulateLS, chk);
+		}
+		void Chk_LangTooltipMouseMouseHover(object sender, EventArgs e) {
+			var chk = sender as CheckBox;
+			HelpMeUnderstand.ToolTipTitle = chk.Text;
+			if (Lang == "English")
+				HelpMeUnderstand.Show(Languages.English.TT_LDForMouse, chk);
+			else if (Lang == "Русский")
+				HelpMeUnderstand.Show(Languages.Russian.TT_LDForMouse, chk);
+		}
+		void Chk_LangTooltipCaretMouseHover(object sender, EventArgs e) {
+			var chk = sender as CheckBox;
+			HelpMeUnderstand.ToolTipTitle = chk.Text;
+			if (Lang == "English")
+				HelpMeUnderstand.Show(Languages.English.TT_LDForCaret, chk);
+			else if (Lang == "Русский")
+				HelpMeUnderstand.Show(Languages.Russian.TT_LDForCaret, chk);
+		}
+		void Chk_LangTTOnChange(object sender, EventArgs e) {
+			var chk = sender as CheckBox;
+			HelpMeUnderstand.ToolTipTitle = chk.Text;
+			if (Lang == "English")
+				HelpMeUnderstand.Show(Languages.English.TT_LDOnlyOnChange, chk);
+			else if (Lang == "Русский")
+				HelpMeUnderstand.Show(Languages.Russian.TT_LDOnlyOnChange, chk);
+		}
+		void Chk_SnippetsMouseHover(object sender, EventArgs e) {
+			var chk = sender as CheckBox;
+			HelpMeUnderstand.ToolTipTitle = chk.Text;
+			if (Lang == "English")
+				HelpMeUnderstand.Show(Languages.English.TT_Snippets, chk);
+			else if (Lang == "Русский")
+				HelpMeUnderstand.Show(Languages.Russian.TT_Snippets, chk);
+		}
+		void Chk_BlockHKWithCtrlMouseHover(object sender, EventArgs e) {
+			var chk = sender as CheckBox;
+			HelpMeUnderstand.ToolTipTitle = chk.Text;
+			if (Lang == "English")
+				HelpMeUnderstand.Show(Languages.English.TT_BlockCtrl, chk);
+			else if (Lang == "Русский")
+				HelpMeUnderstand.Show(Languages.Russian.TT_BlockCtrl, chk);
+		}
+		void Chk_LangTTDiffLayoutColorsMouseHover(object sender, EventArgs e) {
+			var chk = sender as CheckBox;
+			HelpMeUnderstand.ToolTipTitle = chk.Text;
+			if (Lang == "English")
+				HelpMeUnderstand.Show(Languages.English.TT_LDDifferentAppearence, chk);
+			else if (Lang == "Русский")
+				HelpMeUnderstand.Show(Languages.Russian.TT_LDDifferentAppearence, chk);
+		}
+		#endregion
 		#endregion
 	}
 }
