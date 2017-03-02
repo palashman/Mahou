@@ -1269,7 +1269,7 @@ namespace Mahou
 			this.txt_Snippets.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.txt_Snippets.Size = new System.Drawing.Size(541, 236);
 			this.txt_Snippets.TabIndex = 1;
-			this.txt_Snippets.Text = "->mahou\r\n====>\r\nMahou (魔法) - Magical layout switcher.\r\n<====\r\n->eml\r\n====>BladeMi" +
+			this.txt_Snippets.Text = "->mahou\r\n====>Mahou (魔法) - Magical layout switcher.<====\r\n->eml\r\n====>BladeMi" +
 	"ght@gmail.com<====";
 			// 
 			// chk_Snippets
