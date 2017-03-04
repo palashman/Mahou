@@ -555,10 +555,18 @@ namespace Mahou
 					self = false;
 				}
 				#endregion
-				self = true;
-				KeybdEvent(Keys.LControlKey, 2);  //fix for WinAPI.PostMessage, it SOMEHOW o_0 sends LEFT ctrl after layout change...
-								// I'd be really happy if someone could tell me why it SEND THAT ****** Left Control after postmessage???
-				self = false;
+				if ((specificKey == 7 && Key == Keys.RMenu) ||
+					(specificKey == 6 && Key == Keys.LMenu) ||
+					(specificKey == 5 && Key == Keys.RShiftKey) ||
+					(specificKey == 4 && Key == Keys.LShiftKey) ||
+					(specificKey == 3 && Key == Keys.RControlKey) ||
+					(specificKey == 2 && Key == Keys.LControlKey) ||
+					(specificKey == 1 && Key == Keys.CapsLock)) {
+					self = true;
+					KeybdEvent(Keys.LControlKey, 2);  //fix for WinAPI.PostMessage, it SOMEHOW o_0 sends LEFT ctrl after layout change...
+									// I'd be really happy if someone could tell me why it SEND THAT ****** Left Control after postmessage???
+					self = false;
+				}
 			}
 		}
 		/// <summary>
