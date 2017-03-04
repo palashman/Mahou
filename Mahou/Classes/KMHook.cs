@@ -699,15 +699,16 @@ namespace Mahou
 					foreach (KeyValuePair<string, string> key in transliterationDict) {
 		                output = ClipStr.Replace(key.Key, key.Value);
 		            }
-	                if (ClipStr == output)
+					if (ClipStr == output) {
 						foreach (KeyValuePair<string, string> key in transliterationDict) {
 			                	ClipStr = ClipStr.Replace(key.Value, key.Key);
 	                	}
-	                if (ClipStr == output)
+						if (ClipStr == output)
 						foreach (KeyValuePair<string, string> key in transliterationDict) {
 			                	ClipStr = ClipStr.Replace(key.Key, key.Value);
 	                	}
-					KInputs.MakeInput(KInputs.AddString(ClipStr));
+						KInputs.MakeInput(KInputs.AddString(ClipStr));
+					} else { KInputs.MakeInput(KInputs.AddString(output)); }
 					ReSelect(ClipStr.Length);
 				}
 				NativeClipboard.Clear();
