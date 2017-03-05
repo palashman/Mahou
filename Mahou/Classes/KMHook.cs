@@ -481,37 +481,37 @@ namespace Mahou
 						Logging.Log("Changing layout by CapsLock key.");
 						self = false;
 					}
-					if (specificKey == 2 && Key == Keys.LControlKey) {
+					if (specificKey == 2 && Key == Keys.LControlKey && !keyAfterCTRL) {
 						self = true;
 						Logging.Log("Changing layout by LCtrl key.");
 						ChangeLayout();
 						self = false;
 					}
-					if (specificKey == 3 && Key == Keys.RControlKey) {
+					if (specificKey == 3 && Key == Keys.RControlKey && !keyAfterCTRL) {
 						self = true;
 						Logging.Log("Changing layout by RCtrl key.");
 						ChangeLayout();
 						self = false;
 					}
-					if (specificKey == 4 && Key == Keys.LShiftKey) {
+					if (specificKey == 4 && Key == Keys.LShiftKey && !keyAfterSHIFT) {
 						self = true;
 						Logging.Log("Changing layout by LShift key.");
 						ChangeLayout();
 						self = false;
 					}
-					if (specificKey == 5 && Key == Keys.RShiftKey) {
+					if (specificKey == 5 && Key == Keys.RShiftKey && !keyAfterSHIFT) {
 						self = true;
 						Logging.Log("Changing layout by RShift key.");
 						ChangeLayout();
 						self = false;
 					}
-					if (specificKey == 6 && Key == Keys.LMenu) {
+					if (specificKey == 6 && Key == Keys.LMenu && !keyAfterALT) {
 						self = true;
 						Logging.Log("Changing layout by LAlt key.");
 						ChangeLayout();
 						self = false;
 					}
-					if (specificKey == 7 && Key == Keys.RMenu) {
+					if (specificKey == 7 && Key == Keys.RMenu && !keyAfterALT) {
 						self = true;
 						Logging.Log("Changing layout by RAlt key.");
 						ChangeLayout();
