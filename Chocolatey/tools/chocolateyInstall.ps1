@@ -1,1 +1,1 @@
-Install-ChocolateyZipPackage 'Mahou' 'https://github.com/BladeMight/Mahou/releases/download/v2.0.0.5/Mahou-v2.0.0.5.zip' "$(Split-Path -parent $MyInvocation.MyCommand.Definition)" -Checksum "bbe79a6d378b48994476fd85fc5b80bf20070b5958299e581684d989a8aa4e0e"
+Install-ChocolateyZipPackage 'Mahou' 'https://github.com/BladeMight/Mahou/releases/download/v2.0.0.8/Mahou-v2.0.0.8.zip' "$(Split-Path -parent $MyInvocation.MyCommand.Definition)" -Checksum "42b210b75820aa34379f4bf3a6bb9b23f9288fbb862330b09adcc0fcd385bedb"
