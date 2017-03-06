@@ -705,9 +705,9 @@ namespace Mahou
 				Logging.Log("Starting Transliterate selection.");
 				string ClipStr = GetClipStr();
 				if (!String.IsNullOrEmpty(ClipStr)) {
-					string output = "";
+					string output = ClipStr;
 					foreach (KeyValuePair<string, string> key in transliterationDict) {
-		                output = ClipStr.Replace(key.Key, key.Value);
+		                output.Replace(key.Key, key.Value);
 		            }
 					if (ClipStr == output) {
 						foreach (KeyValuePair<string, string> key in transliterationDict) {
