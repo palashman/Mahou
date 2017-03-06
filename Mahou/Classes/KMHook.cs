@@ -618,8 +618,10 @@ namespace Mahou
 								WinAPI.ToUnicodeEx((uint)scan, (uint)scan, bytes, s, s.Capacity, 0, (IntPtr)wasLocale);
 								Logging.Log("Char 1 is [" + s + "] in locale +[" + wasLocale + "].");
 								if (ClipStr[index].ToString() == s.ToString()) {
-									Logging.Log("Making input of [" + scan + "] in locale +[" + nowLocale + "].");
-									KInputs.MakeInput(KInputs.AddString(InAnother(c, wasLocale, nowLocale)));
+									if (!SymbolIgnoreRules((Keys)(scan & 0xff), state == 1, wasLocale)) {
+										Logging.Log("Making input of [" + scan + "] in locale +[" + nowLocale + "].");
+										KInputs.MakeInput(KInputs.AddString(InAnother(c, wasLocale, nowLocale)));
+									}
 									index++;
 									continue;
 								}
@@ -933,7 +935,7 @@ namespace Mahou
 			{
 				Logging.Log("Starting to convert word.");
 				self = true;
-				var wasLocale = Locales.GetCurrentLocale();
+				var wasLocale = Locales.GetCurrentLocale() & 0xFFFF;
 				ChangeLayout();
 				Logging.Log("Deleting old word, with lenght of [" + YuKeys.Length + "].");
 				for (int e = 0; e < YuKeys.Length; e++) {
@@ -979,7 +981,7 @@ namespace Mahou
 		/// <returns></returns>
 		static bool SymbolIgnoreRules(Keys key, bool upper, uint wasLocale)
 		{
-			Logging.Log("Passing through symbol ignore rules.");
+			Logging.Log("Passing Key = ["+key+"]+["+(upper ? "UPPER" : "lower") + "] with WasLayoutID = ["+wasLocale+"] through symbol ignore rules.");
 			if (MMain.mahou.HKSymIgn.enabled &&
 			    MMain.mahou.SymIgnEnabled &&
 			    (wasLocale == 1033 || wasLocale == 1041) &&
