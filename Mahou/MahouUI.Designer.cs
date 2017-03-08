@@ -124,6 +124,8 @@ namespace Mahou
 		private System.Windows.Forms.Label lbl_Language;
 		private System.Windows.Forms.ToolTip HelpMeUnderstand;
 		private System.Windows.Forms.Label lbl_HotkeyHelp;
+		private System.Windows.Forms.Label lbl_ExcludedPrograms;
+		private System.Windows.Forms.TextBox txt_ExcludedPrograms;
 		
 		/// <summary>
 		/// Disposes resources used by the form.
@@ -264,6 +266,8 @@ namespace Mahou
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
 			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
+			this.lbl_ExcludedPrograms = new System.Windows.Forms.Label();
+			this.txt_ExcludedPrograms = new System.Windows.Forms.TextBox();
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -1053,6 +1057,8 @@ namespace Mahou
 			// 
 			// tab_timings
 			// 
+			this.tab_timings.Controls.Add(this.lbl_ExcludedPrograms);
+			this.tab_timings.Controls.Add(this.txt_ExcludedPrograms);
 			this.tab_timings.Controls.Add(this.nud_SelectedTextGetTriesCount);
 			this.tab_timings.Controls.Add(this.chk_SelectedTextGetMoreTries);
 			this.tab_timings.Controls.Add(this.nud_CapsLockRefreshRate);
@@ -1269,8 +1275,8 @@ namespace Mahou
 			this.txt_Snippets.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.txt_Snippets.Size = new System.Drawing.Size(541, 236);
 			this.txt_Snippets.TabIndex = 1;
-			this.txt_Snippets.Text = "->mahou\r\n====>Mahou (魔法) - Magical layout switcher.<====\r\n->eml\r\n====>BladeMi" +
-	"ght@gmail.com<====";
+			this.txt_Snippets.Text = "->mahou\r\n====>Mahou (魔法) - Magical layout switcher.<====\r\n->eml\r\n====>BladeMight@" +
+	"gmail.com<====";
 			// 
 			// chk_Snippets
 			// 
@@ -1653,6 +1659,26 @@ namespace Mahou
 			this.HelpMeUnderstand.ReshowDelay = 500;
 			this.HelpMeUnderstand.ShowAlways = true;
 			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+			// 
+			// lbl_ExcludedPrograms
+			// 
+			this.lbl_ExcludedPrograms.AutoSize = true;
+			this.lbl_ExcludedPrograms.Location = new System.Drawing.Point(218, 204);
+			this.lbl_ExcludedPrograms.Name = "lbl_ExcludedPrograms";
+			this.lbl_ExcludedPrograms.Size = new System.Drawing.Size(111, 15);
+			this.lbl_ExcludedPrograms.TabIndex = 22;
+			this.lbl_ExcludedPrograms.Text = "Excluded programs:";
+			this.lbl_ExcludedPrograms.MouseHover += new System.EventHandler(this.ExcludedProgramsMouseHover);
+			// 
+			// txt_ExcludedPrograms
+			// 
+			this.txt_ExcludedPrograms.Location = new System.Drawing.Point(8, 225);
+			this.txt_ExcludedPrograms.Multiline = true;
+			this.txt_ExcludedPrograms.Name = "txt_ExcludedPrograms";
+			this.txt_ExcludedPrograms.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+			this.txt_ExcludedPrograms.Size = new System.Drawing.Size(541, 42);
+			this.txt_ExcludedPrograms.TabIndex = 21;
+			this.txt_ExcludedPrograms.Text = "LA.exe SomeProgram.exe";
 			// 
 			// MahouUI
 			// 

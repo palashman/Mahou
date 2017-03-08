@@ -98,7 +98,7 @@ namespace Mahou {
 		/// <summary>
 		/// Temporary layouts.
 		/// </summary>
-		public string Layout1, Layout2, Layout3, Layout4, MainLayout1, MainLayout2, EmulateLSType;
+		public string Layout1, Layout2, Layout3, Layout4, MainLayout1, MainLayout2, EmulateLSType, ExcludedPrograms;
 		/// <summary>
 		/// Temporary specific keys.
 		/// </summary>
@@ -425,6 +425,7 @@ namespace Mahou {
 			MMain.MyConfs.Write("Timings", "ScrollLockStateRefreshRate", nud_ScrollLockRefreshRate.Value.ToString());
 			MMain.MyConfs.Write("Timings", "SelectedTextGetMoreTries", chk_SelectedTextGetMoreTries.Checked.ToString());
 			MMain.MyConfs.Write("Timings", "SelectedTextGetMoreTriesCount", nud_SelectedTextGetTriesCount.Value.ToString());
+			MMain.MyConfs.Write("Timings", "ExcludedPrograms", txt_ExcludedPrograms.Text);
 			#endregion
 			#region Snippets
 			MMain.MyConfs.Write("Snippets", "SnippetsEnabled", chk_Snippets.Checked.ToString());
@@ -495,6 +496,7 @@ namespace Mahou {
 			nud_ScrollLockRefreshRate.Value = MMain.MyConfs.ReadInt("Timings", "ScrollLockStateRefreshRate");
 			SelectedTextGetMoreTries = chk_SelectedTextGetMoreTries.Checked = MMain.MyConfs.ReadBool("Timings", "SelectedTextGetMoreTries");
 			nud_SelectedTextGetTriesCount.Value = MMain.MyConfs.ReadInt("Timings", "SelectedTextGetMoreTriesCount");
+			ExcludedPrograms = txt_ExcludedPrograms.Text = MMain.MyConfs.Read("Timings", "ExcludedPrograms");
 			SelectedTextGetMoreTriesCount = (int)nud_SelectedTextGetTriesCount.Value;
 			#endregion
 			#region Snippets
@@ -1540,6 +1542,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				lbl_ScrollLockRefreshRate.Text = Languages.Russian.ScrollLockRefreshRate;
 				lbl_CapsLockRefreshRate.Text = Languages.Russian.CapsLockRefreshRate;
 				chk_SelectedTextGetMoreTries.Text = Languages.Russian.MoreTriesToGetSelectedText;
+				lbl_ExcludedPrograms.Text =  Languages.Russian.ExcludedPrograms;
 				#endregion
 				#region Snippets
 				chk_Snippets.Text = Languages.Russian.SnippetsEnabled;
@@ -1652,6 +1655,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				lbl_ScrollLockRefreshRate.Text = Languages.English.ScrollLockRefreshRate;
 				lbl_CapsLockRefreshRate.Text = Languages.English.CapsLockRefreshRate;
 				chk_SelectedTextGetMoreTries.Text = Languages.English.MoreTriesToGetSelectedText;
+				lbl_ExcludedPrograms.Text =  Languages.English.ExcludedPrograms;
 				#endregion
 				#region Snippets
 				chk_Snippets.Text = Languages.English.SnippetsEnabled;
@@ -2108,6 +2112,14 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				HelpMeUnderstand.Show(Languages.English.TT_LDDifferentAppearence, chk);
 			else if (Lang == "Русский")
 				HelpMeUnderstand.Show(Languages.Russian.TT_LDDifferentAppearence, chk);
+		}
+		void ExcludedProgramsMouseHover(object sender, EventArgs e) {
+			var lbl = sender as Label;
+			HelpMeUnderstand.ToolTipTitle = lbl.Text;
+			if (Lang == "English")
+				HelpMeUnderstand.Show(Languages.English.TT_ExcludedPrograms, lbl);
+			else if (Lang == "Русский")
+				HelpMeUnderstand.Show(Languages.Russian.TT_ExcludedPrograms, lbl);
 		}
 		#endregion
 		#endregion

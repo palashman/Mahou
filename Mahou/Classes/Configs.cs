@@ -109,6 +109,7 @@ namespace Mahou
 			CheckInt("Timings", "CapsLockDisableRefreshRate", "100");
 			CheckBool("Timings", "SelectedTextGetMoreTries", "false");
 			CheckInt("Timings", "SelectedTextGetMoreTriesCount", "5");
+			CheckString("Timings", "ExcludedPrograms", "LA.exe SomeProg.exe");
 			#endregion
 			#region Snippets section
 			CheckBool("Snippets", "SnippetsEnabled", "false");

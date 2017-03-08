@@ -60,6 +60,7 @@ namespace Mahou.Languages
 		public static readonly string ScrollLockRefreshRate = "Scroll Lock refresh rate(ms):";
 		public static readonly string CapsLockRefreshRate = "Caps Lock update rate(ms):";
 		public static readonly string MoreTriesToGetSelectedText = "Use more tries to get selected text:";
+		public static readonly string ExcludedPrograms = "Excluded programs:";
 		#endregion
 		#region Snippets
 		public static readonly string SnippetsEnabled = "Enable snippets.";
@@ -151,6 +152,7 @@ namespace Mahou.Languages
 		public static readonly string TT_SymbolIgnore = "If enabled, symbols []{};':\"./<>? will be ignored.\nWorks in Convert last word, line, selection with  \"Conver selection layout switching\" enabled or plus.\n"+
 										"WON'T WORK IF YOU HAVE MORE THAN 2 LAYOUTS AND FUNCTION \"Switch between layouts\" disabled!";
 		public static readonly string TT_ConvertWords= "Allow to convert specific last word count by pressing hotkey and then 0-9 (0 = 10) on keyboard.";
+		public static readonly string TT_ExcludedPrograms = "Programs(excluded) in which convert hotkeys won't work.\nSeperators - any symbols including a space..";
 		#endregion
 	}
 	/// <summary>
@@ -215,6 +217,7 @@ namespace Mahou.Languages
 		public static readonly string ScrollLockRefreshRate = "Скорость обновления Scroll Lock(мс):";
 		public static readonly string CapsLockRefreshRate = "Скорость обновления Caps Lock(ms):";
 		public static readonly string MoreTriesToGetSelectedText = "Использовать больше попыток взятия текста:";
+		public static readonly string ExcludedPrograms = "Программы исключения:";
 		#endregion
 		#region Snippets
 		public static readonly string SnippetsEnabled = "Включить сниппеты.";
@@ -307,7 +310,8 @@ namespace Mahou.Languages
 		public static readonly string TT_CountryFlags = "Если включено, иконка в трее будет показывать флаги стран.";
 		public static readonly string TT_SymbolIgnore = "Если включено, символы []{};':\"./<>? будут проигнорированы.\nРаботает в Конверт слова, линии, выделения с включенным \"Смена раскладки в Конверт выделения\" или плюс.\n"+
 										"НЕ БУДЕТ РАБОТАТЬ если у Вас больше 2 раскладок и функция \"Преключать между раскладками\" выключена!";
-		public static readonly string TT_ConvertWords= "Дает возможность конвертировать специфическое количество последних слов, после горячей клавиши нажмите 0-9(0 = 10) на клавиатуре.";				
+		public static readonly string TT_ConvertWords = "Дает возможность конвертировать специфическое количество последних слов, после горячей клавиши нажмите 0-9(0 = 10) на клавиатуре.";				
+		public static readonly string TT_ExcludedPrograms = "Программы(исключения) в которых горячие клавиши Конвертирования не будут работать.\nРазделители - любые символы включая пробел.";
 		#endregion
 	}
 }

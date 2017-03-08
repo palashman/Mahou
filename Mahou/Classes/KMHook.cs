@@ -139,7 +139,7 @@ namespace Mahou
 					self = false;
 				}
 				if (!self && (wParam == (IntPtr)WinAPI.WM_KEYUP || wParam == (IntPtr)WinAPI.WM_SYSKEYUP)) {
-					if (!MMain.MahouActive()) {
+					if (!MMain.MahouActive() && !ExcludedProgram()) {
 						CheckHotkey(thishk, MMain.mahou.HKCSelection, ref hksOK, ConvertSelection);
 						CheckHotkey(thishk, MMain.mahou.HKTitleCase, ref hksTTCOK, ToTitleSelection);
 						CheckHotkey(thishk, MMain.mahou.HKSwapCase, ref hksTSCOK, ToSwapSelection);
@@ -428,6 +428,16 @@ namespace Mahou
 		}
 		#endregion
 		#region Functions/Struct
+		static bool ExcludedProgram() {
+        	uint pid = 0;
+        	WinAPI.GetWindowThreadProcessId(Locales.ActiveWindow(), out pid);
+			var prc = Process.GetProcessById((int)pid);
+			if (MMain.mahou.ExcludedPrograms.Contains(prc.ProcessName + ".exe")) { 
+				Logging.Log(prc.ProcessName + ".exe->excluded");
+				return true;
+			}
+			return false;
+		}
 		static void CheckHotkey(Hotkey thishk, Hotkey actionhk, ref bool hkOK, Action hotkeyAction) {
 			if (!actionhk.Double)
 				hkOK = true;
