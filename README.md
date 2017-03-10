@@ -23,6 +23,10 @@ Mahou работает совершенно по-другому: в отличи
 
 ###### Возможности по версиям:
 
+**v2.1.0.4**<br/>
+- Добавлена поддержка [MCDS](https://github.com/BladeMight/MahouCaretDisplayServer), который добавляет возможность отображения подсказки языка в Sublime Text 3.
+- Добавлена функция прогамм-исключений.
+
 **v2.0.0.3**<br/>
 - Улучшено циклическое переключение раскладок. Теперь поддерживает приложения вроде WordPad и Skype(форма ввода сообщения).
 
@@ -150,6 +154,10 @@ Even selected text switches just between **selected** layouts, though if you lik
 4. Starting from v1.0.4.4 in Convert selection unrecognized text by all selected layout in settings (example: ♥) just rewrites.
 
 ###### By version features:
+
+**v2.1.0.4**<br/>
+- Added support for [MCDS](https://github.com/BladeMight/MahouCaretDisplayServer), which adds ability to display caret language tooltip in Sublime Text 3.
+- Added excluded programs function.
 
 **v2.0.0.3**<br/>
 - Improved layout switching by cycle. Now it supports apps like WordPad and Skype(message entry form).
