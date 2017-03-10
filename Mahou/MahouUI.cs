@@ -38,7 +38,7 @@ namespace Mahou {
 		public bool DiffColorsForLayouts, LDForCaretOnChange, LDForMouseOnChange, ScrollTip, AddOneSpace,
 					TrayFlags, SymIgnEnabled, TrayIconVisible, SnippetsEnabled, ChangeLayouByKey, EmulateLS,
 					RePress, BlockHKWithCtrl, blueIcon, SwitchBetweenLayouts, SelectedTextGetMoreTries, ReSelect,
-					ConvertSelectionLS, ConvertSelectionLSPlus;
+					ConvertSelectionLS, ConvertSelectionLSPlus, MCDSSupport;
 		/// <summary>
 		/// Temporary modifiers of hotkeys.
 		/// </summary>
@@ -80,8 +80,9 @@ namespace Mahou {
 		/// <summary>
 		/// Temporary positions of LangDisplays appearece.
 		/// </summary>
-		int LDMouseY_Pos_temp, LDCaretY_Pos_temp, LDMouseX_Pos_temp, LDCaretX_Pos_temp, 
-		 	  Layout1Y_Pos_temp, Layout2Y_Pos_temp, Layout1X_Pos_temp, Layout2X_Pos_temp;
+		public int LDMouseY_Pos_temp, LDCaretY_Pos_temp, LDMouseX_Pos_temp, LDCaretX_Pos_temp, 
+		 	  Layout1Y_Pos_temp, Layout2Y_Pos_temp, Layout1X_Pos_temp, Layout2X_Pos_temp,
+		 	  MCDS_Xpos_temp, MCDS_Ypos_temp, MCDS_TopIndent_temp, MCDS_BottomIndent_temp;
 		/// <summary>
 		/// Temporary sizes of LangDisplays appearece.
 		/// </summary>
@@ -96,7 +97,7 @@ namespace Mahou {
 		/// </summary>
 		string txt_Hotkey_tempModifiers;
 		/// <summary>
-		/// Temporary layouts.
+		/// Temporary layouts, etc..
 		/// </summary>
 		public string Layout1, Layout2, Layout3, Layout4, MainLayout1, MainLayout2, EmulateLSType, ExcludedPrograms;
 		/// <summary>
@@ -265,6 +266,11 @@ namespace Mahou {
 			Layout2Height_temp = MMain.MyConfs.ReadInt("Appearence", "Layout2Height");
 			Layout1Width_temp = MMain.MyConfs.ReadInt("Appearence", "Layout1Width");
 			Layout2Width_temp = MMain.MyConfs.ReadInt("Appearence", "Layout2Width");
+			// MCDS
+			MCDS_Xpos_temp = MMain.MyConfs.ReadInt("Appearence", "MCDS_Pos_X");
+			MCDS_Ypos_temp = MMain.MyConfs.ReadInt("Appearence", "MCDS_Pos_Y");
+			MCDS_TopIndent_temp = MMain.MyConfs.ReadInt("Appearence", "MCDS_Top");
+			MCDS_BottomIndent_temp = MMain.MyConfs.ReadInt("Appearence", "MCDS_Bottom");
 			#endregion
 		}
 		void SaveFromTemps() {
@@ -359,6 +365,11 @@ namespace Mahou {
 			MMain.MyConfs.Write("Appearence", "Layout2Height", Layout2Height_temp.ToString());
 			MMain.MyConfs.Write("Appearence", "Layout1Width", Layout1Width_temp.ToString());
 			MMain.MyConfs.Write("Appearence", "Layout2Width", Layout2Width_temp.ToString());
+			// MCDS
+			MMain.MyConfs.Write("Appearence", "MCDS_Pos_X", MCDS_Xpos_temp.ToString());
+			MMain.MyConfs.Write("Appearence", "MCDS_Pos_Y", MCDS_Ypos_temp.ToString());
+			MMain.MyConfs.Write("Appearence", "MCDS_Top", MCDS_TopIndent_temp.ToString());
+			MMain.MyConfs.Write("Appearence", "MCDS_Bottom", MCDS_BottomIndent_temp.ToString());
 			#endregion
 			Logging.Log("Saved from temps.");
 		}
@@ -381,6 +392,7 @@ namespace Mahou {
 			MMain.MyConfs.Write("Functions", "TrayFlags", chk_FlagsInTray.Checked.ToString());
 			MMain.MyConfs.Write("Functions", "CapsLockTimer", chk_CapsLockDTimer.Checked.ToString());
 			MMain.MyConfs.Write("Functions", "BlockMahouHotkeysWithCtrl", chk_BlockHKWithCtrl.Checked.ToString());
+			MMain.MyConfs.Write("Functions", "MCDServerSupport", chk_MCDS_support.Checked.ToString());
 			#endregion
 			#region Layouts
 			MMain.MyConfs.Write("Layouts", "SwitchBetweenLayouts", chk_SwitchBetweenLayouts.Checked.ToString());
@@ -462,6 +474,7 @@ namespace Mahou {
 			chk_CapsLockDTimer.Checked = MMain.MyConfs.ReadBool("Functions", "CapsLockTimer");
 			BlockHKWithCtrl = chk_BlockHKWithCtrl.Checked = MMain.MyConfs.ReadBool("Functions", "BlockMahouHotkeysWithCtrl");
 			SymIgnEnabled = MMain.MyConfs.ReadBool("Functions", "SymbolIgnoreModeEnabled");
+			MCDSSupport = chk_MCDS_support.Checked = MMain.MyConfs.ReadBool("Functions", "MCDServerSupport");
 			#endregion
 			#region Layouts
 			SwitchBetweenLayouts = chk_SwitchBetweenLayouts.Checked = MMain.MyConfs.ReadBool("Layouts", "SwitchBetweenLayouts");
@@ -826,7 +839,7 @@ namespace Mahou {
 				if (crtOnly.X != 77777 && crtOnly.Y != 77777) // 77777x77777 is null/none point
 					caretLangDisplay.ShowInactiveTopmost();
 				else if (caretLangDisplay.Visible)
-					caretLangDisplay.HideWnd();
+//					caretLangDisplay.HideWnd();
 				caretLangDisplay.RefreshLang();
 				}
 			};
@@ -1058,6 +1071,33 @@ namespace Mahou {
 		/// Calls UpdateLangDisplayControls() which updates lang display controls based on selected [layout appearence]. 
 		/// </summary>
 		void UpdateLangDisplayControlsSwitch() {
+			if (lsb_LangTTAppearenceForList.SelectedIndex < 4) {
+				chk_LangTTTransparentColor.Enabled = btn_LangTTFont.Enabled = btn_LangTTForegroundColor.Enabled = 
+					btn_LangTTBackgroundColor.Enabled = lbl_LangTTBackgroundColor.Enabled = lbl_LangTTForegroundColor.Enabled = true;
+				if (Lang == "English") {
+					grb_LangTTSize.Text = Languages.English.LDSize;
+					lbl_LangTTWidth.Text = Languages.English.LDWidth;
+					lbl_LangTTHeight.Text = Languages.English.LDHeight;
+				} else if (Lang == "Русский") {
+					grb_LangTTSize.Text = Languages.Russian.LDSize;
+					lbl_LangTTWidth.Text = Languages.Russian.LDWidth;
+					lbl_LangTTHeight.Text = Languages.Russian.LDHeight;
+				}
+			} else {
+				chk_LangTTTransparentColor.Enabled = btn_LangTTFont.Enabled = btn_LangTTForegroundColor.Enabled = 
+					btn_LangTTBackgroundColor.Enabled = lbl_LangTTBackgroundColor.Enabled = lbl_LangTTForegroundColor.Enabled = false;
+				if (Lang == "English") {
+						grb_LangTTSize.Text = Languages.English.LDPosition;
+						lbl_LangTTWidth.Text = Languages.English.MCDSTopIndent;
+						lbl_LangTTHeight.Text = Languages.English.MCDSBottomIndent;
+					} else if (Lang == "Русский") {
+						grb_LangTTSize.Text = Languages.Russian.LDPosition;
+						lbl_LangTTWidth.Text = Languages.Russian.MCDSTopIndent;
+						lbl_LangTTHeight.Text = Languages.Russian.MCDSBottomIndent;
+					}
+			}
+			lbl_LangTTWidth.Text += ":";
+			lbl_LangTTHeight.Text += ":";
 			switch (lsb_LangTTAppearenceForList.SelectedIndex) {
 				case 0:
 					UpdateLangDisplayControls(Layout1Fore_temp, Layout1Back_temp, Layout1TransparentBack_temp,
@@ -1078,6 +1118,11 @@ namespace Mahou {
 					UpdateLangDisplayControls(LDCaretFore_temp, LDCaretBack_temp, LDCaretTransparentBack_temp,
 					                          LDCaretFont_temp, LDCaretX_Pos_temp, LDCaretY_Pos_temp, LDCaretWidth_temp,
 					                          LDCaretHeight_temp);
+					break;
+				case 4:
+					UpdateLangDisplayControls(LDCaretFore_temp, LDCaretBack_temp, LDCaretTransparentBack_temp,
+					                          LDCaretFont_temp, MCDS_Xpos_temp, MCDS_Ypos_temp, MCDS_TopIndent_temp,
+					                          MCDS_BottomIndent_temp);
 					break;
 			}
 		}
@@ -1147,6 +1192,12 @@ namespace Mahou {
 					LDCaretWidth_temp = (int)nud_LangTTWidth.Value;
 					LDCaretHeight_temp = (int)nud_LangTTHeight.Value;
 					LDCaretTransparentBack_temp = chk_LangTTTransparentColor.Checked;
+					break;
+				case 4:
+					MCDS_Xpos_temp = (int)nud_LangTTPositionX.Value;
+					MCDS_Ypos_temp = (int)nud_LangTTPositionY.Value;
+					MCDS_TopIndent_temp = (int)nud_LangTTWidth.Value;
+					MCDS_BottomIndent_temp = (int)nud_LangTTHeight.Value;
 					break;
 			}
 		}
@@ -1487,6 +1538,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				tab_hotkeys.Text = Languages.Russian.tab_Hotkeys;
 				tab_updates.Text = Languages.Russian.tab_Updates;
 				tab_about.Text = Languages.Russian.tab_About;
+				lnk_plugin.Text = "ST3 " + Languages.Russian.Plugin;
 				#endregion
 				#region Functions
 				chk_AutoStart.Text = Languages.Russian.AutoStart;
@@ -1502,6 +1554,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				chk_CapsLockDTimer.Text = Languages.Russian.CapsTimer;
 				chk_FlagsInTray.Text = Languages.Russian.ContryFlags;
 				chk_BlockHKWithCtrl.Text = Languages.Russian.BlockCtrlHKs;
+				chk_MCDS_support.Text = Languages.Russian.MCDSSupport;
 				#endregion
 				#region Layouts
 				chk_SwitchBetweenLayouts.Text = Languages.Russian.SwitchBetween+":";
@@ -1531,7 +1584,8 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				                                           	Languages.Russian.Layout + " 1",
 				                                           	Languages.Russian.Layout + " 2",
 				                                           	Languages.Russian.LDAroundMouse,
-				                                           	Languages.Russian.LDAroundCaret
+				                                           	Languages.Russian.LDAroundCaret,
+				                                           	"MCDS"
 				                                           });
 				#endregion
 				#region Timings
@@ -1615,6 +1669,8 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				chk_CapsLockDTimer.Text = Languages.English.CapsTimer;
 				chk_FlagsInTray.Text = Languages.English.ContryFlags;
 				chk_BlockHKWithCtrl.Text = Languages.English.BlockCtrlHKs;
+				chk_MCDS_support.Text = Languages.English.MCDSSupport;
+				lnk_plugin.Text = "ST3 " + Languages.English.Plugin;
 				#endregion
 				#region Layouts
 				chk_SwitchBetweenLayouts.Text = Languages.English.SwitchBetween+":";
@@ -1644,7 +1700,8 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				                                           	Languages.English.Layout + " 1",
 				                                           	Languages.English.Layout + " 2",
 				                                           	Languages.English.LDAroundMouse,
-				                                           	Languages.English.LDAroundCaret
+				                                           	Languages.English.LDAroundCaret,
+				                                           	"MCDS"
 				                                           });
 				#endregion
 				#region Timings
@@ -1740,6 +1797,11 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 		void Lnk_EmailLinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
 			try {
 				Process.Start("mailto:BladeMight@gmail.com");
+			} catch (Exception ex) { Logging.Log("No program to open mailto: opening skiped. Details:\r\n"+ex.Message + "\r\n" + ex.StackTrace, 2); }
+		}
+		void Lnk_pluginLinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+			try {
+				Process.Start("http://github.com/BladeMight/MahouCaretDisplayServer");
 			} catch (Exception ex) { Logging.Log("No program to open http:// opening skiped. Details:\r\n"+ex.Message + "\r\n" + ex.StackTrace, 2); }
 		}
 		#endregion
@@ -2120,6 +2182,14 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				HelpMeUnderstand.Show(Languages.English.TT_ExcludedPrograms, lbl);
 			else if (Lang == "Русский")
 				HelpMeUnderstand.Show(Languages.Russian.TT_ExcludedPrograms, lbl);
+		}
+		void Chk_MCDS_supportMouseHover(object sender, EventArgs e) {
+			var chk = sender as CheckBox;
+			HelpMeUnderstand.ToolTipTitle = chk.Text;
+			if (Lang == "English")
+				HelpMeUnderstand.Show(Languages.English.TT_MCDSSupport, chk);
+			else if (Lang == "Русский")
+				HelpMeUnderstand.Show(Languages.Russian.TT_MCDSSupport, chk);
 		}
 		#endregion
 		#endregion

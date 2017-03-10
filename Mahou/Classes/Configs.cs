@@ -38,6 +38,7 @@ namespace Mahou
             CheckBool("Functions", "TrayFlags", "true");
             CheckBool("Functions", "BlockMahouHotkeysWithCtrl", "false");
             CheckBool("Functions", "SymbolIgnoreModeEnabled", "false");
+            CheckBool("Functions", "MCDServerSupport", "false");
             #endregion
 			#region Layouts section
 			CheckBool("Layouts", "SwitchBetweenLayouts", "true");
@@ -99,6 +100,10 @@ namespace Mahou
 			CheckInt("Appearence", "CaretLTWidth", "26");
 			CheckInt("Appearence", "CaretLTPositionX", "8");
 			CheckInt("Appearence", "CaretLTPositionY", "12");
+			CheckInt("Appearence", "MCDS_Pos_X", "58");
+			CheckInt("Appearence", "MCDS_Pos_Y", "13");
+			CheckInt("Appearence", "MCDS_Top", "60");
+			CheckInt("Appearence", "MCDS_Bottom", "45");
 			#endregion
 			#region Timings section
 			CheckInt("Timings", "LangTooltipForMouseRefreshRate", "25");

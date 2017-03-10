@@ -126,7 +126,8 @@ namespace Mahou
 		private System.Windows.Forms.Label lbl_HotkeyHelp;
 		private System.Windows.Forms.Label lbl_ExcludedPrograms;
 		private System.Windows.Forms.TextBox txt_ExcludedPrograms;
-		
+		private System.Windows.Forms.LinkLabel lnk_plugin;
+		private System.Windows.Forms.CheckBox chk_MCDS_support;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -145,12 +146,13 @@ namespace Mahou
 		/// This method is required for Windows Forms designer support.
 		/// Do not change the method contents inside the source code editor. The Forms designer might
 		/// not be able to load this method if it was changed manually.
-		/// </summary>
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
 			this.tabs = new System.Windows.Forms.TabControl();
 			this.tab_functions = new System.Windows.Forms.TabPage();
+			this.lnk_plugin = new System.Windows.Forms.LinkLabel();
+			this.chk_MCDS_support = new System.Windows.Forms.CheckBox();
 			this.chk_BlockHKWithCtrl = new System.Windows.Forms.CheckBox();
 			this.chk_FlagsInTray = new System.Windows.Forms.CheckBox();
 			this.chk_CapsLockDTimer = new System.Windows.Forms.CheckBox();
@@ -215,6 +217,8 @@ namespace Mahou
 			this.chk_LangTooltipCaret = new System.Windows.Forms.CheckBox();
 			this.chk_LangTooltipMouse = new System.Windows.Forms.CheckBox();
 			this.tab_timings = new System.Windows.Forms.TabPage();
+			this.lbl_ExcludedPrograms = new System.Windows.Forms.Label();
+			this.txt_ExcludedPrograms = new System.Windows.Forms.TextBox();
 			this.nud_SelectedTextGetTriesCount = new System.Windows.Forms.NumericUpDown();
 			this.chk_SelectedTextGetMoreTries = new System.Windows.Forms.CheckBox();
 			this.nud_CapsLockRefreshRate = new System.Windows.Forms.NumericUpDown();
@@ -266,8 +270,6 @@ namespace Mahou
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
 			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
-			this.lbl_ExcludedPrograms = new System.Windows.Forms.Label();
-			this.txt_ExcludedPrograms = new System.Windows.Forms.TextBox();
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -317,6 +319,8 @@ namespace Mahou
 			// 
 			// tab_functions
 			// 
+			this.tab_functions.Controls.Add(this.lnk_plugin);
+			this.tab_functions.Controls.Add(this.chk_MCDS_support);
 			this.tab_functions.Controls.Add(this.chk_BlockHKWithCtrl);
 			this.tab_functions.Controls.Add(this.chk_FlagsInTray);
 			this.tab_functions.Controls.Add(this.chk_CapsLockDTimer);
@@ -337,6 +341,28 @@ namespace Mahou
 			this.tab_functions.TabIndex = 0;
 			this.tab_functions.Text = "Functions";
 			this.tab_functions.UseVisualStyleBackColor = true;
+			// 
+			// lnk_plugin
+			// 
+			this.lnk_plugin.AutoSize = true;
+			this.lnk_plugin.Location = new System.Drawing.Point(493, 92);
+			this.lnk_plugin.Name = "lnk_plugin";
+			this.lnk_plugin.Size = new System.Drawing.Size(63, 15);
+			this.lnk_plugin.TabIndex = 14;
+			this.lnk_plugin.TabStop = true;
+			this.lnk_plugin.Text = "ST3 plugin";
+			this.lnk_plugin.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Lnk_pluginLinkClicked);
+			// 
+			// chk_MCDS_support
+			// 
+			this.chk_MCDS_support.AutoSize = true;
+			this.chk_MCDS_support.Location = new System.Drawing.Point(302, 91);
+			this.chk_MCDS_support.Name = "chk_MCDS_support";
+			this.chk_MCDS_support.Size = new System.Drawing.Size(144, 19);
+			this.chk_MCDS_support.TabIndex = 13;
+			this.chk_MCDS_support.Text = "Enable MCDS support.";
+			this.chk_MCDS_support.UseVisualStyleBackColor = true;
+			this.chk_MCDS_support.MouseHover += new System.EventHandler(this.Chk_MCDS_supportMouseHover);
 			// 
 			// chk_BlockHKWithCtrl
 			// 
@@ -1081,6 +1107,26 @@ namespace Mahou
 			this.tab_timings.Text = "Timings";
 			this.tab_timings.UseVisualStyleBackColor = true;
 			// 
+			// lbl_ExcludedPrograms
+			// 
+			this.lbl_ExcludedPrograms.AutoSize = true;
+			this.lbl_ExcludedPrograms.Location = new System.Drawing.Point(218, 204);
+			this.lbl_ExcludedPrograms.Name = "lbl_ExcludedPrograms";
+			this.lbl_ExcludedPrograms.Size = new System.Drawing.Size(111, 15);
+			this.lbl_ExcludedPrograms.TabIndex = 22;
+			this.lbl_ExcludedPrograms.Text = "Excluded programs:";
+			this.lbl_ExcludedPrograms.MouseHover += new System.EventHandler(this.ExcludedProgramsMouseHover);
+			// 
+			// txt_ExcludedPrograms
+			// 
+			this.txt_ExcludedPrograms.Location = new System.Drawing.Point(8, 225);
+			this.txt_ExcludedPrograms.Multiline = true;
+			this.txt_ExcludedPrograms.Name = "txt_ExcludedPrograms";
+			this.txt_ExcludedPrograms.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+			this.txt_ExcludedPrograms.Size = new System.Drawing.Size(541, 42);
+			this.txt_ExcludedPrograms.TabIndex = 21;
+			this.txt_ExcludedPrograms.Text = "LA.exe SomeProgram.exe";
+			// 
 			// nud_SelectedTextGetTriesCount
 			// 
 			this.nud_SelectedTextGetTriesCount.Location = new System.Drawing.Point(429, 181);
@@ -1659,26 +1705,6 @@ namespace Mahou
 			this.HelpMeUnderstand.ReshowDelay = 500;
 			this.HelpMeUnderstand.ShowAlways = true;
 			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-			// 
-			// lbl_ExcludedPrograms
-			// 
-			this.lbl_ExcludedPrograms.AutoSize = true;
-			this.lbl_ExcludedPrograms.Location = new System.Drawing.Point(218, 204);
-			this.lbl_ExcludedPrograms.Name = "lbl_ExcludedPrograms";
-			this.lbl_ExcludedPrograms.Size = new System.Drawing.Size(111, 15);
-			this.lbl_ExcludedPrograms.TabIndex = 22;
-			this.lbl_ExcludedPrograms.Text = "Excluded programs:";
-			this.lbl_ExcludedPrograms.MouseHover += new System.EventHandler(this.ExcludedProgramsMouseHover);
-			// 
-			// txt_ExcludedPrograms
-			// 
-			this.txt_ExcludedPrograms.Location = new System.Drawing.Point(8, 225);
-			this.txt_ExcludedPrograms.Multiline = true;
-			this.txt_ExcludedPrograms.Name = "txt_ExcludedPrograms";
-			this.txt_ExcludedPrograms.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.txt_ExcludedPrograms.Size = new System.Drawing.Size(541, 42);
-			this.txt_ExcludedPrograms.TabIndex = 21;
-			this.txt_ExcludedPrograms.Text = "LA.exe SomeProgram.exe";
 			// 
 			// MahouUI
 			// 

@@ -27,6 +27,7 @@ namespace Mahou.Languages
 		public static readonly string CapsTimer = "Activate Caps Lock disabler timer.";
 		public static readonly string ContryFlags = "Display country flags in tray icon.";
 		public static readonly string BlockCtrlHKs = "Block Mahou hotkeys with Ctrl.";
+		public static readonly string MCDSSupport = "Enable MCDS support.";
 		#endregion
 		#region Layouts
 		public static readonly string SwitchBetween = "Switch between layouts";
@@ -51,6 +52,8 @@ namespace Mahou.Languages
 		public static readonly string LDPosition = "Position";
 		public static readonly string LDWidth = "Width";
 		public static readonly string LDHeight = "Height";
+		public static readonly string MCDSTopIndent = "Top";
+		public static readonly string MCDSBottomIndent = "Bottom";
 		#endregion
 		#region Timings
 		public static readonly string LDForMouseRefreshRate = "Language tooltip around mouse refresh rate(ms):";
@@ -113,6 +116,7 @@ namespace Mahou.Languages
 		public static readonly string Key_Left = "Left";
 		public static readonly string Key_Right = "Right";
 		public static readonly string Layouts = "Layouts";
+		public static readonly string Plugin = "plugin";
 		public static readonly string Layout = "Layout";
 		public static readonly string Hotkey = "Hotkey";
 		public static readonly string UpdateFound = "New version avaible!";
@@ -153,6 +157,7 @@ namespace Mahou.Languages
 										"WON'T WORK IF YOU HAVE MORE THAN 2 LAYOUTS AND FUNCTION \"Switch between layouts\" disabled!";
 		public static readonly string TT_ConvertWords= "Allow to convert specific last word count by pressing hotkey and then 0-9 (0 = 10) on keyboard.";
 		public static readonly string TT_ExcludedPrograms = "Programs(excluded) in which convert hotkeys won't work.\nSeperators - any symbols including a space..";
+		public static readonly string TT_MCDSSupport = "Add ability to display language tooltip around caret in Sublime Text 3.\nFor it to work yout need to install plugin, link on right.\nSettings avaible in appearence tab:\nTop: Your ST3 titlebar + tab bar height,\nBottom: Your y pixels to ST3 console edit box(ctrl+`).\nFor different windows/themes settings will be different!";
 		#endregion
 	}
 	/// <summary>
@@ -184,6 +189,7 @@ namespace Mahou.Languages
 		public static readonly string CapsTimer = "Включит таймер отключатель Caps-Lock.";
 		public static readonly string ContryFlags = "Отображать флаги стран в трее.";
 		public static readonly string BlockCtrlHKs = "Блокировать горячие клавиши Mahou содержащие Ctrl.";
+		public static readonly string MCDSSupport = "Включить поддержку MCDS.";
 		#endregion
 		#region Layouts
 		public static readonly string SwitchBetween = "Переключать между раскладками";
@@ -208,6 +214,8 @@ namespace Mahou.Languages
 		public static readonly string LDPosition = "Позиция";
 		public static readonly string LDWidth = "Ширина";
 		public static readonly string LDHeight = "Высота";
+		public static readonly string MCDSTopIndent = "Сверху";
+		public static readonly string MCDSBottomIndent = "Снизу";
 		#endregion
 		#region Timings
 		public static readonly string LDForMouseRefreshRate = "Скорость обновления подсказки языка возле мыши(мс):";
@@ -272,6 +280,7 @@ namespace Mahou.Languages
 		public static readonly string Key_Right = "Правый";
 		public static readonly string Layouts = "Раскладки";
 		public static readonly string Layout = "Раскладка";
+		public static readonly string Plugin = "плагин";
 		public static readonly string Hotkey = "Горячая клавиша";
 		public static readonly string UpdateFound = "Новая версия доступна!";
 		public static readonly string UpdateComplete = "Mahou успешно обновлен!";
@@ -312,6 +321,7 @@ namespace Mahou.Languages
 										"НЕ БУДЕТ РАБОТАТЬ если у Вас больше 2 раскладок и функция \"Преключать между раскладками\" выключена!";
 		public static readonly string TT_ConvertWords = "Дает возможность конвертировать специфическое количество последних слов, после горячей клавиши нажмите 0-9(0 = 10) на клавиатуре.";				
 		public static readonly string TT_ExcludedPrograms = "Программы(исключения) в которых горячие клавиши Конвертирования не будут работать.\nРазделители - любые символы включая пробел.";
+		public static readonly string TT_MCDSSupport = "Дает возможность отображения подсказки текущего языка возле каретки в Sublime Text 3.\nДля его работы нужно установить плагин, ссылка с права.\nНастройки во вкладке Вид.\nСверху: Высота заголовка окна + высота панели вкладок ST3,\nСнизу: Ваши y пиксели от конца окна до формы ввода консоли ST3(ctrl+`).\nДля разных Windows/Тем будут нужны разные настройки!";
 		#endregion
 	}
 }
