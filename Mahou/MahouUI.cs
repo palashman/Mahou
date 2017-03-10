@@ -1442,12 +1442,14 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 					var Title = Regex.Match(data,
 						            "<h1 class=\"release-title\">\n.*<a href=\".*\">(.*)</a>").Groups[1].Value;
 					var Description = Regex.Replace(Regex.Match(data,
-                                                                  //These ↓↓↓↓↓↓↓↓ &&&  ↓↓↓↓↓↓ spaces looks unsafe, but really they works!
-						                  "<div class=\"markdown-body\">\n        (.*)\n      </div>",
+                                           //These looks unsafe, but really they works!
+						                  "<div class=\"markdown-body\">\n\\s+(.+?)</div>",
 						                  RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value, "<[^>]*>", "");
 					var Version = Regex.Match(data, "<span class=\"css-truncate-target\">(.*)</span>").Groups[1].Value;
 					var Link = "https://github.com" + Regex.Match(data,
 						           "<ul class=\"release-downloads\">\n.*<li>\n.+href=\"(/.*\\.\\w{3})").Groups[1].Value;
+					Debug.WriteLine(Title);
+					Debug.WriteLine(Description);
 					Info.Add(Title);
 					Info.Add(Regex.Replace(Description, "\n", "\r\n")); // Regex needed to properly display new lines.
 					Info.Add(Version);
