@@ -10,6 +10,7 @@ namespace Mahou
 	{
 		public static Point _CaretST3 = new Point(0,0);
 		public static int SidebarWidth = 0, viewID = 0;
+		public static uint lastAttachedThread = 0;
 		
 		public static int GetMCDSValue(string type, string input) {
 			return Int32.Parse(Regex.Match(input, type + @"->(\d+)").Groups[1].Value);
@@ -50,23 +51,27 @@ namespace Mahou
 			string _clsNMfw = "";
 			Logging.Log("_c HWND: [" +MMain.mahou.Handle+ "], _c ThrId: ["+_cThr_id+"], "+"_fw HWND: ["+_fw+"]"+", _fw ThrId: "+_fwThr_id+".");
 			if (_fwThr_id != _cThr_id) {
-				if (WinAPI.AttachThreadInput(_fwThr_id, _cThr_id, true)) {
-					_fwFCS = WinAPI.GetFocus();
-					WinAPI.GetClassName(_fw, _clsNMb, _clsNMb.Capacity);
-					_clsNMfw = _clsNMb.ToString();
-					if (_fwFCS != IntPtr.Zero && _fwFCS != _fw) {
-						Logging.Log("_fcs: ["+_fwFCS+"]."+"_fw classname = ["+_clsNMb+"].");
-						WinAPI.GetClassName(_fwFCS, _clsNMb, _clsNMb.Capacity);
-						Logging.Log("_fcs classname = ["+_clsNMb+"].");
-						WinAPI.GetWindowRect(_fwFCS, out _fwFCS_Re);
-						WinAPI.GetCaretPos(out _pntCR);
-					} else {
-						WinAPI.GetCaretPos(out _pntCR);
-						WinAPI.GetWindowRect(_fw, out _fwFCS_Re);
-					}
-					WinAPI.AttachThreadInput(_fwThr_id, _cThr_id, false);
-				} else
+				if (lastAttachedThread != _fwThr_id && lastAttachedThread != 0) {
+					WinAPI.AttachThreadInput(lastAttachedThread, _cThr_id, false);
+					Logging.Log("Detaching from thread: ["+lastAttachedThread+"].");
+					Logging.Log("Attaching to thread: ["+_cThr_id+"].");
+				}
+				if (!WinAPI.AttachThreadInput(_fwThr_id, _cThr_id, true))
 					return LuckyNone;
+				_fwFCS = WinAPI.GetFocus();
+				WinAPI.GetClassName(_fw, _clsNMb, _clsNMb.Capacity);
+				_clsNMfw = _clsNMb.ToString();
+				if (_fwFCS != IntPtr.Zero && _fwFCS != _fw) {
+					Logging.Log("_fcs: ["+_fwFCS+"]."+"_fw classname = ["+_clsNMb+"].");
+					WinAPI.GetClassName(_fwFCS, _clsNMb, _clsNMb.Capacity);
+					Logging.Log("_fcs classname = ["+_clsNMb+"].");
+					WinAPI.GetWindowRect(_fwFCS, out _fwFCS_Re);
+					WinAPI.GetCaretPos(out _pntCR);
+				} else {
+					WinAPI.GetCaretPos(out _pntCR);
+					WinAPI.GetWindowRect(_fw, out _fwFCS_Re);
+				}
+				lastAttachedThread = _fwThr_id;
 				if (_clsNMfw == "PX_WINDOW_CLASS" && MMain.mahou.MCDSSupport) {
 					System.Threading.Tasks.Task.Factory.StartNew(GetDataFromMCDS);
 					var CaretToScreen = new Point(_fwFCS_Re.Left, _fwFCS_Re.Top);
