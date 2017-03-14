@@ -132,6 +132,15 @@ Mahou находится под GPL v2+.
 Если Вы нашли ошибку напишите её [здесь](https://github.com/BladeMight/Mahou/issues)
 или свяжитесь со мной через [email](mailto:BladeMight@gmail.com) (можете спрашивать о чем угодно)
 
+### Поддержать проект материально
+
+Если Вы считаете что хотите помочь материально, буду очень благодарен :) 
+
+Кошельки:
+
+- Яндекс.Деньги: 410015057363201
+- Webmoney WMZ: Z407834572196
+
 # English :us:
 
 ![](http://i.piccy.info/i9/29fa819a849fa70f38ddfcf9c29d1c99/1480349941/6018/1094353/Mahou.jpg)
@@ -262,3 +271,12 @@ Mahou is under GPL v2+
 ### Contact
 If you found an issue write [here](https://github.com/BladeMight/Mahou/issues)
 or contact me though [email](mailto:BladeMight@gmail.com) (You can ask anything)
+
+### Donate
+
+If you think that you want to help financially, I will be very grateful :)
+
+Wallets:
+
+- Yandex.Money: 410015057363201
+- Webmoney WMZ: Z407834572196
