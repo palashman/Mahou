@@ -44,19 +44,19 @@ namespace Mahou {
 		/// </summary>
 		string Mainhk_tempMods, ExitHk_tempMods, HKCLast_tempMods, HKCSelection_tempMods, 
 			    HKCLine_tempMods, HKSymIgn_tempMods, HKConMorWor_tempMods, HKTitleCase_tempMods,
- 				HKRandomCase_tempMods, HKSwapCase_tempMods, HKTransliteration_tempMods;
+ 				HKRandomCase_tempMods, HKSwapCase_tempMods, HKTransliteration_tempMods, HKRestart_tempMods;
 		/// <summary>
 		/// Temporary key of hotkeys.
 		/// </summary>
 		int Mainhk_tempKey, ExitHk_tempKey, HKCLast_tempKey, HKCSelection_tempKey,
 			    HKCLine_tempKey, HKSymIgn_tempKey, HKConMorWor_tempKey, HKTitleCase_tempKey,
- 				HKRandomCase_tempKey, HKSwapCase_tempKey, HKTransliteration_tempKey;
+ 				HKRandomCase_tempKey, HKSwapCase_tempKey, HKTransliteration_tempKey, HKRestart_tempKey;
 		/// <summary>
 		/// Temporary Enabled of hotkeys.
 		/// </summary>
 		bool Mainhk_tempEnabled, ExitHk_tempEnabled, HKCLast_tempEnabled, HKCSelection_tempEnabled,
 			    HKCLine_tempEnabled, HKSymIgn_tempEnabled, HKConMorWor_tempEnabled, HKTitleCase_tempEnabled,
- 				HKRandomCase_tempEnabled, HKSwapCase_tempEnabled, HKTransliteration_tempEnabled;
+ 				HKRandomCase_tempEnabled, HKSwapCase_tempEnabled, HKTransliteration_tempEnabled, HKRestart_tempEnabled;
 		/// <summary>
 		/// Temporary Double of hotkeys.
 		/// </summary>
@@ -134,9 +134,7 @@ namespace Mahou {
 		    	nud_ScrollLockRefreshRate.Minimum = nud_TrayFlagRefreshRate.Minimum = 1;
 			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version;
 			nud_LangTTPositionX.Minimum = nud_LangTTPositionY.Minimum = -100;
-			//↓ Dummy(none) hotkey, makes it possible WndProc to handle messages at startup
-			//↓ when form isn't was shown. 
-			WinAPI.RegisterHotKey(Handle, 0xffff ^ 0xffff, 0, 0); //HWND must be this form handle
+			RegisterRestartHotkey();
 			RefreshAllIcons();
 			//Background startup check for updates
 			if (MMain.MyConfs.ReadBool("Functions", "StartupUpdatesCheck")) {
@@ -169,6 +167,33 @@ namespace Mahou {
 				ToggleVisibility();
         		Logging.Log("Another instance detected, closing it.");
 			}
+			if (m.Msg == WinAPI.WM_HOTKEY && m.WParam.ToInt32() == 7) {
+				int MahouPID = Process.GetCurrentProcess().Id;
+				MMain.mahou.icon.Hide();
+				//Batch script to restart Mahou.
+				var restartMahou =
+					@"@ECHO OFF
+REM You should never see this file, if you are it means during restarting Mahou something went wrong. 
+chcp 65001
+SET MAHOUDIR=" + nPath + @"
+TASKKILL /PID " + MahouPID + @" /F
+TASKKILL /IM Mahou.exe /F
+START """" ""%MAHOUDIR%Mahou.exe""
+DEL %MAHOUDIR%RestartMahou.cmd";
+				Logging.Log("Writing restart script.");
+				File.WriteAllText(Path.Combine(new string[] {
+					nPath,
+					"RestartMahou.cmd"
+				}), restartMahou);
+				var piRestartMahou = new ProcessStartInfo();
+				piRestartMahou.FileName = Path.Combine(new string[] {
+					nPath,
+					"RestartMahou.cmd"
+				});
+				piRestartMahou.WindowStyle = ProcessWindowStyle.Hidden;
+				Logging.Log("Starting restart script.");
+				Process.Start(piRestartMahou);
+			}
 			base.WndProc(ref m);
 		}
 		/// <summary>
@@ -189,6 +214,7 @@ namespace Mahou {
 			HKSwapCase_tempEnabled = MMain.MyConfs.ReadBool("Hotkeys", "SelectedTextToSwapCase_Enabled");
 			HKTransliteration_tempEnabled = MMain.MyConfs.ReadBool("Hotkeys", "SelectedTextTransliteration_Enabled");
 			ExitHk_tempEnabled = MMain.MyConfs.ReadBool("Hotkeys", "ExitMahou_Enabled");
+			HKRestart_tempEnabled = MMain.MyConfs.ReadBool("Hotkeys", "RestartMahou_Enabled");
 			#endregion
 			#region Hotkey doubles
 			Mainhk_tempDouble = MMain.MyConfs.ReadBool("Hotkeys", "ToggleMainWindow_Double");
@@ -215,6 +241,7 @@ namespace Mahou {
 			HKSwapCase_tempMods = MMain.MyConfs.Read("Hotkeys", "SelectedTextToSwapCase_Modifiers");
 			HKTransliteration_tempMods = MMain.MyConfs.Read("Hotkeys", "SelectedTextTransliteration_Modifiers");
 			ExitHk_tempMods = MMain.MyConfs.Read("Hotkeys", "ExitMahou_Modifiers");
+			HKRestart_tempMods = MMain.MyConfs.Read("Hotkeys", "RestartMahou_Modifiers");
 			#endregion
 			#region Hotkey keys
 			Mainhk_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "ToggleMainWindow_Key");
@@ -228,6 +255,7 @@ namespace Mahou {
 			HKSwapCase_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "SelectedTextToSwapCase_Key");
 			HKTransliteration_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "SelectedTextTransliteration_Key");
 			ExitHk_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "ExitMahou_Key");
+			HKRestart_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "RestartMahou_Key");
 			#endregion
 			#region Lang Display colors
 			LDMouseFore_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "MouseLTForeColor"));
@@ -287,6 +315,7 @@ namespace Mahou {
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextToSwapCase_Enabled", HKSwapCase_tempEnabled.ToString());
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextTransliteration_Enabled", HKTransliteration_tempEnabled.ToString());
 			MMain.MyConfs.Write("Hotkeys", "ExitMahou_Enabled", ExitHk_tempEnabled.ToString());
+			MMain.MyConfs.Write("Hotkeys", "RestartMahou_Enabled", HKRestart_tempEnabled.ToString());
 			#endregion
 			#region Hotkey doubles
 			MMain.MyConfs.Write("Hotkeys", "ToggleMainWindow_Double", Mainhk_tempDouble.ToString());
@@ -313,6 +342,7 @@ namespace Mahou {
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextToSwapCase_Modifiers", HKSwapCase_tempMods);
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextTransliteration_Modifiers", HKTransliteration_tempMods);
 			MMain.MyConfs.Write("Hotkeys", "ExitMahou_Modifiers", ExitHk_tempMods);
+			MMain.MyConfs.Write("Hotkeys", "RestartMahou_Modifiers", HKRestart_tempMods);
 			#endregion
 			#region Hotkey keys
 			MMain.MyConfs.Write("Hotkeys", "ToggleMainWindow_Key", Mainhk_tempKey.ToString());
@@ -326,6 +356,7 @@ namespace Mahou {
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextToSwapCase_Key", HKSwapCase_tempKey.ToString());
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextTransliteration_Key", HKTransliteration_tempKey.ToString());
 			MMain.MyConfs.Write("Hotkeys", "ExitMahou_Key", ExitHk_tempKey.ToString());
+			MMain.MyConfs.Write("Hotkeys", "RestartMahou_Key", HKRestart_tempKey.ToString());
 			#endregion
 			UpdateLangDisplayTemps();
 			#region Lang Display colors
@@ -529,6 +560,9 @@ namespace Mahou {
 			RefreshLanguage();
 			ToggleDependentControlsEnabledState();
 			RefreshAllIcons();
+			// Unregister Restart Hotkey
+			WinAPI.UnregisterHotKey(Handle, 7);
+			RegisterRestartHotkey();
 			Memory.Flush();
 			Logging.Log("All configurations loaded.");
 		}
@@ -609,6 +643,7 @@ namespace Mahou {
 			txt_Snippets.Enabled = chk_Snippets.Checked;
 			// Hotkeys tab
 			chk_DoubleHotkey.Enabled = chk_WinInHotKey.Enabled = txt_Hotkey.Enabled = chk_HotKeyEnabled.Checked;
+			chk_DoubleHotkey.Enabled = lsb_Hotkeys.SelectedIndex != 11;
 			// Timings tab
 			nud_SelectedTextGetTriesCount.Enabled = chk_SelectedTextGetMoreTries.Checked;
 			lbl_ScrollLockRefreshRate.Enabled = nud_ScrollLockRefreshRate.Enabled = chk_HighlightScroll.Checked;
@@ -999,6 +1034,21 @@ namespace Mahou {
 			icon.Hide();
 			Application.Exit();
 		}
+		public void RegisterRestartHotkey() {
+			Debug.WriteLine(HKRestart_tempMods);
+			uint mods = 0;
+			if (HKRestart_tempMods.Contains("Shift")) 
+				mods += WinAPI.MOD_SHIFT;
+			if (HKRestart_tempMods.Contains("Alt")) 
+				mods += WinAPI.MOD_ALT;
+			if (HKRestart_tempMods.Contains("Control")) 
+				mods += WinAPI.MOD_CONTROL;
+			if (HKRestart_tempMods.Contains("Win")) 
+				mods += WinAPI.MOD_WIN;
+//			int hash = HKRestart_tempKey.GetHashCode() ^ mods.GetHashCode();
+			if (HKRestart_tempEnabled)
+				WinAPI.RegisterHotKey(Handle, 7, mods, HKRestart_tempKey); 
+		}
 		/// <summary>
 		/// Converts some special keys to readable string.
 		/// </summary>
@@ -1205,6 +1255,7 @@ namespace Mahou {
 		/// Calls UpdateHotkeyControls() which updates hotkey controls based on selected [layout appearence]. 
 		/// </summary>
 		void UpdateHotkeyControlsSwitch() {
+			chk_DoubleHotkey.Enabled = lsb_Hotkeys.SelectedIndex != 11;
 			switch(lsb_Hotkeys.SelectedIndex) {
 				case 0:
 					UpdateHotkeyControls(Mainhk_tempEnabled, Mainhk_tempDouble, Mainhk_tempMods, Mainhk_tempKey);
@@ -1238,6 +1289,9 @@ namespace Mahou {
 					break;
 				case 10:
 					UpdateHotkeyControls(ExitHk_tempEnabled, ExitHk_tempDouble, ExitHk_tempMods, ExitHk_tempKey);
+					break;
+				case 11:
+					UpdateHotkeyControls(HKRestart_tempEnabled, false, HKRestart_tempMods, HKRestart_tempKey);
 					break;
 			}
 		}
@@ -1327,6 +1381,11 @@ namespace Mahou {
 					ExitHk_tempMods = (chk_WinInHotKey.Checked ? "Win + " : "") + txt_Hotkey_tempModifiers;
 					ExitHk_tempKey = txt_Hotkey_tempKey;
 					break;
+				case 11:
+					HKRestart_tempEnabled = chk_HotKeyEnabled.Checked;
+					HKRestart_tempMods = (chk_WinInHotKey.Checked ? "Win + " : "") + txt_Hotkey_tempModifiers;
+					HKRestart_tempKey = txt_Hotkey_tempKey;
+					break;
 			}
 		}
 		/// <summary>
@@ -1356,6 +1415,8 @@ namespace Mahou {
 					return HKTransliteration_tempDouble;
 				case 10:
 					return ExitHk_tempDouble;
+				case 11:
+					return false;
 			}
 			return false;
 		}
@@ -1370,7 +1431,6 @@ namespace Mahou {
 				int MahouPID = Process.GetCurrentProcess().Id;
 				//Downloaded archive
 				var arch = Regex.Match(UpdInfo[3], @"[^\\\/]+$").Groups[0].Value;
-				flagsCheck.Stop();
 				//This prevent Mahou icon from stucking in tray
 				MMain.mahou.icon.Hide();
 				//Batch script to create other script o.0,
@@ -1619,7 +1679,8 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				                           	Languages.Russian.SelectedToRandomCase,
 				                           	Languages.Russian.SelectedToSwapCase,
 				                           	Languages.Russian.SelectedTransliteration,
-				                           	Languages.Russian.ExitMahou
+				                           	Languages.Russian.ExitMahou,
+				                           	Languages.Russian.RestartMahou
 				                           });
 				#endregion
 				#region Updtaes
@@ -1735,7 +1796,8 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				                           	Languages.English.SelectedToRandomCase,
 				                           	Languages.English.SelectedToSwapCase,
 				                           	Languages.English.SelectedTransliteration,
-				                           	Languages.English.ExitMahou
+				                           	Languages.English.ExitMahou,
+				                           	Languages.English.RestartMahou
 				                           });
 				#endregion
 				#region Updtaes

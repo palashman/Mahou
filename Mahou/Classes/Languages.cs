@@ -80,6 +80,7 @@ namespace Mahou.Languages
 		public static readonly string SelectedToSwapCase = "Selected text words to sWAP cASE";
 		public static readonly string SelectedTransliteration = "Selected text transliteration";
 		public static readonly string ExitMahou = "Exit";
+		public static readonly string RestartMahou = "Restart";
 		public static readonly string Enabled = "Enabled";
 		public static readonly string DoubleHK= "Double hotkey";
 		#endregion
@@ -242,6 +243,7 @@ namespace Mahou.Languages
 		public static readonly string SelectedToSwapCase = "Выделенные слов в оБРАТЫНЙ регистр";
 		public static readonly string SelectedTransliteration = "Транслитерация выледенного текста";
 		public static readonly string ExitMahou = "Выход";
+		public static readonly string RestartMahou = "Перезапустить";
 		public static readonly string Enabled = "Включена";
 		public static readonly string DoubleHK= "Двойная горячая клавиша";
 		#endregion

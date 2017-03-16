@@ -50,6 +50,13 @@ public static class WinAPI
 	public static uint WM_SYSKEYDOWN = 0x0104;
 	public static uint WM_SYSKEYUP = 0x0105;
 	#endregion
+	#region MahouUI requirements
+	public static uint MOD_ALT = 0x1;
+	public static uint MOD_CONTROL = 0x2;
+	public static uint MOD_SHIFT = 0x4;
+	public static uint MOD_WIN = 0x8;
+	public static uint WM_HOTKEY = 0x312;
+	#endregion
 	#region LangDisplay requirements
 	public const int SW_SHOWNOACTIVATE = 4;
 	public const int HWND_TOPMOST = -1;
@@ -140,6 +147,8 @@ public static class WinAPI
     #region MahouForm requires
 	[DllImport("user32.dll")]
 	public static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, int vk);
+	[DllImport("user32.dll")]
+	public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 	#endregion
 	#region CaretPos requires
 	[DllImport("user32.dll", SetLastError=true)]

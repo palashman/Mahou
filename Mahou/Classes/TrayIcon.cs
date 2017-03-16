@@ -54,6 +54,8 @@ namespace Mahou
         /// </summary>
         public void Hide()
         {
+        	if (MMain.mahou.TrayFlags)
+        		MMain.mahou.flagsCheck.Stop();
             trIcon.Visible = false;
         }
         /// <summary>
@@ -61,6 +63,8 @@ namespace Mahou
         /// </summary>
         public void Show()
         {
+        	if (MMain.mahou.TrayFlags)
+        		MMain.mahou.flagsCheck.Start();
             trIcon.Visible = true;
         }
         /// <summary>

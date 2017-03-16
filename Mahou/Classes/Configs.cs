@@ -175,6 +175,10 @@ namespace Mahou
 			CheckBool("Hotkeys", "ExitMahou_Double", "false");
 			CheckString("Hotkeys", "ExitMahou_Modifiers", "Win + Control + Shift + Alt");
 			CheckInt("Hotkeys", "ExitMahou_Key", "123");
+			// Restart Mahou hotkey
+			CheckBool("Hotkeys", "RestartMahou_Enabled", "true");
+			CheckString("Hotkeys", "RestartMahou_Modifiers", "Win + Shift + Alt");
+			CheckInt("Hotkeys", "RestartMahou_Key", "33");
 			#endregion
             #region Proxy section
             CheckString("Proxy", "ServerPort", "");
