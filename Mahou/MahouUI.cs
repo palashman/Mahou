@@ -874,7 +874,7 @@ namespace Mahou {
 			};
 			ScrlCheck.Interval = MMain.MyConfs.ReadInt("Timings", "ScrollLockStateRefreshRate");
 			ScrlCheck.Tick += (_, __) => {
-				if (ScrollTip && !KMHook.self) {
+				if (ScrollTip && !KMHook.self && !KMHook.alt) {
 					KMHook.self = true;
 					if (Locales.GetCurrentLocale() == 
 					    Locales.GetLocaleFromString(MainLayout1).uId) {
