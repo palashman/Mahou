@@ -887,7 +887,7 @@ namespace Mahou
 			string ClipStr = "";
 			// Backup & Restore feature, now only text supported...
 			Logging.Log("Taking backup of clipboard text if possible.");
-			doBackup = false || WinAPI.IsClipboardFormatAvailable(WinAPI.CF_UNICODETEXT);			
+			doBackup = false || WinAPI.IsClipboardFormatAvailable(WinAPI.CF_UNICODETEXT);
 			if (doBackup)
 				datas = NativeClipboard.GetClipboardDatas();
 			//This prevents from converting text that already exist in Clipboard
@@ -897,13 +897,21 @@ namespace Mahou
 			if (MMain.mahou.SelectedTextGetMoreTries)
 				for (int i = 0; i != MMain.mahou.SelectedTextGetMoreTriesCount; i++) {
 					ClipStr = MakeCopy();
+					if (doBackup)
+						datas = NativeClipboard.GetClipboardDatas();
 					if (!String.IsNullOrEmpty(ClipStr))
 						break;
 				}
-			else
+			else {
 				ClipStr = MakeCopy();
+				if (String.IsNullOrEmpty(ClipStr)) {
+					ClipStr = MakeCopy();
+					if (doBackup)
+						datas = NativeClipboard.GetClipboardDatas();
+				}
+			}
 			if (String.IsNullOrEmpty(ClipStr))
-				return ClipStr;
+				return "";
 			return Regex.Replace(ClipStr, "\r?\n|\r", "\n");
 		}
 		/// <summary>

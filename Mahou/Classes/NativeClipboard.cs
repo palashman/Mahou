@@ -69,7 +69,7 @@ namespace Mahou
                 {
                     //Init a buffer which will contain the clipboard data
                     data = new byte[(uint)lenght];
-                    //Console.WriteLine(lenght);
+                    System.Diagnostics.Debug.WriteLine("::"+lenght);
                     int l = Convert.ToInt32(lenght.ToString());
                     //Copy data from clipboard to our byte[] buffer
                     Marshal.Copy(gLock, data, 0, l);
@@ -95,17 +95,18 @@ namespace Mahou
             for (int i = 0; i != datas.data.Count; i++)
             {
                 var data = datas.data[i];
-                //foreach (var d in data)
-                //{
-                //    Console.WriteLine("|"+d);
-                //}
-                //Console.WriteLine(data.GetLength(0));
                 IntPtr alloc = WinAPI.GlobalAlloc(WinAPI.GMEM_MOVEABLE | WinAPI.GMEM_DDESHARE, new UIntPtr(Convert.ToUInt32(data.GetLength(0))));
                 var glock = WinAPI.GlobalLock(alloc);
+                if (glock == IntPtr.Zero) {
+                	WinAPI.CloseClipboard();
+                	WinAPI.OpenClipboard(IntPtr.Zero);
+                	WinAPI.EmptyClipboard();
+                	continue;
+                }
                 var fmt = datas.format[i];
                 Marshal.Copy(data, 0, glock, data.GetLength(0));
-                WinAPI.GlobalUnlock(alloc);
                 WinAPI.SetClipboardData(fmt, alloc);
+                WinAPI.GlobalUnlock(alloc);
             }
             WinAPI.CloseClipboard();
             Logging.Log("Clipboard text was restored");
