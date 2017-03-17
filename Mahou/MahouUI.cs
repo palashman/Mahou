@@ -873,7 +873,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				} else {
 				if (crtOnly.X != 77777 && crtOnly.Y != 77777) // 77777x77777 is null/none point
 					caretLangDisplay.ShowInactiveTopmost();
-				else if (caretLangDisplay.Visible)
+//				else if (caretLangDisplay.Visible)
 //					caretLangDisplay.HideWnd();
 				caretLangDisplay.RefreshLang();
 				}
