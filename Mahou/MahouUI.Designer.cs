@@ -1130,9 +1130,24 @@ namespace Mahou
 			// nud_SelectedTextGetTriesCount
 			// 
 			this.nud_SelectedTextGetTriesCount.Location = new System.Drawing.Point(429, 181);
+			this.nud_SelectedTextGetTriesCount.Maximum = new decimal(new int[] {
+			20,
+			0,
+			0,
+			0});
+			this.nud_SelectedTextGetTriesCount.Minimum = new decimal(new int[] {
+			3,
+			0,
+			0,
+			0});
 			this.nud_SelectedTextGetTriesCount.Name = "nud_SelectedTextGetTriesCount";
 			this.nud_SelectedTextGetTriesCount.Size = new System.Drawing.Size(120, 23);
 			this.nud_SelectedTextGetTriesCount.TabIndex = 17;
+			this.nud_SelectedTextGetTriesCount.Value = new decimal(new int[] {
+			3,
+			0,
+			0,
+			0});
 			// 
 			// chk_SelectedTextGetMoreTries
 			// 
