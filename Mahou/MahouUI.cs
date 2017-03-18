@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
@@ -132,7 +133,7 @@ namespace Mahou {
 		    nud_CapsLockRefreshRate.Minimum = nud_DoubleHK2ndPressWaitTime.Minimum =
 		        nud_LangTTCaretRefreshRate.Minimum = nud_LangTTMouseRefreshRate.Minimum = 
 		    	nud_ScrollLockRefreshRate.Minimum = nud_TrayFlagRefreshRate.Minimum = 1;
-			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version;
+			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version + "-dev";
 			nud_LangTTPositionX.Minimum = nud_LangTTPositionY.Minimum = -100;
 			RegisterRestartHotkey();
 			RefreshAllIcons();
@@ -478,6 +479,11 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			#region Appearence & Hotkeys
 			SaveFromTemps();
 			#endregion
+			#region Proxy
+			MMain.MyConfs.Write("Proxy", "ServerPort", txt_ProxyServerPort.Text);
+			MMain.MyConfs.Write("Proxy", "UserName", txt_ProxyLogin.Text);
+			MMain.MyConfs.Write("Proxy", "Password", Convert.ToBase64String(Encoding.Unicode.GetBytes(txt_ProxyPassword.Text)));
+			#endregion
 			Logging.Log("All configurations saved.");
 			LoadConfigs();
 			lsb_LangTTAppearenceForList.SelectedIndex = tmpLangTTAppearenceIndex;
@@ -554,6 +560,13 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			LoadTemps();
 			UpdateLangDisplayControlsSwitch();
 			UpdateHotkeyControlsSwitch();
+			#endregion
+			#region Proxy
+			txt_ProxyServerPort.Text = MMain.MyConfs.Read("Proxy", "ServerPort");
+			txt_ProxyLogin.Text = MMain.MyConfs.Read("Proxy", "UserName");
+			try {
+				txt_ProxyPassword.Text = Encoding.Unicode.GetString(Convert.FromBase64String(MMain.MyConfs.Read("Proxy", "Password")));
+			} catch { Logging.Log("Password invalidly encoded, reset to none.", 2); }
 			#endregion
 			InitializeHotkeys();
 			InitializeTimers();
@@ -1035,7 +1048,6 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			Application.Exit();
 		}
 		public void RegisterRestartHotkey() {
-			Debug.WriteLine(HKRestart_tempMods);
 			uint mods = 0;
 			if (HKRestart_tempMods.Contains("Shift")) 
 				mods += WinAPI.MOD_SHIFT;
@@ -1508,8 +1520,8 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 					var Version = Regex.Match(data, "<span class=\"css-truncate-target\">(.*)</span>").Groups[1].Value;
 					var Link = "https://github.com" + Regex.Match(data,
 						           "<ul class=\"release-downloads\">\n.*<li>\n.+href=\"(/.*\\.\\w{3})").Groups[1].Value;
-					Debug.WriteLine(Title);
-					Debug.WriteLine(Description);
+//					Debug.WriteLine(Title);
+//					Debug.WriteLine(Description);
 					Info.Add(Title);
 					Info.Add(Regex.Replace(Description, "\n", "\r\n")); // Regex needed to properly display new lines.
 					Info.Add(Version);

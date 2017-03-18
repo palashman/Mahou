@@ -1512,6 +1512,7 @@ namespace Mahou
 			// 
 			this.txt_ProxyPassword.Location = new System.Drawing.Point(117, 80);
 			this.txt_ProxyPassword.Name = "txt_ProxyPassword";
+			this.txt_ProxyPassword.PasswordChar = '~';
 			this.txt_ProxyPassword.Size = new System.Drawing.Size(122, 23);
 			this.txt_ProxyPassword.TabIndex = 5;
 			// 

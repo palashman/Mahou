@@ -69,7 +69,6 @@ namespace Mahou
                 {
                     //Init a buffer which will contain the clipboard data
                     data = new byte[(uint)lenght];
-                    System.Diagnostics.Debug.WriteLine("::"+lenght);
                     int l = Convert.ToInt32(lenght.ToString());
                     //Copy data from clipboard to our byte[] buffer
                     Marshal.Copy(gLock, data, 0, l);
