@@ -337,8 +337,12 @@ namespace Mahou
 						}
 					}
 					if (((Key >= Keys.D0 && Key <= Keys.Z) || // This is 0-9 & A-Z
-					   Key >= Keys.Oem1 && Key <= Keys.OemBackslash // All other printable
-					   ) && !win && !alt && !ctrl) {
+					   Key >= Keys.Oem1 && Key <= Keys.OemBackslash || // All other printable
+					   (Control.IsKeyLocked(Keys.NumLock) && ( // while numlock is on
+					   Key >= Keys.NumPad0 && Key <= Keys.NumPad9)) || // Numpad numbers 
+					   Key == Keys.Decimal || Key == Keys.Subtract || Key == Keys.Multiply ||
+					   Key == Keys.Divide || Key == Keys.Add // Numpad symbols
+					  ) && !win && !alt && !ctrl) {
 						if (afterEOS) { //Clears word after Eat ONE space
 							MMain.c_word.Clear();
 							afterEOS = false;
