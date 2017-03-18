@@ -1897,27 +1897,34 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 		}
 		void Btn_DebugInfoClick(object sender, EventArgs e) {
 			try {
-				string debuginfo = "### MAHOU DEBUG INFO";
+				string debuginfo = "<details><summary>MAHOU DEBUG INFO</summary>\r\n\r\n";
+				debuginfo += "<details><summary>Environment info</summary>\r\n\r\n";
 				debuginfo += "\r\n" + "- " + Text;
 				debuginfo += "\r\n" + "- OS = [" + Environment.OSVersion + "]";
 				debuginfo += "\r\n" + "- x64 = [" + Environment.Is64BitOperatingSystem + "]";
 				debuginfo += "\r\n" + "- .Net = [" + Environment.Version +"]";
-				debuginfo += "\r\n" + "#### All installed layouts:\r\n";
+				debuginfo += "\r\n</details>";
+				debuginfo += "\r\n" + "<details><summary>All installed layouts</summary>\r\n\r\n";
 				foreach (var l in MMain.lcnmid) {
 					debuginfo += l + "\r\n";
 				}
-				debuginfo += "#### Mahou.ini:\r\n```ini\r\n" + 
+				debuginfo += "\r\n</details>";
+				debuginfo += "<details><summary>Mahou.ini</summary>\r\n\r\n```ini\r\n" + 
 					Regex.Match(File.ReadAllText(Path.Combine(nPath, "Mahou.ini")), @"(.*?)\[Proxy.+", RegexOptions.Singleline).Groups[1].Value +
 					"```";
+				debuginfo += "\r\n</details>";
 				if (File.Exists(Path.Combine(nPath, "snippets.txt")))
-				    debuginfo += "\r\n" + "#### Snippets:\r\n```\r\n" + File.ReadAllText(Path.Combine(nPath, "snippets.txt")) + "```";
+				    debuginfo += "\r\n" + "<details><summary>Snippets</summary>\r\n\r\n```\r\n" + File.ReadAllText(Path.Combine(nPath, "snippets.txt")) + "\r\n```";
+				debuginfo += "\r\n</details>";
 				if (Directory.Exists(Path.Combine(nPath, "Flags"))) {
-				    	debuginfo += "\r\n" + "#### Additional flags in Flags directory:\r\n```\r\n";
+				    	debuginfo += "\r\n" + "<details><summary>Additional flags in Flags directory</summary>\r\n\r\n";
 				    	foreach (var flg in Directory.GetFiles(Path.Combine(nPath, "Flags"))) {
-				    		debuginfo += flg + "\r\n";
+				    		debuginfo += "- " + Path.GetFileName(flg) + "\r\n";
 				    	}
-				    	debuginfo += "```\r\n";
+				    	debuginfo += "\r\n";
+						debuginfo += "\r\n</details>";
 	             }
+				debuginfo += "\r\n</details>";
 				Clipboard.SetText(debuginfo);
 				var btDgtTxtWas = btn_DebugInfo.Text;
 				if (Lang == "English")
