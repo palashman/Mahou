@@ -36,7 +36,7 @@ namespace Mahou {
 		/// <summary>
 		/// In memory settings, for timers/hooks.
 		/// </summary>
-		public bool DiffColorsForLayouts, LDForCaretOnChange, LDForMouseOnChange, ScrollTip, AddOneSpace,
+		public bool DiffAppearenceForLayouts, LDForCaretOnChange, LDForMouseOnChange, ScrollTip, AddOneSpace,
 					TrayFlags, SymIgnEnabled, TrayIconVisible, SnippetsEnabled, ChangeLayouByKey, EmulateLS,
 					RePress, BlockHKWithCtrl, blueIcon, SwitchBetweenLayouts, SelectedTextGetMoreTries, ReSelect,
 					ConvertSelectionLS, ConvertSelectionLSPlus, MCDSSupport;
@@ -100,7 +100,8 @@ namespace Mahou {
 		/// <summary>
 		/// Temporary layouts, etc..
 		/// </summary>
-		public string Layout1, Layout2, Layout3, Layout4, MainLayout1, MainLayout2, EmulateLSType, ExcludedPrograms;
+		public string Layout1, Layout2, Layout3, Layout4, 
+			MainLayout1, MainLayout2, EmulateLSType, ExcludedPrograms, Layout1TText, Layout2TText;
 		/// <summary>
 		/// Temporary specific keys.
 		/// </summary>
@@ -300,6 +301,9 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			MCDS_Ypos_temp = MMain.MyConfs.ReadInt("Appearence", "MCDS_Pos_Y");
 			MCDS_TopIndent_temp = MMain.MyConfs.ReadInt("Appearence", "MCDS_Top");
 			MCDS_BottomIndent_temp = MMain.MyConfs.ReadInt("Appearence", "MCDS_Bottom");
+			// Diff text for layouts
+			Layout1TText = MMain.MyConfs.Read("Appearence", "Layout1LTText");
+			Layout2TText = MMain.MyConfs.Read("Appearence", "Layout2LTText");
 			#endregion
 		}
 		void SaveFromTemps() {
@@ -402,6 +406,9 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			MMain.MyConfs.Write("Appearence", "MCDS_Pos_Y", MCDS_Ypos_temp.ToString());
 			MMain.MyConfs.Write("Appearence", "MCDS_Top", MCDS_TopIndent_temp.ToString());
 			MMain.MyConfs.Write("Appearence", "MCDS_Bottom", MCDS_BottomIndent_temp.ToString());
+			// Diff text for layouts
+			MMain.MyConfs.Write("Appearence", "Layout1LTText", Layout1TText);
+			MMain.MyConfs.Write("Appearence", "Layout2LTText", Layout2TText);
 			#endregion
 			Logging.Log("Saved from temps.");
 		}
@@ -534,7 +541,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			chk_LangTooltipCaret.Checked = MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForCaret");
 			LDForMouseOnChange = chk_LangTTMouseOnChange.Checked = MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForMouseOnChange");
 			LDForCaretOnChange = chk_LangTTCaretOnChange.Checked = MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForCaretOnChange");
-			DiffColorsForLayouts = chk_LangTTDiffLayoutColors.Checked = MMain.MyConfs.ReadBool("Appearence", "DifferentColorsForLayouts");
+			DiffAppearenceForLayouts = chk_LangTTDiffLayoutColors.Checked = MMain.MyConfs.ReadBool("Appearence", "DifferentColorsForLayouts");
 			#endregion
 			#region Timings
 			nud_LangTTMouseRefreshRate.Value = MMain.MyConfs.ReadInt("Timings", "LangTooltipForMouseRefreshRate");
@@ -779,17 +786,13 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			}
 		}
 		/// <summary>
-		/// Refreshes language tooltips (caret/mouse) colors, size and font.
+		/// Initializes language tooltips.
 		/// </summary>
-		public void RefreshLangDisplays() {
+		public void InitLangDisplays() {
 			mouseLangDisplay = new LangDisplay();
 			caretLangDisplay = new LangDisplay();
 			mouseLangDisplay.mouseDisplay = true;
-			mouseLangDisplay.ChangeColors(LDMouseFont_temp, LDMouseFore_temp, LDMouseBack_temp);
-			mouseLangDisplay.ChangeSize(LDMouseHeight_temp, LDMouseWidth_temp);
 			caretLangDisplay.caretDisplay = true;
-			caretLangDisplay.ChangeColors(LDCaretFont_temp, LDCaretFore_temp, LDCaretBack_temp);
-			caretLangDisplay.ChangeSize(LDCaretHeight_temp, LDCaretWidth_temp);
 			caretLangDisplay.AddOwnedForm(mouseLangDisplay); //Prevents flickering when tooltips are one on another 
 		}
 		/// <summary>
@@ -861,17 +864,19 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				var crtOnly = new Point(0,0);
 				var curCrtPos = CaretPos.GetCaretPointToScreen(out crtOnly);
 				uint cLuid = 0;
-				if (LDForCaretOnChange || DiffColorsForLayouts)
+				var notTwo = false;
+				if (LDForCaretOnChange || DiffAppearenceForLayouts)
 					cLuid = Locales.GetCurrentLocale();
-				if (DiffColorsForLayouts && cLuid != 0) {
+				if (DiffAppearenceForLayouts && cLuid != 0) {
 					if (cLuid == Locales.GetLocaleFromString(MainLayout1).uId) {
 						caretLangDisplay.Location = new Point(curCrtPos.X + Layout1X_Pos_temp, 
 						                                      curCrtPos.Y + Layout1Y_Pos_temp);
 					} else if (cLuid == Locales.GetLocaleFromString(MainLayout2).uId) {
 						caretLangDisplay.Location = new Point(curCrtPos.X + Layout2X_Pos_temp, 
 						                                      curCrtPos.Y + Layout2Y_Pos_temp);
-					}
-				} else
+					} else notTwo = true;
+				} else notTwo = true;
+				if (notTwo)
 					caretLangDisplay.Location = new Point(curCrtPos.X + LDCaretX_Pos_temp, 
 					                                      curCrtPos.Y + LDCaretY_Pos_temp);
 				if (LDForCaretOnChange && cLuid != 0) {
@@ -980,7 +985,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			tmr.Interval = 3000;
 			old.Interval = 7500;
 			old.Tick += (_, __) => { isold = !isold; };			
-			RefreshLangDisplays();
+			InitLangDisplays();
 			ToggleTimers();
 		}
 		/// <summary>
@@ -1134,6 +1139,10 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 		/// </summary>
 		void UpdateLangDisplayControlsSwitch() {
 			if (lsb_LangTTAppearenceForList.SelectedIndex < 4) {
+				if (lsb_LangTTAppearenceForList.SelectedIndex > 1)
+					txt_LangTTText.Enabled = lbl_LangTTText.Enabled = false;
+				else
+					txt_LangTTText.Enabled = lbl_LangTTText.Enabled = true;
 				chk_LangTTTransparentColor.Enabled = btn_LangTTFont.Enabled = btn_LangTTForegroundColor.Enabled = 
 					btn_LangTTBackgroundColor.Enabled = lbl_LangTTBackgroundColor.Enabled = lbl_LangTTForegroundColor.Enabled = true;
 				if (Lang == "English") {
@@ -1164,12 +1173,12 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				case 0:
 					UpdateLangDisplayControls(Layout1Fore_temp, Layout1Back_temp, Layout1TransparentBack_temp,
 					                          Layout1Font_temp, Layout1X_Pos_temp, Layout1Y_Pos_temp, Layout1Width_temp,
-					                          Layout1Height_temp);
+					                          Layout1Height_temp, Layout1TText);
 					break;
 				case 1:
 					UpdateLangDisplayControls(Layout2Fore_temp, Layout2Back_temp, Layout2TransparentBack_temp,
 					                          Layout2Font_temp, Layout2X_Pos_temp, Layout2Y_Pos_temp, Layout2Width_temp,
-					                          Layout2Height_temp);
+					                          Layout2Height_temp, Layout2TText);
 					break;
 				case 2:
 					UpdateLangDisplayControls(LDMouseFore_temp, LDMouseBack_temp, LDMouseTransparentBack_temp,
@@ -1200,7 +1209,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 		/// <param name="width">Width.</param>
 		/// <param name="height">Height.</param>
 		void UpdateLangDisplayControls(Color FGcolor, Color BGColor, bool TransparentBG, Font font,
-		                               int posX, int posY, int width, int height) {
+		                               int posX, int posY, int width, int height, string TTText = "") {
 			btn_LangTTForegroundColor.BackColor = FGcolor;
 			btn_LangTTBackgroundColor.BackColor = BGColor;
 			chk_LangTTTransparentColor.Checked = TransparentBG;
@@ -1209,6 +1218,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			nud_LangTTPositionY.Value = posY;
 			nud_LangTTWidth.Value = width;
 			nud_LangTTHeight.Value = height;
+			txt_LangTTText.Text = TTText;
 		}
 		/// <summary>
 		/// Updates Lang Display temporary variables based on selected [layout appearence]. 
@@ -1224,6 +1234,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 					Layout1Width_temp = (int)nud_LangTTWidth.Value;
 					Layout1Height_temp = (int)nud_LangTTHeight.Value;
 					Layout1TransparentBack_temp = chk_LangTTTransparentColor.Checked;
+					Layout1TText = txt_LangTTText.Text;
 					break;
 				case 1:
 					Layout2Fore_temp = btn_LangTTForegroundColor.BackColor;
@@ -1234,6 +1245,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 					Layout2Width_temp = (int)nud_LangTTWidth.Value;
 					Layout2Height_temp = (int)nud_LangTTHeight.Value;
 					Layout2TransparentBack_temp = chk_LangTTTransparentColor.Checked;
+					Layout2TText = txt_LangTTText.Text;
 					break;
 				case 2:
 					LDMouseFore_temp = btn_LangTTForegroundColor.BackColor;
@@ -1648,6 +1660,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				btn_LangTTFont.Text = Languages.Russian.LDFont;
 				lbl_LangTTForegroundColor.Text = Languages.Russian.LDFore;
 				lbl_LangTTBackgroundColor.Text = Languages.Russian.LDBack;
+				lbl_LangTTText.Text = Languages.Russian.LDText;
 				grb_LangTTSize.Text = Languages.Russian.LDSize;
 				grb_LangTTPositon.Text = Languages.Russian.LDPosition;
 				lbl_LangTTHeight.Text = Languages.Russian.LDHeight;
@@ -1765,6 +1778,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				btn_LangTTFont.Text = Languages.English.LDFont;
 				lbl_LangTTForegroundColor.Text = Languages.English.LDFore;
 				lbl_LangTTBackgroundColor.Text = Languages.English.LDBack;
+				lbl_LangTTText.Text = Languages.English.LDText;
 				grb_LangTTSize.Text = Languages.English.LDSize;
 				grb_LangTTPositon.Text = Languages.English.LDPosition;
 				lbl_LangTTHeight.Text = Languages.English.LDHeight;
@@ -2029,6 +2043,9 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			ToggleDependentControlsEnabledState();
 			UpdateLangDisplayTemps();
 		}
+		void Txt_LangTTTextTextChanged(object sender, EventArgs e) {
+			UpdateLangDisplayTemps();
+		}
 		void Btn_LangTTFontClick(object sender, EventArgs e) {
 			var btn = sender as Button;
 			fntd.Font = btn.Font;
@@ -2275,6 +2292,14 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				HelpMeUnderstand.Show(Languages.English.TT_MCDSSupport, chk);
 			else if (Lang == "Русский")
 				HelpMeUnderstand.Show(Languages.Russian.TT_MCDSSupport, chk);
+		}
+		void Txt_LangTTTextMouseHover(object sender, EventArgs e) {
+			var lbl = sender as TextBox;
+			HelpMeUnderstand.ToolTipTitle = lbl.Text;
+			if (Lang == "English")
+				HelpMeUnderstand.Show(Languages.English.TT_LDText, lbl);
+			else if (Lang == "Русский")
+				HelpMeUnderstand.Show(Languages.Russian.TT_LDText, lbl);
 		}
 		#endregion
 		#endregion

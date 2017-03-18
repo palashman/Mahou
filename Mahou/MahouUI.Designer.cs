@@ -128,6 +128,8 @@ namespace Mahou
 		private System.Windows.Forms.TextBox txt_ExcludedPrograms;
 		private System.Windows.Forms.LinkLabel lnk_plugin;
 		private System.Windows.Forms.CheckBox chk_MCDS_support;
+		private System.Windows.Forms.TextBox txt_LangTTText;
+		private System.Windows.Forms.Label lbl_LangTTText;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -197,6 +199,8 @@ namespace Mahou
 			this.chk_LangTTCaretOnChange = new System.Windows.Forms.CheckBox();
 			this.chk_LangTTMouseOnChange = new System.Windows.Forms.CheckBox();
 			this.grb_LangTTAppearence = new System.Windows.Forms.GroupBox();
+			this.txt_LangTTText = new System.Windows.Forms.TextBox();
+			this.lbl_LangTTText = new System.Windows.Forms.Label();
 			this.btn_LangTTFont = new System.Windows.Forms.Button();
 			this.grb_LangTTPositon = new System.Windows.Forms.GroupBox();
 			this.nud_LangTTPositionY = new System.Windows.Forms.NumericUpDown();
@@ -874,6 +878,8 @@ namespace Mahou
 			// 
 			// grb_LangTTAppearence
 			// 
+			this.grb_LangTTAppearence.Controls.Add(this.txt_LangTTText);
+			this.grb_LangTTAppearence.Controls.Add(this.lbl_LangTTText);
 			this.grb_LangTTAppearence.Controls.Add(this.btn_LangTTFont);
 			this.grb_LangTTAppearence.Controls.Add(this.grb_LangTTPositon);
 			this.grb_LangTTAppearence.Controls.Add(this.grb_LangTTSize);
@@ -890,9 +896,27 @@ namespace Mahou
 			this.grb_LangTTAppearence.TabStop = false;
 			this.grb_LangTTAppearence.Text = "Language tooltip appearence";
 			// 
+			// txt_LangTTText
+			// 
+			this.txt_LangTTText.Location = new System.Drawing.Point(368, 77);
+			this.txt_LangTTText.Name = "txt_LangTTText";
+			this.txt_LangTTText.Size = new System.Drawing.Size(117, 23);
+			this.txt_LangTTText.TabIndex = 10;
+			this.txt_LangTTText.TextChanged += new System.EventHandler(this.Txt_LangTTTextTextChanged);
+			this.txt_LangTTText.MouseHover += new System.EventHandler(this.Txt_LangTTTextMouseHover);
+			// 
+			// lbl_LangTTText
+			// 
+			this.lbl_LangTTText.AutoSize = true;
+			this.lbl_LangTTText.Location = new System.Drawing.Point(211, 80);
+			this.lbl_LangTTText.Name = "lbl_LangTTText";
+			this.lbl_LangTTText.Size = new System.Drawing.Size(74, 15);
+			this.lbl_LangTTText.TabIndex = 9;
+			this.lbl_LangTTText.Text = "Tootltip text:";
+			// 
 			// btn_LangTTFont
 			// 
-			this.btn_LangTTFont.Location = new System.Drawing.Point(382, 18);
+			this.btn_LangTTFont.Location = new System.Drawing.Point(368, 18);
 			this.btn_LangTTFont.Name = "btn_LangTTFont";
 			this.btn_LangTTFont.Size = new System.Drawing.Size(117, 23);
 			this.btn_LangTTFont.TabIndex = 8;
@@ -906,16 +930,16 @@ namespace Mahou
 			this.grb_LangTTPositon.Controls.Add(this.lbl_LangTTPositionY);
 			this.grb_LangTTPositon.Controls.Add(this.nud_LangTTPositionX);
 			this.grb_LangTTPositon.Controls.Add(this.lbl_LangTTPositionX);
-			this.grb_LangTTPositon.Location = new System.Drawing.Point(370, 91);
+			this.grb_LangTTPositon.Location = new System.Drawing.Point(351, 106);
 			this.grb_LangTTPositon.Name = "grb_LangTTPositon";
-			this.grb_LangTTPositon.Size = new System.Drawing.Size(134, 89);
+			this.grb_LangTTPositon.Size = new System.Drawing.Size(134, 79);
 			this.grb_LangTTPositon.TabIndex = 7;
 			this.grb_LangTTPositon.TabStop = false;
 			this.grb_LangTTPositon.Text = "Position";
 			// 
 			// nud_LangTTPositionY
 			// 
-			this.nud_LangTTPositionY.Location = new System.Drawing.Point(69, 51);
+			this.nud_LangTTPositionY.Location = new System.Drawing.Point(73, 48);
 			this.nud_LangTTPositionY.Name = "nud_LangTTPositionY";
 			this.nud_LangTTPositionY.Size = new System.Drawing.Size(45, 23);
 			this.nud_LangTTPositionY.TabIndex = 3;
@@ -924,7 +948,7 @@ namespace Mahou
 			// lbl_LangTTPositionY
 			// 
 			this.lbl_LangTTPositionY.AutoSize = true;
-			this.lbl_LangTTPositionY.Location = new System.Drawing.Point(8, 54);
+			this.lbl_LangTTPositionY.Location = new System.Drawing.Point(12, 52);
 			this.lbl_LangTTPositionY.Name = "lbl_LangTTPositionY";
 			this.lbl_LangTTPositionY.Size = new System.Drawing.Size(17, 15);
 			this.lbl_LangTTPositionY.TabIndex = 2;
@@ -932,7 +956,7 @@ namespace Mahou
 			// 
 			// nud_LangTTPositionX
 			// 
-			this.nud_LangTTPositionX.Location = new System.Drawing.Point(69, 21);
+			this.nud_LangTTPositionX.Location = new System.Drawing.Point(73, 19);
 			this.nud_LangTTPositionX.Name = "nud_LangTTPositionX";
 			this.nud_LangTTPositionX.Size = new System.Drawing.Size(45, 23);
 			this.nud_LangTTPositionX.TabIndex = 1;
@@ -941,7 +965,7 @@ namespace Mahou
 			// lbl_LangTTPositionX
 			// 
 			this.lbl_LangTTPositionX.AutoSize = true;
-			this.lbl_LangTTPositionX.Location = new System.Drawing.Point(8, 24);
+			this.lbl_LangTTPositionX.Location = new System.Drawing.Point(12, 23);
 			this.lbl_LangTTPositionX.Name = "lbl_LangTTPositionX";
 			this.lbl_LangTTPositionX.Size = new System.Drawing.Size(17, 15);
 			this.lbl_LangTTPositionX.TabIndex = 0;
@@ -953,16 +977,16 @@ namespace Mahou
 			this.grb_LangTTSize.Controls.Add(this.lbl_LangTTWidth);
 			this.grb_LangTTSize.Controls.Add(this.nud_LangTTHeight);
 			this.grb_LangTTSize.Controls.Add(this.lbl_LangTTHeight);
-			this.grb_LangTTSize.Location = new System.Drawing.Point(230, 91);
+			this.grb_LangTTSize.Location = new System.Drawing.Point(211, 106);
 			this.grb_LangTTSize.Name = "grb_LangTTSize";
-			this.grb_LangTTSize.Size = new System.Drawing.Size(134, 89);
+			this.grb_LangTTSize.Size = new System.Drawing.Size(134, 79);
 			this.grb_LangTTSize.TabIndex = 6;
 			this.grb_LangTTSize.TabStop = false;
 			this.grb_LangTTSize.Text = "Size";
 			// 
 			// nud_LangTTWidth
 			// 
-			this.nud_LangTTWidth.Location = new System.Drawing.Point(69, 51);
+			this.nud_LangTTWidth.Location = new System.Drawing.Point(76, 48);
 			this.nud_LangTTWidth.Name = "nud_LangTTWidth";
 			this.nud_LangTTWidth.Size = new System.Drawing.Size(45, 23);
 			this.nud_LangTTWidth.TabIndex = 3;
@@ -971,7 +995,7 @@ namespace Mahou
 			// lbl_LangTTWidth
 			// 
 			this.lbl_LangTTWidth.AutoSize = true;
-			this.lbl_LangTTWidth.Location = new System.Drawing.Point(8, 53);
+			this.lbl_LangTTWidth.Location = new System.Drawing.Point(14, 51);
 			this.lbl_LangTTWidth.Name = "lbl_LangTTWidth";
 			this.lbl_LangTTWidth.Size = new System.Drawing.Size(42, 15);
 			this.lbl_LangTTWidth.TabIndex = 2;
@@ -979,7 +1003,7 @@ namespace Mahou
 			// 
 			// nud_LangTTHeight
 			// 
-			this.nud_LangTTHeight.Location = new System.Drawing.Point(69, 21);
+			this.nud_LangTTHeight.Location = new System.Drawing.Point(76, 19);
 			this.nud_LangTTHeight.Name = "nud_LangTTHeight";
 			this.nud_LangTTHeight.Size = new System.Drawing.Size(45, 23);
 			this.nud_LangTTHeight.TabIndex = 1;
@@ -988,7 +1012,7 @@ namespace Mahou
 			// lbl_LangTTHeight
 			// 
 			this.lbl_LangTTHeight.AutoSize = true;
-			this.lbl_LangTTHeight.Location = new System.Drawing.Point(7, 23);
+			this.lbl_LangTTHeight.Location = new System.Drawing.Point(13, 22);
 			this.lbl_LangTTHeight.Name = "lbl_LangTTHeight";
 			this.lbl_LangTTHeight.Size = new System.Drawing.Size(46, 15);
 			this.lbl_LangTTHeight.TabIndex = 0;
@@ -997,7 +1021,7 @@ namespace Mahou
 			// lbl_LangTTBackgroundColor
 			// 
 			this.lbl_LangTTBackgroundColor.AutoSize = true;
-			this.lbl_LangTTBackgroundColor.Location = new System.Drawing.Point(230, 52);
+			this.lbl_LangTTBackgroundColor.Location = new System.Drawing.Point(210, 53);
 			this.lbl_LangTTBackgroundColor.Name = "lbl_LangTTBackgroundColor";
 			this.lbl_LangTTBackgroundColor.Size = new System.Drawing.Size(104, 15);
 			this.lbl_LangTTBackgroundColor.TabIndex = 5;
@@ -1006,7 +1030,7 @@ namespace Mahou
 			// lbl_LangTTForegroundColor
 			// 
 			this.lbl_LangTTForegroundColor.AutoSize = true;
-			this.lbl_LangTTForegroundColor.Location = new System.Drawing.Point(230, 22);
+			this.lbl_LangTTForegroundColor.Location = new System.Drawing.Point(210, 23);
 			this.lbl_LangTTForegroundColor.Name = "lbl_LangTTForegroundColor";
 			this.lbl_LangTTForegroundColor.Size = new System.Drawing.Size(102, 15);
 			this.lbl_LangTTForegroundColor.TabIndex = 4;
@@ -1015,7 +1039,7 @@ namespace Mahou
 			// chk_LangTTTransparentColor
 			// 
 			this.chk_LangTTTransparentColor.AutoSize = true;
-			this.chk_LangTTTransparentColor.Location = new System.Drawing.Point(382, 51);
+			this.chk_LangTTTransparentColor.Location = new System.Drawing.Point(368, 52);
 			this.chk_LangTTTransparentColor.Name = "chk_LangTTTransparentColor";
 			this.chk_LangTTTransparentColor.Size = new System.Drawing.Size(119, 19);
 			this.chk_LangTTTransparentColor.TabIndex = 3;
@@ -1025,7 +1049,7 @@ namespace Mahou
 			// 
 			// btn_LangTTBackgroundColor
 			// 
-			this.btn_LangTTBackgroundColor.Location = new System.Drawing.Point(339, 47);
+			this.btn_LangTTBackgroundColor.Location = new System.Drawing.Point(319, 48);
 			this.btn_LangTTBackgroundColor.Name = "btn_LangTTBackgroundColor";
 			this.btn_LangTTBackgroundColor.Size = new System.Drawing.Size(25, 25);
 			this.btn_LangTTBackgroundColor.TabIndex = 2;
@@ -1034,7 +1058,7 @@ namespace Mahou
 			// 
 			// btn_LangTTForegroundColor
 			// 
-			this.btn_LangTTForegroundColor.Location = new System.Drawing.Point(339, 17);
+			this.btn_LangTTForegroundColor.Location = new System.Drawing.Point(319, 18);
 			this.btn_LangTTForegroundColor.Name = "btn_LangTTForegroundColor";
 			this.btn_LangTTForegroundColor.Size = new System.Drawing.Size(25, 25);
 			this.btn_LangTTForegroundColor.TabIndex = 1;

@@ -90,7 +90,7 @@ namespace Mahou
 			CheckInt("Appearence", "MouseLTWidth", "26");
 			CheckInt("Appearence", "MouseLTPositionX", "8");
 			CheckInt("Appearence", "MouseLTPositionY", "0");
-			// Language tooltip appearence for for Caret Language Tooltip
+			// Language tooltip appearence for Caret Language Tooltip
 			CheckString("Appearence", "CaretLTForeColor", "#000000");
 			CheckString("Appearence", "CaretLTBackColor", "#FFFFFF");
             CheckBool("Appearence", "MouseLTTransparentBackColor", "false");
@@ -100,10 +100,14 @@ namespace Mahou
 			CheckInt("Appearence", "CaretLTWidth", "26");
 			CheckInt("Appearence", "CaretLTPositionX", "8");
 			CheckInt("Appearence", "CaretLTPositionY", "12");
+			// Language tooltip positions for Mahou Cared Display Server
 			CheckInt("Appearence", "MCDS_Pos_X", "58");
 			CheckInt("Appearence", "MCDS_Pos_Y", "13");
 			CheckInt("Appearence", "MCDS_Top", "60");
 			CheckInt("Appearence", "MCDS_Bottom", "45");
+			// Different text for layouts
+			CheckString("Appearence", "Layout1LTText", "");
+			CheckString("Appearence", "Layout2LTText", "");
 			#endregion
 			#region Timings section
 			CheckInt("Timings", "LangTooltipForMouseRefreshRate", "25");

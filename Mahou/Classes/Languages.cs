@@ -48,6 +48,7 @@ namespace Mahou.Languages
 		public static readonly string LDFont = "Font";
 		public static readonly string LDFore = "Foreground color:";
 		public static readonly string LDBack = "Background color:";
+		public static readonly string LDText = "Tooltip text:";
 		public static readonly string LDSize = "Size";
 		public static readonly string LDPosition = "Position";
 		public static readonly string LDWidth = "Width";
@@ -159,6 +160,7 @@ namespace Mahou.Languages
 		public static readonly string TT_ConvertWords= "Allow to convert specific last word count by pressing hotkey and then 0-9 (0 = 10) on keyboard.";
 		public static readonly string TT_ExcludedPrograms = "Programs(excluded) in which convert hotkeys won't work.\nSeperators - any symbols including a space..";
 		public static readonly string TT_MCDSSupport = "Add ability to display language tooltip around caret in Sublime Text 3.\nFor it to work yout need to install plugin, link on right.\nSettings avaible in appearence tab:\nTop: Your ST3 titlebar + tab bar height,\nBottom: Your y pixels to ST3 console edit box(ctrl+`).\nFor different windows/themes settings will be different!";
+		public static readonly string TT_LDText = "Leave empty for auto-detect.";
 		#endregion
 	}
 	/// <summary>
@@ -211,6 +213,7 @@ namespace Mahou.Languages
 		public static readonly string LDFont = "Шрифт";
 		public static readonly string LDFore = "Цвет текста:";
 		public static readonly string LDBack = "Цвет фона:";
+		public static readonly string LDText = "Текст подсказки:";
 		public static readonly string LDSize = "Размер";
 		public static readonly string LDPosition = "Позиция";
 		public static readonly string LDWidth = "Ширина";
@@ -324,6 +327,7 @@ namespace Mahou.Languages
 		public static readonly string TT_ConvertWords = "Дает возможность конвертировать специфическое количество последних слов, после горячей клавиши нажмите 0-9(0 = 10) на клавиатуре.";				
 		public static readonly string TT_ExcludedPrograms = "Программы(исключения) в которых горячие клавиши Конвертирования не будут работать.\nРазделители - любые символы включая пробел.";
 		public static readonly string TT_MCDSSupport = "Дает возможность отображения подсказки текущего языка возле каретки в Sublime Text 3.\nДля его работы нужно установить плагин, ссылка с права.\nНастройки во вкладке Вид.\nСверху: Высота заголовка окна + высота панели вкладок ST3,\nСнизу: Ваши y пиксели от конца окна до формы ввода консоли ST3(ctrl+`).\nДля разных Windows/Тем будут нужны разные настройки!";
+		public static readonly string TT_LDText = "Оставьте пустым для авто-определения.";
 		#endregion
 	}
 }
