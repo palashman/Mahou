@@ -18,11 +18,8 @@ namespace Mahou
 			awas, swas, cwas, wwas, afterEOS, //*was = alt/shift/ctrl was
 			keyAfterCTRL, keyAfterALT, keyAfterSHIFT, hklOK, hksOK, hklineOK, hkSIOK, hkExitOK,
 			hksTTCOK, hksTRCOK, hksTSCOK, hksTrslOK, hkShWndOK, hkcwdsOK,
-			hotkeywithmodsfired, csdoing, incapt, waitfornum, doBackup;
-		static NativeClipboard.ClipboardData datas = new NativeClipboard.ClipboardData() {
-				data = new List<byte[]>(),
-				format = new List<uint>()
-			};
+			hotkeywithmodsfired, csdoing, incapt, waitfornum;
+		static string lastClipText = "";
 		static List<Keys> tempNumpads = new List<Keys>();
 		static List<char> c_snip = new List<char>();
 		public static System.Windows.Forms.Timer doublekey = new System.Windows.Forms.Timer();
@@ -699,8 +696,9 @@ namespace Mahou
 					ReSelect(items);
 			}
 			NativeClipboard.Clear();
-			if (doBackup) {
-				NativeClipboard.RestoreData(datas);
+			if (!String.IsNullOrEmpty(lastClipText)) {
+				Clipboard.SetText(lastClipText);
+				Clipboard.SetText(lastClipText);
 			}
 			self = false;
 			} catch(Exception e) {
@@ -732,8 +730,9 @@ namespace Mahou
 					ReSelect(ClipStr.Length);
 				}
 				NativeClipboard.Clear();
-				if (doBackup) {
-					NativeClipboard.RestoreData(datas);
+				if (!String.IsNullOrEmpty(lastClipText)) {
+					Clipboard.SetText(lastClipText);
+					Clipboard.SetText(lastClipText);
 				}
 				self = false;
 				} catch(Exception e) {
@@ -770,6 +769,11 @@ namespace Mahou
 							KInputs.MakeInput(KInputs.AddString("\n"));
 					}
 					ReSelect(ClipStr.Length);
+				}
+				NativeClipboard.Clear();
+				if (!String.IsNullOrEmpty(lastClipText)) {
+					Clipboard.SetText(lastClipText);
+					Clipboard.SetText(lastClipText);
 				}
 				self = false;
 			} catch(Exception e) {
@@ -809,6 +813,11 @@ namespace Mahou
 					}
 					ReSelect(ClipStr.Length);
 				}
+				NativeClipboard.Clear();
+				if (!String.IsNullOrEmpty(lastClipText)) {
+					Clipboard.SetText(lastClipText);
+					Clipboard.SetText(lastClipText);
+				}
 				self = false;
 			} catch(Exception e) {
 				Logging.Log("To sWAP Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
@@ -846,6 +855,11 @@ namespace Mahou
 							KInputs.MakeInput(KInputs.AddString("\n"));
 					}
 					ReSelect(ClipStr.Length);
+				}
+				NativeClipboard.Clear();
+				if (!String.IsNullOrEmpty(lastClipText)) {
+					Clipboard.SetText(lastClipText);
+					Clipboard.SetText(lastClipText);
 				}
 				self = false;
 			} catch(Exception e) {
@@ -887,9 +901,9 @@ namespace Mahou
 			string ClipStr = "";
 			// Backup & Restore feature, now only text supported...
 			Logging.Log("Taking backup of clipboard text if possible.");
-			doBackup = false || WinAPI.IsClipboardFormatAvailable(WinAPI.CF_UNICODETEXT);
-			if (doBackup)
-				datas = NativeClipboard.GetClipboardDatas();
+			lastClipText = NativeClipboard.GetText();
+			if (!String.IsNullOrEmpty(lastClipText))
+				lastClipText = NativeClipboard.GetText();
 			//This prevents from converting text that already exist in Clipboard
 			//by pressing "Convert Selection hotkey" without selected text.
 			NativeClipboard.Clear();
@@ -897,18 +911,13 @@ namespace Mahou
 			if (MMain.mahou.SelectedTextGetMoreTries)
 				for (int i = 0; i != MMain.mahou.SelectedTextGetMoreTriesCount; i++) {
 					ClipStr = MakeCopy();
-					if (doBackup)
-						datas = NativeClipboard.GetClipboardDatas();
 					if (!String.IsNullOrEmpty(ClipStr))
 						break;
 				}
 			else {
 				ClipStr = MakeCopy();
-				if (String.IsNullOrEmpty(ClipStr)) {
+				if (String.IsNullOrEmpty(ClipStr))
 					ClipStr = MakeCopy();
-					if (doBackup)
-						datas = NativeClipboard.GetClipboardDatas();
-				}
 			}
 			if (String.IsNullOrEmpty(ClipStr))
 				return "";
