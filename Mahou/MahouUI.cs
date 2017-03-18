@@ -1556,7 +1556,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			var myProxy = new WebProxy();
 			try {
 				var newUri = new Uri("http://" + txt_ProxyServerPort.Text);
-				Logging.Log("Proxy is " + newUri);
+				Logging.Log("Proxy is " + newUri + ", port is " + newUri.Port + ".");
 				myProxy.Address = newUri;
 			} catch {
 //				grb_ProxyConfig.Text = MMain.UI[51];
@@ -1898,7 +1898,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 		void Btn_DebugInfoClick(object sender, EventArgs e) {
 			try {
 				string debuginfo = "### MAHOU DEBUG INFO";
-				debuginfo += "\r\n" + "- Mahou-v"+Application.ProductVersion;
+				debuginfo += "\r\n" + "- " + Text;
 				debuginfo += "\r\n" + "- OS = [" + Environment.OSVersion + "]";
 				debuginfo += "\r\n" + "- x64 = [" + Environment.Is64BitOperatingSystem + "]";
 				debuginfo += "\r\n" + "- .Net = [" + Environment.Version +"]";
@@ -1906,7 +1906,9 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				foreach (var l in MMain.lcnmid) {
 					debuginfo += l + "\r\n";
 				}
-				debuginfo += "#### Mahou.ini:\r\n```ini\r\n"+ File.ReadAllText(Path.Combine(nPath, "Mahou.ini")) + "```";
+				debuginfo += "#### Mahou.ini:\r\n```ini\r\n" + 
+					Regex.Match(File.ReadAllText(Path.Combine(nPath, "Mahou.ini")), @"(.*?)\[Proxy.+", RegexOptions.Singleline).Groups[1].Value +
+					"```";
 				if (File.Exists(Path.Combine(nPath, "snippets.txt")))
 				    debuginfo += "\r\n" + "#### Snippets:\r\n```\r\n" + File.ReadAllText(Path.Combine(nPath, "snippets.txt")) + "```";
 				if (Directory.Exists(Path.Combine(nPath, "Flags"))) {
