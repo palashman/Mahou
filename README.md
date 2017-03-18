@@ -23,6 +23,14 @@ Mahou работает совершенно по-другому: в отличи
 
 ###### Возможности по версиям:
 
+**v2.1.1.1**<br/>
+- Добавлена возможность изменить текст для подсказок языка.
+- Исправлено восстановление текста который был в буфере обмена перед конвертацией выделенного в некоторых приложениях(MS Office 2016 и т.д.).
+- Исправлен вид для остальных раскладок при включенной функции **Использовать разный вид для раскладок**.
+- Обновлено отладочная информация, теперь включает тэги &lt;details> и &lt;summary> для создания спойлеров для чтобы уменьшить занимаемое место в комментариях на GitHub. Данные прокси из Mahou.ini теперь не включаются в отладочную информацию.
+- Исправлено сохранение данных прокси.
+- Добавелно скрытие вида пароля прокси и шифрование пароля в файле настроек.
+
 **v2.1.0.4**<br/>
 - Добавлена поддержка [MCDS](https://github.com/BladeMight/MahouCaretDisplayServer), который добавляет возможность отображения подсказки языка возле каретки в Sublime Text 3.
 - Добавлена функция прогамм-исключений.
@@ -134,7 +142,7 @@ Mahou находится под GPL v2+.
 
 ### Поддержать проект материально
 
-Если Вы считаете что хотите помочь материально, буду очень благодарен :) 
+Если Вы считаете что хотите помочь материально, буду очень благодарен :)
 
 Кошельки:
 
@@ -163,6 +171,14 @@ Even selected text switches just between **selected** layouts, though if you lik
 4. Starting from v1.0.4.4 in Convert selection unrecognized text by all selected layout in settings (example: ♥) just rewrites.
 
 ###### By version features:
+
+**v2.1.1.1**<br/>
+- Added feature to change language tooltip text.
+- Fixed clipboard text restore before converting selection in some apps(MS Office 2016 etc.)..
+- Fixed appearence for non-main-layouts(two in settings) when *Use different appearence for layouts* enabled.
+- Updated debug info, now it includes tags &lt;details> and &lt;summary> to create spoilers which will consume less space in comments on GitHub. Proxy settings from Mahou.ini now won't be included to debug info.
+- Fixed proxy settings saving.
+- Added proxy password hide in view and password encryption in the settings file.
 
 **v2.1.0.4**<br/>
 - Added support for [MCDS](https://github.com/BladeMight/MahouCaretDisplayServer), which adds ability to display caret language tooltip in Sublime Text 3.
@@ -258,7 +274,7 @@ Even selected text switches just between **selected** layouts, though if you lik
 - <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>F12</kbd> - To exit Mahou.
 - [More...](https://github.com/BladeMight/Mahou/wiki/Functions-list#hotkeys)
 
-### [Download or view release notes.](https://github.com/BladeMight/Mahou/releases) 
+### [Download or view release notes.](https://github.com/BladeMight/Mahou/releases)
 
 ### Using Chocolatey? type `cinst Mahou` to install.
 
