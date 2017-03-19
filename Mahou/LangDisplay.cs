@@ -49,9 +49,9 @@ namespace Mahou
 			else if (MMain.mahou.LDMouseTransparentBack_temp && mouseDisplay)
 				transparentBG = true;
 			else transparentBG = false;
-			var clangname = new System.Globalization.CultureInfo((int)(cLid & 0xffff));
 			var notTwo = false;
 			if ((cLid & 0xffff) > 0) {
+				var clangname = new System.Globalization.CultureInfo((int)(cLid & 0xffff));
 				if (MMain.mahou.DiffAppearenceForLayouts) {
 					if (cLid == Locales.GetLocaleFromString(MMain.mahou.MainLayout1).uId) {
 						ChangeColors(MMain.mahou.Layout1Font_temp, MMain.mahou.Layout1Fore_temp, 
