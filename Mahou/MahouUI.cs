@@ -117,6 +117,7 @@ namespace Mahou {
 		public LangDisplay mouseLangDisplay = new LangDisplay();
 		public LangDisplay caretLangDisplay = new LangDisplay();
 		uint latestL = 0, latestCL = 0;
+		public uint currentLayout = 0;
 		bool onepass = true, onepassC = true;
 		string latestSwitch = "null";
 		public Timer res = new Timer();
@@ -726,11 +727,16 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 		/// Changes tray icon image to country flag based on current layout.
 		/// </summary>
 		void ChangeTrayIconToFlag() {
-			var lcid = (int)(Locales.GetCurrentLocale() & 0xffff);
+			int lcid = 0;
+			if (currentLayout == 0)
+				lcid = (int)(Locales.GetCurrentLocale() & 0xffff);
+			else 
+				lcid = (int)(currentLayout & 0xffff);
 			if (lcid > 0) {
 				var flagname = "jp";
 				var clangname = new CultureInfo(lcid);
 				flagname = clangname.ThreeLetterISOLanguageName.Substring(0, 2).ToLower();
+//				Debug.WriteLine(flagname+" "+currentLayout+" "+lcid);
 				var flag = Path.Combine(MahouUI.nPath, "Flags\\" + flagname + ".png");
 				Icon flagicon = null;
 				if (flagname != latestSwitch) {

@@ -108,6 +108,10 @@ namespace Mahou
 				// Anti win-stuck rule
 				if (win && Key == Keys.L)
 					win = false;
+				// Clear currentLayout in MMain.mahou rule
+				if (((win || alt || ctrl) && Key == Keys.Tab) ||
+				    win && Key != Keys.None) // On any Win+[AnyKey] hotkey
+					MMain.mahou.currentLayout = 0;
 				#endregion
 				#region Hotkeys
 				switch (vkCode) {
@@ -411,6 +415,7 @@ namespace Mahou
 			try {
 			if (nCode >= 0) {
 				if ((WinAPI.WM_LBUTTONDOWN == (uint)wParam) || WinAPI.WM_RBUTTONDOWN == (uint)wParam) {
+					MMain.mahou.currentLayout = 0;
 					MMain.c_word.Clear();
 					MMain.c_words.Clear();
 					Logging.Log("Last word & words cleared [with mouse click].");
@@ -469,7 +474,7 @@ namespace Mahou
 		{
 //			Debug.WriteLine("Spekky->" + specificKey + " Ky->" + Key + " skId->" + specKeyId);
 //			Debug.WriteLine("Speekky->" + (Key == Keys.CapsLock));
-			if (!shift && specificKey == 1 && Key == Keys.CapsLock &&
+			if (!shift && !alt && !ctrl && specificKey == 1 && Key == Keys.CapsLock &&
 			    wParam == (IntPtr)WinAPI.WM_KEYDOWN && !self) {
 				self = true;
 				//Code below removes CapsLock original action, but if hold will not work and will stuck, press again to off.
@@ -477,12 +482,13 @@ namespace Mahou
 				KeybdEvent(Keys.CapsLock, 2);
 				self = false;
 			}
+			var bylayout = false;
 			if (wParam == (IntPtr)WinAPI.WM_KEYUP && !self) {
 				#region Switch between layouts with one key
 				var speclayout = (string)typeof(MahouUI).GetField("Layout"+specKeyId).GetValue(MMain.mahou);
 				if (speclayout == Languages.Russian.SwitchBetween ||
 				     speclayout == Languages.English.SwitchBetween) {
-					if (!shift && specificKey == 1 && Key == Keys.CapsLock) {
+					if (!shift && !alt && !ctrl && specificKey == 1 && Key == Keys.CapsLock) {
 						self = true;
 						ChangeLayout();
 						if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
@@ -532,49 +538,66 @@ namespace Mahou
 				} else {
 					#region By layout switch
 					self = true;
+					bylayout = true;
+					var matched = false;
 					if (specificKey == 1 && Key == Keys.CapsLock) {
 						Logging.Log("Switching to specific layout by Caps Lock key.");
 						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(speclayout).uId);
 						KeybdEvent(Keys.LControlKey, 2); //fix for WinAPI.PostMessage, it somehow o_0 sends another ctrl...
+						matched = true;
 					}
 					if (specificKey == 2 && Key == Keys.LControlKey && !keyAfterCTRL) {
 						Logging.Log("Switching to specific layout by  LCtrl key.");
 						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(speclayout).uId);
 						KeybdEvent(Keys.LControlKey, 2); //fix for WinAPI.PostMessage, it somehow o_0 sends another ctrl...
+						matched = true;
 					}
 					if (specificKey == 3 && Key == Keys.RControlKey && !keyAfterCTRL) {
 						Logging.Log("Switching to specific layout by RCtrl key.");
 						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(speclayout).uId);
 						KeybdEvent(Keys.LControlKey, 2); //fix for WinAPI.PostMessage, it somehow o_0 sends another ctrl...
+						matched = true;
 					}
 					if (specificKey == 4 && Key == Keys.LShiftKey && !keyAfterSHIFT) {
 						Logging.Log("Switching to specific layout by LShift key.");
 						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(speclayout).uId);
+						matched = true;
 					}
 					if (specificKey == 5 && Key == Keys.RShiftKey && !keyAfterSHIFT) {
 						Logging.Log("Switching to specific layout by RShift key.");
 						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(speclayout).uId);
+						matched = true;
 					}
 					if (specificKey == 6 && Key == Keys.LMenu && !keyAfterALT) {
 						Logging.Log("Switching to specific layout by LAlt key.");
 						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(speclayout).uId);	
+						matched = true;
 					}
 					if (specificKey == 7 && Key == Keys.RMenu && !keyAfterALT) {
 						Logging.Log("Switching to specific layout by RAlt key.");
 						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(speclayout).uId);
+						matched = true;
+					}
+					try {
+						if (matched) {
+							MMain.mahou.currentLayout = Locales.GetLocaleFromString(speclayout).uId;
+							Logging.Log("Available layout from string ["+speclayout+"] & id ["+specKeyId+"].");
+						}
+					} catch { 
+						Logging.Log("No layout available from string ["+speclayout+"] & id ["+specKeyId+"]."); 
 					}
 					self = false;
 				}
 				#endregion
-				if ((specificKey == 7 && Key == Keys.RMenu) ||
+				if (((specificKey == 7 && Key == Keys.RMenu) ||
 					(specificKey == 6 && Key == Keys.LMenu) ||
 					(specificKey == 5 && Key == Keys.RShiftKey) ||
 					(specificKey == 4 && Key == Keys.LShiftKey) ||
 					(specificKey == 3 && Key == Keys.RControlKey) ||
 					(specificKey == 2 && Key == Keys.LControlKey) ||
-					(specificKey == 1 && Key == Keys.CapsLock)) {
+					(specificKey == 1 && Key == Keys.CapsLock)) && bylayout) {
 					self = true;
-					KeybdEvent(Keys.LControlKey, 2);  //fix for WinAPI.PostMessage, it SOMEHOW o_0 sends LEFT ctrl after layout change...
+//					KeybdEvent(Keys.LControlKey, 2);  //fix for WinAPI.PostMessage, it SOMEHOW o_0 sends LEFT ctrl after layout change...
 									// I'd be really happy if someone could tell me why it SEND THAT ****** Left Control after postmessage???
 					self = false;
 				}
@@ -966,10 +989,17 @@ namespace Mahou
 			{
 				Logging.Log("Starting to convert word.");
 				self = true;
+				var backs = YuKeys.Length;
+				// Fix for cmd exe pause hotkey leaving one char. 
+				var clsNM = new StringBuilder(256);
+				WinAPI.GetClassName(WinAPI.GetForegroundWindow(), clsNM, clsNM.Capacity);
+				if (clsNM.ToString() == "ConsoleWindowClass" && (
+					MMain.mahou.HKCLast.keyCode == (int)Keys.Pause))
+					backs++;
 				var wasLocale = Locales.GetCurrentLocale() & 0xFFFF;
 				ChangeLayout();
 				Logging.Log("Deleting old word, with lenght of [" + YuKeys.Length + "].");
-				for (int e = 0; e < YuKeys.Length; e++) {
+				for (int e = 0; e < backs; e++) {
 					KInputs.MakeInput(new [] { KInputs.AddKey(Keys.Back, true),
 						KInputs.AddKey(Keys.Back, false) 
 					});
@@ -1090,6 +1120,7 @@ namespace Mahou
 					if (tries == 3)
 						break;
 				}
+				MMain.mahou.currentLayout = notnowLocale;
 			} else
 				CycleSwitch();
 		}
@@ -1100,6 +1131,7 @@ namespace Mahou
 		{
 			if (MMain.mahou.EmulateLS) {
 				if (MMain.mahou.EmulateLSType == "Alt+Shift") {
+					MMain.mahou.currentLayout = 0;
 					Logging.Log("Changing layout using cycle mode by simulating key press [Alt+Shift].");
 					//Emulate Alt+Shift
 					KInputs.MakeInput(new [] {
@@ -1138,6 +1170,7 @@ namespace Mahou
 					if (curind == MMain.locales.Length - 1) {
 						Logging.Log("Locales BREAK!");
 						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, MMain.locales[0].uId);
+						MMain.mahou.currentLayout = MMain.locales[0].uId;
 						break;
 					}
 					Logging.Log("LIDC = "+lidc +" curid = "+curind + " Lidle = " +(MMain.locales.Length - 1));
@@ -1145,6 +1178,7 @@ namespace Mahou
 						if (l.uId != cur) {
 							Logging.Log("Locales +1 Next BREAK!");
 							WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, l.uId);
+							MMain.mahou.currentLayout = l.uId;
 							break;
 					}
 					lidc++;
