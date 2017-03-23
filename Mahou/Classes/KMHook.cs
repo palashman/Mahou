@@ -17,6 +17,7 @@ namespace Mahou
 			shiftRP, ctrlRP, altRP, winRP, //RP = Re-Press
 			awas, swas, cwas, wwas, afterEOS, //*was = alt/shift/ctrl was
 			keyAfterCTRL, keyAfterALT, keyAfterSHIFT, hklOK, hksOK, hklineOK, hkSIOK, hkExitOK,
+			clickAfterCTRL, clickAfterALT, clickAfterSHIFT,
 			hksTTCOK, hksTRCOK, hksTSCOK, hksTrslOK, hkShWndOK, hkcwdsOK,
 			hotkeywithmodsfired, csdoing, incapt, waitfornum;
 		static string lastClipText = "";
@@ -260,7 +261,13 @@ namespace Mahou
 					KeybdEvent(Keys.Scroll, 2);
 					self = false;
 				}
-				
+				if (!self && wParam == (IntPtr)WinAPI.WM_KEYUP)
+					if (Key == Keys.LControlKey || Key == Keys.RControlKey || Key == Keys.ControlKey)
+						clickAfterCTRL = false;
+					if (Key != Keys.LMenu && Key != Keys.RMenu && Key != Keys.Menu)
+						clickAfterALT = false;
+					if (Key != Keys.LShiftKey && Key != Keys.RShiftKey && Key != Keys.Shift)
+						clickAfterSHIFT = false;
 				if (!self && MMain.mahou.ChangeLayouByKey) {
 					if (Key == Keys.LControlKey || Key == Keys.RControlKey ||
 				   	Key == Keys.LShiftKey || Key == Keys.RShiftKey ||
@@ -274,15 +281,15 @@ namespace Mahou
 						SpecificKey(Key, wParam, MMain.mahou.Key4, 4);
 //						Debug.WriteLine("!!!!!BREAK");
 					}
-					if (ctrl && (Key != Keys.LControlKey && Key != Keys.RControlKey && Key != Keys.ControlKey))
+					if (ctrl && (Key != Keys.LControlKey && Key != Keys.RControlKey && Key != Keys.ControlKey || clickAfterCTRL))
 						keyAfterCTRL = true;
 					else 
 						keyAfterCTRL = false;
-					if (alt && (Key != Keys.LMenu && Key != Keys.RMenu && Key != Keys.Menu))
+					if (alt && (Key != Keys.LMenu && Key != Keys.RMenu && Key != Keys.Menu || clickAfterALT))
 						keyAfterALT = true;
 					else 
 						keyAfterALT = false;
-					if (shift && (Key != Keys.LShiftKey && Key != Keys.RShiftKey && Key != Keys.Shift))
+					if (shift && (Key != Keys.LShiftKey && Key != Keys.RShiftKey && Key != Keys.Shift || clickAfterSHIFT))
 						keyAfterSHIFT = true;
 					else 
 						keyAfterSHIFT = false;
@@ -415,6 +422,12 @@ namespace Mahou
 			try {
 			if (nCode >= 0) {
 				if ((WinAPI.WM_LBUTTONDOWN == (uint)wParam) || WinAPI.WM_RBUTTONDOWN == (uint)wParam) {
+					if (ctrl)
+						clickAfterCTRL = true;
+					if (shift)
+						clickAfterSHIFT = true;
+					if (alt)
+						clickAfterALT = true;
 					MMain.mahou.currentLayout = 0;
 					MMain.c_word.Clear();
 					MMain.c_words.Clear();
@@ -595,9 +608,10 @@ namespace Mahou
 					(specificKey == 4 && Key == Keys.LShiftKey) ||
 					(specificKey == 3 && Key == Keys.RControlKey) ||
 					(specificKey == 2 && Key == Keys.LControlKey) ||
-					(specificKey == 1 && Key == Keys.CapsLock)) && bylayout) {
+					(specificKey == 1 && Key == Keys.CapsLock)) &&
+					(bylayout || !MMain.mahou.EmulateLS)) {
 					self = true;
-//					KeybdEvent(Keys.LControlKey, 2);  //fix for WinAPI.PostMessage, it SOMEHOW o_0 sends LEFT ctrl after layout change...
+					KeybdEvent(Keys.LControlKey, 2);  //fix for WinAPI.PostMessage, it SOMEHOW o_0 sends LEFT ctrl after layout change...
 									// I'd be really happy if someone could tell me why it SEND THAT ****** Left Control after postmessage???
 					self = false;
 				}
