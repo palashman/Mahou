@@ -23,6 +23,13 @@ Mahou работает совершенно по-другому: в отличи
 
 ###### Возможности по версиям:
 
+**v2.1.1.2~v2.1.1.6**<br/>
+- Обновлена wiki.
+- Добавлена функция **Считать раскладку для всего слова в КВ** которая **прекрасно** конвертирует выделенный текст в котором есть слова с символами.
+- Добавлено правило — не переключать раскладку в функции **Переключать раскладки по клавишам** если до отпуска клавиши была надата кнопка мыши.
+- Исправлено включение CapsLock'а при **выключенном таймере отключателе CapsLock** по Ctrl+CapsLock.
+- Исправлено что символы и цифры с Numpad(**Я не про Alt+Numpad**) не ловились в текущее слово.
+
 **v2.1.1.1**<br/>
 - Добавлена возможность изменить текст для подсказок языка.
 - Исправлено восстановление текста который был в буфере обмена перед конвертацией выделенного в некоторых приложениях(MS Office 2016 и т.д.).
@@ -171,6 +178,13 @@ Even selected text switches just between **selected** layouts, though if you lik
 4. Starting from v1.0.4.4 in Convert selection unrecognized text by all selected layout in settings (example: ♥) just rewrites.
 
 ###### By version features:
+
+**v2.1.1.2~v2.1.1.6**<br/>
+- Updated wiki.
+- Added fucntion **Use layout for whole word in CS** which **perfectly** converts selected text in which are words with symbols.
+- Added rule — not switch layout in **Change to specific layout by key** if before key release was clicked mouse button.
+- Fixed Ctrl+CapsLock enabling when **CapsLock disabler timer** is off.
+- Fixed Numpad numbers and symbols(i'm talking not about alt+numpad) was not catched in last word/words.
 
 **v2.1.1.1**<br/>
 - Added feature to change language tooltip text.
