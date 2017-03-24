@@ -727,15 +727,20 @@ namespace Mahou
 								var wordL1 = "";
 								var wordL2 = "";
 								foreach (var c in w) {
-									var T = InAnother(c, l2 & 0xffff, l1 & 0xffff);
-									wordL1 += T;
-									if (T == "") {
+									var T1 = InAnother(c, l2 & 0xffff, l1 & 0xffff);
+									wordL1 += T1;
+									if (T1 == "") {
 										wordL1Minuses++;
 									}
-									T = InAnother(c, l1 & 0xffff, l2 & 0xffff);
-									wordL2 += T;
-									if (T == "") {
+									var T2 = InAnother(c, l1 & 0xffff, l2 & 0xffff);
+									wordL2 += T2;
+									if (T2 == "") {
 										wordL2Minuses++;
+									}
+									if (T1 == "" && T2 == "") {
+										Logging.Log("Char ["+c+"] is not in any of two layouts ["+l1+"], ["+l2+"] just rewriting.");
+										wordL1 += ClipStr[index].ToString();
+										wordL2 += ClipStr[index].ToString();
 									}
 									index++;
 								}
