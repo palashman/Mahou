@@ -39,7 +39,7 @@ namespace Mahou {
 		public bool DiffAppearenceForLayouts, LDForCaretOnChange, LDForMouseOnChange, ScrollTip, AddOneSpace,
 					TrayFlags, SymIgnEnabled, TrayIconVisible, SnippetsEnabled, ChangeLayouByKey, EmulateLS,
 					RePress, BlockHKWithCtrl, blueIcon, SwitchBetweenLayouts, SelectedTextGetMoreTries, ReSelect,
-					ConvertSelectionLS, ConvertSelectionLSPlus, MCDSSupport;
+					ConvertSelectionLS, ConvertSelectionLSPlus, MCDSSupport, OneLayoutWholeWord;
 		/// <summary>
 		/// Temporary modifiers of hotkeys.
 		/// </summary>
@@ -433,6 +433,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			MMain.MyConfs.Write("Functions", "CapsLockTimer", chk_CapsLockDTimer.Checked.ToString());
 			MMain.MyConfs.Write("Functions", "BlockMahouHotkeysWithCtrl", chk_BlockHKWithCtrl.Checked.ToString());
 			MMain.MyConfs.Write("Functions", "MCDServerSupport", chk_MCDS_support.Checked.ToString());
+			MMain.MyConfs.Write("Functions", "OneLayoutWholeWord", chk_OneLayoutWholeWord.Checked.ToString());
 			#endregion
 			#region Layouts
 			MMain.MyConfs.Write("Layouts", "SwitchBetweenLayouts", chk_SwitchBetweenLayouts.Checked.ToString());
@@ -520,6 +521,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			BlockHKWithCtrl = chk_BlockHKWithCtrl.Checked = MMain.MyConfs.ReadBool("Functions", "BlockMahouHotkeysWithCtrl");
 			SymIgnEnabled = MMain.MyConfs.ReadBool("Functions", "SymbolIgnoreModeEnabled");
 			MCDSSupport = chk_MCDS_support.Checked = MMain.MyConfs.ReadBool("Functions", "MCDServerSupport");
+			OneLayoutWholeWord = chk_OneLayoutWholeWord.Checked = MMain.MyConfs.ReadBool("Functions", "OneLayoutWholeWord");
 			#endregion
 			#region Layouts
 			SwitchBetweenLayouts = chk_SwitchBetweenLayouts.Checked = MMain.MyConfs.ReadBool("Layouts", "SwitchBetweenLayouts");
@@ -650,6 +652,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 		void ToggleDependentControlsEnabledState() {
 			// Functions tab
 			chk_CSLayoutSwitchingPlus.Enabled = chk_CSLayoutSwitching.Checked;
+			chk_OneLayoutWholeWord.Enabled = !chk_CSLayoutSwitching.Checked;
 			// Layouts tab
 			grb_Keys.Enabled = grb_Layouts.Enabled = chk_SpecificLS.Checked;
 			cbb_MainLayout1.Enabled = cbb_MainLayout2.Enabled = 
@@ -1634,6 +1637,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				tab_updates.Text = Languages.Russian.tab_Updates;
 				tab_about.Text = Languages.Russian.tab_About;
 				lnk_plugin.Text = "ST3 " + Languages.Russian.Plugin;
+				chk_OneLayoutWholeWord.Text = Languages.Russian.OneLayoutWholeWord;
 				#endregion
 				#region Functions
 				chk_AutoStart.Text = Languages.Russian.AutoStart;
@@ -1768,6 +1772,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				chk_BlockHKWithCtrl.Text = Languages.English.BlockCtrlHKs;
 				chk_MCDS_support.Text = Languages.English.MCDSSupport;
 				lnk_plugin.Text = "ST3 " + Languages.English.Plugin;
+				chk_OneLayoutWholeWord.Text = Languages.English.OneLayoutWholeWord;
 				#endregion
 				#region Layouts
 				chk_SwitchBetweenLayouts.Text = Languages.English.SwitchBetween+":";
@@ -2309,6 +2314,14 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				HelpMeUnderstand.Show(Languages.English.TT_LDText, lbl);
 			else if (Lang == "Русский")
 				HelpMeUnderstand.Show(Languages.Russian.TT_LDText, lbl);
+		}
+		void Chk_OneLayoutWholeWordMouseHover(object sender, EventArgs e) {
+			var chk = sender as CheckBox;
+			HelpMeUnderstand.ToolTipTitle = chk.Text;
+			if (Lang == "English")
+				HelpMeUnderstand.Show(Languages.English.TT_OneLayoutWholeWordCS, chk);
+			else if (Lang == "Русский")
+				HelpMeUnderstand.Show(Languages.Russian.TT_OneLayoutWholeWordCS, chk);
 		}
 		#endregion
 		#endregion

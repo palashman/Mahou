@@ -28,6 +28,7 @@ namespace Mahou.Languages
 		public static readonly string ContryFlags = "Display country flags in tray icon.";
 		public static readonly string BlockCtrlHKs = "Block Mahou hotkeys with Ctrl.";
 		public static readonly string MCDSSupport = "Enable MCDS support.";
+		public static readonly string OneLayoutWholeWord = "Use layout for whole word in CS.";
 		#endregion
 		#region Layouts
 		public static readonly string SwitchBetween = "Switch between layouts";
@@ -138,7 +139,7 @@ namespace Mahou.Languages
 		public static readonly string TT_BlockCtrl = "Blocks hotkeys that use Control,\nwhen \"Switch layout by key\" is set to Left/Right Control.";
 		public static readonly string TT_CapsDis = "If enabled, timer which disables CapsLock(led) will work.";
 		public static readonly string TT_EmulateLS = "If enabled, layout switching will emulate press of keys selected on right.";
-		public static readonly string TT_RePress = "If enabled, modifiers(Ctrl/Alt/Shift/Win) will be pressed again conversion(recommended).";
+		public static readonly string TT_RePress = "If enabled, modifiers(Ctrl/Alt/Shift/Win) will be pressed again conversion(recommended? although With a very small probability (less than 0.01%) modifiers may stuck...)).";
 		public static readonly string TT_Add1Space = "If enabled, ONE space will be adding to last word.";
 		public static readonly string TT_ReSelect = "If enabled, any \"Convert selected\" will select text again after conversion.";
 		public static readonly string TT_ScrollTip = "Highlight Scroll Lock when active language 1, selected in Layouts tab.\nUnnesesary to keep enabled \"Switch between layouts\" function enabled for this function to work, just select layout #1 below it and the disable it if you need to.";
@@ -161,6 +162,7 @@ namespace Mahou.Languages
 		public static readonly string TT_ExcludedPrograms = "Programs(excluded) in which convert hotkeys won't work.\nSeperators - any symbols including a space..";
 		public static readonly string TT_MCDSSupport = "Add ability to display language tooltip around caret in Sublime Text 3.\nFor it to work yout need to install plugin, link on right.\nSettings avaible in appearence tab:\nTop: Your ST3 titlebar + tab bar height,\nBottom: Your y pixels to ST3 console edit box(ctrl+`).\nFor different windows/themes settings will be different!";
 		public static readonly string TT_LDText = "Leave empty for auto-detect.";
+		public static readonly string TT_OneLayoutWholeWordCS = "Use one layout for whole word in Convert Selection, this feature uses quantity of rightly recognized chars in two selected layouts to indicate layout of whole word,\nthis feature works PERFECTLY with words that have symbols around them, but word lenght must be greater that 1 char for this feature to work properly.";
 		#endregion
 	}
 	/// <summary>
@@ -183,7 +185,7 @@ namespace Mahou.Languages
 		public static readonly string TrayIcon = "Показывать иконку в трее.";
 		public static readonly string ConvertSelectionLS = "Смена раскладки в Конверт выделения.";
 		public static readonly string ReSelect = "Выделять заново текст после конвертации.";
-		public static readonly string RePress = "Нажимать заново модификаторы после действия горячих клавиш.";
+		public static readonly string RePress = "Нажимать снова модификаторы горячих клавиш.";
 		public static readonly string Add1Space = "Добавлять 1 пробел в текущее слово.";
 		public static readonly string ConvertSelectionLSPlus = "Смена раскладки в Конверт выделения+ (экспереметнально).";
 		public static readonly string HighlightScroll = "Подсвечивать Scroll-Lock когда раскладка 1 активна.";
@@ -193,6 +195,7 @@ namespace Mahou.Languages
 		public static readonly string ContryFlags = "Отображать флаги стран в трее.";
 		public static readonly string BlockCtrlHKs = "Блокировать горячие клавиши Mahou содержащие Ctrl.";
 		public static readonly string MCDSSupport = "Включить поддержку MCDS.";
+		public static readonly string OneLayoutWholeWord = "Считать раскладку для всего слова в КВ.";
 		#endregion
 		#region Layouts
 		public static readonly string SwitchBetween = "Переключать между раскладками";
@@ -305,7 +308,7 @@ namespace Mahou.Languages
 		public static readonly string TT_BlockCtrl = "Блокирует горячие клавиши содержащие Control,\nможет быть полезно если \"Переключать язык клавишей\" установлен на Left/Right Control.";
 		public static readonly string TT_CapsDis = "Если включено, то будет работать таймер который будет выключать CapsLock(лампочку).";
 		public static readonly string TT_EmulateLS = "Если включено, переключение раскладку будет эмулировать нажатие клавиш выбранный правее для переключения раскладки.";
-		public static readonly string TT_RePress = "Если включено, то модификаторы(Ctrl/Alt/Shift/Win) будут нажаты заново после действия горячей клавиши.(рекомендуется).";
+		public static readonly string TT_RePress = "Если включено, то модификаторы(Ctrl/Alt/Shift/Win) будут нажаты заново после действия горячей клавиши.(рекомендуется? хотя с очень маленькой вероятностью (менее 0.01%) могут залипнуть модификаторы...).";
 		public static readonly string TT_Add1Space = "Если включено, то ОДИН пробел будет добавлятся в последнее слово.";
 		public static readonly string TT_ReSelect = "Если включено, любые \"Конверт выделения\" будут выделять тескт заново.";
 		public static readonly string TT_ScrollTip = "Подсвечивать лампочку Scroll Lock когда активна раскладка 1, выбранная во вкладке Раскладки.\nНе обязательно оставлять включенным функцию \"Переключать между раскладками\", нужно просто выбрать раскладку #1 ниже неё.";
@@ -328,6 +331,7 @@ namespace Mahou.Languages
 		public static readonly string TT_ExcludedPrograms = "Программы(исключения) в которых горячие клавиши Конвертирования не будут работать.\nРазделители - любые символы включая пробел.";
 		public static readonly string TT_MCDSSupport = "Дает возможность отображения подсказки текущего языка возле каретки в Sublime Text 3.\nДля его работы нужно установить плагин, ссылка с права.\nНастройки во вкладке Вид.\nСверху: Высота заголовка окна + высота панели вкладок ST3,\nСнизу: Ваши y пиксели от конца окна до формы ввода консоли ST3(ctrl+`).\nДля разных Windows/Тем будут нужны разные настройки!";
 		public static readonly string TT_LDText = "Оставьте пустым для авто-определения.";
+		public static readonly string TT_OneLayoutWholeWordCS = "Использовать одну раскладку для целого слова в Конверт Выделения, эта функция использует количество правильно распознанных букв в двух раскладках чтобы определить раскладку слова,\nэта функция ПРЕКРАСНО работает с словами которые имеют рядом символы, но длинна слова должна быть больше 1(не включая символы) чтобы функция нормально работала.";
 		#endregion
 	}
 }

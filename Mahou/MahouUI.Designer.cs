@@ -130,6 +130,7 @@ namespace Mahou
 		private System.Windows.Forms.CheckBox chk_MCDS_support;
 		private System.Windows.Forms.TextBox txt_LangTTText;
 		private System.Windows.Forms.Label lbl_LangTTText;
+		private System.Windows.Forms.CheckBox chk_OneLayoutWholeWord;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -153,6 +154,7 @@ namespace Mahou
 			this.components = new System.ComponentModel.Container();
 			this.tabs = new System.Windows.Forms.TabControl();
 			this.tab_functions = new System.Windows.Forms.TabPage();
+			this.chk_OneLayoutWholeWord = new System.Windows.Forms.CheckBox();
 			this.lnk_plugin = new System.Windows.Forms.LinkLabel();
 			this.chk_MCDS_support = new System.Windows.Forms.CheckBox();
 			this.chk_BlockHKWithCtrl = new System.Windows.Forms.CheckBox();
@@ -323,6 +325,7 @@ namespace Mahou
 			// 
 			// tab_functions
 			// 
+			this.tab_functions.Controls.Add(this.chk_OneLayoutWholeWord);
 			this.tab_functions.Controls.Add(this.lnk_plugin);
 			this.tab_functions.Controls.Add(this.chk_MCDS_support);
 			this.tab_functions.Controls.Add(this.chk_BlockHKWithCtrl);
@@ -345,6 +348,18 @@ namespace Mahou
 			this.tab_functions.TabIndex = 0;
 			this.tab_functions.Text = "Functions";
 			this.tab_functions.UseVisualStyleBackColor = true;
+			// 
+			// chk_OneLayoutWholeWord
+			// 
+			this.chk_OneLayoutWholeWord.AutoSize = true;
+			this.chk_OneLayoutWholeWord.Location = new System.Drawing.Point(302, 116);
+			this.chk_OneLayoutWholeWord.Name = "chk_OneLayoutWholeWord";
+			this.chk_OneLayoutWholeWord.Size = new System.Drawing.Size(220, 19);
+			this.chk_OneLayoutWholeWord.TabIndex = 15;
+			this.chk_OneLayoutWholeWord.Text = "Use one layout for whole word in CS.";
+			this.chk_OneLayoutWholeWord.UseVisualStyleBackColor = true;
+			this.chk_OneLayoutWholeWord.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
+			this.chk_OneLayoutWholeWord.MouseHover += new System.EventHandler(this.Chk_OneLayoutWholeWordMouseHover);
 			// 
 			// lnk_plugin
 			// 

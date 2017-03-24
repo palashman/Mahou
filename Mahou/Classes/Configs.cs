@@ -26,7 +26,7 @@ namespace Mahou
         	#endregion
             #region Functions section
             CheckBool("Functions", "TrayIconVisible", "true");
-            CheckBool("Functions", "ConvertSelectionLayoutSwitching", "true");
+            CheckBool("Functions", "ConvertSelectionLayoutSwitching", "false");
             CheckBool("Functions", "ReSelect", "true");
             CheckBool("Functions", "RePress", "true");
             CheckBool("Functions", "AddOneSpaceToLastWord", "false");
@@ -39,6 +39,7 @@ namespace Mahou
             CheckBool("Functions", "BlockMahouHotkeysWithCtrl", "false");
             CheckBool("Functions", "SymbolIgnoreModeEnabled", "false");
             CheckBool("Functions", "MCDServerSupport", "false");
+            CheckBool("Functions", "OneLayoutWholeWord", "true");
             #endregion
 			#region Layouts section
 			CheckBool("Layouts", "SwitchBetweenLayouts", "true");

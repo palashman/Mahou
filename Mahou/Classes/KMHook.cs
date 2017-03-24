@@ -715,18 +715,51 @@ namespace Mahou
 							index++;
 						}
 					} else {
-						Logging.Log("Using default convert selection mode.");
 						var l1 = Locales.GetLocaleFromString(MMain.mahou.MainLayout1).uId;
 						var l2 = Locales.GetLocaleFromString(MMain.mahou.MainLayout2).uId;
 						var index = 0;
-						foreach (char c in ClipStr) {
-							var T = InAnother(c, l2 & 0xffff, l1 & 0xffff);
-							if (T == "")
-								T = InAnother(c, l1 & 0xffff, l2 & 0xffff);
-							if (T == "")
-								T = ClipStr[index].ToString();							
-							result += T;
-							index++;
+						if (MMain.mahou.OneLayoutWholeWord) {
+							Logging.Log("Using one layout whole word convert selection mode.");
+							var allWords = ClipStr.Split(' ');
+							foreach (var w in allWords) {
+								int wordL1Minuses = 0;
+								int wordL2Minuses = 0;
+								var wordL1 = "";
+								var wordL2 = "";
+								foreach (var c in w) {
+									var T = InAnother(c, l2 & 0xffff, l1 & 0xffff);
+									wordL1 += T;
+									if (T == "") {
+										wordL1Minuses++;
+									}
+									T = InAnother(c, l1 & 0xffff, l2 & 0xffff);
+									wordL2 += T;
+									if (T == "") {
+										wordL2Minuses++;
+									}
+									index++;
+								}
+								if (wordL1Minuses > wordL2Minuses)
+									result += wordL2;
+								else
+									result += wordL1;
+								if (w != allWords.Last())
+									result += " ";
+								Logging.Log("Layout 1 minuses: " + wordL1Minuses + "wordL1: " + wordL1 + 
+								                ", Layout 2 minuses: " + wordL2Minuses + "wordL2: " + wordL2);
+								index++;
+							}
+						} else {
+							Logging.Log("Using default convert selection mode.");
+							foreach (char c in ClipStr) {
+								var T = InAnother(c, l2 & 0xffff, l1 & 0xffff);
+								if (T == "")
+									T = InAnother(c, l1 & 0xffff, l2 & 0xffff);
+								if (T == "")
+									T = ClipStr[index].ToString();							
+								result += T;
+								index++;
+							}
 						}
 						Logging.Log("Conversion of string [" + ClipStr + "] from locale [" + l1 + "] into locale [" + l2 + "] became [" + result + "].");
 						//Inputs converted text
