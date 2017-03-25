@@ -164,6 +164,9 @@ namespace Mahou.Languages
 		public static readonly string TT_LDText = "Leave empty for auto-detect.";
 		public static readonly string TT_OneLayoutWholeWordCS = "Use one layout for whole word in Convert Selection, this feature uses quantity of rightly recognized chars in two selected layouts to indicate layout of whole word,\nthis feature works PERFECTLY with words that have symbols around them, but word lenght must be greater that 1 char for this feature to work properly.";
 		#endregion
+		#region Messages
+		public static readonly string MSG_SnippetsError = "Snippets contains error in syntax, check if there are errors, details on snippets syntax you can find on Wiki.";
+		#endregion
 	}
 	/// <summary>
 	/// Russian language for MahouUI.
@@ -332,6 +335,9 @@ namespace Mahou.Languages
 		public static readonly string TT_MCDSSupport = "Дает возможность отображения подсказки текущего языка возле каретки в Sublime Text 3.\nДля его работы нужно установить плагин, ссылка с права.\nНастройки во вкладке Вид.\nСверху: Высота заголовка окна + высота панели вкладок ST3,\nСнизу: Ваши y пиксели от конца окна до формы ввода консоли ST3(ctrl+`).\nДля разных Windows/Тем будут нужны разные настройки!";
 		public static readonly string TT_LDText = "Оставьте пустым для авто-определения.";
 		public static readonly string TT_OneLayoutWholeWordCS = "Использовать одну раскладку для целого слова в Конверт Выделения, эта функция использует количество правильно распознанных букв в двух раскладках чтобы определить раскладку слова,\nэта функция ПРЕКРАСНО работает с словами которые имеют рядом символы, но длинна слова должна быть больше 1(не включая символы) чтобы функция нормально работала.";
+		#endregion
+		#region Messages
+		public static readonly string MSG_SnippetsError = "Сниппеты содержат ошибки в синтаксисе, проверьте ваши сниппеты, детали синтаксиса можете найти на Wiki.";
 		#endregion
 	}
 }

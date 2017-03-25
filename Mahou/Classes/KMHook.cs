@@ -213,8 +213,17 @@ namespace Mahou
 								} catch {
 									Logging.Log("Some snippets configured wrong, check them.", 1);
 									// If not use TASK, form(MessageBox) won't accept the keys(Enter/Escape/Alt+F4).
-//									var tsk = new Task(() => MessageBox.Show(MMain.Msgs[10], MMain.Msgs[11], MessageBoxButtons.OK, MessageBoxIcon.Error));
-//									tsk.Start();
+									var msg = new [] {"", ""};
+									if (MMain.mahou.Lang == "English") {
+										msg[0] = Languages.English.MSG_SnippetsError;
+										msg[1] = Languages.English.Error;
+									}
+									if (MMain.mahou.Lang == "Русский") {
+										msg[0] = Languages.Russian.MSG_SnippetsError;
+										msg[1] = Languages.Russian.Error;
+									}
+									var tsk = new System.Threading.Tasks.Task(() => MessageBox.Show(msg[0], msg[1], MessageBoxButtons.OK, MessageBoxIcon.Error));
+									tsk.Start();
 									KInputs.MakeInput(KInputs.AddString(snip));
 								}
 								self = false;
