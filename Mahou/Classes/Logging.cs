@@ -38,14 +38,22 @@ namespace Mahou
 			stopwatch.Start();
 			while (true) {
 				try {
-					#if DEBUG
+					#if VSCDEBUG
+						Console.WriteLine(tologmsg);
+					#elif DEBUG 
 						Debug.WriteLine(tologmsg);
 					#else
-					File.AppendAllText(log, tologmsg);
+						File.AppendAllText(log, tologmsg);
 					#endif
 					break;
 				} catch (Exception e) {
-					Debug.WriteLine(msgtime + " [LogError]\r\n                    " + e.Message + "\r\n" + e.StackTrace + "\r\n");
+					#if VSCDEBUG
+						Console.WriteLine(msgtime + " [LogError]\r\n                    " + e.Message + "\r\n" + e.StackTrace + "\r\n"); 
+					#elif DEBUG
+						Debug.WriteLine(msgtime + " [LogError]\r\n                    " + e.Message + "\r\n" + e.StackTrace + "\r\n");
+					#else
+						File.AppendAllText(log+"LOG-ERROR.txt", msgtime + " [LogError]\r\n                    " + e.Message + "\r\n" + e.StackTrace + "\r\n");
+					#endif
 					if (errcount > 10 && !messagebox) {
 						messagebox = true;
 //							MessageBox.Show(MMain.Msgs[14] + "\r\n\r\n" + e.Message + "\r\n\r\n" + e.StackTrace, MMain.Msgs[5]);
