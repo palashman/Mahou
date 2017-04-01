@@ -1612,6 +1612,8 @@ namespace Mahou
 			this.txt_UpdateDetails.Font = new System.Drawing.Font("Segoe UI Symbol", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.txt_UpdateDetails.Location = new System.Drawing.Point(3, 19);
 			this.txt_UpdateDetails.Multiline = true;
+			this.txt_UpdateDetails.ReadOnly = true;
+			this.txt_UpdateDetails.BackColor = System.Drawing.Color.White;
 			this.txt_UpdateDetails.Name = "txt_UpdateDetails";
 			this.txt_UpdateDetails.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.txt_UpdateDetails.Size = new System.Drawing.Size(295, 213);
@@ -1661,6 +1663,7 @@ namespace Mahou
 			this.txt_Help.Multiline = true;
 			this.txt_Help.Name = "txt_Help";
 			this.txt_Help.ReadOnly = true;
+			this.txt_Help.BackColor = System.Drawing.Color.White;
 			this.txt_Help.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.txt_Help.Size = new System.Drawing.Size(559, 246);
 			this.txt_Help.TabIndex = 5;
