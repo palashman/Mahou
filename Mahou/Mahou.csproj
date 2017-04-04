@@ -142,7 +142,9 @@
     <Compile Include="LangDisplay.Designer.cs">
       <DependentUpon>LangDisplay.cs</DependentUpon>
     </Compile>
-    <Compile Include="MahouUI.cs" />
+    <Compile Include="MahouUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="MahouUI.Designer.cs">
       <DependentUpon>MahouUI.cs</DependentUpon>
     </Compile>
