@@ -134,7 +134,7 @@ namespace Mahou {
 		    nud_CapsLockRefreshRate.Minimum = nud_DoubleHK2ndPressWaitTime.Minimum =
 		        nud_LangTTCaretRefreshRate.Minimum = nud_LangTTMouseRefreshRate.Minimum = 
 		    	nud_ScrollLockRefreshRate.Minimum = nud_TrayFlagRefreshRate.Minimum = 1;
-			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version + "-dev";
+			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version;
 			nud_LangTTPositionX.Minimum = nud_LangTTPositionY.Minimum = -100;
 			RegisterRestartHotkey();
 			RefreshAllIcons();
