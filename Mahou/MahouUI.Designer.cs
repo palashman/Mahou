@@ -1447,8 +1447,10 @@ namespace Mahou
 			// 
 			// txt_Hotkey
 			// 
+			this.txt_Hotkey.AcceptsTab = true;
 			this.txt_Hotkey.BackColor = System.Drawing.SystemColors.Window;
 			this.txt_Hotkey.Location = new System.Drawing.Point(59, 121);
+			this.txt_Hotkey.Multiline = true;
 			this.txt_Hotkey.Name = "txt_Hotkey";
 			this.txt_Hotkey.ReadOnly = true;
 			this.txt_Hotkey.Size = new System.Drawing.Size(224, 23);
