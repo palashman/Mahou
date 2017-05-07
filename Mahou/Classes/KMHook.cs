@@ -504,6 +504,17 @@ namespace Mahou
 				var speclayout = (string)typeof(MahouUI).GetField("Layout"+specKeyId).GetValue(MMain.mahou);
 				if (speclayout == MMain.Lang[Languages.Element.SwitchBetween] ||
 				     speclayout == MMain.Lang[Languages.Element.SwitchBetween]) {
+					if (specificKey == 8 && Key == Keys.CapsLock && shift && !alt && !ctrl) {
+						self = true;
+						Logging.Log("Changing layout by Shift+CapsLock key.");
+						ChangeLayout();
+						Thread.Sleep(5);
+						if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
+							KeybdEvent(Keys.CapsLock, 0);
+							KeybdEvent(Keys.CapsLock, 2);
+						}
+						self = false;
+					} else 
 					if (!shift && !alt && !ctrl && specificKey == 1 && Key == Keys.CapsLock) {
 						self = true;
 						ChangeLayout();
@@ -556,6 +567,16 @@ namespace Mahou
 					self = true;
 					bylayout = true;
 					var matched = false;
+					if (specificKey == 8 && Key == Keys.CapsLock && shift && !alt && !ctrl) {
+						Logging.Log("Switching to specific layout by Shift+CapsLock key.");
+						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(speclayout).uId);
+						Thread.Sleep(5);
+						if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
+							KeybdEvent(Keys.CapsLock, 0);
+							KeybdEvent(Keys.CapsLock, 2);
+						}
+						matched = true;
+					} else
 					if (specificKey == 1 && Key == Keys.CapsLock) {
 						Logging.Log("Switching to specific layout by Caps Lock key.");
 						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(speclayout).uId);
@@ -605,7 +626,8 @@ namespace Mahou
 					self = false;
 				}
 				#endregion
-				if (((specificKey == 7 && Key == Keys.RMenu) ||
+				if (((specificKey == 8 && Key == Keys.CapsLock && shift) ||
+					(specificKey == 7 && Key == Keys.RMenu) ||
 					(specificKey == 6 && Key == Keys.LMenu) ||
 					(specificKey == 5 && Key == Keys.RShiftKey) ||
 					(specificKey == 4 && Key == Keys.LShiftKey) ||
@@ -778,10 +800,7 @@ namespace Mahou
 					ReSelect(items);
 			}
 			NativeClipboard.Clear();
-			if (!String.IsNullOrEmpty(lastClipText)) {
-				Clipboard.SetText(lastClipText);
-				Clipboard.SetText(lastClipText);
-			}
+			RestoreClipBoard();
 			self = false;
 			} catch(Exception e) {
 				Logging.Log("Convert Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
@@ -812,10 +831,7 @@ namespace Mahou
 					ReSelect(ClipStr.Length);
 				}
 				NativeClipboard.Clear();
-				if (!String.IsNullOrEmpty(lastClipText)) {
-					Clipboard.SetText(lastClipText);
-					Clipboard.SetText(lastClipText);
-				}
+				RestoreClipBoard();
 				self = false;
 				} catch(Exception e) {
 					Logging.Log("Transliterate Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
@@ -853,10 +869,7 @@ namespace Mahou
 					ReSelect(ClipStr.Length);
 				}
 				NativeClipboard.Clear();
-				if (!String.IsNullOrEmpty(lastClipText)) {
-					Clipboard.SetText(lastClipText);
-					Clipboard.SetText(lastClipText);
-				}
+				RestoreClipBoard();
 				self = false;
 			} catch(Exception e) {
 				Logging.Log("To Title Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
@@ -896,10 +909,7 @@ namespace Mahou
 					ReSelect(ClipStr.Length);
 				}
 				NativeClipboard.Clear();
-				if (!String.IsNullOrEmpty(lastClipText)) {
-					Clipboard.SetText(lastClipText);
-					Clipboard.SetText(lastClipText);
-				}
+				RestoreClipBoard();
 				self = false;
 			} catch(Exception e) {
 				Logging.Log("To sWAP Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
@@ -939,10 +949,7 @@ namespace Mahou
 					ReSelect(ClipStr.Length);
 				}
 				NativeClipboard.Clear();
-				if (!String.IsNullOrEmpty(lastClipText)) {
-					Clipboard.SetText(lastClipText);
-					Clipboard.SetText(lastClipText);
-				}
+				RestoreClipBoard();
 				self = false;
 			} catch(Exception e) {
 				Logging.Log("To RaNdoM Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
@@ -962,6 +969,25 @@ namespace Mahou
 					});
 				}
 			}
+		}
+		static bool WaitForClip2BeFree() {
+			IntPtr CB_Blocker = IntPtr.Zero;
+			int tries = 0;
+			do { 
+				CB_Blocker = WinAPI.GetOpenClipboardWindow();
+				if (CB_Blocker == IntPtr.Zero) break;
+				Logging.Log("Clipboard blocked by process id ["+WinAPI.GetWindowThreadProcessId(CB_Blocker, IntPtr.Zero) +"].", 2);
+				tries ++;
+				if (tries > 3000) {
+					Logging.Log("3000 Tries to wait for clipboard blocker ended, blocker didn't free'd clipboard |_|.", 2); return false;;
+				}
+			} while (CB_Blocker != IntPtr.Zero);
+			return true;
+		}
+		static void RestoreClipBoard() {
+			Logging.Log("Restoring clipboard text: ["+lastClipText+"].");
+			if (WaitForClip2BeFree())
+				try { Clipboard.SetDataObject(lastClipText, true, 5, 120); } catch { Logging.Log("Error during clipboard text restore after 5 tries.", 2); }
 		}
 		/// <summary>
 		/// Sends RCtrl + Insert to selected get text, and returns that text by using WinAPI.GetText().
@@ -992,14 +1018,18 @@ namespace Mahou
 			Logging.Log("Getting selected text.");
 			if (MMain.mahou.SelectedTextGetMoreTries)
 				for (int i = 0; i != MMain.mahou.SelectedTextGetMoreTriesCount; i++) {
-					ClipStr = MakeCopy();
-					if (!String.IsNullOrEmpty(ClipStr))
-						break;
+					if (WaitForClip2BeFree()) {
+							ClipStr = MakeCopy();
+							if (!String.IsNullOrEmpty(ClipStr))
+								break;
+					}
 				}
 			else {
-				ClipStr = MakeCopy();
-				if (String.IsNullOrEmpty(ClipStr))
+				if (WaitForClip2BeFree()) {
 					ClipStr = MakeCopy();
+					if (String.IsNullOrEmpty(ClipStr))
+						ClipStr = MakeCopy();
+				}
 			}
 			if (String.IsNullOrEmpty(ClipStr))
 				return "";

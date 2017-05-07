@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -8,14 +9,34 @@ namespace Mahou
 {
 	static class Locales
 	{
+		[DllImport("getconkbl.dll")]
+		public static extern uint GetConsoleAppKbLayout(uint ActiveConsolePID);
+		[DllImport("getconkbl.dll")]
+		public static extern bool Initialize();
 		/// <summary>
 		/// Returns current layout id in foreground window.
 		/// </summary>
 		/// <returns>uint</returns>
 		public static uint GetCurrentLocale() //Gets current locale in active window
 		{
-			uint tid = WinAPI.GetWindowThreadProcessId(ActiveWindow(), IntPtr.Zero);
+			var actv = ActiveWindow();
+			uint pid = 0;
+			uint tid = WinAPI.GetWindowThreadProcessId(actv, out pid);
 			IntPtr layout = WinAPI.GetKeyboardLayout(tid);
+			var strb = new StringBuilder(256);
+			WinAPI.GetClassName(actv, strb, strb.Capacity);
+			if (strb.ToString() == "ConsoleWindowClass") {
+				WinAPI.GetWindowThreadProcessId(actv, out pid);
+				uint lid = 0;
+				try {
+					System.Diagnostics.Debug.WriteLine("INIT: {0}.", Initialize());
+					lid = GetConsoleAppKbLayout(pid);
+				} catch {
+					Logging.Log("getconkbl.dll not found, console layout get will not be right.", 2); 
+				}
+				System.Diagnostics.Debug.WriteLine("Tried to get console layout id, return [{0}], pid [{1}].", lid, pid);
+				return lid;
+			}
 			//Produces TOO much logging, disabled.
             //Logging.Log("Current locale id is [" + (uint)(layout.ToInt32() & 0xFFFF) + "].");
 			return (uint)layout;

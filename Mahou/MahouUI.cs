@@ -131,11 +131,12 @@ namespace Mahou {
 			InitializeTrayIcon();
 			LoadConfigs();
 			InitializeListBoxes();
+			// Set minnimum values because they're ALWAYS restores to 0 after Form Editor is used.
 		    nud_CapsLockRefreshRate.Minimum = nud_DoubleHK2ndPressWaitTime.Minimum =
 		        nud_LangTTCaretRefreshRate.Minimum = nud_LangTTMouseRefreshRate.Minimum = 
 		    	nud_ScrollLockRefreshRate.Minimum = nud_TrayFlagRefreshRate.Minimum = 1;
-			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version;
 			nud_LangTTPositionX.Minimum = nud_LangTTPositionY.Minimum = -100;
+			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version + "-dev";
 			RegisterRestartHotkey();
 			RefreshAllIcons();
 			//Background startup check for updates
@@ -727,6 +728,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				lcid = (int)(Locales.GetCurrentLocale() & 0xffff);
 			else 
 				lcid = (int)(currentLayout & 0xffff);
+//			Debug.WriteLine(lcid);
 			if (lcid > 0) {
 				var flagname = "jp";
 				var clangname = new CultureInfo(lcid);
