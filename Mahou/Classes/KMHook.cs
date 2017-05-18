@@ -451,10 +451,8 @@ namespace Mahou
 		#endregion
 		#region Functions/Struct
 		static bool ExcludedProgram() {
-        	uint pid = 0;
-        	WinAPI.GetWindowThreadProcessId(Locales.ActiveWindow(), out pid);
-			var prc = Process.GetProcessById((int)pid);
-			if (MMain.mahou.ExcludedPrograms.Contains(prc.ProcessName + ".exe")) { 
+			var prc = Locales.ActiveWindowProcess();
+			if (MMain.mahou.ExcludedPrograms.Contains(prc.ProcessName + ".exe")) {
 				Logging.Log(prc.ProcessName + ".exe->excluded");
 				return true;
 			}

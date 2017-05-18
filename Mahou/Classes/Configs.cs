@@ -54,6 +54,14 @@ namespace Mahou
 			CheckString("Layouts", "SpecificLayout3", "");
 			CheckString("Layouts", "SpecificLayout4", "");
 			#endregion
+			#region Persistent Layout
+			CheckBool("PersistentLayout", "ActivateForLayout1", "false");
+			CheckBool("PersistentLayout", "ActivateForLayout2", "false");
+			CheckInt("PersistentLayout", "Layout1CheckInterval", "50");
+			CheckInt("PersistentLayout", "Layout2CheckInterval", "50");
+			CheckString("PersistentLayout", "Layout1Processes", "devenv.exe wdexpress.exe");
+			CheckString("PersistentLayout", "Layout2Processes", "notepad++.exe winword.exe");
+			#endregion
 			#region Appearence section
             CheckBool("Appearence", "DisplayLangTooltipForMouse", "false");
             CheckBool("Appearence", "DisplayLangTooltipForMouseOnChange", "false");

@@ -98,6 +98,10 @@ namespace Mahou {
 		/// </summary>
 		string txt_Hotkey_tempModifiers;
 		/// <summary>
+		/// Temporary persistent layout's processes.
+		/// </summary>
+		public string PersistentLayout1Processes, PersistentLayout2Processes;
+		/// <summary>
 		/// Temporary layouts, etc..
 		/// </summary>
 		public string Layout1, Layout2, Layout3, Layout4, 
@@ -113,6 +117,8 @@ namespace Mahou {
 		public Timer crtCheck = new Timer();
 		public Timer capsCheck = new Timer();
 		public Timer flagsCheck = new Timer();
+		public Timer persistentLayout1Check = new Timer();
+		public Timer persistentLayout2Check = new Timer();
 		public LangDisplay mouseLangDisplay = new LangDisplay();
 		public LangDisplay caretLangDisplay = new LangDisplay();
 		uint latestL = 0, latestCL = 0;
@@ -134,7 +140,8 @@ namespace Mahou {
 			// Set minnimum values because they're ALWAYS restores to 0 after Form Editor is used.
 		    nud_CapsLockRefreshRate.Minimum = nud_DoubleHK2ndPressWaitTime.Minimum =
 		        nud_LangTTCaretRefreshRate.Minimum = nud_LangTTMouseRefreshRate.Minimum = 
-		    	nud_ScrollLockRefreshRate.Minimum = nud_TrayFlagRefreshRate.Minimum = 1;
+		    	nud_ScrollLockRefreshRate.Minimum = nud_TrayFlagRefreshRate.Minimum =
+				nud_PersistentLayout1Interval.Minimum = nud_PersistentLayout2Interval.Minimum =	1;
 			nud_LangTTPositionX.Minimum = nud_LangTTPositionY.Minimum = -100;
 			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version + "-dev";
 			RegisterRestartHotkey();
@@ -447,7 +454,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			try {
 				try { MMain.MyConfs.Write("Layouts", "EmulateLayoutSwitchType", cbb_EmulateType.SelectedItem.ToString()); } catch { }
 				// Main Layouts
-				try { MMain.MyConfs.Write("Layouts", "MainLayout1", cbb_MainLayout1.SelectedItem.ToString()); } catch { }
+				try { MMain.MyConfs.Write("Layouts", "MainLayout1", cbb_MainLayout1.SelectedItem.ToString()); } catch {  }
 				try { MMain.MyConfs.Write("Layouts", "MainLayout2", cbb_MainLayout2.SelectedItem.ToString()); } catch { }
 				// Layouts
 				try { MMain.MyConfs.Write("Layouts", "SpecificLayout1", cbb_Layout1.SelectedItem.ToString()); } catch { }
@@ -455,6 +462,14 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				try { MMain.MyConfs.Write("Layouts", "SpecificLayout3", cbb_Layout3.SelectedItem.ToString()); } catch { }
 				try { MMain.MyConfs.Write("Layouts", "SpecificLayout4", cbb_Layout4.SelectedItem.ToString()); } catch { }
 			} catch { Logging.Log("Some settings in layouts tab failed to save, they are skipped."); }
+			#endregion
+			#region Persistent Layout
+			MMain.MyConfs.Write("PersistentLayout", "ActivateForLayout1", chk_PersistentLayout1Active.Checked.ToString());
+			MMain.MyConfs.Write("PersistentLayout", "ActivateForLayout2", chk_PersistentLayout2Active.Checked.ToString());
+			MMain.MyConfs.Write("PersistentLayout", "Layout1CheckInterval", nud_PersistentLayout1Interval.Value.ToString());
+			MMain.MyConfs.Write("PersistentLayout", "Layout2CheckInterval", nud_PersistentLayout2Interval.Value.ToString());
+			MMain.MyConfs.Write("PersistentLayout", "Layout1Processes", txt_PersistentLayout1Processes.Text.Replace(Environment.NewLine, " "));
+			MMain.MyConfs.Write("PersistentLayout", "Layout2Processes", txt_PersistentLayout2Processes.Text.Replace(Environment.NewLine, " "));
 			#endregion
 			#region Appearence
 			MMain.MyConfs.Write("Appearence", "DisplayLangTooltipForMouse", chk_LangTooltipMouse.Checked.ToString());
@@ -479,7 +494,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			MMain.MyConfs.Write("Timings", "ScrollLockStateRefreshRate", nud_ScrollLockRefreshRate.Value.ToString());
 			MMain.MyConfs.Write("Timings", "SelectedTextGetMoreTries", chk_SelectedTextGetMoreTries.Checked.ToString());
 			MMain.MyConfs.Write("Timings", "SelectedTextGetMoreTriesCount", nud_SelectedTextGetTriesCount.Value.ToString());
-			MMain.MyConfs.Write("Timings", "ExcludedPrograms", txt_ExcludedPrograms.Text);
+			MMain.MyConfs.Write("Timings", "ExcludedPrograms", txt_ExcludedPrograms.Text.Replace(Environment.NewLine, " "));
 			#endregion
 			#region Snippets
 			MMain.MyConfs.Write("Snippets", "SnippetsEnabled", chk_Snippets.Checked.ToString());
@@ -540,6 +555,14 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			Key3 = MMain.MyConfs.ReadInt("Layouts", "SpecificKey3");
 			Key4 = MMain.MyConfs.ReadInt("Layouts", "SpecificKey4");
 			RefreshComboboxes();
+			#endregion
+			#region Persistent Layout
+			chk_PersistentLayout1Active.Checked = MMain.MyConfs.ReadBool("PersistentLayout", "ActivateForLayout1");
+			chk_PersistentLayout2Active.Checked = MMain.MyConfs.ReadBool("PersistentLayout", "ActivateForLayout2");
+			nud_PersistentLayout1Interval.Value = MMain.MyConfs.ReadInt("PersistentLayout", "Layout1CheckInterval");
+			nud_PersistentLayout2Interval.Value = MMain.MyConfs.ReadInt("PersistentLayout", "Layout2CheckInterval");
+			PersistentLayout1Processes = txt_PersistentLayout1Processes.Text = MMain.MyConfs.Read("PersistentLayout", "Layout1Processes");
+			PersistentLayout2Processes = txt_PersistentLayout2Processes.Text = MMain.MyConfs.Read("PersistentLayout", "Layout2Processes");
 			#endregion
 			#region Appearence
 			chk_LangTooltipMouse.Checked = MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForMouse");
@@ -866,12 +889,16 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			old.Stop();
 			capsCheck.Stop();
 			flagsCheck.Stop();
+			persistentLayout1Check.Stop();
+			persistentLayout2Check.Stop();
 			ICheck = new Timer();
 			crtCheck = new Timer();
 			ScrlCheck = new Timer();
 			res = new Timer();
 			capsCheck = new Timer();
 			flagsCheck = new Timer();
+			persistentLayout1Check = new Timer();
+			persistentLayout2Check = new Timer();
 			old = new Timer();
 			KMHook.doublekey = new Timer();
 			#endregion
@@ -1000,9 +1027,28 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			animate.Interval = 2500;
 			tmr.Interval = 3000;
 			old.Interval = 7500;
-			old.Tick += (_, __) => { isold = !isold; };			
+			old.Tick += (_, __) => { isold = !isold; };	
+			persistentLayout1Check.Interval = MMain.MyConfs.ReadInt("PersistentLayout", "Layout1CheckInterval");
+			persistentLayout2Check.Interval = MMain.MyConfs.ReadInt("PersistentLayout", "Layout2CheckInterval");
+			persistentLayout1Check.Tick += (_, __) => PersistentLayoutCheck(PersistentLayout1Processes, MainLayout1);
+			persistentLayout2Check.Tick += (_, __) => PersistentLayoutCheck(PersistentLayout2Processes, MainLayout2);
 			InitLangDisplays();
 			ToggleTimers();
+		}
+		public void PersistentLayoutCheck(string ProcessNames, string Layout) {
+			var actProcName = Locales.ActiveWindowProcess().ProcessName + ".exe";
+			Logging.Log("Checking active window's process name: ["+actProcName+"] with processes: ["+ProcessNames+"], for layout: ["+Layout+"].");
+			if (ProcessNames.Contains(actProcName)) {
+				uint CurrentLayout = Locales.GetCurrentLocale();
+				uint PersistentLayout = Locales.GetLocaleFromString(Layout).uId;
+				Logging.Log("Checking current layout: ["+currentLayout+"] with selected persistent layout: ["+PersistentLayout+"].");
+				if (CurrentLayout != PersistentLayout) {
+					WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, PersistentLayout);
+					Logging.Log("Layout was different, changing to: ["+Layout+"].");
+					currentLayout = PersistentLayout;
+					System.Threading.Thread.Sleep(5);
+				}
+			}
 		}
 		/// <summary>
 		/// Toggles timers state.
@@ -1018,6 +1064,10 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				capsCheck.Start();
 			if (MMain.MyConfs.ReadBool("Functions", "TrayFlags"))
 				flagsCheck.Start();
+			if (MMain.MyConfs.ReadBool("PersistentLayout", "ActivateForLayout1"))
+				persistentLayout1Check.Start();
+			if (MMain.MyConfs.ReadBool("PersistentLayout", "ActivateForLayout2"))
+				persistentLayout2Check.Start();
 		}
 		/// <summary>
 		/// Creates startup shortcut v2.0.(now not uses com. So whole project not need the Windows SDK :p)
@@ -1647,6 +1697,13 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			chk_SpecificLS.Text = MMain.Lang[Languages.Element.ChangeLayoutBy1Key];
 			grb_Layouts.Text = MMain.Lang[Languages.Element.Layouts];
 			grb_Keys.Text = MMain.Lang[Languages.Element.Keys];
+			#endregion
+			#region Persistent Layout
+			tab_persistent.Text = MMain.Lang[Languages.Element.PersistentLayout];
+			grb_PersistentLayout1.Text = MMain.Lang[Languages.Element.Layout] + " 1";
+			grb_PersistentLayout2.Text = MMain.Lang[Languages.Element.Layout] + " 2";
+			chk_PersistentLayout1Active.Text = chk_PersistentLayout2Active.Text = MMain.Lang[Languages.Element.ActivatePLFP];
+			lbl_PersistentLayout1Interval.Text = lbl_PersistentLayout2Interval.Text = MMain.Lang[Languages.Element.CheckInterval];
 			#endregion
 			#region Appearence
 			chk_LangTooltipMouse.Text = MMain.Lang[Languages.Element.LDMouseDisplay];

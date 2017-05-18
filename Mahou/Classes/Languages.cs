@@ -35,6 +35,11 @@ public class Languages
 		EmulateType,
 		ChangeLayoutBy1Key,
 		#endregion
+		#region Persistent Layout
+		PersistentLayout,
+		ActivatePLFP,
+		CheckInterval,
+		#endregion
 		#region Appearence
 		LDMouseDisplay,
 		LDCaretDisplay,
@@ -186,6 +191,11 @@ public class Languages
 		{ Element.EmulateLS, "Emulate layout switching." }, 
 		{ Element.EmulateType, "Emulation type:" }, 
 		{ Element.ChangeLayoutBy1Key, "Change to specific layout by keys:" }, 
+		#endregion
+		#region Persistent Layout
+		{ Element.PersistentLayout, "Persistent layout" }, 
+		{ Element.ActivatePLFP, "Activate persistent layout for processes:" }, 
+		{ Element.CheckInterval, "Check interval:" }, 
 		#endregion
 		#region Appearence
 		{ Element.LDMouseDisplay, "Display current language tooltip around mouse." }, 
@@ -363,6 +373,11 @@ public class Languages
 		{ Element.EmulateLS, "Эмулировать переключение раскладки." }, 
 		{ Element.EmulateType, "Тип эмуляции:" }, 
 		{ Element.ChangeLayoutBy1Key, "Переключать раскладки по клавишам:" }, 
+		#endregion
+		#region Persistent Layout
+		{ Element.PersistentLayout, "Постоянная раскладка" }, 
+		{ Element.ActivatePLFP, "Постоянная раскладка для процессов:" }, 
+		{ Element.CheckInterval, "Интервал проверки:" }, 
 		#endregion
 		#region Appearence
 		{ Element.LDMouseDisplay, "Отображать подсказку текущего языка рядом с мышью." }, 
