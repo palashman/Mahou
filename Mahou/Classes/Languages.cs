@@ -153,6 +153,7 @@ public class Languages
 		TT_MCDSSupport,
 		TT_LDText,
 		TT_OneLayoutWholeWordCS,
+		TT_PersistentLayout,
 		#endregion
 		#region Messages
 		MSG_SnippetsError
@@ -326,12 +327,13 @@ public class Languages
 		{ Element.TT_SymbolIgnore, "If enabled, symbols []{};':\"./<>? will be ignored.\nWorks in Convert last word, line, selection with  \"Conver selection layout switching\" enabled or plus.\n" +
 										"WON'T WORK IF YOU HAVE MORE THAN 2 LAYOUTS AND FUNCTION \"Switch between layouts\" disabled!" }, 
 		{ Element.TT_ConvertWords, "Allow to convert specific last word count by pressing hotkey and then 0-9 (0 = 10) on keyboard." }, 
-		{ Element.TT_ExcludedPrograms, "Programs(excluded) in which convert hotkeys won't work.\nSeperators - any symbols including a space.." }, 
+		{ Element.TT_ExcludedPrograms, "Programs(excluded) in which convert hotkeys won't work.\nSeparators - any symbols including a space.." }, 
 		{ Element.TT_MCDSSupport, "Add ability to display language tooltip around caret in Sublime Text 3.\nFor it to work yout need to install plugin, link on right.\nSettings avaible in appearence tab:\nTop: Your ST3 titlebar + tab bar height,\nBottom: Your y pixels to ST3 console edit box(ctrl+`).\nFor different windows/themes settings will be different!" }, 
 		{ Element.TT_LDText, "Leave empty for auto-detect." }, 
 		{ Element.TT_OneLayoutWholeWordCS, "Use one layout for whole word in Convert Selection,\r\n"+
 				"this feature uses quantity of rightly recognized chars in two selected layouts to indicate layout of whole word,"+
 				"\r\nthis feature works PERFECTLY with words that have symbols around them, but word lenght must be greater that 1 char for this feature to work properly." },
+		{ Element.TT_PersistentLayout, "Write here process names in which you want to have persistent layout, separators are spaces(though symbols as ,.^& etc are too supported)."},
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Snippets contains error in syntax, check if there are errors, details on snippets syntax you can find on Wiki." }
@@ -512,6 +514,7 @@ public class Languages
 		{ Element.TT_OneLayoutWholeWordCS, "Использовать одну раскладку для целого слова в Конверт Выделения,\r\n"+
 				"эта функция использует количество правильно распознанных букв в двух раскладках чтобы определить раскладку слова,\r\n"+
 				"эта функция ПРЕКРАСНО работает с словами которые имеют рядом символы, но длинна слова должна быть больше 1(не включая символы) чтобы функция нормально работала." },
+		{ Element.TT_PersistentLayout, "Напишите здесь названия процессов в которых вы бы хотели иметь постоянную раскладку, разделитель - пробел(хотя другие символы вроде ,.^& и т.д. тоже поддерживаются)."},
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Сниппеты содержат ошибки в синтаксисе, проверьте ваши сниппеты, детали синтаксиса можете найти на Wiki." }

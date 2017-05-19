@@ -143,7 +143,7 @@ namespace Mahou {
 		    	nud_ScrollLockRefreshRate.Minimum = nud_TrayFlagRefreshRate.Minimum =
 				nud_PersistentLayout1Interval.Minimum = nud_PersistentLayout2Interval.Minimum =	1;
 			nud_LangTTPositionX.Minimum = nud_LangTTPositionY.Minimum = -100;
-			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version + "-dev";
+			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version;
 			RegisterRestartHotkey();
 			RefreshAllIcons();
 			//Background startup check for updates
@@ -1813,6 +1813,8 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			HelpMeUnderstand.SetToolTip(chk_LangTTDiffLayoutColors, MMain.Lang[Languages.Element.TT_LDDifferentAppearence]);
 			HelpMeUnderstand.SetToolTip(chk_Snippets, MMain.Lang[Languages.Element.TT_Snippets]);
 			HelpMeUnderstand.SetToolTip(lbl_ExcludedPrograms, MMain.Lang[Languages.Element.TT_ExcludedPrograms]);
+			HelpMeUnderstand.SetToolTip(txt_PersistentLayout1Processes, MMain.Lang[Languages.Element.TT_PersistentLayout]);
+			HelpMeUnderstand.SetToolTip(txt_PersistentLayout2Processes, MMain.Lang[Languages.Element.TT_PersistentLayout]);
 		}
 		void HelpMeUnderstandPopup(object sender, PopupEventArgs e) {
 			HelpMeUnderstand.ToolTipTitle = e.AssociatedControl.Text;
