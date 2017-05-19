@@ -22,13 +22,14 @@ Mahou работает совершенно по-другому: в отличи
 4. Начиная с v1.0.4.4, при конвертации выделения текст, не распознанный ни в одной из выбранных в настройках раскладках (пример: ♥), просто переписывается.
 
 ###### Возможности по версиям:
-
+**v2.1.2.6**<br/>
+- :gem: Добавлена функция постоянной раскладки для процессов.
 **v2.1.2.0~v2.1.2.3**<br/>
-:gem: Добавлена поддержка getconkbl.dll, который позволяет получить правильную раскладку в консольных приложениях. ТОЛЬКО x86 версии обоих(Mahou и getconkbl.dll) поддерживаются. (вы можете взять dll [отсюда]( https://github.com/Elfy/getconkbl), поставьте ее в папку где находится Mahou.exe, возможно потребуется перезапуск Mahou)
-:bug: Исправлены проблемы связанные с восстановлением буфера.
-:gem: Добавлена Shift+CapsLock к переключеать раскладки по клавишам.
-:speech_balloon: Обновлен способ показа подсказок, :rocket: теперь быстрее показывается, и таймаут исчезания - 20 сек.
-:gem: Обновлен способ локализации.
+- :gem: Добавлена поддержка getconkbl.dll, который позволяет получить правильную раскладку в консольных приложениях. ТОЛЬКО x86 версии обоих(Mahou и getconkbl.dll) поддерживаются. (вы можете взять dll [отсюда]( https://github.com/Elfy/getconkbl), поставьте ее в папку где находится Mahou.exe, возможно потребуется перезапуск Mahou)
+- :bug: Исправлены проблемы связанные с восстановлением буфера.
+- :gem: Добавлена Shift+CapsLock к переключеать раскладки по клавишам.
+- :speech_balloon: Обновлен способ показа подсказок, :rocket: теперь быстрее показывается, и таймаут исчезания - 20 сек.
+- :gem: Обновлен способ локализации.
 
 **v2.1.1.2~v2.1.1.6**<br/>
 - Обновлена wiki.
@@ -186,12 +187,15 @@ Even selected text switches just between **selected** layouts, though if you lik
 
 ###### By version features:
 
+**v2.1.2.6**<br/>
+- :gem: Added Persistent layout function for processes.
+
 **v2.1.2.0~v2.1.2.3**<br/>
-:gem: Added support for getconkbl.dll, which adds support for console apps right layout recognition. ONLY x86 version of both(Mahou and getconkbl.dll) are supported. (you can get dll from [here]( https://github.com/Elfy/getconkbl), put it in directory where Mahou.exe is)
-:bug: Fixed some clipboard restore issues.
-:gem: Added Shift+CapsLock to by key switch.
-:speech_balloon: Updated tooltip appear style, :rocket: now faster (re)show, and timeout to hide to 20 sec.
-:gem: Updated translation to dictionary style.
+- :gem: Added support for getconkbl.dll, which adds support for console apps right layout recognition. ONLY x86 version of both(Mahou and getconkbl.dll) are supported. (you can get dll from [here]( https://github.com/Elfy/getconkbl), put it in directory where Mahou.exe is)
+- :bug: Fixed some clipboard restore issues.
+- :gem: Added Shift+CapsLock to by key switch.
+- :speech_balloon: Updated tooltip appear style, :rocket: now faster (re)show, and timeout to hide to 20 sec.
+- :gem: Updated translation to dictionary style.
 
 **v2.1.1.2~v2.1.1.6**<br/>
 - Updated wiki.
