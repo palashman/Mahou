@@ -93,16 +93,6 @@ namespace Mahou.Properties {
 		/// <summary>
 		///   Looks up a localized resource of type System.Drawing.Bitmap.
 		/// </summary>
-		public static System.Drawing.Bitmap down_arrow {
-			get {
-				object obj = ResourceManager.GetObject("down_arrow", resourceCulture);
-				return ((System.Drawing.Bitmap)(obj));
-			}
-		}
-		
-		/// <summary>
-		///   Looks up a localized resource of type System.Drawing.Bitmap.
-		/// </summary>
 		public static System.Drawing.Bitmap en {
 			get {
 				object obj = ResourceManager.GetObject("en", resourceCulture);
@@ -216,16 +206,6 @@ namespace Mahou.Properties {
 		public static System.Drawing.Bitmap uk {
 			get {
 				object obj = ResourceManager.GetObject("uk", resourceCulture);
-				return ((System.Drawing.Bitmap)(obj));
-			}
-		}
-		
-		/// <summary>
-		///   Looks up a localized resource of type System.Drawing.Bitmap.
-		/// </summary>
-		public static System.Drawing.Bitmap up_arrow {
-			get {
-				object obj = ResourceManager.GetObject("up_arrow", resourceCulture);
 				return ((System.Drawing.Bitmap)(obj));
 			}
 		}
