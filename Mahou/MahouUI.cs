@@ -157,7 +157,7 @@ namespace Mahou {
 				uche.Start();
 				showUpdWnd.Tick += (_, __) => {
 					if (AtUpdateShow == 1) {
-						tabs.SelectedIndex = 6;
+						tabs.SelectedIndex = 7;
 						SetUInfo();
 						Visible = TopMost = true;
 						grb_DownloadUpdate.Enabled = true;
