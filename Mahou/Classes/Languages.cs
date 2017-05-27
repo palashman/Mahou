@@ -275,7 +275,7 @@ public class Languages
 			"Press Shift+Pause (by Default) to convert last inputted line.\r\n"+
             "Press Ctrl+Alt+Win+Shift+Insert to show Mahou main window.\r\n"+
 			"Press Ctrl+Alt+Win+Shift+F12 to shutdown Mahou.\r\n\r\n"+
-			"*Note that if you typing in not of selected in settings layouts,"+
+            "*Note that if your typing layout is not selected in settings,"+
 			" conversion will switch typed text to Language 1 (Ignored if Switch between layouts is OFF).\r\n\r\n"+
             "**If you have problems with symbols conversion (selection) try enabling function \"Use layout for whole word in CS\", "+
 			" or \"switching languages (1=>2 & 2=>1)\""+
@@ -302,10 +302,10 @@ public class Languages
 		{ Element.ButtonCancel, "Cancel" }, 
 		#endregion
 		#region Tooltips
-		{ Element.TT_SwitchBetween, "While this option disabled, [Convert word] and [Convert line] and [Convert selection with \"Convert selection layout switching\" enabled]\n" + 
-		                                  "will just cycle between all locales instead of switching between selected in settings."+
-		                                  "If there is program in which [Convert word] or [Convert line] or [Convert selection with \"CS-Switch\" enabled] not work,\ntry with this option enabled.\n" },
-		{ Element.TT_ConvertSelectionSwitch, "If enabled, Convers selection will use layout switching.\nAll symbols will be written as the must(if layout before switching was the one where they are written it).\nThere also a plus version of that function." }, 
+		{ Element.TT_SwitchBetween, "While this option is disabled, [Convert word], [Convert line] and [Convert selection with \"Convert selection layout switching\" enabled]\n" + 
+		                                  "will just cycle between all locales instead of switching between the selected ones in settings."+
+		                                  "If there is a program in which [Convert word], [Convert line] or [Convert selection with \"CS-Switch\" enabled] don't work,\ntry with this option enabled.\n" },
+		{ Element.TT_ConvertSelectionSwitch, "If enabled, Convert selection will use layout switching.\nAll symbols will be written as the must(if layout before switching was the one where they are written it).\nThere also a plus version of that function." }, 
 		{ Element.TT_BlockCtrl, "Blocks hotkeys that use Control,\nwhen \"Switch layout by key\" is set to Left/Right Control." }, 
 		{ Element.TT_CapsDis, "If enabled, timer which disables CapsLock(led) will work." }, 
 		{ Element.TT_EmulateLS, "If enabled, layout switching will emulate press of keys selected on right." }, 
@@ -313,16 +313,16 @@ public class Languages
 				"although if you release modifiers before conversion action finishes - modifiers may stuck...))." },
 		{ Element.TT_Add1Space, "If enabled, ONE space will be adding to last word." }, 
 		{ Element.TT_ReSelect, "If enabled, any \"Convert selected\" will select text again after conversion." }, 
-		{ Element.TT_ScrollTip, "Highlight Scroll Lock when active language 1, selected in Layouts tab.\nUnnesesary to keep enabled \"Switch between layouts\" function enabled for this function to work, just select layout #1 below it and the disable it if you need to." }, 
+		{ Element.TT_ScrollTip, "Highlight Scroll Lock when active language 1, selected in Layouts tab.\nUnnesesary to keep enabled \"Switch between layouts\" function enabled for this function to work, just select layout #1 below it and then disable it if you need to." }, 
 		{ Element.TT_LDOnlyOnChange, "Display language tooltip only on layout change.\nDisplay time - 2x[Refresh rate for mouse + for caret]." }, 
-		{ Element.TT_ConvertSelectionSwitchPlus, "Combines some abilities of Convert selection with enabled \"Convert selection layout switching\" and when it disabled." +
+		{ Element.TT_ConvertSelectionSwitchPlus, "Combines some abilities of Convert selection with enabled \"Convert selection layout switching\" and when it's disabled." +
 										"\nIt can:"+
-										"\n1.Conversion text from different layouts to different layouts at once."+
-										"\n2.gnore symbols feature work in it."+
+										"\n1.Convert text from different layouts to different layouts at once."+
+										"\n2.Ignore symbols feature work in it."+
 										"\n3.Auto get layout of text (symbols, that exist in both layouts are not supported)."+
 										"\n4.Convert unsupported symbols differently, if you change layout before conversion." }, 
-		{ Element.TT_LDForMouse, "If enabled, when hovering text form with, around mouse will be displayed language tooltip." }, 
-		{ Element.TT_LDForCaret, "If enabled, around caret will be displayed language tooltip." }, 
+		{ Element.TT_LDForMouse, "If enabled, when hovering text form with, a language tooltip will be displayed around the mouse." }, 
+		{ Element.TT_LDForCaret, "If enabled, a language tooltip will be displayed around the caret." }, 
 		{ Element.TT_Snippets, "If enabled, pressing SPACE will expand small (which starts with \"->\") word, to big (which is between \"====>\" and \"<====\") word/text fragment." }, 
 		{ Element.TT_Logging, "Designed ONLY to search for errors, BIG PERFORMANCE IMPACT, logs are saved in Mahou's folder, in folder Logs." }, 
 		{ Element.TT_LDDifferentAppearence, "If enabled, you can select different appearence for main layouts(1&2), for others will be used from \"around mouse\" or \"around caret\"." }, 
@@ -331,7 +331,7 @@ public class Languages
 										"WON'T WORK IF YOU HAVE MORE THAN 2 LAYOUTS AND FUNCTION \"Switch between layouts\" disabled!" }, 
 		{ Element.TT_ConvertWords, "Allow to convert specific last word count by pressing hotkey and then 0-9 (0 = 10) on keyboard." }, 
 		{ Element.TT_ExcludedPrograms, "Programs(excluded) in which convert hotkeys won't work.\nSeparators - any symbols including a space.." }, 
-		{ Element.TT_MCDSSupport, "Add ability to display language tooltip around caret in Sublime Text 3.\nFor it to work yout need to install plugin, link on right.\nSettings avaible in appearence tab:\nTop: Your ST3 titlebar + tab bar height,\nBottom: Your y pixels to ST3 console edit box(ctrl+`).\nFor different windows/themes settings will be different!" }, 
+		{ Element.TT_MCDSSupport, "Add the ability to display language tooltip around caret in Sublime Text 3.\nFor it to work yout need to install a plugin, link on right.\nSettings avaible in appearence tab:\nTop: Your ST3 titlebar + tab bar height,\nBottom: Your y pixels to ST3 console edit box(ctrl+`).\nFor different windows/themes settings will be different!" }, 
 		{ Element.TT_LDText, "Leave empty for auto-detect." }, 
 		{ Element.TT_OneLayoutWholeWordCS, "Use one layout for whole word in Convert Selection,\r\n"+
 				"this feature uses quantity of rightly recognized chars in two selected layouts to indicate layout of whole word,"+
