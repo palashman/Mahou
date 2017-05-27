@@ -25,7 +25,7 @@ namespace Mahou
             CheckBool("Functions", "TrayIconVisible", "true");
             CheckBool("Functions", "ConvertSelectionLayoutSwitching", "false");
             CheckBool("Functions", "ReSelect", "true");
-            CheckBool("Functions", "RePress", "true");
+            CheckBool("Functions", "RePress", "false");
             CheckBool("Functions", "AddOneSpaceToLastWord", "false");
             CheckBool("Functions", "ConvertSelectionLayoutSwitchingPlus", "false");
             CheckBool("Functions", "ScrollTip", "false");
@@ -37,6 +37,7 @@ namespace Mahou
             CheckBool("Functions", "SymbolIgnoreModeEnabled", "false");
             CheckBool("Functions", "MCDServerSupport", "false");
             CheckBool("Functions", "OneLayoutWholeWord", "true");
+            CheckBool("Functions", "RestartHooksOnHotkeyActionEnd", "true");
             #endregion
 			#region Layouts section
 			CheckBool("Layouts", "SwitchBetweenLayouts", "true");
@@ -164,17 +165,17 @@ namespace Mahou
 			CheckBool("Hotkeys", "SelectedTextToTitleCase_Enabled", "false");
 			CheckBool("Hotkeys", "SelectedTextToTitleCase_Double", "true");
 			CheckString("Hotkeys", "SelectedTextToTitleCase_Modifiers", "Shift");
-			CheckInt("Hotkeys", "SelectedTextToTitleCase_Key", "16");
+			CheckInt("Hotkeys", "SelectedTextToTitleCase_Key", "0");
 			// Selected text To random case hotkey
 			CheckBool("Hotkeys", "SelectedTextToRandomCase_Enabled", "false");
 			CheckBool("Hotkeys", "SelectedTextToRandomCase_Double", "true");
 			CheckString("Hotkeys", "SelectedTextToRandomCase_Modifiers", "Alt");
-			CheckInt("Hotkeys", "SelectedTextToRandomCase_Key", "17");
+			CheckInt("Hotkeys", "SelectedTextToRandomCase_Key", "0");
 			// Selected text to swap case hotkey
 			CheckBool("Hotkeys", "SelectedTextToSwapCase_Enabled", "false");
 			CheckBool("Hotkeys", "SelectedTextToSwapCase_Double", "false");
 			CheckString("Hotkeys", "SelectedTextToSwapCase_Modifiers", "Win");
-			CheckInt("Hotkeys", "SelectedTextToSwapCase_Key", "19");
+			CheckInt("Hotkeys", "SelectedTextToSwapCase_Key", "190");
 			// Selected text Transliteration hotkey
 			CheckBool("Hotkeys", "SelectedTextTransliteration_Enabled", "false");
 			CheckBool("Hotkeys", "SelectedTextTransliteration_Double", "false");

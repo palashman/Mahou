@@ -16,12 +16,16 @@ namespace Mahou {
 		#region Variables
 		// Hotkeys, HKC => HotKey Convert
 		public Hotkey Mainhk, ExitHk, HKCLast, HKCSelection, HKCLine, HKSymIgn, HKConMorWor,
-			  	      HKTitleCase, HKRandomCase, HKSwapCase, HKTransliteration;
+			  	      HKTitleCase, HKRandomCase, HKSwapCase, HKTransliteration, HKRestart;
+		/// <summary>
+		/// Hotkey OK to fire action bools.
+		/// </summary>
+  	    public bool hksTTCOK, hksTRCOK, hksTSCOK, hksTrslOK, hkShWndOK, hkcwdsOK, hklOK, hksOK, hklineOK, hkSIOK, hkExitOK;
 		/// <summary>
 		/// Directory where Mahou.exe is.
 		/// </summary>
 		public static string nPath = AppDomain.CurrentDomain.BaseDirectory;
-		public static bool LoggingEnabled;
+		public static bool LoggingEnabled, dummy;
 		static string[] UpdInfo;
 		static bool updating, was, isold = true, checking;
 		static Timer tmr = new Timer();
@@ -39,7 +43,7 @@ namespace Mahou {
 		public bool DiffAppearenceForLayouts, LDForCaretOnChange, LDForMouseOnChange, ScrollTip, AddOneSpace,
 					TrayFlags, SymIgnEnabled, TrayIconVisible, SnippetsEnabled, ChangeLayouByKey, EmulateLS,
 					RePress, BlockHKWithCtrl, blueIcon, SwitchBetweenLayouts, SelectedTextGetMoreTries, ReSelect,
-					ConvertSelectionLS, ConvertSelectionLSPlus, MCDSSupport, OneLayoutWholeWord;
+					ConvertSelectionLS, ConvertSelectionLSPlus, MCDSSupport, OneLayoutWholeWord, RestartHooks;
 		/// <summary>
 		/// Temporary modifiers of hotkeys.
 		/// </summary>
@@ -144,7 +148,7 @@ namespace Mahou {
 				nud_PersistentLayout1Interval.Minimum = nud_PersistentLayout2Interval.Minimum =	1;
 			nud_LangTTPositionX.Minimum = nud_LangTTPositionY.Minimum = -100;
 			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version +"-dev";
-			RegisterRestartHotkey();
+			RegisterHotkeys();
 			RefreshAllIcons();
 			//Background startup check for updates
 			if (MMain.MyConfs.ReadBool("Functions", "StartupUpdatesCheck")) {
@@ -171,38 +175,66 @@ namespace Mahou {
 			} else { showUpdWnd.Dispose(); }
 			Memory.Flush();
 		}
-		#region WndProc & Functions
+		#region WndProc(Hotkeys) & Functions
 		protected override void WndProc(ref Message m) {
 			if (m.Msg == MMain.ao) { // ao = Already Opened
 				ToggleVisibility();
         		Logging.Log("Another instance detected, closing it.");
 			}
-			if (m.Msg == WinAPI.WM_HOTKEY && m.WParam.ToInt32() == 7) {
-				int MahouPID = Process.GetCurrentProcess().Id;
-				MMain.mahou.icon.Hide();
-				//Batch script to restart Mahou.
-				var restartMahou =
-					@"@ECHO OFF
-REM You should never see this file, if you are it means during restarting Mahou something went wrong. 
-chcp 65001
-SET MAHOUDIR=" + nPath + @"
-TASKKILL /PID " + MahouPID + @" /F
-TASKKILL /IM Mahou.exe /F
-START """" ""%MAHOUDIR%Mahou.exe""
-DEL %MAHOUDIR%RestartMahou.cmd";
-				Logging.Log("Writing restart script.");
-				File.WriteAllText(Path.Combine(new string[] {
-					nPath,
-					"RestartMahou.cmd"
-				}), restartMahou);
-				var piRestartMahou = new ProcessStartInfo();
-				piRestartMahou.FileName = Path.Combine(new string[] {
-					nPath,
-					"RestartMahou.cmd"
+			if (m.Msg == WinAPI.WM_HOTKEY && !KMHook.self) {
+				var id = (Hotkey.HKID)m.WParam.ToInt32();
+				#region Convert multiple words 
+				if (m.WParam.ToInt32() >= 100 && m.WParam.ToInt32() <= 109 && KMHook.waitfornum) {
+					int wordnum = m.WParam.ToInt32() - 100;
+					if (wordnum == 0) wordnum = 10;
+					Logging.Log("Attempt to convert " + wordnum + " word(s).");
+					var words = new List<KMHook.YuKey>();
+					try {
+						foreach (var word in MMain.c_words.GetRange(MMain.c_words.Count-wordnum,wordnum)) {
+							words.AddRange(word);
+						}
+						Logging.Log("Full character count in all " + wordnum + " last word(s) is " + words.Count + ".");
+					} catch {
+						Logging.Log("Converting " + wordnum + " word(s) impossible it is bigger that entered words.");
+					}
+					FlushConvertMoreWords();
+					KMHook.ConvertLast(words);
+				}
+				#endregion
+				Hotkey.CallHotkey(HKCSelection, id, ref hksOK, KMHook.ConvertSelection);
+				Hotkey.CallHotkey(HKTitleCase, id, ref hksTTCOK, KMHook.ToTitleSelection);
+				Hotkey.CallHotkey(HKSwapCase, id, ref hksTSCOK, KMHook.ToSwapSelection);
+				Hotkey.CallHotkey(HKRandomCase, id, ref hksTRCOK, KMHook.ToRandomSelection);
+				Hotkey.CallHotkey(HKConMorWor, id, ref hkcwdsOK, PrepareConvertMoreWords);
+				Hotkey.CallHotkey(HKTransliteration, id, ref hksTrslOK, KMHook.TransliterateSelection);
+				Hotkey.CallHotkey(HKCLast, id, ref hklOK, () => KMHook.ConvertLast(MMain.c_word));
+				Hotkey.CallHotkey(HKCLine, id, ref hklineOK, () => { 
+					var line = new List<KMHook.YuKey>();
+					foreach (var word in MMain.c_words) {
+						line.AddRange(word);
+					}
+					KMHook.ConvertLast(line);
 				});
-				piRestartMahou.WindowStyle = ProcessWindowStyle.Hidden;
-				Logging.Log("Starting restart script.");
-				Process.Start(piRestartMahou);
+				KMHook.csdoing = false;
+				if (HKSymIgn.Enabled) {
+					Hotkey.CallHotkey(HKSymIgn, id, ref hkSIOK, () => { 
+						if (SymIgnEnabled) {
+							SymIgnEnabled = false;
+							MMain.MyConfs.Write("Functions", "SymbolIgnoreModeEnabled", "false");
+							Icon = icon.trIcon.Icon = Properties.Resources.MahouTrayHD;
+						} else {
+							MMain.MyConfs.Write("Functions", "SymbolIgnoreModeEnabled", "true");
+							SymIgnEnabled = true;
+							Icon = icon.trIcon.Icon = Properties.Resources.MahouSymbolIgnoreMode;
+						}
+	       		    });
+				}
+				Hotkey.CallHotkey(HKRestart, id, ref dummy, Restart);
+				Hotkey.CallHotkey(MMain.mahou.Mainhk, id, ref hkShWndOK, ToggleVisibility);
+				Hotkey.CallHotkey(MMain.mahou.ExitHk, id, ref hkExitOK, ExitProgram);
+				// Restart hook after each hotkey action.
+				if (RestartHooks)
+					MMain.RestartHook();
 			}
 			base.WndProc(ref m);
 		}
@@ -441,6 +473,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			MMain.MyConfs.Write("Functions", "BlockMahouHotkeysWithCtrl", chk_BlockHKWithCtrl.Checked.ToString());
 			MMain.MyConfs.Write("Functions", "MCDServerSupport", chk_MCDS_support.Checked.ToString());
 			MMain.MyConfs.Write("Functions", "OneLayoutWholeWord", chk_OneLayoutWholeWord.Checked.ToString());
+			MMain.MyConfs.Write("Functions", "RestartHooksOnHotkeyActionEnd", chk_RestartHooks.Checked.ToString());
 			#endregion
 			#region Layouts
 			MMain.MyConfs.Write("Layouts", "SwitchBetweenLayouts", chk_SwitchBetweenLayouts.Checked.ToString());
@@ -539,6 +572,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			SymIgnEnabled = MMain.MyConfs.ReadBool("Functions", "SymbolIgnoreModeEnabled");
 			MCDSSupport = chk_MCDS_support.Checked = MMain.MyConfs.ReadBool("Functions", "MCDServerSupport");
 			OneLayoutWholeWord = chk_OneLayoutWholeWord.Checked = MMain.MyConfs.ReadBool("Functions", "OneLayoutWholeWord");
+			RestartHooks = chk_RestartHooks.Checked = MMain.MyConfs.ReadBool("Functions", "RestartHooksOnHotkeyActionEnd");
 			#endregion
 			#region Layouts
 			SwitchBetweenLayouts = chk_SwitchBetweenLayouts.Checked = MMain.MyConfs.ReadBool("Layouts", "SwitchBetweenLayouts");
@@ -607,9 +641,8 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			InitializeTimers();
 			ToggleDependentControlsEnabledState();
 			RefreshAllIcons();
-			// Unregister Restart Hotkey
-			WinAPI.UnregisterHotKey(Handle, 7);
-			RegisterRestartHotkey();
+			UnregisterHotkeys();
+			RegisterHotkeys();
 			Memory.Flush();
 			Logging.Log("All configurations loaded.");
 		}
@@ -705,16 +738,48 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			} else {
 				TopMost = Visible = true;
 				TopMost = false;
+				WinAPI.SetForegroundWindow(Handle);
 			}
 			// Sometimes when logging is enabled, hooks may die without error...
 			// This fixes it, but you need manually to show/hide main window:
 			// 1. Click tray icon. 2. Start Mahou.exe
 			// This bug is under look...			
 			if (MMain.MyConfs.ReadBool("Functions", "Logging")) {
-				MMain.StopHook();MMain.StartHook();
+				MMain.RestartHook();
 				KMHook.win = KMHook.alt = KMHook.shift = KMHook.ctrl = false;
+				KMHook.SendModsUp(15); // All modifiers
 			}
 			Memory.Flush();
+		}
+		/// <summary>
+		/// Restarts Mahou.
+		/// </summary>
+		public void Restart() {
+			int MahouPID = Process.GetCurrentProcess().Id;
+			MMain.mahou.icon.Hide();
+			//Batch script to restart Mahou.
+			var restartMahou =
+				@"@ECHO OFF
+REM You should never see this file, if you are it means during restarting Mahou something went wrong. 
+chcp 65001
+SET MAHOUDIR=" + nPath + @"
+TASKKILL /PID " + MahouPID + @" /F
+TASKKILL /IM Mahou.exe /F
+START """" ""%MAHOUDIR%Mahou.exe""
+DEL %MAHOUDIR%RestartMahou.cmd";
+			Logging.Log("Writing restart script.");
+			File.WriteAllText(Path.Combine(new string[] {
+				nPath,
+				"RestartMahou.cmd"
+			}), restartMahou);
+			var piRestartMahou = new ProcessStartInfo();
+			piRestartMahou.FileName = Path.Combine(new string[] {
+				nPath,
+				"RestartMahou.cmd"
+			});
+			piRestartMahou.WindowStyle = ProcessWindowStyle.Hidden;
+			Logging.Log("Starting restart script.");
+			Process.Start(piRestartMahou);
 		}
 		/// <summary>
 		/// Refreshes all icon's images and tray icon visibility.
@@ -853,28 +918,30 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 		/// Initializes all hotkeys.
 		/// </summary>
 		public void InitializeHotkeys() {
-			Mainhk = new Hotkey(Mainhk_tempEnabled, Mainhk_tempKey, 
-				Hotkey.GetMods(Mainhk_tempMods), Mainhk_tempDouble);
-			HKCLast = new Hotkey(HKCLast_tempEnabled, HKCLast_tempKey, 
-				Hotkey.GetMods(HKCLast_tempMods), HKCLast_tempDouble);			
-			HKCSelection = new Hotkey(HKCSelection_tempEnabled, HKCSelection_tempKey, 
-				Hotkey.GetMods(HKCSelection_tempMods), HKCSelection_tempDouble);			
-			HKCLine = new Hotkey(HKCLine_tempEnabled, HKCLine_tempKey, 
-				Hotkey.GetMods(HKCLine_tempMods), HKCLine_tempDouble);			
-			HKSymIgn = new Hotkey(HKSymIgn_tempEnabled, HKSymIgn_tempKey, 
-				Hotkey.GetMods(HKSymIgn_tempMods), HKSymIgn_tempDouble);			
-			HKConMorWor = new Hotkey(HKConMorWor_tempEnabled, HKConMorWor_tempKey, 
-				Hotkey.GetMods(HKConMorWor_tempMods), HKConMorWor_tempDouble);			
-			HKTitleCase = new Hotkey(HKTitleCase_tempEnabled, HKTitleCase_tempKey, 
-				Hotkey.GetMods(HKTitleCase_tempMods), HKTitleCase_tempDouble);			
-			HKRandomCase = new Hotkey(HKRandomCase_tempEnabled, HKRandomCase_tempKey, 
-				Hotkey.GetMods(HKRandomCase_tempMods), HKRandomCase_tempDouble);			
-			HKSwapCase = new Hotkey(HKSwapCase_tempEnabled, HKSwapCase_tempKey,
-				Hotkey.GetMods(HKSwapCase_tempMods), HKSwapCase_tempDouble);			
-			HKTransliteration = new Hotkey(HKTransliteration_tempEnabled, HKTransliteration_tempKey, 
-				Hotkey.GetMods(HKTransliteration_tempMods), HKTransliteration_tempDouble);
-			ExitHk = new Hotkey(ExitHk_tempEnabled, ExitHk_tempKey, 
-			    Hotkey.GetMods(ExitHk_tempMods), ExitHk_tempDouble);
+			Mainhk = new Hotkey(Mainhk_tempEnabled, (uint)Mainhk_tempKey,
+			                    Hotkey.GetMods(Mainhk_tempMods), (int)Hotkey.HKID.ToggleVisibility, Mainhk_tempDouble);
+			HKCLast = new Hotkey(HKCLast_tempEnabled, (uint)HKCLast_tempKey, 
+				Hotkey.GetMods(HKCLast_tempMods), (int)Hotkey.HKID.ConvertLastWord, HKCLast_tempDouble);			
+			HKCSelection = new Hotkey(HKCSelection_tempEnabled, (uint)HKCSelection_tempKey, 
+				Hotkey.GetMods(HKCSelection_tempMods), (int)Hotkey.HKID.ConvertSelection, HKCSelection_tempDouble);			
+			HKCLine = new Hotkey(HKCLine_tempEnabled, (uint)HKCLine_tempKey, 
+				Hotkey.GetMods(HKCLine_tempMods), (int)Hotkey.HKID.ConvertLastLine, HKCLine_tempDouble);			
+			HKSymIgn = new Hotkey(HKSymIgn_tempEnabled, (uint)HKSymIgn_tempKey, 
+				Hotkey.GetMods(HKSymIgn_tempMods), (int)Hotkey.HKID.ToggleSymbolIgnoreMode, HKSymIgn_tempDouble);			
+			HKConMorWor = new Hotkey(HKConMorWor_tempEnabled, (uint)HKConMorWor_tempKey, 
+				Hotkey.GetMods(HKConMorWor_tempMods), (int)Hotkey.HKID.ConvertMultipleWords, HKConMorWor_tempDouble);			
+			HKTitleCase = new Hotkey(HKTitleCase_tempEnabled, (uint)HKTitleCase_tempKey, 
+				Hotkey.GetMods(HKTitleCase_tempMods), (int)Hotkey.HKID.ToTitleSelection, HKTitleCase_tempDouble);			
+			HKRandomCase = new Hotkey(HKRandomCase_tempEnabled, (uint)HKRandomCase_tempKey, 
+				Hotkey.GetMods(HKRandomCase_tempMods), (int)Hotkey.HKID.ToRandomSelection, HKRandomCase_tempDouble);			
+			HKSwapCase = new Hotkey(HKSwapCase_tempEnabled, (uint)HKSwapCase_tempKey,
+				Hotkey.GetMods(HKSwapCase_tempMods), (int)Hotkey.HKID.ToSwapSelection, HKSwapCase_tempDouble);			
+			HKTransliteration = new Hotkey(HKTransliteration_tempEnabled, (uint)HKTransliteration_tempKey, 
+				Hotkey.GetMods(HKTransliteration_tempMods), (int)Hotkey.HKID.TransliterateSelection, HKTransliteration_tempDouble);
+			ExitHk = new Hotkey(ExitHk_tempEnabled, (uint)ExitHk_tempKey, 
+			    Hotkey.GetMods(ExitHk_tempMods), (int)Hotkey.HKID.Exit, ExitHk_tempDouble);
+			HKRestart = new Hotkey(HKRestart_tempEnabled, (uint)HKRestart_tempKey, 
+			    Hotkey.GetMods(HKRestart_tempMods), (int)Hotkey.HKID.Restart, false);
 			Logging.Log("Hotkeys initialized.");
 		}
 		/// <summary>
@@ -997,28 +1064,28 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			};
 			capsCheck.Interval = MMain.MyConfs.ReadInt("Timings", "CapsLockDisableRefreshRate");
 			KMHook.doublekey.Tick += (_, __) => {
-				if (KMHook.hklOK)
-					KMHook.hklOK = false;
-				if (KMHook.hksOK)
-					KMHook.hksOK = false;
-				if (KMHook.hklineOK)
-					KMHook.hklineOK = false;
-				if (KMHook.hkSIOK)
-					KMHook.hkSIOK = false;
-				if (KMHook.hkShWndOK)
-					KMHook.hkShWndOK = false;
-				if (KMHook.hkExitOK)
-					KMHook.hkExitOK = false;
-				if (KMHook.hkcwdsOK)
-					KMHook.hkcwdsOK = false;
-				if (KMHook.hksTRCOK)
-					KMHook.hksTRCOK = false;
-				if (KMHook.hksTrslOK)
-					KMHook.hksTrslOK = false;
-				if (KMHook.hksTTCOK)
-					KMHook.hksTTCOK = false;
-				if (KMHook.hksTSCOK)
-					KMHook.hksTSCOK = false;
+				if (hklOK)
+					hklOK = false;
+				if (hksOK)
+					hksOK = false;
+				if (hklineOK)
+					hklineOK = false;
+				if (hkSIOK)
+					hkSIOK = false;
+				if (hkShWndOK)
+					hkShWndOK = false;
+				if (hkExitOK)
+					hkExitOK = false;
+				if (hkcwdsOK)
+					hkcwdsOK = false;
+				if (hksTRCOK)
+					hksTRCOK = false;
+				if (hksTrslOK)
+					hksTrslOK = false;
+				if (hksTTCOK)
+					hksTTCOK = false;
+				if (hksTSCOK)
+					hksTSCOK = false;
 				KMHook.doublekey.Stop();
 			};
 			flagsCheck.Interval = MMain.MyConfs.ReadInt("Timings", "FlagsInTrayRefreshRate");
@@ -1118,19 +1185,73 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			icon.Hide();
 			Application.Exit();
 		}
-		public void RegisterRestartHotkey() {
-			uint mods = 0;
-			if (HKRestart_tempMods.Contains("Shift")) 
-				mods += WinAPI.MOD_SHIFT;
-			if (HKRestart_tempMods.Contains("Alt")) 
-				mods += WinAPI.MOD_ALT;
-			if (HKRestart_tempMods.Contains("Control")) 
-				mods += WinAPI.MOD_CONTROL;
-			if (HKRestart_tempMods.Contains("Win")) 
-				mods += WinAPI.MOD_WIN;
-//			int hash = HKRestart_tempKey.GetHashCode() ^ mods.GetHashCode();
+		/// <summary>
+		/// Registers keys 1->9 & 0 on keyboard as hotkey to be used as word count selector for Convert Multiple Words Count.
+		/// </summary>
+		void PrepareConvertMoreWords() {
+			for (int i = 0; i <= 9; i++) {
+//				Debug.WriteLine("Registering +"+(Keys)(((int)Keys.D0)+i) + " i " +(i+100));
+				WinAPI.RegisterHotKey(Handle, 100+i, WinAPI.MOD_NO_REPEAT, ((int)Keys.D0)+i);
+			}
+			KMHook.waitfornum = true;
+		}
+		/// <summary>
+		/// Unregisters keys 1->9 & 0 on keyboard that were used for Convert Multiple Words Count function.
+		/// </summary>
+		public void FlushConvertMoreWords() {
+			for (int i = 100; i <= 109; i++) {
+//				Debug.WriteLine("Unregistering +"+i);
+				WinAPI.UnregisterHotKey(Handle, i);
+			}
+			KMHook.waitfornum = false;
+		}
+		/// <summary>
+		/// Unregisters Mahou hotkeys.
+		/// </summary>
+		/// <param name="noglobal">Keeps *global hotkeys*(the one's that goes after TransliterateSelection in HKID enum) alive if true.</param>
+		public void UnregisterHotkeys(bool noglobal = false) {
+			foreach (int id in Enum.GetValues(typeof(Hotkey.HKID))) {
+				if (noglobal && (id > (int)Hotkey.HKID.TransliterateSelection)) break;
+				WinAPI.UnregisterHotKey(Handle, id);
+			}
+		}
+		public void RegisterHotkeys() {
+			if (HKCLast_tempEnabled)
+				WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.ConvertLastWord, 
+				                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKCLast_tempMods), HKCLast_tempKey);
+			if (HKCSelection_tempEnabled)
+				WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.ConvertSelection, 
+				                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKCSelection_tempMods), HKCSelection_tempKey);
+			if (HKCLine_tempEnabled)
+				WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.ConvertLastLine, 
+				                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKCLine_tempMods), HKCLine_tempKey);
+			if (HKConMorWor_tempEnabled)
+				WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.ConvertMultipleWords,
+				                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKConMorWor_tempMods), HKConMorWor_tempKey);
+			if (HKTitleCase_tempEnabled)
+				WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.ToTitleSelection, 
+				                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKTitleCase_tempMods), HKTitleCase_tempKey);
+			if (HKSwapCase_tempEnabled)
+				WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.ToSwapSelection, 
+				                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKSwapCase_tempMods), HKSwapCase_tempKey);
+			if (HKRandomCase_tempEnabled)
+				WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.ToRandomSelection, 
+				                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKRandomCase_tempMods), HKRandomCase_tempKey);
+			if (HKTransliteration_tempEnabled)
+				WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.TransliterateSelection, 
+				                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKTransliteration_tempMods), HKTransliteration_tempKey);
+			if (HKSymIgn_tempEnabled)
+				WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.ToggleSymbolIgnoreMode, 
+				                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKSymIgn_tempMods), HKSymIgn_tempKey);
+			if (Mainhk_tempEnabled)
+				WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.ToggleVisibility, 
+				                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(Mainhk_tempMods), Mainhk_tempKey);
+			if (ExitHk_tempEnabled) 
+				WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.Exit, 
+				                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(ExitHk_tempMods), ExitHk_tempKey);
 			if (HKRestart_tempEnabled)
-				WinAPI.RegisterHotKey(Handle, 7, mods, HKRestart_tempKey); 
+				WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.Restart,
+				                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKRestart_tempMods), HKRestart_tempKey);
 		}
 		/// <summary>
 		/// Converts some special keys to readable string.
@@ -1673,6 +1794,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			tab_about.Text = MMain.Lang[Languages.Element.tab_About];
 			lnk_plugin.Text = "ST3 " + MMain.Lang[Languages.Element.Plugin];
 			chk_OneLayoutWholeWord.Text = MMain.Lang[Languages.Element.OneLayoutWholeWord];
+			chk_RestartHooks.Text = MMain.Lang[Languages.Element.RestartHooks];
 			#endregion
 			#region Functions
 			chk_AutoStart.Text = MMain.Lang[Languages.Element.AutoStart];
@@ -1815,6 +1937,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			HelpMeUnderstand.SetToolTip(lbl_ExcludedPrograms, MMain.Lang[Languages.Element.TT_ExcludedPrograms]);
 			HelpMeUnderstand.SetToolTip(txt_PersistentLayout1Processes, MMain.Lang[Languages.Element.TT_PersistentLayout]);
 			HelpMeUnderstand.SetToolTip(txt_PersistentLayout2Processes, MMain.Lang[Languages.Element.TT_PersistentLayout]);
+			HelpMeUnderstand.SetToolTip(chk_RestartHooks, MMain.Lang[Languages.Element.TT_RestartHooks]);
 		}
 		void HelpMeUnderstandPopup(object sender, PopupEventArgs e) {
 			HelpMeUnderstand.ToolTipTitle = e.AssociatedControl.Text;
@@ -1963,24 +2086,32 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			}
 		}
 		void Txt_HotkeyKeyDown(object sender, KeyEventArgs e) {
-			if (GetSelectedHotkeyDoubleTemp()) {
-				txt_Hotkey.Text = OemReadable(Remake(e.KeyCode, false, true));
-				txt_Hotkey_tempModifiers = "None";
-				txt_Hotkey_tempKey = (int)e.KeyCode;				
-			} else {
-				txt_Hotkey.Text = OemReadable((e.Modifiers.ToString().Replace(",", " +") + " + " +
-											  Remake(e.KeyCode)).Replace("None + ", ""));
-				txt_Hotkey_tempModifiers = e.Modifiers.ToString().Replace(",", " +");
-				switch ((int)e.KeyCode) {
-					case 16:
-					case 17:
-					case 18:
-						txt_Hotkey_tempKey = 0;
-						break;
-					default:
-						txt_Hotkey_tempKey = (int)e.KeyCode;
-						break;
-				}
+			switch(lsb_Hotkeys.SelectedIndex) {
+				case 0:
+					WinAPI.UnregisterHotKey(Handle, (int)Hotkey.HKID.ToggleVisibility);
+					break;
+				case 5:
+					WinAPI.UnregisterHotKey(Handle, (int)Hotkey.HKID.ToggleSymbolIgnoreMode);
+					break;
+				case 10:
+					WinAPI.UnregisterHotKey(Handle, (int)Hotkey.HKID.Exit);
+					break;
+				case 11:
+					WinAPI.UnregisterHotKey(Handle, (int)Hotkey.HKID.Restart);
+					break;
+			}
+			txt_Hotkey.Text = OemReadable((e.Modifiers.ToString().Replace(",", " +") + " + " +
+										  Remake(e.KeyCode)).Replace("None + ", ""));
+			txt_Hotkey_tempModifiers = e.Modifiers.ToString().Replace(",", " +");
+			switch ((int)e.KeyCode) {
+				case 16:
+				case 17:
+				case 18:
+					txt_Hotkey_tempKey = 0;
+					break;
+				default:
+					txt_Hotkey_tempKey = (int)e.KeyCode;
+					break;
 			}
 			UpdateHotkeyTemps();
 		}
@@ -2088,6 +2219,12 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 					tmr.Start();
 				}
 			}
+		}
+		void MahouUIDeactivate(object sender, EventArgs e) {
+			RegisterHotkeys();
+		}
+		void MahouUIActivated(object sender, EventArgs e) {
+			UnregisterHotkeys(true);
 		}
 		#endregion
 	}

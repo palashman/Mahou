@@ -16,9 +16,8 @@ namespace Mahou
 		public static bool self, win, alt, ctrl, shift,
 			shiftRP, ctrlRP, altRP, winRP, //RP = Re-Press
 			awas, swas, cwas, wwas, afterEOS, //*was = alt/shift/ctrl was
-			keyAfterCTRL, keyAfterALT, keyAfterSHIFT, hklOK, hksOK, hklineOK, hkSIOK, hkExitOK,
+			keyAfterCTRL, keyAfterALT, keyAfterSHIFT,
 			clickAfterCTRL, clickAfterALT, clickAfterSHIFT,
-			hksTTCOK, hksTRCOK, hksTSCOK, hksTrslOK, hkShWndOK, hkcwdsOK,
 			hotkeywithmodsfired, csdoing, incapt, waitfornum;
 		static string lastClipText = "";
 		static List<Keys> tempNumpads = new List<Keys>();
@@ -36,7 +35,7 @@ namespace Mahou
 				{"Э", "EH"}, {"Ю", "YU"}, {"Я", "YA"}, {"й", "jj"}, {"ё", "jo"}, 
 				{"э", "eh"}, {"вв", "w"}, {"кь", "q"}, {"КЬ", "Q"},
 				{"ь", "j"}, {"№", "#"}, {"А", "A"}, {"Б", "B"},
-				{"В", "V"}, {"Г", "G"}, {"Д", "D"}, {"Е", "E"},  {"З", "Z"}, 
+				{"В", "V"}, {"Г", "G"}, {"Д", "D"}, {"Е", "E"}, {"З", "Z"}, 
 				{"И", "I"}, {"К", "K"}, {"Л", "L"}, {"М", "M"}, {"Н", "N"},
 				{"О", "O"}, {"П", "P"}, {"Р", "R"}, {"С", "S"}, {"Т", "T"},
 				{"У", "U"}, {"Ф", "F"}, {"Х", "H"}, {"Ц", "C"}, {"Ъ", "'"}, 
@@ -53,33 +52,9 @@ namespace Mahou
 			try {
 				int vkCode = Marshal.ReadInt32(lParam);
 				var Key = (Keys)vkCode; // "Key" will further be used instead of "(Keys)vkCode"
-				#region Multiple last words convert
-				if (waitfornum && wParam == (IntPtr)WinAPI.WM_KEYUP && !shift && !ctrl && !alt) {
-					waitfornum = false;
-					if (Key >= Keys.D0 && Key <= Keys.D9) {
-						self = true;
-						KInputs.MakeInput(new [] { KInputs.AddKey(Keys.Back, true),
-							KInputs.AddKey(Keys.Back, false)
-						});
-						self = false;
-						int wordnum = Convert.ToInt32(Key.ToString().Replace("D", "").Replace("0", "10"));
-						Logging.Log("Attempt to convert " + wordnum + " word(s).");
-						var words = new List<YuKey>();
-						try {
-							foreach (var word in MMain.c_words.GetRange(MMain.c_words.Count-wordnum,wordnum)) {
-								words.AddRange(word);
-							}
-							Logging.Log("Full character count in all " + wordnum + " last word(s) is " + words.Count + ".");
-						} catch {
-							Logging.Log("Converting " + wordnum + " word(s) impossible it is bigger that entered words.");
-						}
-						ConvertLast(words);
-					}
-				}
 				if (MMain.c_words.Count == 0) {
 					MMain.c_words.Add(new List<YuKey>());
 				}
-				#endregion
 				#region Checks modifiers that are down
 				switch (Key) {
 					case Keys.LShiftKey:
@@ -101,11 +76,10 @@ namespace Mahou
 					case Keys.LWin:
 						win = ((wParam == (IntPtr)WinAPI.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)WinAPI.WM_KEYDOWN) ? true : false);
 						break;
-					default:
-						if (!self)
-							Logging.Log("Catched Key=[" + Key + "] with VKCode=[" + vkCode + "] and message=[" + (int)wParam + "], modifiers=[" + (shift ? "Shift" : "") + (alt ? "Alt" : "") + (ctrl ? "Ctrl" : "") + (win ? "Win" : "") + "].");
-						break;
 				}
+				//Key log
+				if (!self)
+					Logging.Log("Catched Key=[" + Key + "] with VKCode=[" + vkCode + "] and message=[" + (int)wParam + "], modifiers=[" + (shift ? "Shift" : "") + (alt ? "Alt" : "") + (ctrl ? "Ctrl" : "") + (win ? "Win" : "") + "].");
 				// Anti win-stuck rule
 				if (win && Key == Keys.L)
 					win = false;
@@ -113,68 +87,6 @@ namespace Mahou
 				if (((win || alt || ctrl) && Key == Keys.Tab) ||
 				    win && Key != Keys.None) // On any Win+[AnyKey] hotkey
 					MMain.mahou.currentLayout = 0;
-				#endregion
-				#region Hotkeys
-				switch (vkCode) {
-					case 160: case 161:
-						vkCode = 16; break;
-					case 162: case 163:
-						vkCode = 17; break;
-					case 164: case 165:
-						vkCode = 18; break;
-					case 240:
-						vkCode = 20; break;
-				}
-				var thishk = new Hotkey(true, vkCode, new []{ ctrl, shift, alt, win });
-				if (!self && thishk.keyCode == 20 &&
-				   (thishk.Equals(MMain.mahou.HKCLast) ||
-				   thishk.Equals(MMain.mahou.HKCLine) ||
-				   thishk.Equals(MMain.mahou.HKCSelection))) {
-					self = true;
-					if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
-						KeybdEvent(Keys.CapsLock, 0);
-						KeybdEvent(Keys.CapsLock, 2);
-					}
-					//Code below removes CapsLock original action, but if hold will not work and will stuck, press again to off.
-					KeybdEvent(Keys.CapsLock, 0);
-					KeybdEvent(Keys.CapsLock, 2);
-					self = false;
-				}
-				if (!self && (wParam == (IntPtr)WinAPI.WM_KEYUP || wParam == (IntPtr)WinAPI.WM_SYSKEYUP)) {
-					if (!MMain.MahouActive() && !ExcludedProgram()) {
-						CheckHotkey(thishk, MMain.mahou.HKCSelection, ref hksOK, ConvertSelection);
-						CheckHotkey(thishk, MMain.mahou.HKTitleCase, ref hksTTCOK, ToTitleSelection);
-						CheckHotkey(thishk, MMain.mahou.HKSwapCase, ref hksTSCOK, ToSwapSelection);
-						CheckHotkey(thishk, MMain.mahou.HKRandomCase, ref hksTRCOK, ToRandomSelection);
-						CheckHotkey(thishk, MMain.mahou.HKConMorWor, ref hkcwdsOK, () => { waitfornum = true; });
-						CheckHotkey(thishk, MMain.mahou.HKTransliteration, ref hksTrslOK, TransliterateSelection);
-						CheckHotkey(thishk, MMain.mahou.HKCLast, ref hklOK, () => ConvertLast(MMain.c_word));
-						CheckHotkey(thishk, MMain.mahou.HKCLine, ref hklineOK, () => { 
-									var line = new List<YuKey>();
-									foreach (var word in MMain.c_words) {
-										line.AddRange(word);
-									}
-									ConvertLast(line);
-						            });
-						csdoing = false;
-					}
-					//these are global, so they don't need to be stopped when window is visible.
-					if (MMain.mahou.HKSymIgn.enabled) {
-					CheckHotkey(thishk, MMain.mahou.HKSymIgn, ref hkSIOK, () => { 
-								if (MMain.mahou.SymIgnEnabled) {
-									MMain.mahou.SymIgnEnabled = false;
-									MMain.MyConfs.Write("Functions", "SymbolIgnoreModeEnabled", "false");
-									MMain.mahou.Icon = MMain.mahou.icon.trIcon.Icon = Properties.Resources.MahouTrayHD;
-								} else {
-									MMain.MyConfs.Write("Functions", "SymbolIgnoreModeEnabled", "true");
-									MMain.mahou.SymIgnEnabled = true;
-									MMain.mahou.Icon = MMain.mahou.icon.trIcon.Icon = Properties.Resources.MahouSymbolIgnoreMode;
-								}
-			           		    });
-					}
-					CheckHotkey(thishk, MMain.mahou.Mainhk, ref hkShWndOK, MMain.mahou.ToggleVisibility);
-					CheckHotkey(thishk, MMain.mahou.ExitHk, ref hkExitOK, MMain.mahou.ExitProgram);
-				}
 				#endregion
 				#region Snippets
 				if (MMain.mahou.SnippetsEnabled) {
@@ -233,29 +145,28 @@ namespace Mahou
 				   (Key == Keys.LShiftKey || Key == Keys.LMenu || Key == Keys.LControlKey || Key == Keys.LWin)) {
 					self = true;
 					hotkeywithmodsfired = false;
-					var mods = new bool[4];
+					uint mods = 0;
 					if (cwas) {
 						cwas = false;
-						mods[0] = true;
+						mods += WinAPI.MOD_CONTROL;
 					}
 					if (swas) {
 						swas = false;
-						mods[1] = true;
+						mods += WinAPI.MOD_SHIFT;
 					}
 					if (awas) {
 						awas = false;
-						mods[2] = true;
+						mods += WinAPI.MOD_ALT;
 					}
 					if (wwas) {
 						wwas = false;
-						mods[3] = true;
+						mods += WinAPI.MOD_WIN;
 					}
-					SendModsUp(mods);
+					SendModsUp((int)mods);
 					self = false;
 				}
 				#endregion
 				#region One key layout switch
-//				Debug.WriteLine("SELFY + "+self);
 				// Additional fix for scroll tip.
 				if (!self && MMain.mahou.ScrollTip &&
 				   Key == Keys.Scroll && wParam == (IntPtr)WinAPI.WM_KEYDOWN) {
@@ -277,12 +188,10 @@ namespace Mahou
 				    Key == Keys.LMenu || Key == Keys.RMenu ||
 				    Key == Keys.LWin || Key == Keys.RWin ||
 				    Key == Keys.CapsLock) {
-//						Debug.WriteLine("WHY LEFT CONTROL??? ->" + Key + " WPaRAm->" + wParam);
 						SpecificKey(Key, wParam, MMain.mahou.Key1, 1);
 						SpecificKey(Key, wParam, MMain.mahou.Key2, 2);
 						SpecificKey(Key, wParam, MMain.mahou.Key3, 3);
 						SpecificKey(Key, wParam, MMain.mahou.Key4, 4);
-//						Debug.WriteLine("!!!!!BREAK");
 					}
 					if (ctrl && (Key != Keys.LControlKey && Key != Keys.RControlKey && Key != Keys.ControlKey || clickAfterCTRL))
 						keyAfterCTRL = true;
@@ -458,35 +367,10 @@ namespace Mahou
 			}
 			return false;
 		}
-		static void CheckHotkey(Hotkey thishk, Hotkey actionhk, ref bool hkOK, Action hotkeyAction) {
-			if (!actionhk.Double)
-				hkOK = true;
-			if (thishk.Equals(actionhk) && actionhk.enabled) {
-				if (hkOK) {
-					Logging.Log("Hotkey fired.");
-					if (MMain.mahou.BlockHKWithCtrl && actionhk.modifs[0]) {
-					} else {
-						if (Array.Exists(actionhk.modifs, b => b == true) && MMain.mahou.RePress) {
-							hotkeywithmodsfired = true;
-							RePressAfter(actionhk.modifs);
-						}
-						SendModsUp(actionhk.modifs);
-						IfKeyIsMod((Keys)actionhk.keyCode);
-						hotkeyAction();
-						RePress();
-					}
-				}
-				if (actionhk.Double) {
-					Logging.Log("Waiting for second hotkey press.");
-					hkOK = true;
-					doublekey.Interval = MMain.mahou.DoubleHKInterval;
-					doublekey.Start();
-				}
-			}
-		}
 		static void SpecificKey(Keys Key, IntPtr wParam, int specificKey, int specKeyId)
 		{
-//			Debug.WriteLine("Spekky->" + specificKey + " Ky->" + Key + " skId->" + specKeyId);
+//			Logging.Log("Spekky->" + specificKey + " Ky->" + Key + " skId->" + specKeyId);
+//			Logging.Log("A->" + alt + " Sh->" + shift + " Ct->" + ctrl);
 //			Debug.WriteLine("Speekky->" + (Key == Keys.CapsLock));
 			if (!shift && !alt && !ctrl && specificKey == 1 && Key == Keys.CapsLock &&
 			    wParam == (IntPtr)WinAPI.WM_KEYDOWN && !self) {
@@ -497,7 +381,7 @@ namespace Mahou
 				self = false;
 			}
 			var bylayout = false;
-			if (wParam == (IntPtr)WinAPI.WM_KEYUP && !self) {
+			if ((wParam == (IntPtr)WinAPI.WM_KEYUP || wParam == (IntPtr)WinAPI.WM_SYSKEYUP) && !self) {
 				#region Switch between layouts with one key
 				var speclayout = (string)typeof(MahouUI).GetField("Layout"+specKeyId).GetValue(MMain.mahou);
 				if (speclayout == MMain.Lang[Languages.Element.SwitchBetween] ||
@@ -559,6 +443,12 @@ namespace Mahou
 						ChangeLayout();
 						self = false;
 					}
+					if (specificKey == 9 && Key == Keys.RMenu) {
+						self = true;
+						Logging.Log("Changing layout by AltGr key.");
+						ChangeLayout();
+						self = false;
+					}
 					#endregion
 				} else {
 					#region By layout switch
@@ -613,6 +503,11 @@ namespace Mahou
 						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(speclayout).uId);
 						matched = true;
 					}
+					if (specificKey == 9 && Key == Keys.RMenu) {
+						Logging.Log("Switching to specific layout by AltGr key.");
+						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, Locales.GetLocaleFromString(speclayout).uId);
+						matched = true;
+					}
 					try {
 						if (matched) {
 							MMain.mahou.currentLayout = Locales.GetLocaleFromString(speclayout).uId;
@@ -624,7 +519,8 @@ namespace Mahou
 					self = false;
 				}
 				#endregion
-				if (((specificKey == 8 && Key == Keys.CapsLock && shift) ||
+				if (((specificKey == 9 && Key == Keys.RMenu) ||
+					(specificKey == 8 && Key == Keys.CapsLock && shift) ||
 					(specificKey == 7 && Key == Keys.RMenu) ||
 					(specificKey == 6 && Key == Keys.LMenu) ||
 					(specificKey == 5 && Key == Keys.RShiftKey) ||
@@ -643,7 +539,7 @@ namespace Mahou
 		/// <summary>
 		/// Converts selected text.
 		/// </summary>
-		static void ConvertSelection()
+		public static void ConvertSelection()
 		{
 			try { //Used to catch errors
 				self = true;
@@ -805,7 +701,7 @@ namespace Mahou
 			}
 			Memory.Flush();
 		}
-		static void TransliterateSelection() {
+		public static void TransliterateSelection() {
 			try { //Used to catch errors
 				Locales.IfLessThan2();
 				self = true;
@@ -836,7 +732,7 @@ namespace Mahou
 				}
 			Memory.Flush();
 		}
-		static void ToTitleSelection() {
+		public static void ToTitleSelection() {
 			try {
 				self = true;
 				string ClipStr = GetClipStr();
@@ -874,7 +770,7 @@ namespace Mahou
 			}
 			Memory.Flush();
 		}
-		static void ToSwapSelection() {
+		public static void ToSwapSelection() {
 			try {
 				self = true;
 				string ClipStr = GetClipStr();
@@ -914,7 +810,7 @@ namespace Mahou
 			}
 			Memory.Flush();
 		}
-		static void ToRandomSelection() {
+		public static void ToRandomSelection() {
 			try {
 				self = true;
 				string ClipStr = GetClipStr();
@@ -1008,10 +904,11 @@ namespace Mahou
 			// Backup & Restore feature, now only text supported...
 			Logging.Log("Taking backup of clipboard text if possible.");
 			lastClipText = NativeClipboard.GetText();
+			Thread.Sleep(50);
 			if (!String.IsNullOrEmpty(lastClipText))
-				lastClipText = NativeClipboard.GetText();
-			//This prevents from converting text that already exist in Clipboard
-			//by pressing "Convert Selection hotkey" without selected text.
+				lastClipText = Clipboard.GetText();
+//			This prevents from converting text that already exist in Clipboard
+//			by pressing "Convert Selection hotkey" without selected text.
 			NativeClipboard.Clear();
 			Logging.Log("Getting selected text.");
 			if (MMain.mahou.SelectedTextGetMoreTries)
@@ -1036,7 +933,7 @@ namespace Mahou
 		/// <summary>
 		/// Re-presses modifiers you hold when hotkey fired(due to SendModsUp()).
 		/// </summary>
-		static void RePress() 
+		public static void RePress() 
 		{
 			//Repress's modifiers by RePress variables
 			if (shiftRP) {
@@ -1064,7 +961,7 @@ namespace Mahou
 		/// Converts last word/line/words.
 		/// </summary>
 		/// <param name="c_">List of YuKeys to be converted.</param>
-		static void ConvertLast(List<YuKey> c_)
+		public static void ConvertLast(List<YuKey> c_)
 		{
 			try { //Used to catch errors, since it called as Task
 			Locales.IfLessThan2();
@@ -1077,7 +974,7 @@ namespace Mahou
 				var clsNM = new StringBuilder(256);
 				WinAPI.GetClassName(WinAPI.GetForegroundWindow(), clsNM, clsNM.Capacity);
 				if (clsNM.ToString() == "ConsoleWindowClass" && (
-					MMain.mahou.HKCLast.keyCode == (int)Keys.Pause))
+					MMain.mahou.HKCLast.VirtualKeyCode == (int)Keys.Pause))
 					backs++;
 				var wasLocale = Locales.GetCurrentLocale() & 0xFFFF;
 				ChangeLayout();
@@ -1126,7 +1023,7 @@ namespace Mahou
 		static bool SymbolIgnoreRules(Keys key, bool upper, uint wasLocale)
 		{
 			Logging.Log("Passing Key = ["+key+"]+["+(upper ? "UPPER" : "lower") + "] with WasLayoutID = ["+wasLocale+"] through symbol ignore rules.");
-			if (MMain.mahou.HKSymIgn.enabled &&
+			if (MMain.mahou.HKSymIgn.Enabled &&
 			    MMain.mahou.SymIgnEnabled &&
 			    (wasLocale == 1033 || wasLocale == 1041) &&
 			    ((Locales.AllList().Length < 3 && !MMain.mahou.SwitchBetweenLayouts) ||
@@ -1302,82 +1199,71 @@ namespace Mahou
 			Thread.Sleep(15);
 			WinAPI.keybd_event((byte)key, 0, flags | (KInputs.IsExtended(key) ? 1 : 0), 0);
 		}
-		/// <summary>
-		/// Sets RePress variables for modifiers.
-		/// </summary>
-		/// <param name="mods">Array of modifiers for which modifiers RePress variables will be set. Example: "Shift Alt"</param>
-		static void RePressAfter(string mods) // 
+		public static void RePressAfter(int mods)
 		{
-			shiftRP = mods.Contains("Shift") ? true : false;
-			altRP = mods.Contains("Alt") ? true : false;
-			ctrlRP = mods.Contains("Control") ? true : false;
-			winRP = mods.Contains("Win") ? true : false;
-		}
-		static void RePressAfter(bool[] mods)
-		{
-			ctrlRP = mods[0];
-			shiftRP = mods[1];
-			altRP = mods[2];
-			winRP = mods[3];
+			ctrlRP = Hotkey.ContainsModifier(mods, (int)WinAPI.MOD_CONTROL);
+			shiftRP = Hotkey.ContainsModifier(mods, (int)WinAPI.MOD_SHIFT);
+			altRP = Hotkey.ContainsModifier(mods, (int)WinAPI.MOD_ALT);
+			winRP = Hotkey.ContainsModifier(mods, (int)WinAPI.MOD_WIN);
 		}
 		/// <summary>
 		/// Sends modifiers up by modstoup array. 
 		/// </summary>
 		/// <param name="modstoup">Array of modifiers which will be send up. 0 = ctrl, 1 = shift, 2 = alt.</param>
-		static void SendModsUp(bool[] modstoup) //
+		public static void SendModsUp(int modstoup) //
 		{
 			//These three below are needed to release all modifiers, so even if you will still hold any of it
 			//it will skip them and do as it must.
 			self = true;
-			if (modstoup[0]) {
-				KMHook.KeybdEvent(Keys.RControlKey, 2); // Right Control Up
-				KMHook.KeybdEvent(Keys.LControlKey, 2); // Left Control Up
-			}
-			if (modstoup[1]) {
-				KMHook.KeybdEvent(Keys.RShiftKey, 2); // Right Shift Up
-				KMHook.KeybdEvent(Keys.LShiftKey, 2); // Left Shift Up
-			}
-			if (modstoup[2]) {
-				KMHook.KeybdEvent(Keys.RMenu, 2); // Right Alt Up
-				KMHook.KeybdEvent(Keys.LMenu, 2); // Left Alt Up
-			}
-			if (modstoup[3]) {
+			if (Hotkey.ContainsModifier(modstoup, (int)WinAPI.MOD_WIN)) {
 				KMHook.KeybdEvent(Keys.LWin, 2); // Right Win Up
 				KMHook.KeybdEvent(Keys.RWin, 2); // Left Win Up
 			}
-			Logging.Log("All modifiers sended up.");
+			if (Hotkey.ContainsModifier(modstoup, (int)WinAPI.MOD_SHIFT)) {
+				KMHook.KeybdEvent(Keys.RShiftKey, 2); // Right Shift Up
+				KMHook.KeybdEvent(Keys.LShiftKey, 2); // Left Shift Up
+			}
+			if (Hotkey.ContainsModifier(modstoup, (int)WinAPI.MOD_CONTROL)) {
+				KMHook.KeybdEvent(Keys.RControlKey, 2); // Right Control Up
+				KMHook.KeybdEvent(Keys.LControlKey, 2); // Left Control Up
+			}
+			if (Hotkey.ContainsModifier(modstoup, (int)WinAPI.MOD_ALT)) {
+				KMHook.KeybdEvent(Keys.RMenu, 2); // Right Alt Up
+				KMHook.KeybdEvent(Keys.LMenu, 2); // Left Alt Up
+			}
+			Logging.Log("Modifiers ["+modstoup+ "] sent up.");
 			self = false;
 		}
 		/// <summary>
 		/// Checks if key is modifier, and calls SendModsUp() if it is.
 		/// </summary>
 		/// <param name="key">Key to be checked.</param>
-		static void IfKeyIsMod(Keys key)
+		public static void IfKeyIsMod(Keys key)
 		{
-			var mods = new bool[4];
+			uint mods = 0;
 			switch (key) {
 				case Keys.ControlKey:
 				case Keys.LControlKey:
 				case Keys.RControlKey:
-					mods[0] = true;
+					mods += WinAPI.MOD_CONTROL;
 					break;
 				case Keys.ShiftKey:
 				case Keys.LShiftKey:
 				case Keys.RShiftKey:
-					mods[1] = true;
+					mods += WinAPI.MOD_SHIFT;
 					break;
 				case Keys.Menu:
 				case Keys.LMenu:
 				case Keys.RMenu:
 				case Keys.Alt:
-					mods[2] = true;
+					mods += WinAPI.MOD_ALT;
 					break;
 				case Keys.LWin:
 				case Keys.RWin:
-					mods[3] = true;
+					mods += WinAPI.MOD_WIN;
 					break;
 			}
-			SendModsUp(mods);
+			SendModsUp((int)mods);
 		}
 		/// <summary>
 		/// Re-Initializes snippets.

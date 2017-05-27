@@ -28,6 +28,7 @@ public class Languages
 		BlockCtrlHKs,
 		MCDSSupport,
 		OneLayoutWholeWord,
+		RestartHooks,
 		#endregion
 		#region Layouts
 		SwitchBetween,
@@ -154,6 +155,7 @@ public class Languages
 		TT_LDText,
 		TT_OneLayoutWholeWordCS,
 		TT_PersistentLayout,
+		TT_RestartHooks,
 		#endregion
 		#region Messages
 		MSG_SnippetsError
@@ -186,6 +188,7 @@ public class Languages
 		{ Element.BlockCtrlHKs, "Block Mahou hotkeys with Ctrl." }, 
 		{ Element.MCDSSupport, "Enable MCDS support." }, 
 		{ Element.OneLayoutWholeWord, "Use layout for whole word in CS." }, 
+		{ Element.RestartHooks, "Restart HOOKs on hotkey action end." }, 
 		#endregion
 		#region Layouts
 		{ Element.SwitchBetween, "Switch between layouts" }, 
@@ -307,7 +310,7 @@ public class Languages
 		{ Element.TT_CapsDis, "If enabled, timer which disables CapsLock(led) will work." }, 
 		{ Element.TT_EmulateLS, "If enabled, layout switching will emulate press of keys selected on right." }, 
 		{ Element.TT_RePress, "If enabled, modifiers(Ctrl/Alt/Shift/Win) will be pressed again conversion(recommended?),\r\n"+
-				"although with a very small probability (less than 0.01%) modifiers may stuck...))." },
+				"although if you release modifiers before conversion action finishes - modifiers may stuck...))." },
 		{ Element.TT_Add1Space, "If enabled, ONE space will be adding to last word." }, 
 		{ Element.TT_ReSelect, "If enabled, any \"Convert selected\" will select text again after conversion." }, 
 		{ Element.TT_ScrollTip, "Highlight Scroll Lock when active language 1, selected in Layouts tab.\nUnnesesary to keep enabled \"Switch between layouts\" function enabled for this function to work, just select layout #1 below it and the disable it if you need to." }, 
@@ -334,6 +337,7 @@ public class Languages
 				"this feature uses quantity of rightly recognized chars in two selected layouts to indicate layout of whole word,"+
 				"\r\nthis feature works PERFECTLY with words that have symbols around them, but word lenght must be greater that 1 char for this feature to work properly." },
 		{ Element.TT_PersistentLayout, "Write here process names in which you want to have persistent layout, separators are spaces(though symbols as ,.^& etc are too supported)."},
+		{ Element.TT_RestartHooks, "Restart global keyboard and mouse hooks on every Mahou's hotkey action end.\r\nEnabling this will make hooks (almost) impossible to kill, useful if Mahou stops catching pressed keys."},
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Snippets contains error in syntax, check if there are errors, details on snippets syntax you can find on Wiki." }
@@ -369,6 +373,7 @@ public class Languages
 		{ Element.BlockCtrlHKs, "Блокировать горячие клавиши Mahou содержащие Ctrl." }, 
 		{ Element.MCDSSupport, "Включить поддержку MCDS." }, 
 		{ Element.OneLayoutWholeWord, "Считать раскладку для всего слова в КВ." }, 
+		{ Element.RestartHooks, "Перезапускать HOOK'и." }, 
 		#endregion
 		#region Layouts
 		{ Element.SwitchBetween, "Переключать между раскладками" }, 
@@ -488,7 +493,7 @@ public class Languages
 		{ Element.TT_CapsDis, "Если включено, то будет работать таймер который будет выключать CapsLock(лампочку)." }, 
 		{ Element.TT_EmulateLS, "Если включено, переключение раскладку будет эмулировать нажатие клавиш выбранный правее для переключения раскладки." }, 
 		{ Element.TT_RePress, "Если включено, то модификаторы(Ctrl/Alt/Shift/Win) будут нажаты заново после действия горячей клавиши.(рекомендуется?),\r\n"+
-							  "хотя с очень маленькой вероятностью (менее 0.01%) могут залипнуть модификаторы...)." },
+							  "хотя если вы отпустите модификаторы до того как завершиться действие конвертации - могут залипнуть модификаторы...)." },
 		{ Element.TT_Add1Space, "Если включено, то ОДИН пробел будет добавлятся в последнее слово." }, 
 		{ Element.TT_ReSelect, "Если включено, любые \"Конверт выделения\" будут выделять тескт заново." }, 
 		{ Element.TT_ScrollTip, "Подсвечивать лампочку Scroll Lock когда активна раскладка 1, выбранная во вкладке Раскладки.\nНе обязательно оставлять включенным функцию \"Переключать между раскладками\", нужно просто выбрать раскладку #1 ниже неё." }, 
@@ -515,6 +520,7 @@ public class Languages
 				"эта функция использует количество правильно распознанных букв в двух раскладках чтобы определить раскладку слова,\r\n"+
 				"эта функция ПРЕКРАСНО работает с словами которые имеют рядом символы, но длинна слова должна быть больше 1(не включая символы) чтобы функция нормально работала." },
 		{ Element.TT_PersistentLayout, "Напишите здесь названия процессов в которых вы бы хотели иметь постоянную раскладку, разделитель - пробел(хотя другие символы вроде ,.^& и т.д. тоже поддерживаются)."},
+		{ Element.TT_RestartHooks, "Перезапускает глобальные перехваты(HOOK'и) клавиатуры и мыши по окончанию действия любой горячей клавиши Mahou.\r\nВключая эту функцию перехватов будет (почти) что невозможно *убить*, полезно если Mahou перестаёт ловить введенные клавиши."},
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Сниппеты содержат ошибки в синтаксисе, проверьте ваши сниппеты, детали синтаксиса можете найти на Wiki." }

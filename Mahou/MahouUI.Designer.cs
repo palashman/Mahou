@@ -142,6 +142,7 @@ namespace Mahou
 		private System.Windows.Forms.Label lbl_PersistentLayout1Interval;
 		private System.Windows.Forms.CheckBox chk_PersistentLayout1Active;
 		private System.Windows.Forms.TextBox txt_PersistentLayout1Processes;
+		private System.Windows.Forms.CheckBox chk_RestartHooks;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -298,6 +299,7 @@ namespace Mahou
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
 			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
+			this.chk_RestartHooks = new System.Windows.Forms.CheckBox();
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -353,6 +355,7 @@ namespace Mahou
 			// 
 			// tab_functions
 			// 
+			this.tab_functions.Controls.Add(this.chk_RestartHooks);
 			this.tab_functions.Controls.Add(this.chk_OneLayoutWholeWord);
 			this.tab_functions.Controls.Add(this.lnk_plugin);
 			this.tab_functions.Controls.Add(this.chk_MCDS_support);
@@ -690,7 +693,8 @@ namespace Mahou
 			"Right Shift",
 			"Left Alt",
 			"Right Alt",
-			"Shift + Caps Lock"});
+			"Shift + Caps Lock",
+			"AltGr"});
 			this.cbb_Key4.Location = new System.Drawing.Point(6, 115);
 			this.cbb_Key4.Name = "cbb_Key4";
 			this.cbb_Key4.Size = new System.Drawing.Size(250, 23);
@@ -710,7 +714,8 @@ namespace Mahou
 			"Right Shift",
 			"Left Alt",
 			"Right Alt",
-			"Shift + Caps Lock"});
+			"Shift + Caps Lock",
+			"AltGr"});
 			this.cbb_Key3.Location = new System.Drawing.Point(6, 86);
 			this.cbb_Key3.Name = "cbb_Key3";
 			this.cbb_Key3.Size = new System.Drawing.Size(250, 23);
@@ -730,7 +735,8 @@ namespace Mahou
 			"Right Shift",
 			"Left Alt",
 			"Right Alt",
-			"Shift + Caps Lock"});
+			"Shift + Caps Lock",
+			"AltGr"});
 			this.cbb_Key2.Location = new System.Drawing.Point(6, 57);
 			this.cbb_Key2.Name = "cbb_Key2";
 			this.cbb_Key2.Size = new System.Drawing.Size(250, 23);
@@ -750,7 +756,8 @@ namespace Mahou
 			"Right Shift",
 			"Left Alt",
 			"Right Alt",
-			"Shift + Caps Lock"});
+			"Shift + Caps Lock",
+			"AltGr"});
 			this.cbb_Key1.Location = new System.Drawing.Point(6, 28);
 			this.cbb_Key1.Name = "cbb_Key1";
 			this.cbb_Key1.Size = new System.Drawing.Size(250, 23);
@@ -1055,7 +1062,7 @@ namespace Mahou
 			this.lbl_LangTTText.AutoSize = true;
 			this.lbl_LangTTText.Location = new System.Drawing.Point(211, 80);
 			this.lbl_LangTTText.Name = "lbl_LangTTText";
-			this.lbl_LangTTText.Size = new System.Drawing.Size(74, 15);
+			this.lbl_LangTTText.Size = new System.Drawing.Size(73, 15);
 			this.lbl_LangTTText.TabIndex = 9;
 			this.lbl_LangTTText.Text = "Tootltip text:";
 			// 
@@ -1186,7 +1193,7 @@ namespace Mahou
 			this.chk_LangTTTransparentColor.AutoSize = true;
 			this.chk_LangTTTransparentColor.Location = new System.Drawing.Point(368, 52);
 			this.chk_LangTTTransparentColor.Name = "chk_LangTTTransparentColor";
-			this.chk_LangTTTransparentColor.Size = new System.Drawing.Size(119, 19);
+			this.chk_LangTTTransparentColor.Size = new System.Drawing.Size(118, 19);
 			this.chk_LangTTTransparentColor.TabIndex = 3;
 			this.chk_LangTTTransparentColor.Text = "Transparent color";
 			this.chk_LangTTTransparentColor.UseVisualStyleBackColor = true;
@@ -1892,6 +1899,16 @@ namespace Mahou
 			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.HelpMeUnderstand.Popup += new System.Windows.Forms.PopupEventHandler(this.HelpMeUnderstandPopup);
 			// 
+			// chk_RestartHooks
+			// 
+			this.chk_RestartHooks.AutoSize = true;
+			this.chk_RestartHooks.Location = new System.Drawing.Point(302, 141);
+			this.chk_RestartHooks.Name = "chk_RestartHooks";
+			this.chk_RestartHooks.Size = new System.Drawing.Size(212, 19);
+			this.chk_RestartHooks.TabIndex = 16;
+			this.chk_RestartHooks.Text = "Restart hooks on hotkey action end";
+			this.chk_RestartHooks.UseVisualStyleBackColor = true;
+			// 
 			// MahouUI
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1908,6 +1925,8 @@ namespace Mahou
 			this.MinimizeBox = false;
 			this.Name = "MahouUI";
 			this.Text = "MahouUI";
+			this.Activated += new System.EventHandler(this.MahouUIActivated);
+			this.Deactivate += new System.EventHandler(this.MahouUIDeactivate);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MahouUIFormClosing);
 			this.tabs.ResumeLayout(false);
 			this.tab_functions.ResumeLayout(false);
