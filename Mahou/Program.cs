@@ -86,11 +86,12 @@ namespace Mahou
 			}
 		}
 		#region Actions with hooks
+		public static void RestartHook() {
+			StopHook();
+			StartHook();
+		}
 		public static void StartHook()
 		{
-			if (!CheckHook()) {
-				return;
-			}
 			_mouse_hookID = KMHook.SetHook(_mouse_proc, WinAPI.WH_MOUSE_LL);
 			_hookID = KMHook.SetHook(_proc, WinAPI.WH_KEYBOARD_LL);
 			Thread.Sleep(10); //Give some time for it to apply
@@ -98,18 +99,11 @@ namespace Mahou
 		}
 		public static void StopHook()
 		{
-			if (CheckHook()) {
-				return;
-			}
 			WinAPI.UnhookWindowsHookEx(_hookID);
 			WinAPI.UnhookWindowsHookEx(_mouse_hookID);
 			_hookID = _mouse_hookID = IntPtr.Zero;
 			Thread.Sleep(10); //Give some time for it to apply
 			Logging.Log("Global hooks stopped.");
-		}
-		public static bool CheckHook()
-		{
-			return _hookID == IntPtr.Zero;
 		}
 		public static bool MahouActive()
 		{
