@@ -85,9 +85,10 @@ namespace Mahou
 			return false;
 		}
 		public static void CallHotkey(Hotkey hotkey, HKID hkID, ref bool hkOK, Action hkAction) {
-			if (!hotkey.Double) hkOK = true;
+			bool once = false;
+			if (!hotkey.Double) once = true;
 			if (hotkey.ID == (int)hkID && hotkey.Enabled) {
-				if (hkOK) {
+				if (hkOK || once) {
 					Logging.Log("Hotkey [" + Enum.GetName(typeof(HKID), hkID) + "] fired.");
 					if (MMain.mahou.BlockHKWithCtrl && ContainsModifier((int)hotkey.Modifiers, (int)WinAPI.MOD_CONTROL)) { } else {
 						if (hotkey.Modifiers > 0 && MMain.mahou.RePress) {
