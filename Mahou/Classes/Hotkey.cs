@@ -92,6 +92,15 @@ namespace Mahou
 			var other = obj as Hotkey;
 			if (other == null)
 				return false;
+			if (((this.VirtualKeyCode == 16 || this.VirtualKeyCode == 160 || this.VirtualKeyCode == 161) && this.Modifiers == 0 && other.Modifiers == WinAPI.MOD_SHIFT && other.VirtualKeyCode == 0) 
+			 || ((other.VirtualKeyCode == 16 || other.VirtualKeyCode == 160 || other.VirtualKeyCode == 161) && other.Modifiers == 0 && this.Modifiers == WinAPI.MOD_SHIFT && this.VirtualKeyCode == 0))
+				return true;
+			if (((this.VirtualKeyCode == 18 || this.VirtualKeyCode == 164 || this.VirtualKeyCode == 165) && this.Modifiers == 0 && other.Modifiers == WinAPI.MOD_ALT && other.VirtualKeyCode == 0) 
+			 || ((other.VirtualKeyCode == 18 || other.VirtualKeyCode == 164 || other.VirtualKeyCode == 165) && other.Modifiers == 0 && this.Modifiers == WinAPI.MOD_ALT && this.VirtualKeyCode == 0))
+				return true;
+			if (((this.VirtualKeyCode == 17 || this.VirtualKeyCode == 162 || this.VirtualKeyCode == 163) && this.Modifiers == 0 && other.Modifiers == WinAPI.MOD_CONTROL && other.VirtualKeyCode == 0) 
+			 || ((other.VirtualKeyCode == 17 || other.VirtualKeyCode == 162 || other.VirtualKeyCode == 163) && other.Modifiers == 0 && this.Modifiers == WinAPI.MOD_CONTROL && this.VirtualKeyCode == 0))
+				return true;
 			return this.VirtualKeyCode == other.VirtualKeyCode && 
 				   this.Modifiers == other.Modifiers;
 		}
