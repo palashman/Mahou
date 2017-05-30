@@ -1138,19 +1138,21 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			ToggleTimers();
 		}
 		public void PersistentLayoutCheck(string ProcessNames, string Layout) {
-			var actProcName = Locales.ActiveWindowProcess().ProcessName + ".exe";
-			Logging.Log("Checking active window's process name: ["+actProcName+"] with processes: ["+ProcessNames+"], for layout: ["+Layout+"].");
-			if (ProcessNames.Contains(actProcName)) {
-				uint CurrentLayout = Locales.GetCurrentLocale();
-				uint PersistentLayout = Locales.GetLocaleFromString(Layout).uId;
-				Logging.Log("Checking current layout: ["+currentLayout+"] with selected persistent layout: ["+PersistentLayout+"].");
-				if (CurrentLayout != PersistentLayout) {
-					WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, PersistentLayout);
-					Logging.Log("Layout was different, changing to: ["+Layout+"].");
-					currentLayout = PersistentLayout;
-					System.Threading.Thread.Sleep(5);
+			try {
+				var actProcName = Locales.ActiveWindowProcess().ProcessName + ".exe";
+				Logging.Log("Checking active window's process name: ["+actProcName+"] with processes: ["+ProcessNames+"], for layout: ["+Layout+"].");
+				if (ProcessNames.Contains(actProcName)) {
+					uint CurrentLayout = Locales.GetCurrentLocale();
+					uint PersistentLayout = Locales.GetLocaleFromString(Layout).uId;
+					Logging.Log("Checking current layout: ["+currentLayout+"] with selected persistent layout: ["+PersistentLayout+"].");
+					if (CurrentLayout != PersistentLayout) {
+						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, PersistentLayout);
+						Logging.Log("Layout was different, changing to: ["+Layout+"].");
+						currentLayout = PersistentLayout;
+						System.Threading.Thread.Sleep(5);
+					}
 				}
-			}
+			} catch(Exception e) { Logging.Log("Exception in Persistent layout("+Layout+") check, error messages & stack:\r\n"+e.Message+"+\r\n"+e.StackTrace, 1); }
 		}
 		/// <summary>
 		/// Toggles timers state.
