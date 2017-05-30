@@ -99,9 +99,10 @@ namespace Mahou
 				if (MMain.mahou.HasHotkey(new Hotkey(false, (uint)Key, mods, 77)) && !self) {
 					Logging.Log("Pressed Mahou, hotkey words would not be cleared.");
 					IsHotkey = true;
-				} else if (Key == Keys.Scroll && (Keys)MMain.mahou.HKConMorWor.VirtualKeyCode == Keys.Scroll &&  // Super-Fix for SUPER Uncompatibility for Scroll-Tip and Scroll as hotkey for convert multiple words.
-				        MMain.mahou.HKConMorWor.Modifiers == 0 && MMain.mahou.HKConMorWor.Enabled)
+				} else
 					IsHotkey = false;
+				if ((Key >= Keys.D0 || Key <= Keys.D9) && waitfornum)
+					IsHotkey = true;
 				//Key log
 				if (!self)
 					Logging.Log("Catched Key=[" + Key + "] with VKCode=[" + vkCode + "] and message=[" + (int)wParam + "], modifiers=[" + (shift ? "Shift" : "") + (alt ? "Alt" : "") + (ctrl ? "Ctrl" : "") + (win ? "Win" : "") + "].");
