@@ -143,9 +143,9 @@ namespace Mahou {
 			InitializeListBoxes();
 			// Set minnimum values because they're ALWAYS restores to 0 after Form Editor is used.
 		    nud_CapsLockRefreshRate.Minimum = nud_DoubleHK2ndPressWaitTime.Minimum =
-		        nud_LangTTCaretRefreshRate.Minimum = nud_LangTTMouseRefreshRate.Minimum = 
-		    	nud_ScrollLockRefreshRate.Minimum = nud_TrayFlagRefreshRate.Minimum =
-				nud_PersistentLayout1Interval.Minimum = nud_PersistentLayout2Interval.Minimum =	1;
+		        nud_LangTTCaretRefreshRate.Minimum = nud_LangTTMouseRefreshRate.Minimum =
+				nud_ScrollLockRefreshRate.Minimum =	nud_TrayFlagRefreshRate.Minimum = 
+		    	nud_PersistentLayout1Interval.Minimum = nud_PersistentLayout2Interval.Minimum =	1;
 			nud_LangTTPositionX.Minimum = nud_LangTTPositionY.Minimum = -100;
 			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version +"-dev";
 			RegisterHotkeys();
@@ -181,7 +181,8 @@ namespace Mahou {
 				ToggleVisibility();
         		Logging.Log("Another instance detected, closing it.");
 			}
-			if (m.Msg == WinAPI.WM_HOTKEY && !KMHook.self) {
+//			Logging.Log("MSG: "+m.Msg+", LP: "+m.LParam+", WP: "+m.WParam+", KMS: "+KMHook.self+" 0x312");
+			if (m.Msg == WinAPI.WM_HOTKEY && !KMHook.self && KMHook.IsHotkey) {
 				var id = (Hotkey.HKID)m.WParam.ToInt32();
 				#region Convert multiple words 
 				if (m.WParam.ToInt32() >= 100 && m.WParam.ToInt32() <= 109 && KMHook.waitfornum) {
@@ -199,7 +200,7 @@ namespace Mahou {
 					}
 					FlushConvertMoreWords();
 					KMHook.ConvertLast(words);
-				}
+				} else if (KMHook.waitfornum) { FlushConvertMoreWords(); }
 				#endregion
 				Hotkey.CallHotkey(HKCSelection, id, ref hksOK, KMHook.ConvertSelection);
 				Hotkey.CallHotkey(HKTitleCase, id, ref hksTTCOK, KMHook.ToTitleSelection);
@@ -300,18 +301,30 @@ namespace Mahou {
 			HKRestart_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "RestartMahou_Key");
 			#endregion
 			#region Lang Display colors
-			LDMouseFore_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "MouseLTForeColor"));
-			LDCaretFore_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "CaretLTForeColor"));
-			LDMouseBack_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "MouseLTBackColor"));
-			LDCaretBack_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "CaretLTBackColor"));
-			Layout1Fore_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "Layout1ForeColor"));
-			Layout2Fore_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "Layout2ForeColor"));
-			Layout1Back_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "Layout1BackColor"));
-			Layout2Back_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "Layout2BackColor"));
-			LDMouseFont_temp = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("Appearence", "MouseLTFont"));
-			LDCaretFont_temp = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("Appearence", "CaretLTFont"));
-			Layout1Font_temp = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("Appearence", "Layout1Font"));
-			Layout2Font_temp = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("Appearence", "Layout2Font"));
+			try { LDMouseFore_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "MouseLTForeColor")); 
+				} catch { WrongColorLog(MMain.MyConfs.Read("Appearence", "MouseLTForeColor")); }
+			try { LDCaretFore_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "CaretLTForeColor")); 
+				} catch { WrongColorLog(MMain.MyConfs.Read("Appearence", "CaretLTForeColor")); }
+			try { LDMouseBack_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "MouseLTBackColor")); 
+				} catch { WrongColorLog(MMain.MyConfs.Read("Appearence", "MouseLTBackColor")); }
+			try { LDCaretBack_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "CaretLTBackColor")); 
+				} catch { WrongColorLog(MMain.MyConfs.Read("Appearence", "CaretLTBackColor")); }
+			try { Layout1Fore_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "Layout1ForeColor")); 
+				} catch { WrongColorLog(MMain.MyConfs.Read("Appearence", "Layout1ForeColor")); }
+			try { Layout2Fore_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "Layout2ForeColor")); 
+				} catch { WrongColorLog(MMain.MyConfs.Read("Appearence", "Layout2ForeColor")); }
+			try { Layout1Back_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "Layout1BackColor")); 
+				} catch { WrongColorLog(MMain.MyConfs.Read("Appearence", "Layout1BackColor")); }
+			try { Layout2Back_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "Layout2BackColor")); 
+				} catch { WrongColorLog(MMain.MyConfs.Read("Appearence", "Layout2BackColor")); }
+			try { LDMouseFont_temp = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("Appearence", "MouseLTFont")); 
+				} catch { WrongFontLog(MMain.MyConfs.Read("Appearence", "MouseLTFont")); }
+			try { LDCaretFont_temp = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("Appearence", "CaretLTFont")); 
+				} catch { WrongFontLog(MMain.MyConfs.Read("Appearence", "CaretLTFont")); }
+			try { Layout1Font_temp = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("Appearence", "Layout1Font")); 
+				} catch { WrongFontLog(MMain.MyConfs.Read("Appearence", "Layout1Font")); }
+			try { Layout2Font_temp = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("Appearence", "Layout2Font")); 
+				} catch { WrongFontLog(MMain.MyConfs.Read("Appearence", "Layout2Font")); }
 			// Transparent background colors
 			LDMouseTransparentBack_temp = MMain.MyConfs.ReadBool("Appearence", "MouseLTTransparentBackColor");
 			LDCaretTransparentBack_temp = MMain.MyConfs.ReadBool("Appearence", "CaretLTTransparentBackColor");
@@ -943,6 +956,28 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			HKRestart = new Hotkey(HKRestart_tempEnabled, (uint)HKRestart_tempKey, 
 			    Hotkey.GetMods(HKRestart_tempMods), (int)Hotkey.HKID.Restart, false);
 			Logging.Log("Hotkeys initialized.");
+		}
+		public bool HasHotkey(Hotkey thishk) {
+			if (thishk == Mainhk || 
+				thishk == HKCLast ||
+				thishk == HKCSelection ||
+				thishk == HKCLine ||
+				thishk == HKSymIgn ||
+				thishk == HKConMorWor ||
+				thishk == HKTitleCase ||
+				thishk == HKRandomCase ||
+				thishk == HKSwapCase ||		
+				thishk == HKTransliteration ||
+				thishk == ExitHk ||
+				thishk == HKRestart)
+				return true;
+			return false;
+		}
+		void WrongColorLog(string color) {
+			Logging.Log("["+color+"]is not color, it is skipped.", 2);
+		}
+		void WrongFontLog(string font) {
+			Logging.Log("["+font+"]is not font, or its missing from system, it is skipped.", 2);
 		}
 		/// <summary>
 		/// Initializes timers.

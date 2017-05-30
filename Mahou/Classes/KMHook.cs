@@ -18,7 +18,7 @@ namespace Mahou
 			awas, swas, cwas, wwas, afterEOS, //*was = alt/shift/ctrl was
 			keyAfterCTRL, keyAfterALT, keyAfterSHIFT,
 			clickAfterCTRL, clickAfterALT, clickAfterSHIFT,
-			hotkeywithmodsfired, csdoing, incapt, waitfornum;
+			hotkeywithmodsfired, csdoing, incapt, waitfornum, IsHotkey;
 		static string lastClipText = "";
 		static List<Keys> tempNumpads = new List<Keys>();
 		static List<char> c_snip = new List<char>();
@@ -55,6 +55,8 @@ namespace Mahou
 				if (MMain.c_words.Count == 0) {
 					MMain.c_words.Add(new List<YuKey>());
 				}
+				if ((Key < Keys.D0 || Key > Keys.D9) && waitfornum && (uint)Key != MMain.mahou.HKConMorWor.VirtualKeyCode && (wParam == (IntPtr)WinAPI.WM_KEYDOWN))
+					MMain.mahou.FlushConvertMoreWords();
 				#region Checks modifiers that are down
 				switch (Key) {
 					case Keys.LShiftKey:
@@ -77,6 +79,29 @@ namespace Mahou
 						win = ((wParam == (IntPtr)WinAPI.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)WinAPI.WM_KEYDOWN) ? true : false);
 						break;
 				}
+				// Additional fix for scroll tip.
+				if (!self && MMain.mahou.ScrollTip &&
+				   Key == Keys.Scroll && wParam == (IntPtr)WinAPI.WM_KEYDOWN) {
+					self = true;
+					KeybdEvent(Keys.Scroll, 0);
+					KeybdEvent(Keys.Scroll, 2);
+					self = false;
+				}
+				uint mods = 0;
+				if (alt)
+					mods += WinAPI.MOD_ALT;
+				if (ctrl)
+					mods += WinAPI.MOD_CONTROL;
+				if (shift)
+					mods += WinAPI.MOD_SHIFT;
+				if (win)
+					mods += WinAPI.MOD_WIN;
+				if (MMain.mahou.HasHotkey(new Hotkey(false, (uint)Key, mods, 77)) && !self) {
+					Logging.Log("Pressed Mahou, hotkey words would not be cleared.");
+					IsHotkey = true;
+				} else if (Key == Keys.Scroll && (Keys)MMain.mahou.HKConMorWor.VirtualKeyCode == Keys.Scroll &&  // Super-Fix for SUPER Uncompatibility for Scroll-Tip and Scroll as hotkey for convert multiple words.
+				        MMain.mahou.HKConMorWor.Modifiers == 0 && MMain.mahou.HKConMorWor.Enabled)
+					IsHotkey = false;
 				//Key log
 				if (!self)
 					Logging.Log("Catched Key=[" + Key + "] with VKCode=[" + vkCode + "] and message=[" + (int)wParam + "], modifiers=[" + (shift ? "Shift" : "") + (alt ? "Alt" : "") + (ctrl ? "Ctrl" : "") + (win ? "Win" : "") + "].");
@@ -145,7 +170,7 @@ namespace Mahou
 				   (Key == Keys.LShiftKey || Key == Keys.LMenu || Key == Keys.LControlKey || Key == Keys.LWin)) {
 					self = true;
 					hotkeywithmodsfired = false;
-					uint mods = 0;
+					mods = 0;
 					if (cwas) {
 						cwas = false;
 						mods += WinAPI.MOD_CONTROL;
@@ -167,14 +192,6 @@ namespace Mahou
 				}
 				#endregion
 				#region One key layout switch
-				// Additional fix for scroll tip.
-				if (!self && MMain.mahou.ScrollTip &&
-				   Key == Keys.Scroll && wParam == (IntPtr)WinAPI.WM_KEYDOWN) {
-					self = true;
-					KeybdEvent(Keys.Scroll, 0);
-					KeybdEvent(Keys.Scroll, 2);
-					self = false;
-				}
 				if (!self && wParam == (IntPtr)WinAPI.WM_KEYUP)
 					if (Key == Keys.LControlKey || Key == Keys.RControlKey || Key == Keys.ControlKey)
 						clickAfterCTRL = false;
@@ -208,7 +225,8 @@ namespace Mahou
 				}
 				#endregion
 				#region Other, when KeyDown
-				if (nCode >= 0 && wParam == (IntPtr)WinAPI.WM_KEYDOWN && !self && !waitfornum) {
+				if (nCode >= 0 && wParam == (IntPtr)WinAPI.WM_KEYDOWN &&
+				    !self && !waitfornum && !IsHotkey) {
 					if (Key == Keys.Back) { //Removes last item from current word when user press Backspace
 						if (MMain.c_word.Count != 0) {
 							MMain.c_word.RemoveAt(MMain.c_word.Count - 1);
@@ -234,7 +252,17 @@ namespace Mahou
 					   Key == Keys.Tab || Key == Keys.PageDown || Key == Keys.PageUp ||
 					   Key == Keys.Left || Key == Keys.Right || Key == Keys.Down || Key == Keys.Up ||
 					   Key == Keys.BrowserSearch || 
-					   (ctrl && Key != Keys.None)) { //Ctrl modifier + Any key will clear word too
+					   (ctrl && (Key != Keys.Menu  || //Ctrl modifier and key which is not modifier
+								Key != Keys.LMenu ||
+								Key != Keys.RMenu ||
+								Key != Keys.LWin ||
+								Key != Keys.ShiftKey ||
+								Key != Keys.RShiftKey ||
+								Key != Keys.LShiftKey ||
+								Key != Keys.RWin ||
+								Key != Keys.ControlKey ||
+								Key != Keys.LControlKey ||
+								Key != Keys.RControlKey ))) { 
 						Logging.Log("Last word cleared.");
 						MMain.c_word.Clear();
 						MMain.c_words.Clear();

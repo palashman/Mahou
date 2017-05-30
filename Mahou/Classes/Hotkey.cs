@@ -40,7 +40,7 @@ namespace Mahou
 		/// </summary>
 		/// <param name="hkmods">Hotkey modifiers string.</param>
 		public static uint GetMods(string hkmods) {
-			uint MOD = 0; // No repeat for hotkey actions
+			uint MOD = 0;
 			if (hkmods.Contains("Alt"))
 				MOD += WinAPI.MOD_ALT;
 			if (hkmods.Contains("Control"))
@@ -84,6 +84,28 @@ namespace Mahou
 			}
 			return false;
 		}
+		#region GetHash code, Equals etc.
+		public override int GetHashCode() {
+			return (VirtualKeyCode.GetHashCode() * Modifiers.GetHashCode()) ^ 7;
+		}
+		public override bool Equals(object obj) {
+			var other = obj as Hotkey;
+			if (other == null)
+				return false;
+			return this.VirtualKeyCode == other.VirtualKeyCode && 
+				   this.Modifiers == other.Modifiers;
+		}
+		public static bool operator ==(Hotkey lhs, Hotkey rhs) {
+			if (ReferenceEquals(lhs, rhs))
+				return true;
+			if (ReferenceEquals(lhs, null) || ReferenceEquals(rhs, null))
+				return false;
+			return lhs.Equals(rhs);
+		}
+		public static bool operator !=(Hotkey lhs, Hotkey rhs) {
+			return !(lhs == rhs);
+		}
+		#endregion
 		public static void CallHotkey(Hotkey hotkey, HKID hkID, ref bool hkOK, Action hkAction) {
 			bool once = false;
 			if (!hotkey.Double) once = true;
@@ -108,5 +130,6 @@ namespace Mahou
 			}
 			}
 		}
+		
 	}
 }
