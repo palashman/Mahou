@@ -23,6 +23,10 @@ Mahou работает совершенно по-другому: в отличи
 
 ###### Возможности по версиям:
 
+**v2.3.0.6**<br/>
+
+- :gem: Исправлена серьёзная ошибка функции Конвертации нескольких слов из версии 2.3.0.5.
+
 **v2.3.0.5**<br/>
 - :bug: Исправлена серьёзная несовместимость подсказки языка лампочкой Scroll-Lock и функции Конвертации нескольких слов настроенной на Scroll-Lock.
 - :bug: Исправлено неожиданное отключение двойных горячих клавиш в 2.3.0.0.
@@ -202,6 +206,10 @@ Even selected text switches just between **selected** layouts, though if you lik
 4. Starting from v1.0.4.4 in Convert selection unrecognized text by all selected layout in settings (example: ♥) just rewrites.
 
 ###### By version features:
+
+**v2.3.0.6**<br/>
+
+- :gem: Fixed serious bug in Convert Multiple Words function from v2.3.0.5.
 
 **v2.3.0.5**<br/>
 
