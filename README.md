@@ -23,6 +23,13 @@ Mahou работает совершенно по-другому: в отличи
 
 ###### Возможности по версиям:
 
+**v2.3.0.5**<br/>
+- :bug: Исправлена серьёзная несовместимость подсказки языка лампочкой Scroll-Lock и функции Конвертации нескольких слов настроенной на Scroll-Lock.
+- :bug: Исправлено неожиданное отключение двойных горячих клавиш в 2.3.0.0.
+- :bug: Испралено невозможность запустить Mahou из-за неверных настроек шрифтов(или их отсутствия в системе) и цветов в Mahou.ini.
+- :memo: Исправлены некоторые опечатки в русском языке интерфейса.
+- :bug: Исправлена очистка введенных слов при Ctrl+Любая клавиша, теперь Mahou не очищает слова если *Любая клавиша* - модификатор.
+
 **v2.3.0.0**<br/>
 - :gem: Добавлена функция перезапуска HOOK'ов.
 - :gem: Переписан способ регистрации горячих клавиш.
@@ -195,6 +202,14 @@ Even selected text switches just between **selected** layouts, though if you lik
 4. Starting from v1.0.4.4 in Convert selection unrecognized text by all selected layout in settings (example: ♥) just rewrites.
 
 ###### By version features:
+
+**v2.3.0.5**<br/>
+
+- :bug: Fixed double hotkey ability was inacessible until restart in v2.3.0.0.
+- :gem: Fixed serious uncompatibility between Scroll-Tip and Convert Multiple words as Scroll hotkey.
+- :bug: Fixed Mahou wasn't start up if fonts or colors are wrongly configured in Mahou.ini.
+- :gem: Fixed Mahou was clearing catched words on Ctrl+Any key(even modifier) modifiers were excluded.
+- :memo: Fixed some typos in Russian UI translation. подсказки языка лампочкой Scroll-Lock и функции Конвертации нескольких слов настроенной на Scroll-Lock.
 
 **v2.3.0.0**<br/>
 - :gem: Added Restart Hooks on each Mahou hotkey action end.
