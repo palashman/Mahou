@@ -61,6 +61,7 @@ public class Languages
 		LDHeight,
 		MCDSTopIndent,
 		MCDSBottomIndent,
+		UseFlags,
 		#endregion
 		#region Timings
 		LDForMouseRefreshRate,
