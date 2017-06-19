@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Windows.Forms.VisualStyles;
 
 namespace Mahou {
 	public partial class MahouUI : Form {
@@ -30,6 +31,7 @@ namespace Mahou {
 		static bool updating, was, isold = true, checking;
 		static Timer tmr = new Timer();
 		static Timer old = new Timer();
+		public static Bitmap FLAG;
 		static Timer animate = new Timer();
 		static Timer showUpdWnd = new Timer();
 		static int progress = 0, _progress = 0;
@@ -77,6 +79,10 @@ namespace Mahou {
 		/// Temporary fonts of LangDisplays appearece.
 		/// </summary>
 		public Font LDMouseFont_temp, LDCaretFont_temp, Layout1Font_temp, Layout2Font_temp;
+		/// <summary>
+		/// Temporary use flags of LangDisplays appearece.
+		/// </summary>
+		public bool LDMouseUseFlags_temp, LDCaretUseFlags_temp;
 		/// <summary>
 		/// Temporary transparent backgrounds of LangDisplays appearece.
 		/// </summary>
@@ -126,9 +132,9 @@ namespace Mahou {
 		public LangDisplay mouseLangDisplay = new LangDisplay();
 		public LangDisplay caretLangDisplay = new LangDisplay();
 		uint latestL = 0, latestCL = 0;
-		public uint currentLayout = 0;
+		public static uint currentLayout = 0;
 		bool onepass = true, onepassC = true;
-		string latestSwitch = "null";
+		static string latestSwitch = "null";
 		public Timer res = new Timer();
 		// From more configs
 		ColorDialog clrd = new ColorDialog();
@@ -354,6 +360,9 @@ namespace Mahou {
 			MCDS_Ypos_temp = MMain.MyConfs.ReadInt("Appearence", "MCDS_Pos_Y");
 			MCDS_TopIndent_temp = MMain.MyConfs.ReadInt("Appearence", "MCDS_Top");
 			MCDS_BottomIndent_temp = MMain.MyConfs.ReadInt("Appearence", "MCDS_Bottom");
+			// Use Flags
+			LDMouseUseFlags_temp = MMain.MyConfs.ReadBool("Appearence", "MouseLTUseFlags");
+			LDCaretUseFlags_temp = MMain.MyConfs.ReadBool("Appearence", "CaretLTUseFlags");
 			// Diff text for layouts
 			Layout1TText = MMain.MyConfs.Read("Appearence", "Layout1LTText");
 			Layout2TText = MMain.MyConfs.Read("Appearence", "Layout2LTText");
@@ -459,6 +468,9 @@ namespace Mahou {
 			MMain.MyConfs.Write("Appearence", "MCDS_Pos_Y", MCDS_Ypos_temp.ToString());
 			MMain.MyConfs.Write("Appearence", "MCDS_Top", MCDS_TopIndent_temp.ToString());
 			MMain.MyConfs.Write("Appearence", "MCDS_Bottom", MCDS_BottomIndent_temp.ToString());
+			// Use Flags
+			MMain.MyConfs.Write("Appearence", "MouseLTUseFlags", LDMouseUseFlags_temp.ToString());
+			MMain.MyConfs.Write("Appearence", "CaretLTUseFlags", LDCaretUseFlags_temp.ToString());
 			// Diff text for layouts
 			MMain.MyConfs.Write("Appearence", "Layout1LTText", Layout1TText);
 			MMain.MyConfs.Write("Appearence", "Layout2LTText", Layout2TText);
@@ -728,6 +740,9 @@ namespace Mahou {
 			chk_LangTTCaretOnChange.Enabled = chk_LangTooltipCaret.Checked;
 			lbl_LangTTBackgroundColor.Enabled = btn_LangTTBackgroundColor.Enabled = 
 				!chk_LangTTTransparentColor.Checked;
+			lbl_LangTTBackgroundColor.Enabled = btn_LangTTBackgroundColor.Enabled = 
+				chk_LangTTTransparentColor.Enabled = lbl_LangTTForegroundColor.Enabled = btn_LangTTForegroundColor.Enabled = 
+				btn_LangTTFont.Enabled = !chk_LangTTUseFlags.Checked;
 			// Snippets tab
 			txt_Snippets.Enabled = chk_Snippets.Checked;
 			// Hotkeys tab
@@ -820,77 +835,78 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				icon.Hide();
 			}
 		}
-		/// <summary>
-		/// Changes tray icon image to country flag based on current layout.
-		/// </summary>
-		void ChangeTrayIconToFlag() {
+		public static void RefreshFLAG() {
 			int lcid = 0;
-			if (currentLayout == 0)
+			if (MahouUI.currentLayout == 0)
 				lcid = (int)(Locales.GetCurrentLocale() & 0xffff);
 			else 
-				lcid = (int)(currentLayout & 0xffff);
-//			Debug.WriteLine(lcid);
-			if (lcid > 0) {
+				lcid = (int)(MahouUI.currentLayout & 0xffff);
+			
+			if (lcid > 0) { 
 				var flagname = "jp";
 				var clangname = new CultureInfo(lcid);
 				flagname = clangname.ThreeLetterISOLanguageName.Substring(0, 2).ToLower();
-//				Debug.WriteLine(flagname+" "+currentLayout+" "+lcid);
-				var flag = Path.Combine(MahouUI.nPath, "Flags\\" + flagname + ".png");
-				Icon flagicon = null;
+				var flagpth = Path.Combine(MahouUI.nPath, "Flags\\" + flagname + ".png");
 				if (flagname != latestSwitch) {
-					if (File.Exists(flag))
-						flagicon = Icon.FromHandle(((Bitmap)Image.FromFile(flag)).GetHicon());
+					if (File.Exists(flagpth))
+						FLAG = ((Bitmap)Image.FromFile(flagpth));
 					else
 						switch (flagname) {
 							case "ru":
-								flagicon = Icon.FromHandle(Properties.Resources.ru.GetHicon());
+								FLAG = Properties.Resources.ru;
 								break;
 							case "en":
-								flagicon = Icon.FromHandle(Properties.Resources.en.GetHicon());
+								FLAG = Properties.Resources.en;
 								break;
 							case "jp":
-								flagicon = Icon.FromHandle(Properties.Resources.jp.GetHicon());
+								FLAG = Properties.Resources.jp;
 								break;
 							case "bu":
-								flagicon = Icon.FromHandle(Properties.Resources.bu.GetHicon());
+								FLAG = Properties.Resources.bu;
 								break;
 							case "uk":
-								flagicon = Icon.FromHandle(Properties.Resources.uk.GetHicon());
+								FLAG = Properties.Resources.uk;
 								break;
 							case "po":
-								flagicon = Icon.FromHandle(Properties.Resources.po.GetHicon());
+								FLAG = Properties.Resources.po;
 								break;
 							case "sw":
-								flagicon = Icon.FromHandle(Properties.Resources.sw.GetHicon());
+								FLAG = Properties.Resources.sw;
 								break;
 							case "zh":
-								flagicon = Icon.FromHandle(Properties.Resources.zh.GetHicon());
+								FLAG = Properties.Resources.zh;
 								break;
 							case "be":
-								flagicon = Icon.FromHandle(Properties.Resources.be.GetHicon());
+								FLAG = Properties.Resources.be;
 								break;
 							case "de":
-								flagicon = Icon.FromHandle(Properties.Resources.de.GetHicon());
+								FLAG = Properties.Resources.de;
 								break;
 							case "sp":
-								flagicon = Icon.FromHandle(Properties.Resources.sp.GetHicon());
+								FLAG = Properties.Resources.sp;
 								break;
 							case "it":
-								flagicon = Icon.FromHandle(Properties.Resources.it.GetHicon());
+								FLAG = Properties.Resources.it;
 								break;
 							case "fr":
-								flagicon = Icon.FromHandle(Properties.Resources.fr.GetHicon());
-								break;
-							default:
-								flagicon = Icon;
+								FLAG = Properties.Resources.fr;
 								break;
 						}
 					latestSwitch = flagname;
-					icon.trIcon.Icon = flagicon;
 				}
 			} else {
 				Logging.Log("Layout id was ["+lcid+"].", 2);
 			}
+		}
+		/// <summary>
+		/// Changes tray icon image to country flag based on current layout.
+		/// </summary>
+		void ChangeTrayIconToFlag() {
+			RefreshFLAG();
+			var flg = FLAG;
+			if (flg == null) return;
+			Icon flagicon = Icon.FromHandle(flg.GetHicon());
+			icon.trIcon.Icon = flagicon;
 		}
 		/// <summary>
 		/// Initializes UI language.
@@ -910,6 +926,8 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			caretLangDisplay = new LangDisplay();
 			mouseLangDisplay.mouseDisplay = true;
 			caretLangDisplay.caretDisplay = true;
+			mouseLangDisplay.DisplayFlag = LDMouseUseFlags_temp;
+			caretLangDisplay.DisplayFlag = LDCaretUseFlags_temp;
 			caretLangDisplay.AddOwnedForm(mouseLangDisplay); //Prevents flickering when tooltips are one on another 
 		}
 		/// <summary>
@@ -1386,26 +1404,36 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 					UpdateLangDisplayControls(Layout1Fore_temp, Layout1Back_temp, Layout1TransparentBack_temp,
 					                          Layout1Font_temp, Layout1X_Pos_temp, Layout1Y_Pos_temp, Layout1Width_temp,
 					                          Layout1Height_temp, Layout1TText);
+					chk_LangTTUseFlags.Visible = false;
+					lbl_LangTTText.Visible = txt_LangTTText.Visible = true;
 					break;
 				case 1:
 					UpdateLangDisplayControls(Layout2Fore_temp, Layout2Back_temp, Layout2TransparentBack_temp,
 					                          Layout2Font_temp, Layout2X_Pos_temp, Layout2Y_Pos_temp, Layout2Width_temp,
 					                          Layout2Height_temp, Layout2TText);
+					chk_LangTTUseFlags.Visible = false;
+					lbl_LangTTText.Visible = txt_LangTTText.Visible = true;
 					break;
 				case 2:
 					UpdateLangDisplayControls(LDMouseFore_temp, LDMouseBack_temp, LDMouseTransparentBack_temp,
 					                          LDMouseFont_temp, LDMouseX_Pos_temp, LDMouseY_Pos_temp, LDMouseWidth_temp,
-					                          LDMouseHeight_temp);
+					                          LDMouseHeight_temp, "", LDMouseUseFlags_temp);
+					chk_LangTTUseFlags.Visible = true;
+					lbl_LangTTText.Visible = txt_LangTTText.Visible = false;
 					break;
 				case 3:
 					UpdateLangDisplayControls(LDCaretFore_temp, LDCaretBack_temp, LDCaretTransparentBack_temp,
 					                          LDCaretFont_temp, LDCaretX_Pos_temp, LDCaretY_Pos_temp, LDCaretWidth_temp,
-					                          LDCaretHeight_temp);
+					                          LDCaretHeight_temp, "", LDCaretUseFlags_temp);
+					chk_LangTTUseFlags.Visible = true;
+					lbl_LangTTText.Visible = txt_LangTTText.Visible = false;
 					break;
 				case 4:
 					UpdateLangDisplayControls(LDCaretFore_temp, LDCaretBack_temp, LDCaretTransparentBack_temp,
 					                          LDCaretFont_temp, MCDS_Xpos_temp, MCDS_Ypos_temp, MCDS_TopIndent_temp,
 					                          MCDS_BottomIndent_temp);
+					chk_LangTTUseFlags.Visible = false;
+					lbl_LangTTText.Visible = txt_LangTTText.Visible = false;
 					break;
 			}
 		}
@@ -1421,7 +1449,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 		/// <param name="width">Width.</param>
 		/// <param name="height">Height.</param>
 		void UpdateLangDisplayControls(Color FGcolor, Color BGColor, bool TransparentBG, Font font,
-		                               int posX, int posY, int width, int height, string TTText = "") {
+		                               int posX, int posY, int width, int height, string TTText = "", bool UseFlags = false) {
 			btn_LangTTForegroundColor.BackColor = FGcolor;
 			btn_LangTTBackgroundColor.BackColor = BGColor;
 			chk_LangTTTransparentColor.Checked = TransparentBG;
@@ -1431,6 +1459,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			nud_LangTTWidth.Value = width;
 			nud_LangTTHeight.Value = height;
 			txt_LangTTText.Text = TTText;
+			chk_LangTTUseFlags.Checked = UseFlags;
 		}
 		/// <summary>
 		/// Updates Lang Display temporary variables based on selected [layout appearence]. 
@@ -1467,6 +1496,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 					LDMouseY_Pos_temp = (int)nud_LangTTPositionY.Value;
 					LDMouseWidth_temp = (int)nud_LangTTWidth.Value;
 					LDMouseHeight_temp = (int)nud_LangTTHeight.Value;
+					LDMouseUseFlags_temp = chk_LangTTUseFlags.Checked;
 					LDMouseTransparentBack_temp = chk_LangTTTransparentColor.Checked;
 					break;
 				case 3:
@@ -1477,6 +1507,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 					LDCaretY_Pos_temp = (int)nud_LangTTPositionY.Value;
 					LDCaretWidth_temp = (int)nud_LangTTWidth.Value;
 					LDCaretHeight_temp = (int)nud_LangTTHeight.Value;
+					LDCaretUseFlags_temp = chk_LangTTUseFlags.Checked;
 					LDCaretTransparentBack_temp = chk_LangTTTransparentColor.Checked;
 					break;
 				case 4:

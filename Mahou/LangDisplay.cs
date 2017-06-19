@@ -8,7 +8,7 @@ namespace Mahou
 		/// <summary>
 		/// Used to determine if lang display is used for caret display.
 		/// </summary>
-		public bool lastTransparentBG, transparentBG, caretDisplay, mouseDisplay;
+		public bool lastTransparentBG, transparentBG, caretDisplay, mouseDisplay, DisplayFlag;
 		public string lastText = "NO";
 		public LangDisplay()
 		{
@@ -24,6 +24,14 @@ namespace Mahou
 		{
 			if (to == lastText) return;
 			lbLang.Text = lastText = to;
+			if (DisplayFlag) {
+				lbLang.Visible = false;
+				MahouUI.RefreshFLAG();
+				BackgroundImage =  MahouUI.FLAG;
+				TransparencyKey = BackColor = Color.Pink;
+				Invalidate();
+				Update();
+			}
 			if (!transparentBG) return;
 			Invalidate();
 			Update();
@@ -51,7 +59,7 @@ namespace Mahou
 			var notTwo = false;
 			if ((cLid & 0xffff) > 0) {
 				var clangname = new System.Globalization.CultureInfo((int)(cLid & 0xffff));
-				if (MMain.mahou.DiffAppearenceForLayouts) {
+				if (MMain.mahou.DiffAppearenceForLayouts && !DisplayFlag) {
 					if (cLid == Locales.GetLocaleFromString(MMain.mahou.MainLayout1).uId) {
 						ChangeColors(MMain.mahou.Layout1Font_temp, MMain.mahou.Layout1Fore_temp, 
 						             MMain.mahou.Layout1Back_temp, MMain.mahou.Layout1TransparentBack_temp);
@@ -84,7 +92,10 @@ namespace Mahou
 				if (lastTransparentBG != transparentBG)
 					SetVisInvis();
 				lastTransparentBG = transparentBG;
-				Size = lbLang.Size;
+				if (DisplayFlag)
+					Size = BackgroundImage.Size;
+				else 
+					Size = lbLang.Size;
 			} else {
 				Logging.Log("Language tooltip text NOT changed, locale id = [" + cLid + "].", 2);
 			}

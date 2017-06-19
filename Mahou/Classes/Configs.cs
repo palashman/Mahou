@@ -112,6 +112,9 @@ namespace Mahou
 			CheckInt("Appearence", "MCDS_Pos_Y", "13");
 			CheckInt("Appearence", "MCDS_Top", "60");
 			CheckInt("Appearence", "MCDS_Bottom", "45");
+			// Language tooltips use flags
+            CheckBool("Appearence", "MouseLTUseFlags", "false");
+            CheckBool("Appearence", "CaretLTUseFlags", "false");
 			// Different text for layouts
 			CheckString("Appearence", "Layout1LTText", "");
 			CheckString("Appearence", "Layout2LTText", "");

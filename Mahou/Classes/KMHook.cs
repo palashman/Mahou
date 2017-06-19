@@ -112,7 +112,7 @@ namespace Mahou
 				// Clear currentLayout in MMain.mahou rule
 				if (((win || alt || ctrl) && Key == Keys.Tab) ||
 				    win && Key != Keys.None) // On any Win+[AnyKey] hotkey
-					MMain.mahou.currentLayout = 0;
+					MahouUI.currentLayout = 0;
 				#endregion
 				#region Snippets
 				if (MMain.mahou.SnippetsEnabled) {
@@ -369,7 +369,7 @@ namespace Mahou
 						clickAfterSHIFT = true;
 					if (alt)
 						clickAfterALT = true;
-					MMain.mahou.currentLayout = 0;
+					MahouUI.currentLayout = 0;
 					MMain.c_word.Clear();
 					MMain.c_words.Clear();
 					Logging.Log("Last word & words cleared [with mouse click].");
@@ -539,7 +539,7 @@ namespace Mahou
 					}
 					try {
 						if (matched) {
-							MMain.mahou.currentLayout = Locales.GetLocaleFromString(speclayout).uId;
+							MahouUI.currentLayout = Locales.GetLocaleFromString(speclayout).uId;
 							Logging.Log("Available layout from string ["+speclayout+"] & id ["+specKeyId+"].");
 						}
 					} catch { 
@@ -1129,7 +1129,7 @@ namespace Mahou
 					if (tries == 3)
 						break;
 				}
-				MMain.mahou.currentLayout = notnowLocale;
+				MahouUI.currentLayout = notnowLocale;
 			} else
 				CycleSwitch();
 		}
@@ -1140,7 +1140,7 @@ namespace Mahou
 		{
 			if (MMain.mahou.EmulateLS) {
 				if (MMain.mahou.EmulateLSType == "Alt+Shift") {
-					MMain.mahou.currentLayout = 0;
+					MahouUI.currentLayout = 0;
 					Logging.Log("Changing layout using cycle mode by simulating key press [Alt+Shift].");
 					//Emulate Alt+Shift
 					KInputs.MakeInput(new [] {
@@ -1179,7 +1179,7 @@ namespace Mahou
 					if (curind == MMain.locales.Length - 1) {
 						Logging.Log("Locales BREAK!");
 						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, MMain.locales[0].uId);
-						MMain.mahou.currentLayout = MMain.locales[0].uId;
+						MahouUI.currentLayout = MMain.locales[0].uId;
 						break;
 					}
 					Logging.Log("LIDC = "+lidc +" curid = "+curind + " Lidle = " +(MMain.locales.Length - 1));
@@ -1187,7 +1187,7 @@ namespace Mahou
 						if (l.uId != cur) {
 							Logging.Log("Locales +1 Next BREAK!");
 							WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, l.uId);
-							MMain.mahou.currentLayout = l.uId;
+							MahouUI.currentLayout = l.uId;
 							break;
 					}
 					lidc++;

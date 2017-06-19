@@ -143,6 +143,7 @@ namespace Mahou
 		private System.Windows.Forms.CheckBox chk_PersistentLayout1Active;
 		private System.Windows.Forms.TextBox txt_PersistentLayout1Processes;
 		private System.Windows.Forms.CheckBox chk_RestartHooks;
+		private System.Windows.Forms.CheckBox chk_LangTTUseFlags;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -166,6 +167,7 @@ namespace Mahou
 			this.components = new System.ComponentModel.Container();
 			this.tabs = new System.Windows.Forms.TabControl();
 			this.tab_functions = new System.Windows.Forms.TabPage();
+			this.chk_RestartHooks = new System.Windows.Forms.CheckBox();
 			this.chk_OneLayoutWholeWord = new System.Windows.Forms.CheckBox();
 			this.lnk_plugin = new System.Windows.Forms.LinkLabel();
 			this.chk_MCDS_support = new System.Windows.Forms.CheckBox();
@@ -224,6 +226,7 @@ namespace Mahou
 			this.chk_LangTTCaretOnChange = new System.Windows.Forms.CheckBox();
 			this.chk_LangTTMouseOnChange = new System.Windows.Forms.CheckBox();
 			this.grb_LangTTAppearence = new System.Windows.Forms.GroupBox();
+			this.chk_LangTTUseFlags = new System.Windows.Forms.CheckBox();
 			this.txt_LangTTText = new System.Windows.Forms.TextBox();
 			this.lbl_LangTTText = new System.Windows.Forms.Label();
 			this.btn_LangTTFont = new System.Windows.Forms.Button();
@@ -299,7 +302,6 @@ namespace Mahou
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
 			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
-			this.chk_RestartHooks = new System.Windows.Forms.CheckBox();
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -379,6 +381,16 @@ namespace Mahou
 			this.tab_functions.TabIndex = 0;
 			this.tab_functions.Text = "Functions";
 			this.tab_functions.UseVisualStyleBackColor = true;
+			// 
+			// chk_RestartHooks
+			// 
+			this.chk_RestartHooks.AutoSize = true;
+			this.chk_RestartHooks.Location = new System.Drawing.Point(302, 141);
+			this.chk_RestartHooks.Name = "chk_RestartHooks";
+			this.chk_RestartHooks.Size = new System.Drawing.Size(212, 19);
+			this.chk_RestartHooks.TabIndex = 16;
+			this.chk_RestartHooks.Text = "Restart hooks on hotkey action end";
+			this.chk_RestartHooks.UseVisualStyleBackColor = true;
 			// 
 			// chk_OneLayoutWholeWord
 			// 
@@ -1031,6 +1043,7 @@ namespace Mahou
 			// 
 			// grb_LangTTAppearence
 			// 
+			this.grb_LangTTAppearence.Controls.Add(this.chk_LangTTUseFlags);
 			this.grb_LangTTAppearence.Controls.Add(this.txt_LangTTText);
 			this.grb_LangTTAppearence.Controls.Add(this.lbl_LangTTText);
 			this.grb_LangTTAppearence.Controls.Add(this.btn_LangTTFont);
@@ -1049,9 +1062,19 @@ namespace Mahou
 			this.grb_LangTTAppearence.TabStop = false;
 			this.grb_LangTTAppearence.Text = "Language tooltip appearence";
 			// 
+			// chk_LangTTUseFlags
+			// 
+			this.chk_LangTTUseFlags.AutoSize = true;
+			this.chk_LangTTUseFlags.Location = new System.Drawing.Point(211, 81);
+			this.chk_LangTTUseFlags.Name = "chk_LangTTUseFlags";
+			this.chk_LangTTUseFlags.Size = new System.Drawing.Size(75, 19);
+			this.chk_LangTTUseFlags.TabIndex = 11;
+			this.chk_LangTTUseFlags.Text = "Use Flags";
+			this.chk_LangTTUseFlags.UseVisualStyleBackColor = true;
+			// 
 			// txt_LangTTText
 			// 
-			this.txt_LangTTText.Location = new System.Drawing.Point(368, 77);
+			this.txt_LangTTText.Location = new System.Drawing.Point(424, 77);
 			this.txt_LangTTText.Name = "txt_LangTTText";
 			this.txt_LangTTText.Size = new System.Drawing.Size(117, 23);
 			this.txt_LangTTText.TabIndex = 10;
@@ -1060,15 +1083,15 @@ namespace Mahou
 			// lbl_LangTTText
 			// 
 			this.lbl_LangTTText.AutoSize = true;
-			this.lbl_LangTTText.Location = new System.Drawing.Point(211, 80);
+			this.lbl_LangTTText.Location = new System.Drawing.Point(210, 82);
 			this.lbl_LangTTText.Name = "lbl_LangTTText";
-			this.lbl_LangTTText.Size = new System.Drawing.Size(73, 15);
+			this.lbl_LangTTText.Size = new System.Drawing.Size(74, 15);
 			this.lbl_LangTTText.TabIndex = 9;
 			this.lbl_LangTTText.Text = "Tootltip text:";
 			// 
 			// btn_LangTTFont
 			// 
-			this.btn_LangTTFont.Location = new System.Drawing.Point(368, 18);
+			this.btn_LangTTFont.Location = new System.Drawing.Point(422, 18);
 			this.btn_LangTTFont.Name = "btn_LangTTFont";
 			this.btn_LangTTFont.Size = new System.Drawing.Size(117, 23);
 			this.btn_LangTTFont.TabIndex = 8;
@@ -1082,7 +1105,7 @@ namespace Mahou
 			this.grb_LangTTPositon.Controls.Add(this.lbl_LangTTPositionY);
 			this.grb_LangTTPositon.Controls.Add(this.nud_LangTTPositionX);
 			this.grb_LangTTPositon.Controls.Add(this.lbl_LangTTPositionX);
-			this.grb_LangTTPositon.Location = new System.Drawing.Point(351, 106);
+			this.grb_LangTTPositon.Location = new System.Drawing.Point(405, 106);
 			this.grb_LangTTPositon.Name = "grb_LangTTPositon";
 			this.grb_LangTTPositon.Size = new System.Drawing.Size(134, 79);
 			this.grb_LangTTPositon.TabIndex = 7;
@@ -1191,9 +1214,9 @@ namespace Mahou
 			// chk_LangTTTransparentColor
 			// 
 			this.chk_LangTTTransparentColor.AutoSize = true;
-			this.chk_LangTTTransparentColor.Location = new System.Drawing.Point(368, 52);
+			this.chk_LangTTTransparentColor.Location = new System.Drawing.Point(422, 52);
 			this.chk_LangTTTransparentColor.Name = "chk_LangTTTransparentColor";
-			this.chk_LangTTTransparentColor.Size = new System.Drawing.Size(118, 19);
+			this.chk_LangTTTransparentColor.Size = new System.Drawing.Size(119, 19);
 			this.chk_LangTTTransparentColor.TabIndex = 3;
 			this.chk_LangTTTransparentColor.Text = "Transparent color";
 			this.chk_LangTTTransparentColor.UseVisualStyleBackColor = true;
@@ -1898,16 +1921,6 @@ namespace Mahou
 			this.HelpMeUnderstand.ShowAlways = true;
 			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.HelpMeUnderstand.Popup += new System.Windows.Forms.PopupEventHandler(this.HelpMeUnderstandPopup);
-			// 
-			// chk_RestartHooks
-			// 
-			this.chk_RestartHooks.AutoSize = true;
-			this.chk_RestartHooks.Location = new System.Drawing.Point(302, 141);
-			this.chk_RestartHooks.Name = "chk_RestartHooks";
-			this.chk_RestartHooks.Size = new System.Drawing.Size(212, 19);
-			this.chk_RestartHooks.TabIndex = 16;
-			this.chk_RestartHooks.Text = "Restart hooks on hotkey action end";
-			this.chk_RestartHooks.UseVisualStyleBackColor = true;
 			// 
 			// MahouUI
 			// 

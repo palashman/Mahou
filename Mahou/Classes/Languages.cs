@@ -221,6 +221,7 @@ public class Languages
 		{ Element.LDHeight, "Height" }, 
 		{ Element.MCDSTopIndent, "Top" }, 
 		{ Element.MCDSBottomIndent, "Bottom" }, 
+		{ Element.UseFlags, "Use flags" },
 		#endregion
 		#region Timings
 		{ Element.LDForMouseRefreshRate, "Language tooltip around mouse refresh rate(ms):" }, 
@@ -406,6 +407,7 @@ public class Languages
 		{ Element.LDHeight, "Высота" }, 
 		{ Element.MCDSTopIndent, "Сверху" }, 
 		{ Element.MCDSBottomIndent, "Снизу" }, 
+		{ Element.UseFlags, "Использовать флаги" }, 
 		#endregion
 		#region Timings
 		{ Element.LDForMouseRefreshRate, "Скорость обновления подсказки языка возле мыши(мс):" }, 
