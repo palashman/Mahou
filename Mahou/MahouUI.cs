@@ -153,7 +153,7 @@ namespace Mahou {
 				nud_ScrollLockRefreshRate.Minimum =	nud_TrayFlagRefreshRate.Minimum = 
 		    	nud_PersistentLayout1Interval.Minimum = nud_PersistentLayout2Interval.Minimum =	1;
 			nud_LangTTPositionX.Minimum = nud_LangTTPositionY.Minimum = -100;
-			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version +"-dev";
+			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version;
 			RegisterHotkeys();
 			RefreshAllIcons();
 			//Background startup check for updates
@@ -1919,6 +1919,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 														MMain.Lang[Languages.Element.LDAroundCaret],
 														"MCDS"
 														});
+			chk_LangTTUseFlags.Text = MMain.Lang[Languages.Element.UseFlags];
 			#endregion
 			#region Timings
 			lbl_LangTTMouseRefreshRate.Text = MMain.Lang[Languages.Element.LDForMouseRefreshRate];
