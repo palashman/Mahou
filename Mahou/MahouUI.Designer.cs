@@ -1067,9 +1067,9 @@ namespace Mahou
 			this.chk_LangTTUseFlags.AutoSize = true;
 			this.chk_LangTTUseFlags.Location = new System.Drawing.Point(211, 81);
 			this.chk_LangTTUseFlags.Name = "chk_LangTTUseFlags";
-			this.chk_LangTTUseFlags.Size = new System.Drawing.Size(75, 19);
+			this.chk_LangTTUseFlags.Size = new System.Drawing.Size(73, 19);
 			this.chk_LangTTUseFlags.TabIndex = 11;
-			this.chk_LangTTUseFlags.Text = "Use Flags";
+			this.chk_LangTTUseFlags.Text = "Use flags";
 			this.chk_LangTTUseFlags.UseVisualStyleBackColor = true;
 			// 
 			// txt_LangTTText
