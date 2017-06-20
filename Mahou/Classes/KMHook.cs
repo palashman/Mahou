@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Mahou
 {
-	class KMHook // Keyboard & Mouse Hook
+	class KMHook // Keyboard & Mouse Hook + Extra [Event hook]
 	{
 		#region Variables
 		public static bool self, win, alt, ctrl, shift,
@@ -22,6 +22,7 @@ namespace Mahou
 		static string lastClipText = "";
 		static List<Keys> tempNumpads = new List<Keys>();
 		static List<char> c_snip = new List<char>();
+		public static System.Windows.Forms.Timer CheckLayoutLater = new System.Windows.Forms.Timer() { Interval = 350 };
 		public static System.Windows.Forms.Timer doublekey = new System.Windows.Forms.Timer();
 		public static string[] snipps = new []{ "mahou", "eml" };
 		public static string[] exps = new [] {
@@ -46,10 +47,13 @@ namespace Mahou
 				{"Ы", "Y"}, {"Ь", "J"}, {"е", "e"}, {"т", "t"}, {"ы", "y"}
 		};
 		#endregion
-		#region Keyboard & Mouse hooks callbacks
+		#region Keyboard, Mouse & Event hooks callbacks
 		public static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
 		{
 			try {
+//				Debug.WriteLine(MahouUI.currentLayout);
+//				if (MahouUI.currentLayout == 0)
+//					MahouUI.currentLayout = Locales.GetCurrentLocale();
 				int vkCode = Marshal.ReadInt32(lParam);
 				var Key = (Keys)vkCode; // "Key" will further be used instead of "(Keys)vkCode"
 				if (MMain.c_words.Count == 0) {
@@ -111,8 +115,16 @@ namespace Mahou
 					win = false;
 				// Clear currentLayout in MMain.mahou rule
 				if (((win || alt || ctrl) && Key == Keys.Tab) ||
-				    win && Key != Keys.None) // On any Win+[AnyKey] hotkey
+				    win && (Key != Keys.None && 
+				            Key != Keys.LWin && 
+				            Key != Keys.RWin)) // On any Win+[AnyKey] hotkey
 					MahouUI.currentLayout = 0;
+				if ((wParam == (IntPtr)WinAPI.WM_KEYUP || wParam == (IntPtr)WinAPI.WM_SYSKEYUP) && (
+				    ((alt || ctrl) && (Key == Keys.Shift || Key == Keys.LShiftKey || Key == Keys.RShiftKey)) ||
+				     shift && (Key == Keys.Menu || Key == Keys.LMenu || Key == Keys.RMenu) ||
+				     (Environment.OSVersion.Version.Major == 10 && win && Key == Keys.Space))) {
+					CheckLayoutLater.Start();
+				}
 				#endregion
 				#region Snippets
 				if (MMain.mahou.SnippetsEnabled) {
@@ -386,6 +398,16 @@ namespace Mahou
 			}
 			return WinAPI.CallNextHookEx(MMain._mouse_hookID, nCode, wParam, lParam);
 		}
+		public static void EventHookCallback(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject,
+		                                       int idChild, uint dwEventThread, uint dwmsEventTime) {
+			uint hwndLayout = Locales.GetCurrentLocale(hwnd);
+			Logging.Log("Event => " + eventType + ", hwnd " + hwnd + ", layout: " + hwndLayout + ", Mahou layout: " + MahouUI.GlobalLayout);			if (hwndLayout != MahouUI.GlobalLayout && MMain.mahou.OneLayout) {
+				var title = new StringBuilder(128);
+				WinAPI.GetWindowText(hwnd, title, 127);
+				Logging.Log("Layout in this window ["+title+"] was different, changing layout to Mahou global layout.");
+				WinAPI.PostMessage(hwnd, WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, MahouUI.GlobalLayout);
+			}
+		}
 		#endregion
 		#region Functions/Struct
 		static bool ExcludedProgram() {
@@ -539,7 +561,7 @@ namespace Mahou
 					}
 					try {
 						if (matched) {
-							MahouUI.currentLayout = Locales.GetLocaleFromString(speclayout).uId;
+							MahouUI.currentLayout = MahouUI.GlobalLayout = Locales.GetLocaleFromString(speclayout).uId;
 							Logging.Log("Available layout from string ["+speclayout+"] & id ["+specKeyId+"].");
 						}
 					} catch { 
@@ -1129,7 +1151,7 @@ namespace Mahou
 					if (tries == 3)
 						break;
 				}
-				MahouUI.currentLayout = notnowLocale;
+				MahouUI.currentLayout = MahouUI.GlobalLayout = notnowLocale;
 			} else
 				CycleSwitch();
 		}
@@ -1140,7 +1162,6 @@ namespace Mahou
 		{
 			if (MMain.mahou.EmulateLS) {
 				if (MMain.mahou.EmulateLSType == "Alt+Shift") {
-					MahouUI.currentLayout = 0;
 					Logging.Log("Changing layout using cycle mode by simulating key press [Alt+Shift].");
 					//Emulate Alt+Shift
 					KInputs.MakeInput(new [] {
@@ -1169,6 +1190,7 @@ namespace Mahou
 					});
 					Thread.Sleep(70); //Important!
 				}
+				MahouUI.currentLayout = MahouUI.GlobalLayout = Locales.GetCurrentLocale();
 			} else {
 				Logging.Log("Changing layout using cycle mode by sending Message [WinAPI.WM_INPUTLANGCHANGEREQUEST] with LParam [HKL_NEXT] using WinAPI.PostMessage to ActiveWindow");
 				//Use WinAPI.PostMessage to switch to next layout
@@ -1179,7 +1201,7 @@ namespace Mahou
 					if (curind == MMain.locales.Length - 1) {
 						Logging.Log("Locales BREAK!");
 						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, MMain.locales[0].uId);
-						MahouUI.currentLayout = MMain.locales[0].uId;
+						MahouUI.currentLayout = MahouUI.GlobalLayout = MMain.locales[0].uId;
 						break;
 					}
 					Logging.Log("LIDC = "+lidc +" curid = "+curind + " Lidle = " +(MMain.locales.Length - 1));
@@ -1187,7 +1209,7 @@ namespace Mahou
 						if (l.uId != cur) {
 							Logging.Log("Locales +1 Next BREAK!");
 							WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, l.uId);
-							MahouUI.currentLayout = l.uId;
+							MahouUI.currentLayout = MahouUI.GlobalLayout = l.uId;
 							break;
 					}
 					lidc++;

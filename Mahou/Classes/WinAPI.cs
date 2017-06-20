@@ -66,6 +66,10 @@ public static class WinAPI
 	public const int WS_EX_LAYERED = 0x80000;
 	public const int WS_EX_TOOLWINDOW = 0x80;
 	#endregion
+	#region EventHook
+	public const uint EVENT_SYSTEM_FOREGROUND = 3;
+    public const uint WINEVENT_OUTOFCONTEXT = 0;
+	#endregion
 	#endregion
 	#region DLL Imports
 	#region Configs requires
@@ -183,6 +187,16 @@ public static class WinAPI
 		uint uFlags);         // Window positioning flags
 	[DllImport("user32.dll")]
 	public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+	#region EventHook requires
+    [DllImport("user32.dll")]
+    public static extern IntPtr SetWinEventHook(uint eventMin, uint eventMax, IntPtr hmodWinEventProc,
+                                         WinEventDelegate lpfnWinEventProc, uint idProcess,
+                                         uint idThread, uint dwFlags);
+    [DllImport("user32.dll")]
+    public static extern bool UnhookWinEvent(IntPtr hWinEventHook);
+    [DllImport("user32.dll", CharSet=CharSet.Unicode, SetLastError=true)]
+	public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+    #endregion
 	#endregion
 	#endregion
     #region Required structs
@@ -280,6 +294,11 @@ public static class WinAPI
 		public RECT rectCaret;
 	}
 	#endregion
+	#region EventHook
+    public delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType,
+                               			  IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
+	#endregion
     #endregion
+
 }
 

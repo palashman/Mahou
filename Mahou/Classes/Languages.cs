@@ -35,6 +35,7 @@ public class Languages
 		EmulateLS,
 		EmulateType,
 		ChangeLayoutBy1Key,
+		OneLayout,
 		#endregion
 		#region Persistent Layout
 		PersistentLayout,
@@ -62,6 +63,7 @@ public class Languages
 		MCDSTopIndent,
 		MCDSBottomIndent,
 		UseFlags,
+		Always,
 		#endregion
 		#region Timings
 		LDForMouseRefreshRate,
@@ -157,6 +159,7 @@ public class Languages
 		TT_OneLayoutWholeWordCS,
 		TT_PersistentLayout,
 		TT_RestartHooks,
+		TT_OneLayout,
 		#endregion
 		#region Messages
 		MSG_SnippetsError
@@ -196,6 +199,7 @@ public class Languages
 		{ Element.EmulateLS, "Emulate layout switching." }, 
 		{ Element.EmulateType, "Emulation type:" }, 
 		{ Element.ChangeLayoutBy1Key, "Change to specific layout by keys:" }, 
+		{ Element.OneLayout, "One layout for all programs." }, 
 		#endregion
 		#region Persistent Layout
 		{ Element.PersistentLayout, "Persistent layout" }, 
@@ -205,7 +209,7 @@ public class Languages
 		#region Appearence
 		{ Element.LDMouseDisplay, "Display current language tooltip around mouse." }, 
 		{ Element.LDCaretDisplay, "Display current language tooltip around caret." }, 
-		{ Element.LDOnlyOnChange, "Display only on layout change." }, 
+		{ Element.LDOnlyOnChange, "Only on change." }, 
 		{ Element.LDDifferentAppearence, "Use different appearence for layouts." }, 
 		{ Element.Language, "Language:" }, 
 		{ Element.LDAppearence, "Language tooltip appearence" }, 
@@ -223,6 +227,7 @@ public class Languages
 		{ Element.MCDSTopIndent, "Top" }, 
 		{ Element.MCDSBottomIndent, "Bottom" }, 
 		{ Element.UseFlags, "Use flags" },
+		{ Element.Always, "Always." },
 		#endregion
 		#region Timings
 		{ Element.LDForMouseRefreshRate, "Language tooltip around mouse refresh rate(ms):" }, 
@@ -340,6 +345,7 @@ public class Languages
 				"\r\nthis feature works PERFECTLY with words that have symbols around them, but word lenght must be greater that 1 char for this feature to work properly." },
 		{ Element.TT_PersistentLayout, "Write here process names in which you want to have persistent layout, separators are spaces(though symbols as ,.^& etc are too supported)."},
 		{ Element.TT_RestartHooks, "Restart global keyboard and mouse hooks on every Mahou's hotkey action end.\r\nEnabling this will make hooks (almost) impossible to kill, useful if Mahou stops catching pressed keys."},
+		{ Element.TT_OneLayout, "Allows to store global layout in Mahou, insted of layout per window/program.\r\n(if You have Windows 8 or greater this feature is built in Windows, so you don't need to use enable it in Mahou)"},
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Snippets contains error in syntax, check if there are errors, details on snippets syntax you can find on Wiki." }
@@ -387,11 +393,12 @@ public class Languages
 		{ Element.PersistentLayout, "Постоянная раскладка" }, 
 		{ Element.ActivatePLFP, "Постоянная раскладка для процессов:" }, 
 		{ Element.CheckInterval, "Интервал проверки:" }, 
+		{ Element.OneLayout, "Единая раскладка для всех программ." }, 
 		#endregion
 		#region Appearence
 		{ Element.LDMouseDisplay, "Отображать подсказку текущего языка рядом с мышью." }, 
 		{ Element.LDCaretDisplay, "Отображать подсказку текущего языка рядом с кареткой." }, 
-		{ Element.LDOnlyOnChange, "Отображать только при смене." }, 
+		{ Element.LDOnlyOnChange, "Только при смене." }, 
 		{ Element.LDDifferentAppearence, "Использовать разный вид для раскладок." }, 
 		{ Element.Language, "Язык:" }, 
 		{ Element.LDAppearence, "Вид подсказки языка" }, 
@@ -409,6 +416,7 @@ public class Languages
 		{ Element.MCDSTopIndent, "Сверху" }, 
 		{ Element.MCDSBottomIndent, "Снизу" }, 
 		{ Element.UseFlags, "Использовать флаги" }, 
+		{ Element.Always, "Всегда." },
 		#endregion
 		#region Timings
 		{ Element.LDForMouseRefreshRate, "Скорость обновления подсказки языка возле мыши(мс):" }, 
@@ -524,6 +532,7 @@ public class Languages
 				"эта функция ПРЕКРАСНО работает с словами которые имеют рядом символы, но длинна слова должна быть больше 1(не включая символы) чтобы функция нормально работала." },
 		{ Element.TT_PersistentLayout, "Напишите здесь названия процессов в которых вы бы хотели иметь постоянную раскладку, разделитель - пробел(хотя другие символы вроде ,.^& и т.д. тоже поддерживаются)."},
 		{ Element.TT_RestartHooks, "Перезапускает глобальные перехваты(HOOK'и) клавиатуры и мыши по окончанию действия любой горячей клавиши Mahou.\r\nВключая эту функцию перехватов будет (почти) что невозможно *убить*, полезно если Mahou перестаёт ловить введенные клавиши."},
+		{ Element.TT_OneLayout, "Позволяет хранить раскладку в Mahou, вместо раскладки для каждого окна/программы.\r\n(если у Вас Windows 8 и выше, то там уже стоит данная функция по умолчанию, нет необходимости включать ее в Mahou)"},
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Сниппеты содержат ошибки в синтаксисе, проверьте ваши сниппеты, детали синтаксиса можете найти на Wiki." }

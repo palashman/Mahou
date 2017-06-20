@@ -41,6 +41,7 @@ namespace Mahou
             #endregion
 			#region Layouts section
 			CheckBool("Layouts", "SwitchBetweenLayouts", "true");
+			CheckBool("Layouts", "OneLayout", "false");
 			CheckBool("Layouts", "EmulateLayoutSwitch", "false");
             CheckString("Layouts", "EmulateLayoutSwitchType", "Alt+Shift");
 			CheckBool("Layouts", "ChangeToSpecificLayoutByKey", "true");
@@ -69,6 +70,7 @@ namespace Mahou
             CheckBool("Appearence", "DisplayLangTooltipForCaret", "false");
             CheckBool("Appearence", "DisplayLangTooltipForCaretOnChange", "false");
             CheckBool("Appearence", "DifferentColorsForLayouts", "false");
+            CheckBool("Appearence", "MouseLTAlways", "false");
 			CheckString("Appearence", "Language", "English");
 			// Language tooltip appearence for Layout 1
 			CheckString("Appearence", "Layout1ForeColor", "#000000");

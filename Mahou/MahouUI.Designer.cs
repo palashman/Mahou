@@ -144,6 +144,8 @@ namespace Mahou
 		private System.Windows.Forms.TextBox txt_PersistentLayout1Processes;
 		private System.Windows.Forms.CheckBox chk_RestartHooks;
 		private System.Windows.Forms.CheckBox chk_LangTTUseFlags;
+		private System.Windows.Forms.CheckBox chk_MouseTTAlways;
+		private System.Windows.Forms.CheckBox chk_OneLayout;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -220,6 +222,7 @@ namespace Mahou
 			this.chk_PersistentLayout1Active = new System.Windows.Forms.CheckBox();
 			this.txt_PersistentLayout1Processes = new System.Windows.Forms.TextBox();
 			this.tab_appearence = new System.Windows.Forms.TabPage();
+			this.chk_MouseTTAlways = new System.Windows.Forms.CheckBox();
 			this.cbb_Language = new System.Windows.Forms.ComboBox();
 			this.lbl_Language = new System.Windows.Forms.Label();
 			this.chk_LangTTDiffLayoutColors = new System.Windows.Forms.CheckBox();
@@ -302,6 +305,7 @@ namespace Mahou
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
 			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
+			this.chk_OneLayout = new System.Windows.Forms.CheckBox();
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -560,6 +564,7 @@ namespace Mahou
 			// 
 			// tab_layouts
 			// 
+			this.tab_layouts.Controls.Add(this.chk_OneLayout);
 			this.tab_layouts.Controls.Add(this.lbl_Arrow4);
 			this.tab_layouts.Controls.Add(this.lbl_Arrow3);
 			this.tab_layouts.Controls.Add(this.lbl_Arrow2);
@@ -969,11 +974,12 @@ namespace Mahou
 			this.txt_PersistentLayout1Processes.Location = new System.Drawing.Point(9, 52);
 			this.txt_PersistentLayout1Processes.Multiline = true;
 			this.txt_PersistentLayout1Processes.Name = "txt_PersistentLayout1Processes";
-			this.txt_PersistentLayout1Processes.Size = new System.Drawing.Size(247, 178);
+			this.txt_PersistentLayout1Processes.Size = new System.Drawing.Size(247, 176);
 			this.txt_PersistentLayout1Processes.TabIndex = 0;
 			// 
 			// tab_appearence
 			// 
+			this.tab_appearence.Controls.Add(this.chk_MouseTTAlways);
 			this.tab_appearence.Controls.Add(this.cbb_Language);
 			this.tab_appearence.Controls.Add(this.lbl_Language);
 			this.tab_appearence.Controls.Add(this.chk_LangTTDiffLayoutColors);
@@ -989,6 +995,17 @@ namespace Mahou
 			this.tab_appearence.TabIndex = 2;
 			this.tab_appearence.Text = "Appearence";
 			this.tab_appearence.UseVisualStyleBackColor = true;
+			// 
+			// chk_MouseTTAlways
+			// 
+			this.chk_MouseTTAlways.AutoSize = true;
+			this.chk_MouseTTAlways.Location = new System.Drawing.Point(484, 6);
+			this.chk_MouseTTAlways.Name = "chk_MouseTTAlways";
+			this.chk_MouseTTAlways.Size = new System.Drawing.Size(66, 19);
+			this.chk_MouseTTAlways.TabIndex = 16;
+			this.chk_MouseTTAlways.Text = "Always.";
+			this.chk_MouseTTAlways.UseVisualStyleBackColor = true;
+			this.chk_MouseTTAlways.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
 			// 
 			// cbb_Language
 			// 
@@ -1026,9 +1043,9 @@ namespace Mahou
 			this.chk_LangTTCaretOnChange.AutoSize = true;
 			this.chk_LangTTCaretOnChange.Location = new System.Drawing.Point(361, 32);
 			this.chk_LangTTCaretOnChange.Name = "chk_LangTTCaretOnChange";
-			this.chk_LangTTCaretOnChange.Size = new System.Drawing.Size(188, 19);
+			this.chk_LangTTCaretOnChange.Size = new System.Drawing.Size(113, 19);
 			this.chk_LangTTCaretOnChange.TabIndex = 12;
-			this.chk_LangTTCaretOnChange.Text = "Display only on layout change.";
+			this.chk_LangTTCaretOnChange.Text = "Only on change.";
 			this.chk_LangTTCaretOnChange.UseVisualStyleBackColor = true;
 			// 
 			// chk_LangTTMouseOnChange
@@ -1036,10 +1053,11 @@ namespace Mahou
 			this.chk_LangTTMouseOnChange.AutoSize = true;
 			this.chk_LangTTMouseOnChange.Location = new System.Drawing.Point(361, 6);
 			this.chk_LangTTMouseOnChange.Name = "chk_LangTTMouseOnChange";
-			this.chk_LangTTMouseOnChange.Size = new System.Drawing.Size(188, 19);
+			this.chk_LangTTMouseOnChange.Size = new System.Drawing.Size(113, 19);
 			this.chk_LangTTMouseOnChange.TabIndex = 11;
-			this.chk_LangTTMouseOnChange.Text = "Display only on layout change.";
+			this.chk_LangTTMouseOnChange.Text = "Only on change.";
 			this.chk_LangTTMouseOnChange.UseVisualStyleBackColor = true;
+			this.chk_LangTTMouseOnChange.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
 			// 
 			// grb_LangTTAppearence
 			// 
@@ -1921,6 +1939,16 @@ namespace Mahou
 			this.HelpMeUnderstand.ShowAlways = true;
 			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.HelpMeUnderstand.Popup += new System.Windows.Forms.PopupEventHandler(this.HelpMeUnderstandPopup);
+			// 
+			// chk_OneLayout
+			// 
+			this.chk_OneLayout.AutoSize = true;
+			this.chk_OneLayout.Location = new System.Drawing.Point(300, 6);
+			this.chk_OneLayout.Name = "chk_OneLayout";
+			this.chk_OneLayout.Size = new System.Drawing.Size(171, 19);
+			this.chk_OneLayout.TabIndex = 17;
+			this.chk_OneLayout.Text = "One layout for all programs";
+			this.chk_OneLayout.UseVisualStyleBackColor = true;
 			// 
 			// MahouUI
 			// 

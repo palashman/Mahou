@@ -20,6 +20,7 @@ namespace Mahou
 		public static List<List<KMHook.YuKey>> c_words = new List<List<KMHook.YuKey>>();
 		public static IntPtr _hookID = IntPtr.Zero;
 		public static IntPtr _mouse_hookID = IntPtr.Zero;
+		public static IntPtr _evt_hookID = IntPtr.Zero;
 		public static WinAPI.LowLevelProc _proc = KMHook.HookCallback;
 		public static WinAPI.LowLevelProc _mouse_proc = KMHook.MouseHookCallback;
 		public static Locales.Locale[] locales = Locales.AllList();
@@ -62,6 +63,9 @@ namespace Mahou
 //					mahou.icon.RefreshText(MMain.UI[44], MMain.UI[42], MMain.UI[43]);
 					KMHook.ReInitSnippets();
 					Application.EnableVisualStyles(); // Huh i did not noticed that it was missing... '~'
+					_evt_hookID = WinAPI.SetWinEventHook(WinAPI.EVENT_SYSTEM_FOREGROUND, WinAPI.EVENT_SYSTEM_FOREGROUND,
+					                                     IntPtr.Zero, KMHook.EventHookCallback, 0, 0, WinAPI.WINEVENT_OUTOFCONTEXT);
+					KMHook.CheckLayoutLater.Tick += (_, __) => { MahouUI.GlobalLayout = Locales.GetCurrentLocale(); KMHook.CheckLayoutLater.Stop();};
 					if (args.Length != 0)
 					if (args[0] == "_!_updated_!_") {
 						Logging.Log("Mahou updated.");

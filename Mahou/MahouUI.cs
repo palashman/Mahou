@@ -28,7 +28,7 @@ namespace Mahou {
 		public static string nPath = AppDomain.CurrentDomain.BaseDirectory;
 		public static bool LoggingEnabled, dummy;
 		static string[] UpdInfo;
-		static bool updating, was, isold = true, checking;
+		static bool updating, was, isold = true, checking, LayoutChanged = true;
 		static Timer tmr = new Timer();
 		static Timer old = new Timer();
 		public static Bitmap FLAG;
@@ -45,7 +45,8 @@ namespace Mahou {
 		public bool DiffAppearenceForLayouts, LDForCaretOnChange, LDForMouseOnChange, ScrollTip, AddOneSpace,
 					TrayFlags, SymIgnEnabled, TrayIconVisible, SnippetsEnabled, ChangeLayouByKey, EmulateLS,
 					RePress, BlockHKWithCtrl, blueIcon, SwitchBetweenLayouts, SelectedTextGetMoreTries, ReSelect,
-					ConvertSelectionLS, ConvertSelectionLSPlus, MCDSSupport, OneLayoutWholeWord, RestartHooks;
+					ConvertSelectionLS, ConvertSelectionLSPlus, MCDSSupport, OneLayoutWholeWord, RestartHooks,
+					MouseTTAlways, OneLayout, MouseLangTooltipEnabled;
 		/// <summary>
 		/// Temporary modifiers of hotkeys.
 		/// </summary>
@@ -132,7 +133,7 @@ namespace Mahou {
 		public LangDisplay mouseLangDisplay = new LangDisplay();
 		public LangDisplay caretLangDisplay = new LangDisplay();
 		uint latestL = 0, latestCL = 0;
-		public static uint currentLayout = 0;
+		public static uint currentLayout, GlobalLayout;
 		bool onepass = true, onepassC = true;
 		static string latestSwitch = "null";
 		public Timer res = new Timer();
@@ -239,6 +240,8 @@ namespace Mahou {
 				Hotkey.CallHotkey(HKRestart, id, ref dummy, Restart);
 				Hotkey.CallHotkey(MMain.mahou.Mainhk, id, ref hkShWndOK, ToggleVisibility);
 				Hotkey.CallHotkey(MMain.mahou.ExitHk, id, ref hkExitOK, ExitProgram);
+			}
+			if (m.Msg == WinAPI.WM_HOTKEY) {
 				// Restart hook after each hotkey action.
 				if (RestartHooks)
 					MMain.RestartHook();
@@ -499,6 +502,7 @@ namespace Mahou {
 			MMain.MyConfs.Write("Functions", "MCDServerSupport", chk_MCDS_support.Checked.ToString());
 			MMain.MyConfs.Write("Functions", "OneLayoutWholeWord", chk_OneLayoutWholeWord.Checked.ToString());
 			MMain.MyConfs.Write("Functions", "RestartHooksOnHotkeyActionEnd", chk_RestartHooks.Checked.ToString());
+			MMain.MyConfs.Write("Appearence", "MouseLTAlways", chk_MouseTTAlways.Checked.ToString());
 			#endregion
 			#region Layouts
 			MMain.MyConfs.Write("Layouts", "SwitchBetweenLayouts", chk_SwitchBetweenLayouts.Checked.ToString());
@@ -520,6 +524,7 @@ namespace Mahou {
 				try { MMain.MyConfs.Write("Layouts", "SpecificLayout3", cbb_Layout3.SelectedItem.ToString()); } catch { }
 				try { MMain.MyConfs.Write("Layouts", "SpecificLayout4", cbb_Layout4.SelectedItem.ToString()); } catch { }
 			} catch { Logging.Log("Some settings in layouts tab failed to save, they are skipped."); }
+			MMain.MyConfs.Write("Layouts", "OneLayout", chk_OneLayout.Checked.ToString());
 			#endregion
 			#region Persistent Layout
 			MMain.MyConfs.Write("PersistentLayout", "ActivateForLayout1", chk_PersistentLayout1Active.Checked.ToString());
@@ -598,6 +603,7 @@ namespace Mahou {
 			MCDSSupport = chk_MCDS_support.Checked = MMain.MyConfs.ReadBool("Functions", "MCDServerSupport");
 			OneLayoutWholeWord = chk_OneLayoutWholeWord.Checked = MMain.MyConfs.ReadBool("Functions", "OneLayoutWholeWord");
 			RestartHooks = chk_RestartHooks.Checked = MMain.MyConfs.ReadBool("Functions", "RestartHooksOnHotkeyActionEnd");
+			MouseLangTooltipEnabled = MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForMouse");
 			#endregion
 			#region Layouts
 			SwitchBetweenLayouts = chk_SwitchBetweenLayouts.Checked = MMain.MyConfs.ReadBool("Layouts", "SwitchBetweenLayouts");
@@ -613,6 +619,7 @@ namespace Mahou {
 			Key2 = MMain.MyConfs.ReadInt("Layouts", "SpecificKey2");
 			Key3 = MMain.MyConfs.ReadInt("Layouts", "SpecificKey3");
 			Key4 = MMain.MyConfs.ReadInt("Layouts", "SpecificKey4");
+			OneLayout = chk_OneLayout.Checked = MMain.MyConfs.ReadBool("Layouts", "OneLayout");
 			RefreshComboboxes();
 			#endregion
 			#region Persistent Layout
@@ -629,6 +636,7 @@ namespace Mahou {
 			LDForMouseOnChange = chk_LangTTMouseOnChange.Checked = MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForMouseOnChange");
 			LDForCaretOnChange = chk_LangTTCaretOnChange.Checked = MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForCaretOnChange");
 			DiffAppearenceForLayouts = chk_LangTTDiffLayoutColors.Checked = MMain.MyConfs.ReadBool("Appearence", "DifferentColorsForLayouts");
+			MouseTTAlways = chk_MouseTTAlways.Checked = MMain.MyConfs.ReadBool("Appearence", "MouseLTAlways");
 			#endregion
 			#region Timings
 			nud_LangTTMouseRefreshRate.Value = MMain.MyConfs.ReadInt("Timings", "LangTooltipForMouseRefreshRate");
@@ -668,6 +676,7 @@ namespace Mahou {
 			RefreshAllIcons();
 			UnregisterHotkeys();
 			RegisterHotkeys();
+			GlobalLayout = currentLayout = Locales.GetLocaleFromString(MainLayout1).uId;
 			Memory.Flush();
 			Logging.Log("All configurations loaded.");
 		}
@@ -736,13 +745,18 @@ namespace Mahou {
 				chk_SwitchBetweenLayouts.Enabled = chk_SwitchBetweenLayouts.Checked = false;
 			} else { chk_SwitchBetweenLayouts.Enabled = true; }
 			// Appearence tab
-			chk_LangTTMouseOnChange.Enabled = chk_LangTooltipMouse.Checked;
 			chk_LangTTCaretOnChange.Enabled = chk_LangTooltipCaret.Checked;
 			lbl_LangTTBackgroundColor.Enabled = btn_LangTTBackgroundColor.Enabled = 
 				!chk_LangTTTransparentColor.Checked;
 			lbl_LangTTBackgroundColor.Enabled = btn_LangTTBackgroundColor.Enabled = 
 				chk_LangTTTransparentColor.Enabled = lbl_LangTTForegroundColor.Enabled = btn_LangTTForegroundColor.Enabled = 
 				btn_LangTTFont.Enabled = !chk_LangTTUseFlags.Checked;
+			if (!chk_LangTooltipMouse.Checked)
+				chk_MouseTTAlways.Enabled = chk_LangTTMouseOnChange.Enabled = false;
+			else {
+				chk_MouseTTAlways.Enabled = !chk_LangTTMouseOnChange.Checked;
+				chk_LangTTMouseOnChange.Enabled = !chk_MouseTTAlways.Checked;
+			}
 			// Snippets tab
 			txt_Snippets.Enabled = chk_Snippets.Checked;
 			// Hotkeys tab
@@ -841,13 +855,13 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				lcid = (int)(Locales.GetCurrentLocale() & 0xffff);
 			else 
 				lcid = (int)(MahouUI.currentLayout & 0xffff);
-			
 			if (lcid > 0) { 
 				var flagname = "jp";
 				var clangname = new CultureInfo(lcid);
 				flagname = clangname.ThreeLetterISOLanguageName.Substring(0, 2).ToLower();
 				var flagpth = Path.Combine(MahouUI.nPath, "Flags\\" + flagname + ".png");
 				if (flagname != latestSwitch) {
+					Debug.WriteLine("Changed");
 					if (File.Exists(flagpth))
 						FLAG = ((Bitmap)Image.FromFile(flagpth));
 					else
@@ -893,8 +907,11 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 								break;
 						}
 					latestSwitch = flagname;
-				}
+					LayoutChanged = true;
+				} else 
+					LayoutChanged = false;	
 			} else {
+				LayoutChanged = false;
 				Logging.Log("Layout id was ["+lcid+"].", 2);
 			}
 		}
@@ -902,11 +919,13 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 		/// Changes tray icon image to country flag based on current layout.
 		/// </summary>
 		void ChangeTrayIconToFlag() {
-			RefreshFLAG();
-			var flg = FLAG;
-			if (flg == null) return;
-			Icon flagicon = Icon.FromHandle(flg.GetHicon());
-			icon.trIcon.Icon = flagicon;
+			if (!MouseTTAlways && !LDMouseUseFlags_temp) {
+				RefreshFLAG();
+				if (LayoutChanged) {
+					Icon flagicon = Icon.FromHandle(FLAG.GetHicon());
+					icon.trIcon.Icon = flagicon;
+				}
+			}
 		}
 		/// <summary>
 		/// Initializes UI language.
@@ -922,6 +941,10 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 		/// Initializes language tooltips.
 		/// </summary>
 		public void InitLangDisplays() {
+			if (mouseLangDisplay != null)
+				mouseLangDisplay.Dispose();
+			if (caretLangDisplay != null)
+				caretLangDisplay.Dispose();
 			mouseLangDisplay = new LangDisplay();
 			caretLangDisplay = new LangDisplay();
 			mouseLangDisplay.mouseDisplay = true;
@@ -1072,7 +1095,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 						res.Start();
 					}
 				} else {
-					if (ICheckings.IsICursor())
+					if (ICheckings.IsICursor() || MouseTTAlways)
 						mouseLangDisplay.ShowInactiveTopmost();
 					else
 						mouseLangDisplay.HideWnd();
@@ -1162,7 +1185,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				if (ProcessNames.Contains(actProcName)) {
 					uint CurrentLayout = Locales.GetCurrentLocale();
 					uint PersistentLayout = Locales.GetLocaleFromString(Layout).uId;
-					Logging.Log("Checking current layout: ["+currentLayout+"] with selected persistent layout: ["+PersistentLayout+"].");
+					Logging.Log("Checking current layout: ["+CurrentLayout+"] with selected persistent layout: ["+PersistentLayout+"].");
 					if (CurrentLayout != PersistentLayout) {
 						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, PersistentLayout);
 						Logging.Log("Layout was different, changing to: ["+Layout+"].");
@@ -1887,6 +1910,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			chk_SpecificLS.Text = MMain.Lang[Languages.Element.ChangeLayoutBy1Key];
 			grb_Layouts.Text = MMain.Lang[Languages.Element.Layouts];
 			grb_Keys.Text = MMain.Lang[Languages.Element.Keys];
+			chk_OneLayout.Text = MMain.Lang[Languages.Element.OneLayout];
 			#endregion
 			#region Persistent Layout
 			tab_persistent.Text = MMain.Lang[Languages.Element.PersistentLayout];
@@ -1898,6 +1922,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			#region Appearence
 			chk_LangTooltipMouse.Text = MMain.Lang[Languages.Element.LDMouseDisplay];
 			chk_LangTooltipCaret.Text = MMain.Lang[Languages.Element.LDCaretDisplay];
+			chk_MouseTTAlways.Text = MMain.Lang[Languages.Element.Always];
 			chk_LangTTCaretOnChange.Text = chk_LangTTMouseOnChange.Text = MMain.Lang[Languages.Element.LDOnlyOnChange];
 			lbl_Language.Text = MMain.Lang[Languages.Element.Language];
 			chk_LangTTDiffLayoutColors.Text = MMain.Lang[Languages.Element.LDDifferentAppearence];
@@ -2007,6 +2032,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			HelpMeUnderstand.SetToolTip(txt_PersistentLayout1Processes, MMain.Lang[Languages.Element.TT_PersistentLayout]);
 			HelpMeUnderstand.SetToolTip(txt_PersistentLayout2Processes, MMain.Lang[Languages.Element.TT_PersistentLayout]);
 			HelpMeUnderstand.SetToolTip(chk_RestartHooks, MMain.Lang[Languages.Element.TT_RestartHooks]);
+			HelpMeUnderstand.SetToolTip(chk_OneLayout, MMain.Lang[Languages.Element.TT_OneLayout]);
 		}
 		void HelpMeUnderstandPopup(object sender, PopupEventArgs e) {
 			HelpMeUnderstand.ToolTipTitle = e.AssociatedControl.Text;

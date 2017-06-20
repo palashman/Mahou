@@ -18,16 +18,31 @@ namespace Mahou
 		/// Returns current layout id in foreground window.
 		/// </summary>
 		/// <returns>uint</returns>
-		public static uint GetCurrentLocale() //Gets current locale in active window
+		public static uint GetCurrentLocale(IntPtr byHwnd = default(IntPtr)) //Gets current locale in active window, or in specified hwnd.
 		{
-			var actv = ActiveWindow();
+			IntPtr actv = IntPtr.Zero;
+			if (byHwnd == IntPtr.Zero)
+				actv = ActiveWindow();
+			else 
+				actv = byHwnd;
 			uint pid = 0;
 			uint tid = WinAPI.GetWindowThreadProcessId(actv, out pid);
 			IntPtr layout = WinAPI.GetKeyboardLayout(tid);
+			if (tid == 0) { 
+				IfCmdExe(actv, out pid); 
+				if (pid != 0) 
+					tid = pid; 
+			}
+			//Produces TOO much logging, disabled.
+            //Logging.Log("Current locale id is [" + (uint)(layout.ToInt32() & 0xFFFF) + "].");
+			return (uint)layout;
+		}
+		public static void IfCmdExe(IntPtr hwnd, out uint layoutId) {
+			uint pid;
 			var strb = new StringBuilder(256);
-			WinAPI.GetClassName(actv, strb, strb.Capacity);
+			WinAPI.GetClassName(hwnd, strb, strb.Capacity);
 			if (strb.ToString() == "ConsoleWindowClass") {
-				WinAPI.GetWindowThreadProcessId(actv, out pid);
+				WinAPI.GetWindowThreadProcessId(hwnd, out pid);
 				uint lid = 0;
 				try {
 					Debug.WriteLine("INIT: {0}.", Initialize());
@@ -36,11 +51,8 @@ namespace Mahou
 					Logging.Log("getconkbl.dll not found, console layout get will not be right.", 2); 
 				}
 				Debug.WriteLine("Tried to get console layout id, return [{0}], pid [{1}].", lid, pid);
-				return lid;
-			}
-			//Produces TOO much logging, disabled.
-            //Logging.Log("Current locale id is [" + (uint)(layout.ToInt32() & 0xFFFF) + "].");
-			return (uint)layout;
+				layoutId = lid;
+			} else layoutId = 0;
 		}
 		/// <summary>
 		/// Returns focused or foreground window.

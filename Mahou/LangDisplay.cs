@@ -27,7 +27,9 @@ namespace Mahou
 			if (DisplayFlag) {
 				lbLang.Visible = false;
 				MahouUI.RefreshFLAG();
-				BackgroundImage =  MahouUI.FLAG;
+				if (MMain.mahou.MouseTTAlways && mouseDisplay) // fix for tray stuck due to variable "LayoutChanged" which being changed by this mouse tooltip always
+					MMain.mahou.icon.trIcon.Icon = Icon.FromHandle(MahouUI.FLAG.GetHicon());;
+				BackgroundImage = MahouUI.FLAG;
 				TransparencyKey = BackColor = Color.Pink;
 				Invalidate();
 				Update();
@@ -51,6 +53,8 @@ namespace Mahou
 		{
 			if (!Visible) return;
 			uint cLid = Locales.GetCurrentLocale();
+			if (cLid == 0)
+				cLid = MahouUI.currentLayout;
 			if (MMain.mahou.LDCaretTransparentBack_temp && caretDisplay)
 				transparentBG = true;
 			else if (MMain.mahou.LDMouseTransparentBack_temp && mouseDisplay)
