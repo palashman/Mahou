@@ -23,7 +23,7 @@ Mahou работает совершенно по-другому: в отличи
 
 ###### Возможности по версиям:
 
-**v2.3.1.4**<br/>
+**v2.3.1.7**<br/>
 
 - :bug: Исправлена несовместимость прозрачного фона и функции флагов в подсказках языка.
 - :bug: Исправлено зависание позиции подсказки каретки в Firefox после прокрутки колесиком.
@@ -228,7 +228,7 @@ Even selected text switches just between **selected** layouts, though if you lik
 
 ###### By version features:
 
-**v2.3.1.4**<br/>
+**v2.3.1.7**<br/>
 
 - :bug: Fixed transparent color and flags together producing both text and flags.
 - :bug: Fixed caret lang display in Firefox was stuck on screen on mouse wheel.
