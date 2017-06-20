@@ -918,12 +918,11 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 		/// Changes tray icon image to country flag based on current layout.
 		/// </summary>
 		void ChangeTrayIconToFlag() {
-			if (!MouseTTAlways && !LDMouseUseFlags_temp) {
-				RefreshFLAG();
-				if (LayoutChanged) {
-					Icon flagicon = Icon.FromHandle(FLAG.GetHicon());
-					icon.trIcon.Icon = flagicon;
-				}
+			if (MouseTTAlways && LDMouseUseFlags_temp) return;
+			RefreshFLAG();
+			if (LayoutChanged) {
+				Icon flagicon = Icon.FromHandle(FLAG.GetHicon());
+				icon.trIcon.Icon = flagicon;
 			}
 		}
 		/// <summary>
