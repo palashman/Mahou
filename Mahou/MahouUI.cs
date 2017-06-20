@@ -676,7 +676,6 @@ namespace Mahou {
 			RefreshAllIcons();
 			UnregisterHotkeys();
 			RegisterHotkeys();
-			GlobalLayout = currentLayout = Locales.GetLocaleFromString(MainLayout1).uId;
 			Memory.Flush();
 			Logging.Log("All configurations loaded.");
 		}

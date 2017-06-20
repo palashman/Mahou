@@ -84,6 +84,7 @@ namespace Mahou
 						mahou.cbb_MainLayout1.SelectedIndex = 0;
 						mahou.cbb_MainLayout2.SelectedIndex = 1;
 					}
+					MahouUI.GlobalLayout = MahouUI.currentLayout = Locales.GetLocaleFromString(mahou.MainLayout1).uId;
 					Application.Run();
 					StopHook();
 				}
