@@ -23,6 +23,11 @@ Mahou работает совершенно по-другому: в отличи
 
 ###### Возможности по версиям:
 
+**v2.3.1.4**<br/>
+
+- :bug: Исправлена серьезная ошибка x64 в из версии 2.3.1.3.
+- :bug: Исправлен конфилкт подсказки языка в виде флага с функцией флагов в трее.
+
 **v2.3.0.7~v2.3.1.3**<br/>
 
 - :gem: Добавлена новая функция - Единая раскладка для всех программ.
@@ -214,6 +219,11 @@ Even selected text switches just between **selected** layouts, though if you lik
 4. Starting from v1.0.4.4 in Convert selection unrecognized text by all selected layout in settings (example: ♥) just rewrites.
 
 ###### By version features:
+
+**v2.3.1.4**<br/>
+
+- :bug: fixed serious x64 bug from v2.3.1.3(which has been reloaded too).
+- :bug: Fixed tray flags & tooltip flags confilct.
 
 **v2.3.0.7~v2.3.1.3**<br/>
 
