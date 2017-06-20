@@ -87,6 +87,8 @@ namespace Mahou
 				} else {
 					if (_pntCR.Equals(new Point(0,0)))
 						return LuckyNone;
+					var _fwTitle = new StringBuilder(128);
+					WinAPI.GetWindowText(_fw, _fwTitle, 127);
 					Logging.Log("CaretPos = x["+_pntCR.X+"], y["+_pntCR.Y+"].");	
 					// Do not display caret for these classes:
 					var _clsNM = _clsNMb.ToString();
@@ -105,7 +107,9 @@ namespace Mahou
 					    _clsNM == "msctls_trackbar32"|| _clsNM.Contains("wxWindow") ||
 					    _clsNM == "SysTabControl32" || _clsNM == "DirectUIHWND" ||
 					    _clsNM == "Static" ||  _clsNM == "NetUIHWND" || _clsNMfw == "MSPaintApp" ||
-						_clsNM == "PotPlayer" || _clsNM == "MDIClient")
+					    _clsNM == "PotPlayer" || _clsNM == "MDIClient" || 
+					    _clsNMfw == "#32770" && (new Regex("[У][Д][А][Л][И][Т][Ь]", RegexOptions.IgnoreCase).IsMatch(_fwTitle.ToString()) ||
+					                            (new Regex("[D][E][L][E][T][E]", RegexOptions.IgnoreCase).IsMatch(_fwTitle.ToString()))))
 						return LuckyNone;
 					if (_clsNM.Contains("SharpDevelop.exe")) {
 						_pntCR.Y += 28; _pntCR.X += 3;
