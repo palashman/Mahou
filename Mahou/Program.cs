@@ -68,10 +68,12 @@ namespace Mahou
 						Logging.Log("Initializing locales.");
 						MyConfs.Write("Layouts", "MainLayout1", lcnmid[0]);
 						MyConfs.Write("Layouts", "MainLayout2", lcnmid[1]);
+					}
+					mahou = new MahouUI();
+					if (MyConfs.Read("Layouts", "MainLayout1") == "" && MyConfs.Read("Layouts", "MainLayout2") == "") {
 						mahou.cbb_MainLayout1.SelectedIndex = 0;
 						mahou.cbb_MainLayout2.SelectedIndex = 1;
 					}
-					mahou = new MahouUI();
 					//Refreshes icon text language at startup
 //					mahou.icon.RefreshText(MMain.UI[44], MMain.UI[42], MMain.UI[43]);
 					KMHook.ReInitSnippets();
