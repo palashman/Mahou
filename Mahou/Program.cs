@@ -23,6 +23,7 @@ namespace Mahou
 		public static IntPtr _evt_hookID = IntPtr.Zero;
 		public static WinAPI.LowLevelProc _proc = KMHook.HookCallback;
 		public static WinAPI.LowLevelProc _mouse_proc = KMHook.MouseHookCallback;
+		public static WinAPI.WinEventDelegate _evt_proc = KMHook.EventHookCallback;
 		public static Locales.Locale[] locales = Locales.AllList();
 		public static string _language = "";
 		public static Dictionary<Languages.Element, string> Lang = Languages.English;
@@ -57,22 +58,8 @@ namespace Mahou
 							MyConfs.Write("FirstStart", "First", "False");
 						}
 					} else {
-						MahouUI.InitLanguage();}
-					mahou = new MahouUI();
-					//Refreshes icon text language at startup
-//					mahou.icon.RefreshText(MMain.UI[44], MMain.UI[42], MMain.UI[43]);
-					KMHook.ReInitSnippets();
-					Application.EnableVisualStyles(); // Huh i did not noticed that it was missing... '~'
-					_evt_hookID = WinAPI.SetWinEventHook(WinAPI.EVENT_SYSTEM_FOREGROUND, WinAPI.EVENT_SYSTEM_FOREGROUND,
-					                                     IntPtr.Zero, KMHook.EventHookCallback, 0, 0, WinAPI.WINEVENT_OUTOFCONTEXT);
-					KMHook.CheckLayoutLater.Tick += (_, __) => { MahouUI.GlobalLayout = Locales.GetCurrentLocale(); KMHook.CheckLayoutLater.Stop();};
-					if (args.Length != 0)
-					if (args[0] == "_!_updated_!_") {
-						Logging.Log("Mahou updated.");
-						mahou.ToggleVisibility();
-						MessageBox.Show(Lang[Languages.Element.UpdateComplete], Lang[Languages.Element.UpdateComplete], MessageBoxButtons.OK, MessageBoxIcon.Information);
+						MahouUI.InitLanguage();
 					}
-					StartHook();
 					foreach (Locales.Locale lc in MMain.locales) {	
 						MMain.lcnmid.Add(lc.Lang + "(" + lc.uId + ")");
 					}
@@ -84,6 +71,21 @@ namespace Mahou
 						mahou.cbb_MainLayout1.SelectedIndex = 0;
 						mahou.cbb_MainLayout2.SelectedIndex = 1;
 					}
+					mahou = new MahouUI();
+					//Refreshes icon text language at startup
+//					mahou.icon.RefreshText(MMain.UI[44], MMain.UI[42], MMain.UI[43]);
+					KMHook.ReInitSnippets();
+					Application.EnableVisualStyles(); // Huh i did not noticed that it was missing... '~'
+					_evt_hookID = WinAPI.SetWinEventHook(WinAPI.EVENT_SYSTEM_FOREGROUND, WinAPI.EVENT_SYSTEM_FOREGROUND,
+					                                     IntPtr.Zero, _evt_proc, 0, 0, WinAPI.WINEVENT_OUTOFCONTEXT);
+					KMHook.CheckLayoutLater.Tick += (_, __) => { MahouUI.GlobalLayout = Locales.GetCurrentLocale(); KMHook.CheckLayoutLater.Stop();};
+					if (args.Length != 0)
+					if (args[0] == "_!_updated_!_") {
+						Logging.Log("Mahou updated.");
+						mahou.ToggleVisibility();
+						MessageBox.Show(Lang[Languages.Element.UpdateComplete], Lang[Languages.Element.UpdateComplete], MessageBoxButtons.OK, MessageBoxIcon.Information);
+					}
+					StartHook();
 					MahouUI.GlobalLayout = MahouUI.currentLayout = Locales.GetLocaleFromString(mahou.MainLayout1).uId;
 					Application.Run();
 					StopHook();
