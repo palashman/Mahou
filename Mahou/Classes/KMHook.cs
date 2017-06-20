@@ -54,7 +54,7 @@ namespace Mahou
 //				Debug.WriteLine(MahouUI.currentLayout);
 //				if (MahouUI.currentLayout == 0)
 //					MahouUI.currentLayout = Locales.GetCurrentLocale();
-				if (CaretLangTooltipEnabled)
+				if (MMain.mahou.CaretLangTooltipEnabled)
 					ff_wheeled = false;
 				int vkCode = Marshal.ReadInt32(lParam);
 				var Key = (Keys)vkCode; // "Key" will further be used instead of "(Keys)vkCode"
@@ -376,7 +376,7 @@ namespace Mahou
 		{
 			try {
 			if (nCode >= 0) {
-				if ((uint)wParam == WinAPI.WM_MOUSEWHEEL && MMain.mahou.caretLangDisplay.Visible && CaretLangTooltipEnabled) {
+				if ((uint)wParam == WinAPI.WM_MOUSEWHEEL && MMain.mahou.caretLangDisplay.Visible && MMain.mahou.CaretLangTooltipEnabled) {
 					var _fw = WinAPI.GetForegroundWindow();
 					var _clsNMb = new StringBuilder(40);
 					WinAPI.GetClassName(_fw, _clsNMb, _clsNMb.Capacity);

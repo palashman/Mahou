@@ -25,6 +25,14 @@ Mahou работает совершенно по-другому: в отличи
 
 **v2.3.1.4**<br/>
 
+- :bug: Исправлена несовместимость прозрачного фона и функции флагов в подсказках языка.
+- :bug: Исправлено зависание позиции подсказки каретки в Firefox после прокрутки колесиком.
+- :bug: Исправлена проблема запуска Mahou без Mahou.ini.
+- :bug: Исправлена несовместимость диалогового окна удаления файлов с подсказкой каретки в Windows 10.
+- :bug: Исправлена ошибка приводящая к остановке смены флагов в трее.
+
+**v2.3.1.4**<br/>
+
 - :bug: Исправлена серьезная ошибка x64 в из версии 2.3.1.3.
 - :bug: Исправлен конфилкт подсказки языка в виде флага с функцией флагов в трее.
 
@@ -219,6 +227,14 @@ Even selected text switches just between **selected** layouts, though if you lik
 4. Starting from v1.0.4.4 in Convert selection unrecognized text by all selected layout in settings (example: ♥) just rewrites.
 
 ###### By version features:
+
+**v2.3.1.4**<br/>
+
+- :bug: Fixed transparent color and flags together producing both text and flags.
+- :bug: Fixed caret lang display in Firefox was stuck on screen on mouse wheel.
+- :bug: Fixed error on first startup when Mahou.ini not exist.
+- :bug: Fixed delete dialog conflict with caret lang display on windows 10.
+- :bug: Fixed wrong rule in combined refresh of flags in Mouse Lang Display and tray flags while mouse tip was disabled but display mouse tooltip always was enabled.
 
 **v2.3.1.4**<br/>
 
