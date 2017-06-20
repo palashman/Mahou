@@ -18,7 +18,7 @@ namespace Mahou
 			awas, swas, cwas, wwas, afterEOS, //*was = alt/shift/ctrl was
 			keyAfterCTRL, keyAfterALT, keyAfterSHIFT,
 			clickAfterCTRL, clickAfterALT, clickAfterSHIFT,
-			hotkeywithmodsfired, csdoing, incapt, waitfornum, IsHotkey;
+			hotkeywithmodsfired, csdoing, incapt, waitfornum, IsHotkey, ff_wheeled;
 		static string lastClipText = "";
 		static List<Keys> tempNumpads = new List<Keys>();
 		static List<char> c_snip = new List<char>();
@@ -54,6 +54,8 @@ namespace Mahou
 //				Debug.WriteLine(MahouUI.currentLayout);
 //				if (MahouUI.currentLayout == 0)
 //					MahouUI.currentLayout = Locales.GetCurrentLocale();
+				if (CaretLangTooltipEnabled)
+					ff_wheeled = false;
 				int vkCode = Marshal.ReadInt32(lParam);
 				var Key = (Keys)vkCode; // "Key" will further be used instead of "(Keys)vkCode"
 				if (MMain.c_words.Count == 0) {
@@ -374,6 +376,13 @@ namespace Mahou
 		{
 			try {
 			if (nCode >= 0) {
+				if ((uint)wParam == WinAPI.WM_MOUSEWHEEL && MMain.mahou.caretLangDisplay.Visible && CaretLangTooltipEnabled) {
+					var _fw = WinAPI.GetForegroundWindow();
+					var _clsNMb = new StringBuilder(40);
+					WinAPI.GetClassName(_fw, _clsNMb, _clsNMb.Capacity);
+					if (_clsNMb.ToString() == "MozillaWindowClass")
+						ff_wheeled = true;
+				}
 				if ((WinAPI.WM_LBUTTONDOWN == (uint)wParam) || WinAPI.WM_RBUTTONDOWN == (uint)wParam) {
 					if (ctrl)
 						clickAfterCTRL = true;

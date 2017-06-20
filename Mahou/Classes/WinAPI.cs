@@ -38,7 +38,6 @@ public static class WinAPI
 	public static uint WM_LBUTTONDOWN = 0x0201;
 	public static uint WM_LBUTTONUP = 0x0202;
 	public static uint WM_MOUSEMOVE = 0x0200;
-	public static uint WM_MOUSEWHEEL = 0x020A;
 	public static uint WM_RBUTTONDOWN = 0x0204;
 	public static uint WM_RBUTTONUP = 0x0205;
 	public static uint WM_MBUTTONDOWN = 0x0207;
@@ -65,6 +64,7 @@ public static class WinAPI
 	public const int WS_EX_TRANSPARENT = 0x20;
 	public const int WS_EX_LAYERED = 0x80000;
 	public const int WS_EX_TOOLWINDOW = 0x80;
+	public const uint WM_MOUSEWHEEL = 0x020A;
 	#endregion
 	#region EventHook
 	public const uint EVENT_SYSTEM_FOREGROUND = 3;

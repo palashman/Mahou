@@ -46,7 +46,7 @@ namespace Mahou {
 					TrayFlags, SymIgnEnabled, TrayIconVisible, SnippetsEnabled, ChangeLayouByKey, EmulateLS,
 					RePress, BlockHKWithCtrl, blueIcon, SwitchBetweenLayouts, SelectedTextGetMoreTries, ReSelect,
 					ConvertSelectionLS, ConvertSelectionLSPlus, MCDSSupport, OneLayoutWholeWord, RestartHooks,
-					MouseTTAlways, OneLayout, MouseLangTooltipEnabled;
+					MouseTTAlways, OneLayout, MouseLangTooltipEnabled, CaretLangTooltipEnabled;
 		/// <summary>
 		/// Temporary modifiers of hotkeys.
 		/// </summary>
@@ -604,6 +604,7 @@ namespace Mahou {
 			OneLayoutWholeWord = chk_OneLayoutWholeWord.Checked = MMain.MyConfs.ReadBool("Functions", "OneLayoutWholeWord");
 			RestartHooks = chk_RestartHooks.Checked = MMain.MyConfs.ReadBool("Functions", "RestartHooksOnHotkeyActionEnd");
 			MouseLangTooltipEnabled = MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForMouse");
+			CaretLangTooltipEnabled = MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForCaret");
 			#endregion
 			#region Layouts
 			SwitchBetweenLayouts = chk_SwitchBetweenLayouts.Checked = MMain.MyConfs.ReadBool("Layouts", "SwitchBetweenLayouts");
@@ -1073,10 +1074,10 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 						res.Start();
 					}
 				} else {
-				if (crtOnly.X != 77777 && crtOnly.Y != 77777) // 77777x77777 is null/none point
+				if (KMHook.ff_wheeled)
+					caretLangDisplay.HideWnd();
+				else if (crtOnly.X != 77777 && crtOnly.Y != 77777) // 77777x77777 is null/none point
 					caretLangDisplay.ShowInactiveTopmost();
-//				else if (caretLangDisplay.Visible)
-//					caretLangDisplay.HideWnd();
 				caretLangDisplay.RefreshLang();
 				}
 			};

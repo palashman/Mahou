@@ -162,7 +162,7 @@ namespace Mahou
 		/// </summary>
 		protected override void OnPaint(PaintEventArgs e)
 		{
-			if (!transparentBG) { base.OnPaint(e); return; }
+			if (!transparentBG || DisplayFlag) { base.OnPaint(e); return; }
 			e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
 			e.Graphics.DrawString(lbLang.Text, lbLang.Font, new SolidBrush(lbLang.ForeColor), 0, 0);
 			base.OnPaint(e);
