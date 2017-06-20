@@ -376,7 +376,7 @@ public class Languages
 		{ Element.HighlightScroll, "Подсвечивать Scroll-Lock когда раскладка 1 активна." }, 
 		{ Element.UpdatesCheck, "Проверять обновления при запуске." }, 
 		{ Element.Logging, "Включить журналирование действий для поиска ошибок." }, 
-		{ Element.CapsTimer, "Включит таймер отключатель Caps-Lock." }, 
+		{ Element.CapsTimer, "Включить таймер отключатель Caps-Lock." }, 
 		{ Element.ContryFlags, "Отображать флаги стран в трее." }, 
 		{ Element.BlockCtrlHKs, "Блокировать горячие клавиши Mahou содержащие Ctrl." }, 
 		{ Element.MCDSSupport, "Включить поддержку MCDS." }, 
