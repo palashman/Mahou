@@ -1189,9 +1189,8 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 					uint PersistentLayout = Locales.GetLocaleFromString(Layout).uId;
 					Logging.Log("Checking current layout: ["+CurrentLayout+"] with selected persistent layout: ["+PersistentLayout+"].");
 					if (CurrentLayout != PersistentLayout) {
-						WinAPI.PostMessage(Locales.ActiveWindow(), WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, PersistentLayout);
+						KMHook.ChangeToLayout(Locales.ActiveWindow(), PersistentLayout);
 						Logging.Log("Layout was different, changing to: ["+Layout+"].");
-						currentLayout = PersistentLayout;
 						System.Threading.Thread.Sleep(5);
 					}
 				}
