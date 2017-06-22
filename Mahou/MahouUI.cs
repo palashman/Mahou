@@ -905,6 +905,9 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 							case "fr":
 								FLAG = Properties.Resources.fr;
 								break;
+							case "la":
+								FLAG = Properties.Resources.la;
+								break;
 						}
 					latestSwitch = flagname;
 					LayoutChanged = true;
