@@ -861,7 +861,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				flagname = clangname.ThreeLetterISOLanguageName.Substring(0, 2).ToLower();
 				var flagpth = Path.Combine(MahouUI.nPath, "Flags\\" + flagname + ".png");
 				if (flagname != latestSwitch) {
-					Debug.WriteLine("Changed");
+					Logging.Log("Changed flag to " + flagname + " lcid " + lcid);
 					if (File.Exists(flagpth))
 						FLAG = ((Bitmap)Image.FromFile(flagpth));
 					else
@@ -907,6 +907,10 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 								break;
 							case "la":
 								FLAG = Properties.Resources.la;
+								break;
+							default:
+								FLAG = Properties.Resources.MahouTrayHD.ToBitmap();
+								Logging.Log("Missing flag for language [" + flagname + " / " + lcid + "].", 2);
 								break;
 						}
 					latestSwitch = flagname;

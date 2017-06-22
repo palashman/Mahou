@@ -18,7 +18,9 @@ namespace Mahou
 			awas, swas, cwas, wwas, afterEOS, //*was = alt/shift/ctrl was
 			keyAfterCTRL, keyAfterALT, keyAfterSHIFT,
 			clickAfterCTRL, clickAfterALT, clickAfterSHIFT,
-			hotkeywithmodsfired, csdoing, incapt, waitfornum, IsHotkey, ff_wheeled;
+			hotkeywithmodsfired, csdoing, incapt, waitfornum, 
+			IsHotkey, ff_wheeled;
+		static int ignoreLCtrl = 0;
 		static string lastClipText = "";
 		static List<Keys> tempNumpads = new List<Keys>();
 		static List<char> c_snip = new List<char>();
@@ -537,10 +539,15 @@ namespace Mahou
 						ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 						matched = true;
 					}
-					if (specificKey == 2 && Key == Keys.LControlKey && !keyAfterCTRL) {
-						Logging.Log("Switching to specific layout by  LCtrl key.");
-						ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
-						matched = true;
+					if (ignoreLCtrl >= 1 && Key == Keys.LControlKey) {
+						ignoreLCtrl--;
+						Logging.Log("Ignored LCtrl via PostMessage bug.");
+					} else {
+						if (specificKey == 2 && Key == Keys.LControlKey && !keyAfterCTRL) {
+							Logging.Log("Switching to specific layout by  LCtrl key.");
+							ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
+							matched = true;
+						}
 					}
 					if (specificKey == 3 && Key == Keys.RControlKey && !keyAfterCTRL) {
 						Logging.Log("Switching to specific layout by RCtrl key.");
@@ -573,10 +580,8 @@ namespace Mahou
 						matched = true;
 					}
 					try {
-						if (matched) {
-							MahouUI.currentLayout = MahouUI.GlobalLayout = Locales.GetLocaleFromString(speclayout).uId;
+						if (matched) 
 							Logging.Log("Available layout from string ["+speclayout+"] & id ["+specKeyId+"].");
-						}
 					} catch { 
 						Logging.Log("No layout available from string ["+speclayout+"] & id ["+specKeyId+"]."); 
 					}
@@ -1152,13 +1157,19 @@ namespace Mahou
 			} else
 				CycleSwitch();
 		}
-		public static void ChangeToLayout(IntPtr hwnd, uint LayoutId) {
+		public static void ChangeToLayout(IntPtr hwnd, uint LayoutId, bool lc_fix = false) {
 			WinAPI.PostMessage(hwnd, WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, LayoutId);
+			ignoreLCtrl = 1;
 			MahouUI.currentLayout = MahouUI.GlobalLayout = LayoutId;
-			self = true;
-			KeybdEvent(Keys.LControlKey, 2); // fix for WinAPI.PostMessage, it SOMEHOW o_0 sends LEFT ctrl after layout change to specific...
-											 // I'd be really happy if someone could tell me why it SEND THAT ****** Left Control after postmessage???
-			self = false;
+//			if (lc_fix) {
+//				var latest_self = self;
+//				if (!latest_self) // If it is not change by another rule.
+//					self = true;
+//				KeybdEvent(Keys.LControlKey, 2); // fix for WinAPI.PostMessage, it SOMEHOW o_0 sends LEFT ctrl after layout change to specific...
+												 // I'd be really happy if someone could tell me why it SEND THAT ****** Left Control after postmessage???
+//				if (!latest_self)
+//					self = false;
+//			}
 		}
 		/// <summary>
 		/// Changes current layout by cycling between all installed in system.
