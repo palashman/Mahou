@@ -888,7 +888,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			} else {
 				if (HKSymIgn_tempEnabled && SymIgnEnabled && icon.trIcon.Icon != Properties.Resources.MahouSymbolIgnoreMode)
 					icon.trIcon.Icon = Properties.Resources.MahouSymbolIgnoreMode;
-				else if (HKSymIgn_tempEnabled && SymIgnEnabled && icon.trIcon.Icon != Properties.Resources.MahouTrayHD)
+				else if (!TrayFlags && icon.trIcon.Icon != Properties.Resources.MahouTrayHD)
 					icon.trIcon.Icon = Properties.Resources.MahouTrayHD;
 			}
 			if (!blueIcon && HKSymIgn_tempEnabled && SymIgnEnabled) {

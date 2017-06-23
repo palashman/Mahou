@@ -38,12 +38,13 @@ namespace Mahou
 			// 
 			// lbl_LayoutName
 			// 
+			this.lbl_LayoutName.AutoSize = true;
 			this.lbl_LayoutName.Location = new System.Drawing.Point(26, 5);
 			this.lbl_LayoutName.Name = "lbl_LayoutName";
-			this.lbl_LayoutName.Size = new System.Drawing.Size(130, 15);
+			this.lbl_LayoutName.Size = new System.Drawing.Size(70, 13);
 			this.lbl_LayoutName.TabIndex = 0;
 			this.lbl_LayoutName.Text = "Layout Name";
-			this.lbl_LayoutName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.lbl_LayoutName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			this.lbl_LayoutName.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LangPanelMouseDown);
 			this.lbl_LayoutName.MouseMove += new System.Windows.Forms.MouseEventHandler(this.LangPanelMouseMove);
 			this.lbl_LayoutName.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Lbl_LayoutNameMouseUp);
@@ -88,6 +89,7 @@ namespace Mahou
 			this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Lbl_LayoutNameMouseUp);
 			((System.ComponentModel.ISupportInitialize)(this.pct_Flag)).EndInit();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 	}

@@ -19,6 +19,7 @@ namespace Mahou {
 		public void ChangeLayout(Bitmap flag, string layoutName) {
 			lbl_LayoutName.Text = layoutName;
 			pct_Flag.BackgroundImage = flag;
+			Width = lbl_LayoutName.Left + lbl_LayoutName.Width + 4;
 		}
 		void LangPanelMouseDown(object sender, MouseEventArgs e) {
 			int top = 0, left = 0;
