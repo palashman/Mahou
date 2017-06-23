@@ -130,8 +130,10 @@ namespace Mahou {
 		public Timer flagsCheck = new Timer();
 		public Timer persistentLayout1Check = new Timer();
 		public Timer persistentLayout2Check = new Timer();
+		public Timer langPanelRefresh = new Timer();
 		public LangDisplay mouseLangDisplay = new LangDisplay();
 		public LangDisplay caretLangDisplay = new LangDisplay();
+		public LangPanel _langPanel = new LangPanel();
 		uint latestL = 0, latestCL = 0;
 		public static uint currentLayout, GlobalLayout;
 		bool onepass = true, onepassC = true;
@@ -180,6 +182,8 @@ namespace Mahou {
 				showUpdWnd.Interval = 1000;
 				showUpdWnd.Start();
 			} else { showUpdWnd.Dispose(); }
+			_langPanel.Show();
+			_langPanel.ShowInactiveTopmost();
 			Memory.Flush();
 		}
 		#region WndProc(Hotkeys) & Functions
@@ -736,6 +740,7 @@ namespace Mahou {
 			// Functions tab
 			chk_CSLayoutSwitchingPlus.Enabled = chk_CSLayoutSwitching.Checked;
 			chk_OneLayoutWholeWord.Enabled = !chk_CSLayoutSwitching.Checked;
+			chk_FlagsInTray.Enabled = chk_TrayIcon.Checked;
 			// Layouts tab
 			grb_Keys.Enabled = grb_Layouts.Enabled = chk_SpecificLS.Checked;
 			cbb_MainLayout1.Enabled = cbb_MainLayout2.Enabled = 
@@ -759,6 +764,9 @@ namespace Mahou {
 			}
 			// Snippets tab
 			txt_Snippets.Enabled = chk_Snippets.Checked;
+			// Language Panel tab
+			grb_LPConfig.Enabled = chk_DisplayLangPanel.Checked;
+			btn_LPBorderColor.Enabled = !chk_LPAeroColor.Checked;
 			// Hotkeys tab
 			chk_DoubleHotkey.Enabled = chk_WinInHotKey.Enabled = txt_Hotkey.Enabled = chk_HotKeyEnabled.Checked;
 			chk_DoubleHotkey.Enabled = lsb_Hotkeys.SelectedIndex != 11;
@@ -1040,6 +1048,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			flagsCheck.Stop();
 			persistentLayout1Check.Stop();
 			persistentLayout2Check.Stop();
+			langPanelRefresh.Stop();
 			ICheck = new Timer();
 			crtCheck = new Timer();
 			ScrlCheck = new Timer();
@@ -1048,6 +1057,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			flagsCheck = new Timer();
 			persistentLayout1Check = new Timer();
 			persistentLayout2Check = new Timer();
+			langPanelRefresh = new Timer();
 			old = new Timer();
 			KMHook.doublekey = new Timer();
 			#endregion
@@ -1181,6 +1191,21 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			persistentLayout2Check.Interval = MMain.MyConfs.ReadInt("PersistentLayout", "Layout2CheckInterval");
 			persistentLayout1Check.Tick += (_, __) => PersistentLayoutCheck(PersistentLayout1Processes, MainLayout1);
 			persistentLayout2Check.Tick += (_, __) => PersistentLayoutCheck(PersistentLayout2Processes, MainLayout2);
+			langPanelRefresh.Interval = 1000;
+			langPanelRefresh.Tick += (_, __) => {
+				RefreshFLAG();
+				uint loc = 0;
+				try {
+					if (!OneLayout)
+						loc = currentLayout == 0 ? Locales.GetCurrentLocale() : currentLayout;
+					else
+						loc = GlobalLayout;
+					Debug.WriteLine(loc);
+					if (loc > 0)
+						_langPanel.ChangeLayout(FLAG, MMain.locales[Array.FindIndex(MMain.locales, l => l.uId == loc)].Lang);
+				} catch (Exception e) { Logging.Log("Error in LangPanel Refresh, loc: "+loc+ ",  details:\r\n" + e.Message + "\r\n" + e.StackTrace); }
+			};
+			langPanelRefresh.Start();
 			InitLangDisplays();
 			ToggleTimers();
 		}
@@ -1887,6 +1912,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			tab_snippets.Text = MMain.Lang[Languages.Element.tab_Snippets];
 			tab_hotkeys.Text = MMain.Lang[Languages.Element.tab_Hotkeys];
 			tab_updates.Text = MMain.Lang[Languages.Element.tab_Updates];
+			tab_LangPanel.Text =  MMain.Lang[Languages.Element.tab_LangPanel];
 			tab_about.Text = MMain.Lang[Languages.Element.tab_About];
 			lnk_plugin.Text = "ST3 " + MMain.Lang[Languages.Element.Plugin];
 			chk_OneLayoutWholeWord.Text = MMain.Lang[Languages.Element.OneLayoutWholeWord];
@@ -1983,6 +2009,16 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 										MMain.Lang[Languages.Element.ExitMahou],
 										MMain.Lang[Languages.Element.RestartMahou]
 										});
+			#endregion
+			#region LangPanel
+			chk_DisplayLangPanel.Text = MMain.Lang[Languages.Element.DisplayLangPanel];
+			lbl_LPRefreshRate.Text = MMain.Lang[Languages.Element.RefreshRate];
+			lbl_LPTrasparency.Text = MMain.Lang[Languages.Element.Transparency];
+			lbl_LPBorderColor.Text = MMain.Lang[Languages.Element.BorderColor];
+			lbl_LPFore.Text = MMain.Lang[Languages.Element.LDFore];
+			lbl_LPBack.Text = MMain.Lang[Languages.Element.LDBack];
+			chk_LPAeroColor.Text = MMain.Lang[Languages.Element.UseAeroColor];
+			chk_LPHotkeyHoldShow.Text = MMain.Lang[Languages.Element.HotkeyHoldShow];
 			#endregion
 			#region Updtaes
 			btn_CheckForUpdates.Text = MMain.Lang[Languages.Element.CheckForUpdates];
@@ -2088,10 +2124,6 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 		#region Mahou UI controls events
 		void Chk_CheckedChanged(object sender, EventArgs e) {
 			ToggleDependentControlsEnabledState();
-		}
-		void ChkUpdateHotkeyTemps_CheckedChanged(object sender, EventArgs e) {
-			ToggleDependentControlsEnabledState();
-			UpdateHotkeyTemps();
 		}
 		void Chk_AutoStartCheckedChanged(object sender, EventArgs e) {
 			if (chk_AutoStart.Checked)
@@ -2225,15 +2257,11 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				btn.BackColor = clrd.Color;
 			UpdateLangDisplayTemps();
 		}
-		void Nud_ValueChanged(object sender, EventArgs e) {
+		void UpdateLDTemps(object sender, EventArgs e) {
 			UpdateLangDisplayTemps();
 		}
-		void Chk_LangTTTransparentColorCheckedChanged(object sender, EventArgs e) {
-			ToggleDependentControlsEnabledState();
-			UpdateLangDisplayTemps();
-		}
-		void Txt_LangTTTextTextChanged(object sender, EventArgs e) {
-			UpdateLangDisplayTemps();
+		void UpdateHKTemps(object sender, EventArgs e) {
+			UpdateHotkeyTemps();
 		}
 		void Btn_LangTTFontClick(object sender, EventArgs e) {
 			var btn = sender as Button;

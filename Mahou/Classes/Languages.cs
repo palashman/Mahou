@@ -11,6 +11,7 @@ public class Languages
 		tab_Hotkeys,
 		tab_Updates,
 		tab_About,
+		tab_LangPanel,
 		#endregion
 		#region Functions
 		AutoStart,
@@ -94,6 +95,14 @@ public class Languages
 		Enabled,
 		DoubleHK,
 		#endregion
+		#region LangPanel
+		DisplayLangPanel,
+		RefreshRate,
+		Transparency,
+		BorderColor,
+		UseAeroColor,
+		HotkeyHoldShow,
+		#endregion
 		#region Updates
 		CheckForUpdates,
 		CheckingForUpdates,
@@ -173,6 +182,7 @@ public class Languages
 		{ Element.tab_Timings, "Timings" }, 
 		{ Element.tab_Snippets, "Snippets" }, 
 		{ Element.tab_Hotkeys, "Hotkeys" }, 
+		{ Element.tab_LangPanel, "Language panel" }, 
 		{ Element.tab_Updates, "Updates" }, 
 		{ Element.tab_About, "About" }, 
 		#endregion
@@ -257,6 +267,14 @@ public class Languages
 		{ Element.RestartMahou, "Restart" }, 
 		{ Element.Enabled, "Enabled" }, 
 		{ Element.DoubleHK, "Double hotkey" }, 
+		#endregion
+		#region LangPanel
+		{ Element.DisplayLangPanel, "Display language panel." },
+		{ Element.RefreshRate, "Refresh rate(ms):" },
+		{ Element.Transparency, "Transparency:" },
+		{ Element.BorderColor, "Border color:" },
+		{ Element.UseAeroColor, "Use Aero/Accent color." },
+		{ Element.HotkeyHoldShow, "Keep invisible and display only when hotkey to display Language Panel is hold." },
 		#endregion
 		#region Updates
 		{ Element.CheckForUpdates, "Check for updates:" }, 
@@ -362,6 +380,7 @@ public class Languages
 		{ Element.tab_Timings, "Тайминги" }, 
 		{ Element.tab_Snippets, "Сниппеты" }, 
 		{ Element.tab_Hotkeys, "Горячие клавиши" }, 
+		{ Element.tab_LangPanel, "Языковая панель" }, 
 		{ Element.tab_Updates, "Обновления" }, 
 		{ Element.tab_About, "О..." }, 
 		#endregion
@@ -424,7 +443,7 @@ public class Languages
 		{ Element.DoubleHKDelay, "Время ожидания следующего нажатия двойных горячих клавиш(мс):" }, 
 		{ Element.TrayFlagsRefreshRate, "Скорость обновления флагов в трее(мс):" }, 
 		{ Element.ScrollLockRefreshRate, "Скорость обновления Scroll Lock(мс):" }, 
-		{ Element.CapsLockRefreshRate, "Скорость обновления Caps Lock(ms):" }, 
+		{ Element.CapsLockRefreshRate, "Скорость обновления Caps Lock(мс):" }, 
 		{ Element.MoreTriesToGetSelectedText, "Использовать больше попыток взятия текста:" }, 
 		{ Element.ExcludedPrograms, "Программы исключения:" }, 
 		#endregion
@@ -446,6 +465,14 @@ public class Languages
 		{ Element.RestartMahou, "Перезапустить" }, 
 		{ Element.Enabled, "Включена" }, 
 		{ Element.DoubleHK, "Двойная горячая клавиша" }, 
+		#endregion
+		#region LangPanel
+		{ Element.DisplayLangPanel, "Отображать языковую панель." },
+		{ Element.RefreshRate, "Скорость обновления(мс):" },
+		{ Element.Transparency, "Прозрачность:" },
+		{ Element.BorderColor, "Цвет рамки:" },
+		{ Element.UseAeroColor, "Использовать Аэро/Главный цвет." },
+		{ Element.HotkeyHoldShow, "Показывать панель только при удерживании горячей клавиши показа Языковой панели." },
 		#endregion
 		#region Updates
 		{ Element.CheckForUpdates, "Проверить обновления:" }, 

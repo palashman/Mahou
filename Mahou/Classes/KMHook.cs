@@ -449,7 +449,6 @@ namespace Mahou
 				KeybdEvent(Keys.CapsLock, 2);
 				self = false;
 			}
-			var bylayout = false;
 			if ((wParam == (IntPtr)WinAPI.WM_KEYUP || wParam == (IntPtr)WinAPI.WM_SYSKEYUP) && !self) {
 				#region Switch between layouts with one key
 				var speclayout = (string)typeof(MahouUI).GetField("Layout"+specKeyId).GetValue(MMain.mahou);
@@ -522,7 +521,6 @@ namespace Mahou
 				} else {
 					#region By layout switch
 					self = true;
-					bylayout = true;
 					var matched = false;
 					if (specificKey == 8 && Key == Keys.CapsLock && shift && !alt && !ctrl) {
 						Logging.Log("Switching to specific layout by Shift+CapsLock key.");

@@ -1,0 +1,122 @@
+﻿using System;
+using System.Drawing;
+using System.Diagnostics;
+using System.Windows.Forms;
+
+namespace Mahou {
+	/// <summary>
+	/// Language panel with display of flag, name, id of current layout.
+	/// </summary>
+	public partial class LangPanel : Form {
+		public LangPanel() {
+			InitializeComponent();
+		}
+		#region Screen-Snap
+		const int SnapDist = 15;
+		public Point mouseLocation;
+		public bool snap_l, snap_r, snap_t, snap_b;
+		public void ChangeLayout(Bitmap flag, string layoutName) {
+			lbl_LayoutName.Text = layoutName;
+			pct_Flag.BackgroundImage = flag;
+		}
+		void LangPanelMouseDown(object sender, MouseEventArgs e) {
+			int top = 0, left = 0;
+			if (!(sender is Form)) {
+				var ctrl = ((Control)sender);
+				top = ctrl.Top;
+				left = ctrl.Left;
+			}
+			mouseLocation = new Point(-e.X - left, -e.Y - top);
+		}
+		void LangPanelMouseMove(object sender, MouseEventArgs e) {
+			if (e.Button == MouseButtons.Left) {
+			    var mousePos = MousePosition;
+			    var mousePosR = MousePosition;
+			    mousePos.Offset(mouseLocation.X, mouseLocation.Y);
+			    mousePosR.Offset(Width + mouseLocation.X, Height + mouseLocation.Y);
+				var scr = Screen.FromPoint(Location);
+//			    Debug.WriteLine(mouseLocation.X + " " + mouseLocation.Y + " / " +
+//			                    MousePosition.X + " " + MousePosition.Y + " cr " + 
+//			                    mousePosR.X + " " + mousePosR.Y + " sl " + 
+//			                    snap_l + " sr " + snap_r);
+				snap_l = mousePos.X < SnapDist ? true : false;
+				snap_r = mousePosR.X > scr.Bounds.Width - SnapDist ? true : false;
+				snap_t = mousePos.Y < SnapDist ? true : false;
+				snap_b = mousePosR.Y > scr.Bounds.Height - SnapDist ? true : false; 
+			    if (snap_l || snap_r || snap_t || snap_b) {
+					if ((snap_l || snap_r) && (!snap_t && !snap_b))
+						Top = mousePos.Y;
+				    if ((snap_t || snap_b) && (!snap_l && !snap_r))
+						Left = mousePos.X;
+			    	if (snap_l)
+						Left = scr.WorkingArea.Left;
+			    	if (snap_r)
+						Left = scr.WorkingArea.Right - Width;
+			    	if (snap_t)
+						Top = scr.WorkingArea.Top;
+			    	if (snap_b)
+						Top = scr.WorkingArea.Bottom - Height;
+		    	} else 
+			    	Location = mousePos;
+			}
+		}
+		#endregion
+		#region Derived from LangDisplay
+		//Comments removed
+		public void ShowInactiveTopmost() {
+			if (Visible) return;
+			WinAPI.ShowWindow(Handle, WinAPI.SW_SHOWNOACTIVATE);
+			WinAPI.SetWindowPos(Handle.ToInt32(), WinAPI.HWND_TOPMOST,
+				Left, Top, Width, Height,
+				WinAPI.SWP_NOACTIVATE);
+		}
+		public void HideWnd() {
+			if (!Visible) return;
+			WinAPI.ShowWindow(Handle, 0);
+		}
+		protected override CreateParams CreateParams {
+			get {
+				var Params = base.CreateParams;
+				Params.ExStyle |= WinAPI.WS_EX_TOOLWINDOW;
+//				Params.ExStyle |=  // WinAPI.WS_EX_LAYERED |
+//					WinAPI.WS_EX_TRANSPARENT;
+				return Params;
+			}
+		}
+		#endregion
+		#region Derived from JustUI
+		public bool AeroEnabled;
+		public void AeroCheck() {
+			if (Environment.OSVersion.Version.Major >= 6) {
+				int enabled = 0;
+				WinAPI.DwmIsCompositionEnabled(ref enabled);
+				AeroEnabled = (enabled == 1);
+			}
+		}
+		Color CurrentAeroColor() {
+			WinAPI.DWM_COLORIZATION_PARAMS parameters;
+			WinAPI.DwmGetColorizationParameters(out parameters);
+			return Color.FromArgb(Int32.Parse(parameters.clrColor.ToString("X"), System.Globalization.NumberStyles.HexNumber));;
+		}
+		protected override void WndProc(ref Message m) {
+			if (m.Msg == WinAPI.WM_NCPAINT && AeroEnabled) {
+				var v = 2;
+				WinAPI.DwmSetWindowAttribute(this.Handle, 2, ref v, 4);
+				var margins = new WinAPI.MARGINS(){ bH = 1, lW = 1, rW = 1, tH = 1 };
+				WinAPI.DwmExtendFrameIntoClientArea(this.Handle, ref margins);
+			}
+			base.WndProc(ref m);
+		}
+		protected override void OnPaint(PaintEventArgs e) {
+			Graphics g = CreateGraphics();
+			var pn = new Pen(CurrentAeroColor());
+			if (!AeroEnabled)
+				pn.Color = Color.FromKnownColor(KnownColor.LightGray);
+			g.DrawRectangle(pn, new Rectangle(0, 0, Size.Width - 1, Size.Height - 1));
+			g.Dispose();
+			pn.Dispose();
+			base.OnPaint(e);
+		}
+		#endregion
+	}
+}

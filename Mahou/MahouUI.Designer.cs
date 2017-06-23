@@ -146,6 +146,21 @@ namespace Mahou
 		private System.Windows.Forms.CheckBox chk_LangTTUseFlags;
 		private System.Windows.Forms.CheckBox chk_MouseTTAlways;
 		private System.Windows.Forms.CheckBox chk_OneLayout;
+		private System.Windows.Forms.TabPage tab_LangPanel;
+		private System.Windows.Forms.NumericUpDown nud_LPRefreshRate;
+		private System.Windows.Forms.Label lbl_LPRefreshRate;
+		private System.Windows.Forms.CheckBox chk_DisplayLangPanel;
+		private System.Windows.Forms.CheckBox chk_LPAeroColor;
+		private System.Windows.Forms.Label lbl_LPBorderColor;
+		private System.Windows.Forms.Button btn_LPBorderColor;
+		private System.Windows.Forms.Label lbl_LPBack;
+		private System.Windows.Forms.Label lbl_LPFore;
+		private System.Windows.Forms.Button btn_LPBack;
+		private System.Windows.Forms.Button btn_LPFore;
+		private System.Windows.Forms.NumericUpDown nud_LPTransparency;
+		private System.Windows.Forms.Label lbl_LPTrasparency;
+		private System.Windows.Forms.GroupBox grb_LPConfig;
+		private System.Windows.Forms.CheckBox chk_LPHotkeyHoldShow;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -187,6 +202,7 @@ namespace Mahou
 			this.chk_TrayIcon = new System.Windows.Forms.CheckBox();
 			this.chk_AutoStart = new System.Windows.Forms.CheckBox();
 			this.tab_layouts = new System.Windows.Forms.TabPage();
+			this.chk_OneLayout = new System.Windows.Forms.CheckBox();
 			this.lbl_Arrow4 = new System.Windows.Forms.Label();
 			this.lbl_Arrow3 = new System.Windows.Forms.Label();
 			this.lbl_Arrow2 = new System.Windows.Forms.Label();
@@ -279,6 +295,21 @@ namespace Mahou
 			this.txt_Hotkey = new System.Windows.Forms.TextBox();
 			this.chk_WinInHotKey = new System.Windows.Forms.CheckBox();
 			this.lsb_Hotkeys = new System.Windows.Forms.ListBox();
+			this.tab_LangPanel = new System.Windows.Forms.TabPage();
+			this.grb_LPConfig = new System.Windows.Forms.GroupBox();
+			this.chk_LPHotkeyHoldShow = new System.Windows.Forms.CheckBox();
+			this.chk_LPAeroColor = new System.Windows.Forms.CheckBox();
+			this.lbl_LPBorderColor = new System.Windows.Forms.Label();
+			this.btn_LPBorderColor = new System.Windows.Forms.Button();
+			this.lbl_LPBack = new System.Windows.Forms.Label();
+			this.lbl_LPFore = new System.Windows.Forms.Label();
+			this.btn_LPBack = new System.Windows.Forms.Button();
+			this.btn_LPFore = new System.Windows.Forms.Button();
+			this.nud_LPTransparency = new System.Windows.Forms.NumericUpDown();
+			this.lbl_LPTrasparency = new System.Windows.Forms.Label();
+			this.nud_LPRefreshRate = new System.Windows.Forms.NumericUpDown();
+			this.lbl_LPRefreshRate = new System.Windows.Forms.Label();
+			this.chk_DisplayLangPanel = new System.Windows.Forms.CheckBox();
 			this.tab_updates = new System.Windows.Forms.TabPage();
 			this.grb_DownloadUpdate = new System.Windows.Forms.GroupBox();
 			this.prb_UpdateDownloadProgress = new System.Windows.Forms.ProgressBar();
@@ -305,7 +336,6 @@ namespace Mahou
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
 			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
-			this.chk_OneLayout = new System.Windows.Forms.CheckBox();
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -335,6 +365,10 @@ namespace Mahou
 			this.tab_snippets.SuspendLayout();
 			this.tab_hotkeys.SuspendLayout();
 			this.grb_Hotkey.SuspendLayout();
+			this.tab_LangPanel.SuspendLayout();
+			this.grb_LPConfig.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.nud_LPTransparency)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.nud_LPRefreshRate)).BeginInit();
 			this.tab_updates.SuspendLayout();
 			this.grb_DownloadUpdate.SuspendLayout();
 			this.grb_ProxyConfig.SuspendLayout();
@@ -351,6 +385,7 @@ namespace Mahou
 			this.tabs.Controls.Add(this.tab_timings);
 			this.tabs.Controls.Add(this.tab_snippets);
 			this.tabs.Controls.Add(this.tab_hotkeys);
+			this.tabs.Controls.Add(this.tab_LangPanel);
 			this.tabs.Controls.Add(this.tab_updates);
 			this.tabs.Controls.Add(this.tab_about);
 			this.tabs.Location = new System.Drawing.Point(0, 0);
@@ -550,6 +585,7 @@ namespace Mahou
 			this.chk_TrayIcon.TabIndex = 1;
 			this.chk_TrayIcon.Text = "Show tray icon.";
 			this.chk_TrayIcon.UseVisualStyleBackColor = true;
+			this.chk_TrayIcon.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
 			// 
 			// chk_AutoStart
 			// 
@@ -587,6 +623,16 @@ namespace Mahou
 			this.tab_layouts.TabIndex = 1;
 			this.tab_layouts.Text = "Layouts";
 			this.tab_layouts.UseVisualStyleBackColor = true;
+			// 
+			// chk_OneLayout
+			// 
+			this.chk_OneLayout.AutoSize = true;
+			this.chk_OneLayout.Location = new System.Drawing.Point(300, 6);
+			this.chk_OneLayout.Name = "chk_OneLayout";
+			this.chk_OneLayout.Size = new System.Drawing.Size(171, 19);
+			this.chk_OneLayout.TabIndex = 17;
+			this.chk_OneLayout.Text = "One layout for all programs";
+			this.chk_OneLayout.UseVisualStyleBackColor = true;
 			// 
 			// lbl_Arrow4
 			// 
@@ -916,6 +962,7 @@ namespace Mahou
 			this.chk_PersistentLayout2Active.TabIndex = 1;
 			this.chk_PersistentLayout2Active.Text = "Activate persistent layout for processes:";
 			this.chk_PersistentLayout2Active.UseVisualStyleBackColor = true;
+			this.chk_PersistentLayout2Active.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
 			// 
 			// txt_PersistentLayout2Processes
 			// 
@@ -968,6 +1015,7 @@ namespace Mahou
 			this.chk_PersistentLayout1Active.TabIndex = 1;
 			this.chk_PersistentLayout1Active.Text = "Activate persistent layout for processes:";
 			this.chk_PersistentLayout1Active.UseVisualStyleBackColor = true;
+			this.chk_PersistentLayout1Active.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
 			// 
 			// txt_PersistentLayout1Processes
 			// 
@@ -1089,6 +1137,7 @@ namespace Mahou
 			this.chk_LangTTUseFlags.TabIndex = 11;
 			this.chk_LangTTUseFlags.Text = "Use flags";
 			this.chk_LangTTUseFlags.UseVisualStyleBackColor = true;
+			this.chk_LangTTUseFlags.CheckedChanged += new System.EventHandler(this.UpdateLDTemps);
 			// 
 			// txt_LangTTText
 			// 
@@ -1096,7 +1145,7 @@ namespace Mahou
 			this.txt_LangTTText.Name = "txt_LangTTText";
 			this.txt_LangTTText.Size = new System.Drawing.Size(117, 23);
 			this.txt_LangTTText.TabIndex = 10;
-			this.txt_LangTTText.TextChanged += new System.EventHandler(this.Txt_LangTTTextTextChanged);
+			this.txt_LangTTText.TextChanged += new System.EventHandler(this.UpdateLDTemps);
 			// 
 			// lbl_LangTTText
 			// 
@@ -1136,7 +1185,7 @@ namespace Mahou
 			this.nud_LangTTPositionY.Name = "nud_LangTTPositionY";
 			this.nud_LangTTPositionY.Size = new System.Drawing.Size(45, 23);
 			this.nud_LangTTPositionY.TabIndex = 3;
-			this.nud_LangTTPositionY.ValueChanged += new System.EventHandler(this.Nud_ValueChanged);
+			this.nud_LangTTPositionY.ValueChanged += new System.EventHandler(this.UpdateLDTemps);
 			// 
 			// lbl_LangTTPositionY
 			// 
@@ -1153,7 +1202,7 @@ namespace Mahou
 			this.nud_LangTTPositionX.Name = "nud_LangTTPositionX";
 			this.nud_LangTTPositionX.Size = new System.Drawing.Size(45, 23);
 			this.nud_LangTTPositionX.TabIndex = 1;
-			this.nud_LangTTPositionX.ValueChanged += new System.EventHandler(this.Nud_ValueChanged);
+			this.nud_LangTTPositionX.ValueChanged += new System.EventHandler(this.UpdateLDTemps);
 			// 
 			// lbl_LangTTPositionX
 			// 
@@ -1183,7 +1232,7 @@ namespace Mahou
 			this.nud_LangTTWidth.Name = "nud_LangTTWidth";
 			this.nud_LangTTWidth.Size = new System.Drawing.Size(45, 23);
 			this.nud_LangTTWidth.TabIndex = 3;
-			this.nud_LangTTWidth.ValueChanged += new System.EventHandler(this.Nud_ValueChanged);
+			this.nud_LangTTWidth.ValueChanged += new System.EventHandler(this.UpdateLDTemps);
 			// 
 			// lbl_LangTTWidth
 			// 
@@ -1200,7 +1249,7 @@ namespace Mahou
 			this.nud_LangTTHeight.Name = "nud_LangTTHeight";
 			this.nud_LangTTHeight.Size = new System.Drawing.Size(45, 23);
 			this.nud_LangTTHeight.TabIndex = 1;
-			this.nud_LangTTHeight.ValueChanged += new System.EventHandler(this.Nud_ValueChanged);
+			this.nud_LangTTHeight.ValueChanged += new System.EventHandler(this.UpdateLDTemps);
 			// 
 			// lbl_LangTTHeight
 			// 
@@ -1238,7 +1287,7 @@ namespace Mahou
 			this.chk_LangTTTransparentColor.TabIndex = 3;
 			this.chk_LangTTTransparentColor.Text = "Transparent color";
 			this.chk_LangTTTransparentColor.UseVisualStyleBackColor = true;
-			this.chk_LangTTTransparentColor.CheckedChanged += new System.EventHandler(this.Chk_LangTTTransparentColorCheckedChanged);
+			this.chk_LangTTTransparentColor.CheckedChanged += new System.EventHandler(this.UpdateLDTemps);
 			// 
 			// btn_LangTTBackgroundColor
 			// 
@@ -1272,7 +1321,6 @@ namespace Mahou
 			this.lsb_LangTTAppearenceForList.Name = "lsb_LangTTAppearenceForList";
 			this.lsb_LangTTAppearenceForList.Size = new System.Drawing.Size(176, 167);
 			this.lsb_LangTTAppearenceForList.TabIndex = 0;
-			this.lsb_LangTTAppearenceForList.SelectedIndexChanged += new System.EventHandler(this.Lsb_LangTTAppearenceForListSelectedIndexChanged);
 			// 
 			// chk_LangTooltipCaret
 			// 
@@ -1606,7 +1654,7 @@ namespace Mahou
 			this.chk_DoubleHotkey.TabIndex = 6;
 			this.chk_DoubleHotkey.Text = "Double hotkey";
 			this.chk_DoubleHotkey.UseVisualStyleBackColor = true;
-			this.chk_DoubleHotkey.CheckedChanged += new System.EventHandler(this.ChkUpdateHotkeyTemps_CheckedChanged);
+			this.chk_DoubleHotkey.CheckedChanged += new System.EventHandler(this.UpdateHKTemps);
 			// 
 			// chk_HotKeyEnabled
 			// 
@@ -1617,7 +1665,7 @@ namespace Mahou
 			this.chk_HotKeyEnabled.TabIndex = 5;
 			this.chk_HotKeyEnabled.Text = "Enabled";
 			this.chk_HotKeyEnabled.UseVisualStyleBackColor = true;
-			this.chk_HotKeyEnabled.CheckedChanged += new System.EventHandler(this.ChkUpdateHotkeyTemps_CheckedChanged);
+			this.chk_HotKeyEnabled.CheckedChanged += new System.EventHandler(this.UpdateHKTemps);
 			// 
 			// txt_Hotkey
 			// 
@@ -1640,7 +1688,7 @@ namespace Mahou
 			this.chk_WinInHotKey.TabIndex = 3;
 			this.chk_WinInHotKey.Text = "Win";
 			this.chk_WinInHotKey.UseVisualStyleBackColor = true;
-			this.chk_WinInHotKey.CheckedChanged += new System.EventHandler(this.ChkUpdateHotkeyTemps_CheckedChanged);
+			this.chk_WinInHotKey.CheckedChanged += new System.EventHandler(this.UpdateHKTemps);
 			// 
 			// lsb_Hotkeys
 			// 
@@ -1663,7 +1711,192 @@ namespace Mahou
 			this.lsb_Hotkeys.Name = "lsb_Hotkeys";
 			this.lsb_Hotkeys.Size = new System.Drawing.Size(246, 257);
 			this.lsb_Hotkeys.TabIndex = 0;
-			this.lsb_Hotkeys.SelectedIndexChanged += new System.EventHandler(this.Lsb_HotkeysSelectedIndexChanged);
+			// 
+			// tab_LangPanel
+			// 
+			this.tab_LangPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.tab_LangPanel.Controls.Add(this.grb_LPConfig);
+			this.tab_LangPanel.Controls.Add(this.chk_DisplayLangPanel);
+			this.tab_LangPanel.Location = new System.Drawing.Point(4, 24);
+			this.tab_LangPanel.Name = "tab_LangPanel";
+			this.tab_LangPanel.Padding = new System.Windows.Forms.Padding(3);
+			this.tab_LangPanel.Size = new System.Drawing.Size(559, 273);
+			this.tab_LangPanel.TabIndex = 9;
+			this.tab_LangPanel.Text = "Language panel";
+			this.tab_LangPanel.UseVisualStyleBackColor = true;
+			// 
+			// grb_LPConfig
+			// 
+			this.grb_LPConfig.Controls.Add(this.chk_LPHotkeyHoldShow);
+			this.grb_LPConfig.Controls.Add(this.chk_LPAeroColor);
+			this.grb_LPConfig.Controls.Add(this.lbl_LPBorderColor);
+			this.grb_LPConfig.Controls.Add(this.btn_LPBorderColor);
+			this.grb_LPConfig.Controls.Add(this.lbl_LPBack);
+			this.grb_LPConfig.Controls.Add(this.lbl_LPFore);
+			this.grb_LPConfig.Controls.Add(this.btn_LPBack);
+			this.grb_LPConfig.Controls.Add(this.btn_LPFore);
+			this.grb_LPConfig.Controls.Add(this.nud_LPTransparency);
+			this.grb_LPConfig.Controls.Add(this.lbl_LPTrasparency);
+			this.grb_LPConfig.Controls.Add(this.nud_LPRefreshRate);
+			this.grb_LPConfig.Controls.Add(this.lbl_LPRefreshRate);
+			this.grb_LPConfig.Location = new System.Drawing.Point(6, 30);
+			this.grb_LPConfig.Name = "grb_LPConfig";
+			this.grb_LPConfig.Size = new System.Drawing.Size(542, 234);
+			this.grb_LPConfig.TabIndex = 1;
+			this.grb_LPConfig.TabStop = false;
+			// 
+			// chk_LPHotkeyHoldShow
+			// 
+			this.chk_LPHotkeyHoldShow.AutoSize = true;
+			this.chk_LPHotkeyHoldShow.Location = new System.Drawing.Point(10, 21);
+			this.chk_LPHotkeyHoldShow.Name = "chk_LPHotkeyHoldShow";
+			this.chk_LPHotkeyHoldShow.Size = new System.Drawing.Size(440, 19);
+			this.chk_LPHotkeyHoldShow.TabIndex = 35;
+			this.chk_LPHotkeyHoldShow.Text = "Keep invisible and display only when hotkey to display Language Panel is hold.";
+			this.chk_LPHotkeyHoldShow.UseVisualStyleBackColor = true;
+			// 
+			// chk_LPAeroColor
+			// 
+			this.chk_LPAeroColor.AutoSize = true;
+			this.chk_LPAeroColor.Location = new System.Drawing.Point(177, 167);
+			this.chk_LPAeroColor.Name = "chk_LPAeroColor";
+			this.chk_LPAeroColor.Size = new System.Drawing.Size(145, 19);
+			this.chk_LPAeroColor.TabIndex = 34;
+			this.chk_LPAeroColor.Text = "Use Aero/Accent color";
+			this.chk_LPAeroColor.UseVisualStyleBackColor = true;
+			this.chk_LPAeroColor.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
+			// 
+			// lbl_LPBorderColor
+			// 
+			this.lbl_LPBorderColor.AutoSize = true;
+			this.lbl_LPBorderColor.Location = new System.Drawing.Point(27, 167);
+			this.lbl_LPBorderColor.Name = "lbl_LPBorderColor";
+			this.lbl_LPBorderColor.Size = new System.Drawing.Size(75, 15);
+			this.lbl_LPBorderColor.TabIndex = 33;
+			this.lbl_LPBorderColor.Text = "Border color:";
+			// 
+			// btn_LPBorderColor
+			// 
+			this.btn_LPBorderColor.Location = new System.Drawing.Point(483, 162);
+			this.btn_LPBorderColor.Name = "btn_LPBorderColor";
+			this.btn_LPBorderColor.Size = new System.Drawing.Size(25, 25);
+			this.btn_LPBorderColor.TabIndex = 32;
+			this.btn_LPBorderColor.UseVisualStyleBackColor = true;
+			this.btn_LPBorderColor.Click += new System.EventHandler(this.Btn_ColorSelectionClick);
+			// 
+			// lbl_LPBack
+			// 
+			this.lbl_LPBack.AutoSize = true;
+			this.lbl_LPBack.Location = new System.Drawing.Point(26, 137);
+			this.lbl_LPBack.Name = "lbl_LPBack";
+			this.lbl_LPBack.Size = new System.Drawing.Size(104, 15);
+			this.lbl_LPBack.TabIndex = 31;
+			this.lbl_LPBack.Text = "Background color:";
+			// 
+			// lbl_LPFore
+			// 
+			this.lbl_LPFore.AutoSize = true;
+			this.lbl_LPFore.Location = new System.Drawing.Point(26, 107);
+			this.lbl_LPFore.Name = "lbl_LPFore";
+			this.lbl_LPFore.Size = new System.Drawing.Size(102, 15);
+			this.lbl_LPFore.TabIndex = 30;
+			this.lbl_LPFore.Text = "Foreground color:";
+			// 
+			// btn_LPBack
+			// 
+			this.btn_LPBack.Location = new System.Drawing.Point(483, 133);
+			this.btn_LPBack.Name = "btn_LPBack";
+			this.btn_LPBack.Size = new System.Drawing.Size(25, 25);
+			this.btn_LPBack.TabIndex = 29;
+			this.btn_LPBack.UseVisualStyleBackColor = true;
+			this.btn_LPBack.Click += new System.EventHandler(this.Btn_ColorSelectionClick);
+			// 
+			// btn_LPFore
+			// 
+			this.btn_LPFore.Location = new System.Drawing.Point(483, 103);
+			this.btn_LPFore.Name = "btn_LPFore";
+			this.btn_LPFore.Size = new System.Drawing.Size(25, 25);
+			this.btn_LPFore.TabIndex = 28;
+			this.btn_LPFore.UseVisualStyleBackColor = true;
+			this.btn_LPFore.Click += new System.EventHandler(this.Btn_ColorSelectionClick);
+			// 
+			// nud_LPTransparency
+			// 
+			this.nud_LPTransparency.Increment = new decimal(new int[] {
+			3,
+			0,
+			0,
+			0});
+			this.nud_LPTransparency.Location = new System.Drawing.Point(466, 75);
+			this.nud_LPTransparency.Minimum = new decimal(new int[] {
+			1,
+			0,
+			0,
+			0});
+			this.nud_LPTransparency.Name = "nud_LPTransparency";
+			this.nud_LPTransparency.Size = new System.Drawing.Size(66, 23);
+			this.nud_LPTransparency.TabIndex = 27;
+			this.nud_LPTransparency.Value = new decimal(new int[] {
+			1,
+			0,
+			0,
+			0});
+			// 
+			// lbl_LPTrasparency
+			// 
+			this.lbl_LPTrasparency.AutoSize = true;
+			this.lbl_LPTrasparency.Location = new System.Drawing.Point(26, 78);
+			this.lbl_LPTrasparency.Name = "lbl_LPTrasparency";
+			this.lbl_LPTrasparency.Size = new System.Drawing.Size(81, 15);
+			this.lbl_LPTrasparency.TabIndex = 26;
+			this.lbl_LPTrasparency.Text = "Transparency:";
+			// 
+			// nud_LPRefreshRate
+			// 
+			this.nud_LPRefreshRate.Increment = new decimal(new int[] {
+			25,
+			0,
+			0,
+			0});
+			this.nud_LPRefreshRate.Location = new System.Drawing.Point(466, 46);
+			this.nud_LPRefreshRate.Maximum = new decimal(new int[] {
+			2000,
+			0,
+			0,
+			0});
+			this.nud_LPRefreshRate.Minimum = new decimal(new int[] {
+			1,
+			0,
+			0,
+			0});
+			this.nud_LPRefreshRate.Name = "nud_LPRefreshRate";
+			this.nud_LPRefreshRate.Size = new System.Drawing.Size(66, 23);
+			this.nud_LPRefreshRate.TabIndex = 25;
+			this.nud_LPRefreshRate.Value = new decimal(new int[] {
+			25,
+			0,
+			0,
+			0});
+			// 
+			// lbl_LPRefreshRate
+			// 
+			this.lbl_LPRefreshRate.AutoSize = true;
+			this.lbl_LPRefreshRate.Location = new System.Drawing.Point(26, 50);
+			this.lbl_LPRefreshRate.Name = "lbl_LPRefreshRate";
+			this.lbl_LPRefreshRate.Size = new System.Drawing.Size(72, 15);
+			this.lbl_LPRefreshRate.TabIndex = 24;
+			this.lbl_LPRefreshRate.Text = "Refresh rate:";
+			// 
+			// chk_DisplayLangPanel
+			// 
+			this.chk_DisplayLangPanel.AutoSize = true;
+			this.chk_DisplayLangPanel.Location = new System.Drawing.Point(6, 6);
+			this.chk_DisplayLangPanel.Name = "chk_DisplayLangPanel";
+			this.chk_DisplayLangPanel.Size = new System.Drawing.Size(151, 19);
+			this.chk_DisplayLangPanel.TabIndex = 0;
+			this.chk_DisplayLangPanel.Text = "Display language panel.";
+			this.chk_DisplayLangPanel.UseVisualStyleBackColor = true;
+			this.chk_DisplayLangPanel.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
 			// 
 			// tab_updates
 			// 
@@ -1940,16 +2173,6 @@ namespace Mahou
 			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.HelpMeUnderstand.Popup += new System.Windows.Forms.PopupEventHandler(this.HelpMeUnderstandPopup);
 			// 
-			// chk_OneLayout
-			// 
-			this.chk_OneLayout.AutoSize = true;
-			this.chk_OneLayout.Location = new System.Drawing.Point(300, 6);
-			this.chk_OneLayout.Name = "chk_OneLayout";
-			this.chk_OneLayout.Size = new System.Drawing.Size(171, 19);
-			this.chk_OneLayout.TabIndex = 17;
-			this.chk_OneLayout.Text = "One layout for all programs";
-			this.chk_OneLayout.UseVisualStyleBackColor = true;
-			// 
 			// MahouUI
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -2009,6 +2232,12 @@ namespace Mahou
 			this.tab_hotkeys.ResumeLayout(false);
 			this.grb_Hotkey.ResumeLayout(false);
 			this.grb_Hotkey.PerformLayout();
+			this.tab_LangPanel.ResumeLayout(false);
+			this.tab_LangPanel.PerformLayout();
+			this.grb_LPConfig.ResumeLayout(false);
+			this.grb_LPConfig.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.nud_LPTransparency)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.nud_LPRefreshRate)).EndInit();
 			this.tab_updates.ResumeLayout(false);
 			this.grb_DownloadUpdate.ResumeLayout(false);
 			this.grb_ProxyConfig.ResumeLayout(false);

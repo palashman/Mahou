@@ -70,6 +70,13 @@ public static class WinAPI
 	public const uint EVENT_SYSTEM_FOREGROUND = 3;
     public const uint WINEVENT_OUTOFCONTEXT = 0;
 	#endregion
+	#region LangPanel
+	public const int WM_NCLBUTTONDOWN = 0xA1;
+	public const int HT_CAPTION = 0x2;
+	#region From JustUI
+	public const int WM_NCPAINT = 0x0085;
+	#endregion
+	#endregion
 	#endregion
 	#region DLL Imports
 	#region Configs requires
@@ -197,6 +204,22 @@ public static class WinAPI
     [DllImport("user32.dll", CharSet=CharSet.Unicode, SetLastError=true)]
 	public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
     #endregion
+    #region LangPanel requires
+	[DllImport("user32.dll")]
+	public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+	[DllImport("user32.dll")]
+	public static extern bool ReleaseCapture();
+	#region From JustUI
+	[DllImport("dwmapi.dll")]
+	public static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
+    [DllImport("dwmapi.dll", EntryPoint = "#127", PreserveSig = false)]
+    public static extern void DwmGetColorizationParameters(out DWM_COLORIZATION_PARAMS parameters);
+	[DllImport("dwmapi.dll")]
+	public static extern int DwmExtendFrameIntoClientArea(IntPtr hWnd, ref MARGINS pMarInset);
+	[DllImport("dwmapi.dll")]
+	public static extern int DwmIsCompositionEnabled(ref int pfEnabled);
+	#endregion
+    #endregion
 	#endregion
 	#endregion
     #region Required structs
@@ -297,6 +320,23 @@ public static class WinAPI
 	#region EventHook
     public delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType,
                                			  IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
+	#endregion
+	#region From JustUI	
+	public struct MARGINS {
+		public int lW;
+		public int rW;
+		public int tH;
+		public int bH;
+	}
+	public struct DWM_COLORIZATION_PARAMS {
+		public uint clrColor;
+		public uint clrAfterGlow;
+		public uint nIntensity;
+		public uint clrAfterGlowBalance;
+		public uint clrBlurBalance;
+		public uint clrGlassReflectionIntensity;
+		public bool fOpaque;
+	}
 	#endregion
     #endregion
 
