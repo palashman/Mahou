@@ -24,7 +24,7 @@ namespace Mahou
 		static string lastClipText = "";
 		static List<Keys> tempNumpads = new List<Keys>();
 		static List<char> c_snip = new List<char>();
-		public static System.Windows.Forms.Timer CheckLayoutLater = new System.Windows.Forms.Timer() { Interval = 350 };
+		public static System.Windows.Forms.Timer CheckLayoutLater = new System.Windows.Forms.Timer() { Interval = 100 };
 		public static System.Windows.Forms.Timer DoLater = new System.Windows.Forms.Timer() { Interval = 100 };
 		public static System.Windows.Forms.Timer doublekey = new System.Windows.Forms.Timer();
 		public static string[] snipps = new []{ "mahou", "eml" };

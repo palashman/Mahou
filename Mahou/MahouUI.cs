@@ -29,10 +29,11 @@ namespace Mahou {
 		public static string nPath = AppDomain.CurrentDomain.BaseDirectory;
 		public static bool LoggingEnabled, dummy;
 		static string[] UpdInfo;
-		static bool updating, was, isold = true, checking, LayoutChanged = true;
+		static bool updating, was, isold = true, checking;
 		static Timer tmr = new Timer();
 		static Timer old = new Timer();
 		public static Bitmap FLAG;
+		static uint lastTrayFlagLayout = 0;
 		static Timer animate = new Timer();
 		static Timer showUpdWnd = new Timer();
 		static int progress = 0, _progress = 0;
@@ -185,7 +186,6 @@ namespace Mahou {
 //			Logging.Log("MSG: "+m.Msg+", LP: "+m.LParam+", WP: "+m.WParam+", KMS: "+KMHook.self+" 0x312");
 			if (m.Msg == WinAPI.WM_HOTKEY && !KMHook.self && KMHook.IsHotkey) {
 				var id = (Hotkey.HKID)m.WParam.ToInt32();
-				Debug.WriteLine(id);
 				#region Convert multiple words 
 				if (m.WParam.ToInt32() >= 100 && m.WParam.ToInt32() <= 109 && KMHook.waitfornum) {
 					int wordnum = m.WParam.ToInt32() - 100;
@@ -911,6 +911,8 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				lcid = (int)(Locales.GetCurrentLocale() & 0xffff);
 			else 
 				lcid = (int)(MahouUI.currentLayout & 0xffff);
+			if (MMain.mahou.OneLayout)
+				lcid = (int)(MahouUI.GlobalLayout & 0xffff);
 			if (lcid > 0) { 
 				var flagname = "jp";
 				var clangname = new CultureInfo(lcid);
@@ -982,11 +984,18 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 		/// Changes tray icon image to country flag based on current layout.
 		/// </summary>
 		void ChangeTrayIconToFlag() {
-			if (MouseTTAlways && LDMouseUseFlags_temp && MouseLangTooltipEnabled) return;
-			RefreshFLAG();
-			if (LayoutChanged) {
+			uint lcid = 0;
+			if (OneLayout)
+				lcid = GlobalLayout;
+			else if (MahouUI.currentLayout == 0)
+				lcid = Locales.GetCurrentLocale();
+			else 
+				lcid = MahouUI.currentLayout;
+			if (lastTrayFlagLayout != lcid) {
+				RefreshFLAG();
 				Icon flagicon = Icon.FromHandle(FLAG.GetHicon());
 				icon.trIcon.Icon = flagicon;
+				lastTrayFlagLayout = lcid;
 			}
 		}
 		/// <summary>
@@ -1263,8 +1272,6 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			persistentLayout2Check.Tick += (_, __) => PersistentLayoutCheck(PersistentLayout2Processes, MainLayout2);
 			langPanelRefresh.Interval = LangPanelRefreshRate;
 			langPanelRefresh.Tick += (_, __) => {
-				if (!(MouseTTAlways && LDMouseUseFlags_temp && MouseLangTooltipEnabled) || !TrayFlags)
-					RefreshFLAG();
 				uint loc = 0;
 				try {
 					if (!OneLayout)
@@ -1272,6 +1279,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 					else
 						loc = GlobalLayout;
 					if (loc > 0 && loc != lastLayoutLangPanel) {
+						RefreshFLAG();
 						_langPanel.ChangeLayout(FLAG, MMain.locales[Array.FindIndex(MMain.locales, l => l.uId == loc)].Lang);
 						lastLayoutLangPanel = loc;
 					}
