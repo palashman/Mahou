@@ -705,8 +705,13 @@ namespace Mahou {
 			RefreshAllIcons();
 			UnregisterHotkeys();
 			RegisterHotkeys();
-			if (_langPanel != null)
+			if (_langPanel != null) {
 				_langPanel.UpdateApperence(LangPanelBackColor, LangPanelForeColor, LangPanelTransparency, LangPanelFont);
+				if(LangPanelDisplay)
+					_langPanel.ShowInactiveTopmost();
+				else 
+					_langPanel.HideWnd();
+			}
 			Memory.Flush();
 			Logging.Log("All configurations loaded.");
 		}
