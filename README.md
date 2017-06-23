@@ -23,6 +23,12 @@ Mahou работает совершенно по-другому: в отличи
 
 ###### Возможности по версиям:
 
+**v2.3.3.3**<br/>
+
+- :gem: Новая возможность - Панель языка. (она использует код из [JustUI](https://github.com/BladeMight/JustUI))
+- :gem: Новая горячия клавиша - Показать/скрыть панель языка.
+- :bug: Исправлены некоторые ошибки интерфейса.
+
 **v2.3.1.7**<br/>
 
 - :bug: Исправлена несовместимость прозрачного фона и функции флагов в подсказках языка.
@@ -227,6 +233,12 @@ Even selected text switches just between **selected** layouts, though if you lik
 4. Starting from v1.0.4.4 in Convert selection unrecognized text by all selected layout in settings (example: ♥) just rewrites.
 
 ###### By version features:
+
+**v2.3.3.3**<br/>
+
+- :gem: Added new feature - Language Panel. (uses some code of [JustUI](https://github.com/BladeMight/JustUI))
+- :gem: Added new Hotkey to toggle Language Panel visibility.
+- :bug: Fixed bugs in UI.
 
 **v2.3.1.7**<br/>
 
