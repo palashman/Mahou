@@ -911,7 +911,12 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				lcid = (int)(Locales.GetCurrentLocale() & 0xffff);
 			else 
 				lcid = (int)(MahouUI.currentLayout & 0xffff);
-			if (MMain.mahou.OneLayout)
+			var ol = false;
+			if (MMain.mahou != null) 
+				ol = MMain.mahou.OneLayout;
+			else 
+				ol = MMain.MyConfs.ReadBool("Layouts", "OneLayout");
+			if (ol)
 				lcid = (int)(MahouUI.GlobalLayout & 0xffff);
 			if (lcid > 0) { 
 				var flagname = "jp";
@@ -972,13 +977,9 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 								break;
 						}
 					latestSwitch = flagname;
-					LayoutChanged = true;
-				} else 
-					LayoutChanged = false;	
-			} else {
-				LayoutChanged = false;
+				}
+			} else
 				Logging.Log("Layout id was ["+lcid+"].", 2);
-			}
 		}
 		/// <summary>
 		/// Changes tray icon image to country flag based on current layout.
