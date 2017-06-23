@@ -17,11 +17,12 @@ namespace Mahou {
 		#region Variables
 		// Hotkeys, HKC => HotKey Convert
 		public Hotkey Mainhk, ExitHk, HKCLast, HKCSelection, HKCLine, HKSymIgn, HKConMorWor,
-			  	      HKTitleCase, HKRandomCase, HKSwapCase, HKTransliteration, HKRestart;
+			  	      HKTitleCase, HKRandomCase, HKSwapCase, HKTransliteration, HKRestart, HKToggleLP;
 		/// <summary>
 		/// Hotkey OK to fire action bools.
 		/// </summary>
-  	    public bool hksTTCOK, hksTRCOK, hksTSCOK, hksTrslOK, hkShWndOK, hkcwdsOK, hklOK, hksOK, hklineOK, hkSIOK, hkExitOK;
+		public bool hksTTCOK, hksTRCOK, hksTSCOK, hksTrslOK, hkShWndOK, hkcwdsOK, hklOK, 
+					hksOK, hklineOK, hkSIOK, hkExitOK, hkToglLPOK;
 		/// <summary>
 		/// Directory where Mahou.exe is.
 		/// </summary>
@@ -39,88 +40,72 @@ namespace Mahou {
 		public static int AtUpdateShow;
 		public int DoubleHKInterval = 200, SelectedTextGetMoreTriesCount;
 		#region Temporary variables
-		/// <summary>
-		/// In memory settings, for timers/hooks.
-		/// </summary>
+		/// <summary> In memory settings, for timers/hooks.</summary>
 		public bool DiffAppearenceForLayouts, LDForCaretOnChange, LDForMouseOnChange, ScrollTip, AddOneSpace,
 					TrayFlags, SymIgnEnabled, TrayIconVisible, SnippetsEnabled, ChangeLayouByKey, EmulateLS,
 					RePress, BlockHKWithCtrl, blueIcon, SwitchBetweenLayouts, SelectedTextGetMoreTries, ReSelect,
 					ConvertSelectionLS, ConvertSelectionLSPlus, MCDSSupport, OneLayoutWholeWord, RestartHooks,
 					MouseTTAlways, OneLayout, MouseLangTooltipEnabled, CaretLangTooltipEnabled;
-		/// <summary>
-		/// Temporary modifiers of hotkeys.
-		/// </summary>
+		/// <summary> Temporary modifiers of hotkeys. </summary>
 		string Mainhk_tempMods, ExitHk_tempMods, HKCLast_tempMods, HKCSelection_tempMods, 
 			    HKCLine_tempMods, HKSymIgn_tempMods, HKConMorWor_tempMods, HKTitleCase_tempMods,
- 				HKRandomCase_tempMods, HKSwapCase_tempMods, HKTransliteration_tempMods, HKRestart_tempMods;
-		/// <summary>
-		/// Temporary key of hotkeys.
-		/// </summary>
+ 				HKRandomCase_tempMods, HKSwapCase_tempMods, HKTransliteration_tempMods, HKRestart_tempMods,
+ 				HKToggleLangPanel_tempMods;
+		/// <summary> Temporary key of hotkeys. </summary>
 		int Mainhk_tempKey, ExitHk_tempKey, HKCLast_tempKey, HKCSelection_tempKey,
 			    HKCLine_tempKey, HKSymIgn_tempKey, HKConMorWor_tempKey, HKTitleCase_tempKey,
- 				HKRandomCase_tempKey, HKSwapCase_tempKey, HKTransliteration_tempKey, HKRestart_tempKey;
-		/// <summary>
-		/// Temporary Enabled of hotkeys.
-		/// </summary>
+ 				HKRandomCase_tempKey, HKSwapCase_tempKey, HKTransliteration_tempKey, HKRestart_tempKey,
+ 				HKToggleLangPanel_tempKey;
+		/// <summary> Temporary Enabled of hotkeys. </summary>
 		bool Mainhk_tempEnabled, ExitHk_tempEnabled, HKCLast_tempEnabled, HKCSelection_tempEnabled,
 			    HKCLine_tempEnabled, HKSymIgn_tempEnabled, HKConMorWor_tempEnabled, HKTitleCase_tempEnabled,
- 				HKRandomCase_tempEnabled, HKSwapCase_tempEnabled, HKTransliteration_tempEnabled, HKRestart_tempEnabled;
-		/// <summary>
-		/// Temporary Double of hotkeys.
-		/// </summary>
+ 				HKRandomCase_tempEnabled, HKSwapCase_tempEnabled, HKTransliteration_tempEnabled, HKRestart_tempEnabled,
+ 				HKToggleLangPanel_tempEnabled;
+		/// <summary> Temporary Double of hotkeys. </summary>
 		bool Mainhk_tempDouble, ExitHk_tempDouble, HKCLast_tempDouble, HKCSelection_tempDouble,
 			    HKCLine_tempDouble, HKSymIgn_tempDouble, HKConMorWor_tempDouble, HKTitleCase_tempDouble,
- 				HKRandomCase_tempDouble, HKSwapCase_tempDouble, HKTransliteration_tempDouble;
-		/// <summary>
-		/// Temporary colors of LangDisplays appearece.
-		/// </summary>
+ 				HKRandomCase_tempDouble, HKSwapCase_tempDouble, HKTransliteration_tempDouble,
+ 				HKToggleLangPanel_tempDouble;
+		/// <summary> Temporary colors of LangDisplays appearece. </summary>
 		public Color LDMouseFore_temp, LDCaretFore_temp, LDMouseBack_temp, LDCaretBack_temp, 
 		 	  Layout1Fore_temp, Layout2Fore_temp, Layout1Back_temp, Layout2Back_temp;
-		/// <summary>
-		/// Temporary fonts of LangDisplays appearece.
-		/// </summary>
+		/// <summary> Temporary fonts of LangDisplays appearece. </summary>
 		public Font LDMouseFont_temp, LDCaretFont_temp, Layout1Font_temp, Layout2Font_temp;
-		/// <summary>
-		/// Temporary use flags of LangDisplays appearece.
-		/// </summary>
+		/// <summary> Temporary use flags of LangDisplays appearece. </summary>
 		public bool LDMouseUseFlags_temp, LDCaretUseFlags_temp;
-		/// <summary>
-		/// Temporary transparent backgrounds of LangDisplays appearece.
-		/// </summary>
+		/// <summary> Temporary transparent backgrounds of LangDisplays appearece. </summary>
 		public bool LDMouseTransparentBack_temp, LDCaretTransparentBack_temp,
      		 Layout1TransparentBack_temp, Layout2TransparentBack_temp;
-		/// <summary>
-		/// Temporary positions of LangDisplays appearece.
-		/// </summary>
+		/// <summary> Temporary positions of LangDisplays appearece. </summary>
 		public int LDMouseY_Pos_temp, LDCaretY_Pos_temp, LDMouseX_Pos_temp, LDCaretX_Pos_temp, 
 		 	  Layout1Y_Pos_temp, Layout2Y_Pos_temp, Layout1X_Pos_temp, Layout2X_Pos_temp,
 		 	  MCDS_Xpos_temp, MCDS_Ypos_temp, MCDS_TopIndent_temp, MCDS_BottomIndent_temp;
-		/// <summary>
-		/// Temporary sizes of LangDisplays appearece.
-		/// </summary>
+		/// <summary> Temporary sizes of LangDisplays appearece. </summary>
 		public int LDMouseHeight_temp, LDCaretHeight_temp, LDMouseWidth_temp, LDCaretWidth_temp, 
 		 	  Layout1Height_temp, Layout2Height_temp, Layout1Width_temp, Layout2Width_temp;
-		/// <summary>
-		/// Temporary hotkey key of hotkey in txt_Hotkey.
-		/// </summary>
+		/// <summary> Temporary hotkey key of hotkey in txt_Hotkey. </summary>
 		int txt_Hotkey_tempKey;
-		/// <summary>
-		/// Temporary hotkey modifiers of hotkey in txt_Hotkey.
-		/// </summary>
+		/// <summary> Temporary hotkey modifiers of hotkey in txt_Hotkey. </summary>
 		string txt_Hotkey_tempModifiers;
-		/// <summary>
-		/// Temporary persistent layout's processes.
-		/// </summary>
+		/// <summary> Temporary persistent layout's processes. </summary>
 		public string PersistentLayout1Processes, PersistentLayout2Processes;
-		/// <summary>
-		/// Temporary layouts, etc..
-		/// </summary>
+		/// <summary> Temporary layouts, etc.. </summary>
 		public string Layout1, Layout2, Layout3, Layout4, 
 			MainLayout1, MainLayout2, EmulateLSType, ExcludedPrograms, Layout1TText, Layout2TText;
-		/// <summary>
-		/// Temporary specific keys.
-		/// </summary>
+		/// <summary> Temporary specific keys. </summary>
 		public int Key1, Key2, Key3, Key4;
+		/// <summary> LangPanel temporary bool variables. </summary>
+		public bool LangPanelDisplay, LangPanelBorderAero;
+		/// <summary> LangPanel temporary int variables. </summary>
+		public int LangPanelRefreshRate, LangPanelTransparency;
+		/// <summary> LangPanel temporary color variables. </summary>
+		public Color LangPanelForeColor, LangPanelBackColor, LangPanelBorderColor;
+		/// <summary> LangPanel temporary position variable. </summary>
+		public Point LangPanelPosition;
+		/// <summary> LangPanel temporary font variable. </summary>
+		public Font LangPanelFont;
+		/// <summary> Static last layout for LangPanel. </summary>
+		public static uint lastLayoutLangPanel = 0;
 		#endregion
 		public TrayIcon icon;
 		public Timer ICheck = new Timer();
@@ -133,7 +118,7 @@ namespace Mahou {
 		public Timer langPanelRefresh = new Timer();
 		public LangDisplay mouseLangDisplay = new LangDisplay();
 		public LangDisplay caretLangDisplay = new LangDisplay();
-		public LangPanel _langPanel = new LangPanel();
+		public LangPanel _langPanel;
 		uint latestL = 0, latestCL = 0;
 		public static uint currentLayout, GlobalLayout;
 		bool onepass = true, onepassC = true;
@@ -182,8 +167,13 @@ namespace Mahou {
 				showUpdWnd.Interval = 1000;
 				showUpdWnd.Start();
 			} else { showUpdWnd.Dispose(); }
-			_langPanel.Show();
-			_langPanel.ShowInactiveTopmost();
+			KMHook.DoLater.Tick += (_, __) => {
+				Logging.Log("Initializing Lang Panel.");
+				InitializeLangPanel();
+				KMHook.DoLater.Dispose();
+				KMHook.DoLater = new Timer() { Interval = 100 };
+			};
+			KMHook.DoLater.Start(); // Do things after MMain.mahou is initialized.
 			Memory.Flush();
 		}
 		#region WndProc(Hotkeys) & Functions
@@ -195,6 +185,7 @@ namespace Mahou {
 //			Logging.Log("MSG: "+m.Msg+", LP: "+m.LParam+", WP: "+m.WParam+", KMS: "+KMHook.self+" 0x312");
 			if (m.Msg == WinAPI.WM_HOTKEY && !KMHook.self && KMHook.IsHotkey) {
 				var id = (Hotkey.HKID)m.WParam.ToInt32();
+				Debug.WriteLine(id);
 				#region Convert multiple words 
 				if (m.WParam.ToInt32() >= 100 && m.WParam.ToInt32() <= 109 && KMHook.waitfornum) {
 					int wordnum = m.WParam.ToInt32() - 100;
@@ -243,6 +234,7 @@ namespace Mahou {
 				}
 				Hotkey.CallHotkey(HKRestart, id, ref dummy, Restart);
 				Hotkey.CallHotkey(MMain.mahou.Mainhk, id, ref hkShWndOK, ToggleVisibility);
+				Hotkey.CallHotkey(MMain.mahou.HKToggleLP, id, ref hkToglLPOK, ToggleLangPanel);
 				Hotkey.CallHotkey(MMain.mahou.ExitHk, id, ref hkExitOK, ExitProgram);
 			}
 			if (m.Msg == WinAPI.WM_HOTKEY) {
@@ -271,6 +263,7 @@ namespace Mahou {
 			HKTransliteration_tempEnabled = MMain.MyConfs.ReadBool("Hotkeys", "SelectedTextTransliteration_Enabled");
 			ExitHk_tempEnabled = MMain.MyConfs.ReadBool("Hotkeys", "ExitMahou_Enabled");
 			HKRestart_tempEnabled = MMain.MyConfs.ReadBool("Hotkeys", "RestartMahou_Enabled");
+			HKToggleLangPanel_tempEnabled = MMain.MyConfs.ReadBool("Hotkeys", "ToggleLangPanel_Enabled");
 			#endregion
 			#region Hotkey doubles
 			Mainhk_tempDouble = MMain.MyConfs.ReadBool("Hotkeys", "ToggleMainWindow_Double");
@@ -284,6 +277,7 @@ namespace Mahou {
 			HKSwapCase_tempDouble = MMain.MyConfs.ReadBool("Hotkeys", "SelectedTextToSwapCase_Double");
 			HKTransliteration_tempDouble = MMain.MyConfs.ReadBool("Hotkeys", "SelectedTextTransliteration_Double");
 			ExitHk_tempDouble = MMain.MyConfs.ReadBool("Hotkeys", "ExitMahou_Double");
+			HKToggleLangPanel_tempDouble = MMain.MyConfs.ReadBool("Hotkeys", "ToggleLangPanel_Double");
 			#endregion
 			#region Hotkey modifiers
 			Mainhk_tempMods = MMain.MyConfs.Read("Hotkeys", "ToggleMainWindow_Modifiers");
@@ -298,6 +292,7 @@ namespace Mahou {
 			HKTransliteration_tempMods = MMain.MyConfs.Read("Hotkeys", "SelectedTextTransliteration_Modifiers");
 			ExitHk_tempMods = MMain.MyConfs.Read("Hotkeys", "ExitMahou_Modifiers");
 			HKRestart_tempMods = MMain.MyConfs.Read("Hotkeys", "RestartMahou_Modifiers");
+			HKToggleLangPanel_tempMods = MMain.MyConfs.Read("Hotkeys", "ToggleLangPanel_Modifiers");
 			#endregion
 			#region Hotkey keys
 			Mainhk_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "ToggleMainWindow_Key");
@@ -312,6 +307,7 @@ namespace Mahou {
 			HKTransliteration_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "SelectedTextTransliteration_Key");
 			ExitHk_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "ExitMahou_Key");
 			HKRestart_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "RestartMahou_Key");
+			HKToggleLangPanel_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "ToggleLangPanel_Key");
 			#endregion
 			#region Lang Display colors
 			try { LDMouseFore_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "MouseLTForeColor")); 
@@ -390,6 +386,7 @@ namespace Mahou {
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextTransliteration_Enabled", HKTransliteration_tempEnabled.ToString());
 			MMain.MyConfs.Write("Hotkeys", "ExitMahou_Enabled", ExitHk_tempEnabled.ToString());
 			MMain.MyConfs.Write("Hotkeys", "RestartMahou_Enabled", HKRestart_tempEnabled.ToString());
+			MMain.MyConfs.Write("Hotkeys", "ToggleLangPanel_Enabled", HKToggleLangPanel_tempEnabled.ToString());
 			#endregion
 			#region Hotkey doubles
 			MMain.MyConfs.Write("Hotkeys", "ToggleMainWindow_Double", Mainhk_tempDouble.ToString());
@@ -403,6 +400,7 @@ namespace Mahou {
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextToSwapCase_Double", HKSwapCase_tempDouble.ToString());
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextTransliteration_Double", HKTransliteration_tempDouble.ToString());
 			MMain.MyConfs.Write("Hotkeys", "ExitMahou_Double", ExitHk_tempDouble.ToString());
+			MMain.MyConfs.Write("Hotkeys", "ToggleLangPanel_Double", HKToggleLangPanel_tempDouble.ToString());
 			#endregion
 			#region Hotkey modifiers
 			MMain.MyConfs.Write("Hotkeys", "ToggleMainWindow_Modifiers", Mainhk_tempMods);
@@ -417,6 +415,7 @@ namespace Mahou {
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextTransliteration_Modifiers", HKTransliteration_tempMods);
 			MMain.MyConfs.Write("Hotkeys", "ExitMahou_Modifiers", ExitHk_tempMods);
 			MMain.MyConfs.Write("Hotkeys", "RestartMahou_Modifiers", HKRestart_tempMods);
+			MMain.MyConfs.Write("Hotkeys", "ToggleLangPanel_Modifiers", HKToggleLangPanel_tempMods);
 			#endregion
 			#region Hotkey keys
 			MMain.MyConfs.Write("Hotkeys", "ToggleMainWindow_Key", Mainhk_tempKey.ToString());
@@ -431,6 +430,7 @@ namespace Mahou {
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextTransliteration_Key", HKTransliteration_tempKey.ToString());
 			MMain.MyConfs.Write("Hotkeys", "ExitMahou_Key", ExitHk_tempKey.ToString());
 			MMain.MyConfs.Write("Hotkeys", "RestartMahou_Key", HKRestart_tempKey.ToString());
+			MMain.MyConfs.Write("Hotkeys", "ToggleLangPanel_Key", HKToggleLangPanel_tempKey.ToString());
 			#endregion
 			UpdateLangDisplayTemps();
 			#region Lang Display colors
@@ -571,6 +571,16 @@ namespace Mahou {
 			#region Appearence & Hotkeys
 			SaveFromTemps();
 			#endregion
+			#region LangPanel
+			MMain.MyConfs.Write("LangPanel", "Display", chk_DisplayLangPanel.Checked.ToString());
+			MMain.MyConfs.Write("LangPanel", "RefreshRate", nud_LPRefreshRate.Value.ToString());
+			MMain.MyConfs.Write("LangPanel", "Transparency", nud_LPTransparency.Value.ToString());
+			MMain.MyConfs.Write("LangPanel", "ForeColor", ColorTranslator.ToHtml(btn_LPFore.BackColor));
+			MMain.MyConfs.Write("LangPanel", "BackColor", ColorTranslator.ToHtml(btn_LPBack.BackColor));
+			MMain.MyConfs.Write("LangPanel", "BorderColor", ColorTranslator.ToHtml(btn_LPBorderColor.BackColor));
+			MMain.MyConfs.Write("LangPanel", "BorderAeroColor", chk_LPAeroColor.Checked.ToString());
+			MMain.MyConfs.Write("LangPanel", "Font", fcv.ConvertToString(btn_LPFont.Font));
+			#endregion
 			#region Proxy
 			MMain.MyConfs.Write("Proxy", "ServerPort", txt_ProxyServerPort.Text);
 			MMain.MyConfs.Write("Proxy", "UserName", txt_ProxyLogin.Text);
@@ -656,6 +666,20 @@ namespace Mahou {
 			ExcludedPrograms = txt_ExcludedPrograms.Text = MMain.MyConfs.Read("Timings", "ExcludedPrograms");
 			SelectedTextGetMoreTriesCount = (int)nud_SelectedTextGetTriesCount.Value;
 			#endregion
+			#region LangPanel
+			LangPanelDisplay = chk_DisplayLangPanel.Checked = MMain.MyConfs.ReadBool("LangPanel", "Display");
+			nud_LPRefreshRate.Value = LangPanelRefreshRate = MMain.MyConfs.ReadInt("LangPanel", "RefreshRate");
+			nud_LPTransparency.Value = LangPanelTransparency = MMain.MyConfs.ReadInt("LangPanel", "Transparency");
+			try { btn_LPFore.BackColor = LangPanelForeColor = ColorTranslator.FromHtml(MMain.MyConfs.Read("LangPanel", "ForeColor"));
+			} catch { WrongColorLog(MMain.MyConfs.Read("LangPanel", "ForeColor")); }
+			try { btn_LPBack.BackColor = LangPanelBackColor = ColorTranslator.FromHtml(MMain.MyConfs.Read("LangPanel", "BackColor"));
+			} catch { WrongColorLog(MMain.MyConfs.Read("LangPanel", "BackColor")); }
+			try { btn_LPBorderColor.BackColor = LangPanelBorderColor = ColorTranslator.FromHtml(MMain.MyConfs.Read("LangPanel", "BorderColor"));
+			} catch { WrongColorLog(MMain.MyConfs.Read("LangPanel", "BorderColor")); }
+			LangPanelBorderAero = chk_LPAeroColor.Checked = MMain.MyConfs.ReadBool("LangPanel", "BorderAeroColor");
+			try { btn_LPFont.Font = LangPanelFont = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("LangPanel", "Font")); 
+				} catch { WrongFontLog(MMain.MyConfs.Read("LangPanel", "Font")); }
+			#endregion
 			#region Snippets
 			SnippetsEnabled = chk_Snippets.Checked = MMain.MyConfs.ReadBool("Snippets", "SnippetsEnabled");
 			if (File.Exists(snipfile)) {
@@ -681,6 +705,8 @@ namespace Mahou {
 			RefreshAllIcons();
 			UnregisterHotkeys();
 			RegisterHotkeys();
+			if (_langPanel != null)
+				_langPanel.UpdateApperence(LangPanelBackColor, LangPanelForeColor, LangPanelTransparency, LangPanelFont);
 			Memory.Flush();
 			Logging.Log("All configurations loaded.");
 		}
@@ -764,6 +790,11 @@ namespace Mahou {
 			}
 			// Snippets tab
 			txt_Snippets.Enabled = chk_Snippets.Checked;
+			// Persistent Layout tab
+			txt_PersistentLayout1Processes.Enabled = lbl_PersistentLayout1Interval.Enabled = nud_PersistentLayout1Interval.Enabled =
+				chk_PersistentLayout1Active.Checked;
+			txt_PersistentLayout2Processes.Enabled = lbl_PersistentLayout2Interval.Enabled = nud_PersistentLayout2Interval.Enabled =
+				chk_PersistentLayout2Active.Checked;
 			// Language Panel tab
 			grb_LPConfig.Enabled = chk_DisplayLangPanel.Checked;
 			btn_LPBorderColor.Enabled = !chk_LPAeroColor.Checked;
@@ -800,6 +831,18 @@ namespace Mahou {
 				KMHook.SendModsUp(15); // All modifiers
 			}
 			Memory.Flush();
+		}
+		public void ToggleLangPanel() {
+			if (_langPanel.Visible) {
+				chk_DisplayLangPanel.Checked = LangPanelDisplay = _langPanel.Visible = false;
+				MMain.MyConfs.Write("LangPanel", "Display", "false");
+				langPanelRefresh.Stop();
+			}
+			else {
+				chk_DisplayLangPanel.Checked = LangPanelDisplay = _langPanel.Visible = true;
+				MMain.MyConfs.Write("LangPanel", "Display", "true");
+				langPanelRefresh.Start();
+			}
 		}
 		/// <summary>
 		/// Restarts Mahou.
@@ -982,6 +1025,25 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			lsb_Hotkeys.SelectedIndex = 0;
 			lsb_LangTTAppearenceForList.SelectedIndex = 0;
 		}
+		void InitializeLangPanel() {
+			if (_langPanel == null)
+				_langPanel = new LangPanel();
+			int x = -7, y = -7;
+			try { 
+				var getXY = new Regex(@"(X|Y)(\d+)");
+				var xy = MMain.MyConfs.Read("LangPanel", "Position");
+				var _xy = getXY.Matches(xy);
+				Logging.Log("XY: " + _xy[0].Groups[2].Value + " / " + _xy[1].Groups[2].Value);
+				x = Convert.ToInt32(_xy[0].Groups[2].Value);
+				y = Convert.ToInt32(_xy[1].Groups[2].Value);
+			} catch (Exception e) { Logging.Log("Erro during latest x/y position get, details:\r\n" + e.Message + "\r\n" + e.StackTrace, 1); }
+			_langPanel.Location = new Point(x, y);
+			_langPanel.UpdateApperence(LangPanelBackColor, LangPanelForeColor, LangPanelTransparency, LangPanelFont);
+			if(LangPanelDisplay) {
+				_langPanel.ShowInactiveTopmost();
+				langPanelRefresh.Start();
+			}
+		}
 		/// <summary>
 		/// Initializes all hotkeys.
 		/// </summary>
@@ -1010,6 +1072,8 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			    Hotkey.GetMods(ExitHk_tempMods), (int)Hotkey.HKID.Exit, ExitHk_tempDouble);
 			HKRestart = new Hotkey(HKRestart_tempEnabled, (uint)HKRestart_tempKey, 
 			    Hotkey.GetMods(HKRestart_tempMods), (int)Hotkey.HKID.Restart, false);
+			HKToggleLP = new Hotkey(HKToggleLangPanel_tempEnabled, (uint)HKToggleLangPanel_tempKey, 
+			    Hotkey.GetMods(HKToggleLangPanel_tempMods), (int)Hotkey.HKID.ToggleLangPanel, HKToggleLangPanel_tempDouble);
 			Logging.Log("Hotkeys initialized.");
 		}
 		public bool HasHotkey(Hotkey thishk) {
@@ -1024,7 +1088,8 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				thishk == HKSwapCase ||		
 				thishk == HKTransliteration ||
 				thishk == ExitHk ||
-				thishk == HKRestart)
+				thishk == HKRestart ||
+				thishk == HKToggleLP)
 				return true;
 			return false;
 		}
@@ -1191,21 +1256,22 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			persistentLayout2Check.Interval = MMain.MyConfs.ReadInt("PersistentLayout", "Layout2CheckInterval");
 			persistentLayout1Check.Tick += (_, __) => PersistentLayoutCheck(PersistentLayout1Processes, MainLayout1);
 			persistentLayout2Check.Tick += (_, __) => PersistentLayoutCheck(PersistentLayout2Processes, MainLayout2);
-			langPanelRefresh.Interval = 1000;
+			langPanelRefresh.Interval = LangPanelRefreshRate;
 			langPanelRefresh.Tick += (_, __) => {
-				RefreshFLAG();
+				if (!(MouseTTAlways && LDMouseUseFlags_temp && MouseLangTooltipEnabled) || !TrayFlags)
+					RefreshFLAG();
 				uint loc = 0;
 				try {
 					if (!OneLayout)
 						loc = currentLayout == 0 ? Locales.GetCurrentLocale() : currentLayout;
 					else
 						loc = GlobalLayout;
-					Debug.WriteLine(loc);
-					if (loc > 0)
+					if (loc > 0 && loc != lastLayoutLangPanel) {
 						_langPanel.ChangeLayout(FLAG, MMain.locales[Array.FindIndex(MMain.locales, l => l.uId == loc)].Lang);
+						lastLayoutLangPanel = loc;
+					}
 				} catch (Exception e) { Logging.Log("Error in LangPanel Refresh, loc: "+loc+ ",  details:\r\n" + e.Message + "\r\n" + e.StackTrace); }
 			};
-			langPanelRefresh.Start();
 			InitLangDisplays();
 			ToggleTimers();
 		}
@@ -1243,6 +1309,8 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				persistentLayout1Check.Start();
 			if (MMain.MyConfs.ReadBool("PersistentLayout", "ActivateForLayout2"))
 				persistentLayout2Check.Start();
+			if (LangPanelDisplay && !langPanelRefresh.Enabled)
+				langPanelRefresh.Start();
 		}
 		/// <summary>
 		/// Creates startup shortcut v2.0.(now not uses com. So whole project not need the Windows SDK :p)
@@ -1360,6 +1428,9 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			if (HKRestart_tempEnabled)
 				WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.Restart,
 				                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKRestart_tempMods), HKRestart_tempKey);
+			if (HKToggleLangPanel_tempEnabled)
+				WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.ToggleLangPanel,
+				                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKToggleLangPanel_tempMods), HKToggleLangPanel_tempKey);
 		}
 		/// <summary>
 		/// Converts some special keys to readable string.
@@ -1613,6 +1684,9 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				case 11:
 					UpdateHotkeyControls(HKRestart_tempEnabled, false, HKRestart_tempMods, HKRestart_tempKey);
 					break;
+				case 12:
+					UpdateHotkeyControls(HKToggleLangPanel_tempEnabled, HKToggleLangPanel_tempDouble, HKToggleLangPanel_tempMods, HKToggleLangPanel_tempKey);
+					break;
 			}
 		}
 		/// <summary>
@@ -1705,6 +1779,12 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 					HKRestart_tempEnabled = chk_HotKeyEnabled.Checked;
 					HKRestart_tempMods = (chk_WinInHotKey.Checked ? "Win + " : "") + txt_Hotkey_tempModifiers;
 					HKRestart_tempKey = txt_Hotkey_tempKey;
+					break;
+				case 12:
+					HKToggleLangPanel_tempEnabled = chk_HotKeyEnabled.Checked;
+					HKToggleLangPanel_tempDouble = chk_DoubleHotkey.Checked;
+					HKToggleLangPanel_tempMods = (chk_WinInHotKey.Checked ? "Win + " : "") + txt_Hotkey_tempModifiers;
+					HKToggleLangPanel_tempKey = txt_Hotkey_tempKey;
 					break;
 			}
 		}
@@ -2007,7 +2087,8 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 										MMain.Lang[Languages.Element.SelectedToSwapCase],
 										MMain.Lang[Languages.Element.SelectedTransliteration],
 										MMain.Lang[Languages.Element.ExitMahou],
-										MMain.Lang[Languages.Element.RestartMahou]
+										MMain.Lang[Languages.Element.RestartMahou],
+										MMain.Lang[Languages.Element.ToggleLangPanel]
 										});
 			#endregion
 			#region LangPanel
@@ -2018,7 +2099,8 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			lbl_LPFore.Text = MMain.Lang[Languages.Element.LDFore];
 			lbl_LPBack.Text = MMain.Lang[Languages.Element.LDBack];
 			chk_LPAeroColor.Text = MMain.Lang[Languages.Element.UseAeroColor];
-			chk_LPHotkeyHoldShow.Text = MMain.Lang[Languages.Element.HotkeyHoldShow];
+			lbl_LPFont.Text = MMain.Lang[Languages.Element.LDFont] + ":";
+			btn_LPFont.Text = MMain.Lang[Languages.Element.LDFont];
 			#endregion
 			#region Updtaes
 			btn_CheckForUpdates.Text = MMain.Lang[Languages.Element.CheckForUpdates];

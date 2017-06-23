@@ -94,6 +94,7 @@ public class Languages
 		RestartMahou,
 		Enabled,
 		DoubleHK,
+		ToggleLangPanel,
 		#endregion
 		#region LangPanel
 		DisplayLangPanel,
@@ -101,7 +102,6 @@ public class Languages
 		Transparency,
 		BorderColor,
 		UseAeroColor,
-		HotkeyHoldShow,
 		#endregion
 		#region Updates
 		CheckForUpdates,
@@ -267,6 +267,7 @@ public class Languages
 		{ Element.RestartMahou, "Restart" }, 
 		{ Element.Enabled, "Enabled" }, 
 		{ Element.DoubleHK, "Double hotkey" }, 
+		{ Element.ToggleLangPanel, "Toggle language panel" }, 
 		#endregion
 		#region LangPanel
 		{ Element.DisplayLangPanel, "Display language panel." },
@@ -274,7 +275,6 @@ public class Languages
 		{ Element.Transparency, "Transparency:" },
 		{ Element.BorderColor, "Border color:" },
 		{ Element.UseAeroColor, "Use Aero/Accent color." },
-		{ Element.HotkeyHoldShow, "Keep invisible and display only when hotkey to display Language Panel is hold." },
 		#endregion
 		#region Updates
 		{ Element.CheckForUpdates, "Check for updates:" }, 
@@ -334,7 +334,7 @@ public class Languages
 		{ Element.TT_BlockCtrl, "Blocks hotkeys that use Control,\nwhen \"Switch layout by key\" is set to Left/Right Control." }, 
 		{ Element.TT_CapsDis, "If enabled, timer which disables CapsLock(led) will work." }, 
 		{ Element.TT_EmulateLS, "If enabled, layout switching will emulate press of keys selected on right." }, 
-		{ Element.TT_RePress, "If enabled, modifiers(Ctrl/Alt/Shift/Win) will be pressed again conversion(recommended?),\r\n"+
+		{ Element.TT_RePress, "If enabled, modifiers(Ctrl/Alt/Shift/Win) will be pressed again conversion(NOT recommended),\r\n"+
 				"although if you release modifiers before conversion action finishes - modifiers may stuck...))." },
 		{ Element.TT_Add1Space, "If enabled, ONE space will be adding to last word." }, 
 		{ Element.TT_ReSelect, "If enabled, any \"Convert selected\" will select text again after conversion." }, 
@@ -465,6 +465,7 @@ public class Languages
 		{ Element.RestartMahou, "Перезапустить" }, 
 		{ Element.Enabled, "Включена" }, 
 		{ Element.DoubleHK, "Двойная горячая клавиша" }, 
+		{ Element.ToggleLangPanel, "Переключить видимость панели языка" }, 
 		#endregion
 		#region LangPanel
 		{ Element.DisplayLangPanel, "Отображать языковую панель." },
@@ -472,7 +473,6 @@ public class Languages
 		{ Element.Transparency, "Прозрачность:" },
 		{ Element.BorderColor, "Цвет рамки:" },
 		{ Element.UseAeroColor, "Использовать Аэро/Главный цвет." },
-		{ Element.HotkeyHoldShow, "Показывать панель только при удерживании горячей клавиши показа Языковой панели." },
 		#endregion
 		#region Updates
 		{ Element.CheckForUpdates, "Проверить обновления:" }, 
@@ -530,7 +530,7 @@ public class Languages
 		{ Element.TT_BlockCtrl, "Блокирует горячие клавиши содержащие Control,\nможет быть полезно если \"Переключать язык клавишей\" установлен на Left/Right Control." }, 
 		{ Element.TT_CapsDis, "Если включено, то будет работать таймер который будет выключать CapsLock(лампочку)." }, 
 		{ Element.TT_EmulateLS, "Если включено, переключение раскладку будет эмулировать нажатие клавиш выбранный правее для переключения раскладки." }, 
-		{ Element.TT_RePress, "Если включено, то модификаторы(Ctrl/Alt/Shift/Win) будут нажаты заново после действия горячей клавиши.(рекомендуется?),\r\n"+
+		{ Element.TT_RePress, "Если включено, то модификаторы(Ctrl/Alt/Shift/Win) будут нажаты заново после действия горячей клавиши.(НЕ рекомендуется),\r\n"+
 							  "хотя если вы отпустите модификаторы до того как завершиться действие конвертации - могут залипнуть модификаторы...)." },
 		{ Element.TT_Add1Space, "Если включено, то ОДИН пробел будет добавлятся в последнее слово." }, 
 		{ Element.TT_ReSelect, "Если включено, любые \"Конверт выделения\" будут выделять тескт заново." }, 

@@ -10,6 +10,7 @@ namespace Mahou {
 	public partial class LangPanel : Form {
 		public LangPanel() {
 			InitializeComponent();
+			AeroCheck();
 		}
 		#region Screen-Snap
 		const int SnapDist = 15;
@@ -60,14 +61,31 @@ namespace Mahou {
 			    	Location = mousePos;
 			}
 		}
+		
+		void Lbl_LayoutNameMouseUp(object sender, MouseEventArgs e) {
+			Logging.Log("Saved position of LangPanel");
+			MMain.MyConfs.Write("LangPanel", "Position", "X" + Location.X + " Y" + Location.Y);
+		}
+		public void UpdateApperence(Color back, Color fore, int opacity, Font font) {
+			BackColor = back;
+			lbl_LayoutName.ForeColor = fore;
+			lbl_LayoutName.Font = font;
+			Opacity = (double)opacity / 100;
+			Invalidate();
+		}
 		#endregion
 		#region Derived from LangDisplay
 		//Comments removed
-		public void ShowInactiveTopmost() {
+		public void ShowInactiveTopmost(int left = -7, int top = -7) {
 			if (Visible) return;
+			int LEFT = Left, TOP = Top;
+			if (left != -7)
+				LEFT = left;
+			if (top != -7)
+				TOP = top;
 			WinAPI.ShowWindow(Handle, WinAPI.SW_SHOWNOACTIVATE);
 			WinAPI.SetWindowPos(Handle.ToInt32(), WinAPI.HWND_TOPMOST,
-				Left, Top, Width, Height,
+				LEFT, TOP, Width, Height,
 				WinAPI.SWP_NOACTIVATE);
 		}
 		public void HideWnd() {
@@ -109,9 +127,11 @@ namespace Mahou {
 		}
 		protected override void OnPaint(PaintEventArgs e) {
 			Graphics g = CreateGraphics();
-			var pn = new Pen(CurrentAeroColor());
-			if (!AeroEnabled)
-				pn.Color = Color.FromKnownColor(KnownColor.LightGray);
+			var pn = new Pen(Color.Black);
+			if (AeroEnabled && MMain.mahou.LangPanelBorderAero)
+				pn = new Pen(CurrentAeroColor());
+			else
+				pn.Color = MMain.mahou.LangPanelBorderColor;
 			g.DrawRectangle(pn, new Rectangle(0, 0, Size.Width - 1, Size.Height - 1));
 			g.Dispose();
 			pn.Dispose();

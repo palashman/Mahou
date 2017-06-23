@@ -195,6 +195,22 @@ namespace Mahou
 			CheckBool("Hotkeys", "RestartMahou_Enabled", "true");
 			CheckString("Hotkeys", "RestartMahou_Modifiers", "Win + Shift + Alt");
 			CheckInt("Hotkeys", "RestartMahou_Key", "33");
+			// Toggle Language Panel hotkey
+			CheckBool("Hotkeys", "ToggleLangPanel_Enabled", "true");
+			CheckBool("Hotkeys", "ToggleLangPanel_Double", "false");
+			CheckString("Hotkeys", "ToggleLangPanel_Modifiers", "Shift");
+			CheckInt("Hotkeys", "ToggleLangPanel_Key", "120");
+			#endregion
+			#region Language Panel
+			CheckBool("LangPanel", "Display", "false");
+			CheckInt("LangPanel", "Transparency", "90");
+			CheckInt("LangPanel", "RefreshRate", "25");
+			CheckString("LangPanel", "Position", "X0 Y0");
+			CheckString("LangPanel", "ForeColor", "#000000");
+			CheckString("LangPanel", "BackColor", "#FFFFFF");
+			CheckString("LangPanel", "Font", "Microsoft Sans Serif; 8,25pt");
+			CheckString("LangPanel", "BorderColor", "#8B5FFF");
+			CheckBool("LangPanel", "BorderAeroColor", "true");
 			#endregion
             #region Proxy section
             CheckString("Proxy", "ServerPort", "");

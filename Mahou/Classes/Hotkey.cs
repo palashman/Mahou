@@ -33,7 +33,8 @@ namespace Mahou
 			ToggleSymbolIgnoreMode,
 			ToggleVisibility,
 			Exit,
-			Restart
+			Restart,
+			ToggleLangPanel
 		}
 		/// <summary>
 		/// Gets all modifiers in hotkey.

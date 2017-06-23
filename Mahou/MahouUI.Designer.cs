@@ -160,7 +160,8 @@ namespace Mahou
 		private System.Windows.Forms.NumericUpDown nud_LPTransparency;
 		private System.Windows.Forms.Label lbl_LPTrasparency;
 		private System.Windows.Forms.GroupBox grb_LPConfig;
-		private System.Windows.Forms.CheckBox chk_LPHotkeyHoldShow;
+		private System.Windows.Forms.Label lbl_LPFont;
+		private System.Windows.Forms.Button btn_LPFont;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -297,7 +298,6 @@ namespace Mahou
 			this.lsb_Hotkeys = new System.Windows.Forms.ListBox();
 			this.tab_LangPanel = new System.Windows.Forms.TabPage();
 			this.grb_LPConfig = new System.Windows.Forms.GroupBox();
-			this.chk_LPHotkeyHoldShow = new System.Windows.Forms.CheckBox();
 			this.chk_LPAeroColor = new System.Windows.Forms.CheckBox();
 			this.lbl_LPBorderColor = new System.Windows.Forms.Label();
 			this.btn_LPBorderColor = new System.Windows.Forms.Button();
@@ -336,6 +336,8 @@ namespace Mahou
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
 			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
+			this.lbl_LPFont = new System.Windows.Forms.Label();
+			this.btn_LPFont = new System.Windows.Forms.Button();
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -1321,6 +1323,7 @@ namespace Mahou
 			this.lsb_LangTTAppearenceForList.Name = "lsb_LangTTAppearenceForList";
 			this.lsb_LangTTAppearenceForList.Size = new System.Drawing.Size(176, 167);
 			this.lsb_LangTTAppearenceForList.TabIndex = 0;
+			this.lsb_LangTTAppearenceForList.SelectedIndexChanged += new System.EventHandler(this.Lsb_LangTTAppearenceForListSelectedIndexChanged);
 			// 
 			// chk_LangTooltipCaret
 			// 
@@ -1665,7 +1668,7 @@ namespace Mahou
 			this.chk_HotKeyEnabled.TabIndex = 5;
 			this.chk_HotKeyEnabled.Text = "Enabled";
 			this.chk_HotKeyEnabled.UseVisualStyleBackColor = true;
-			this.chk_HotKeyEnabled.CheckedChanged += new System.EventHandler(this.UpdateHKTemps);
+			this.chk_HotKeyEnabled.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
 			// 
 			// txt_Hotkey
 			// 
@@ -1711,6 +1714,7 @@ namespace Mahou
 			this.lsb_Hotkeys.Name = "lsb_Hotkeys";
 			this.lsb_Hotkeys.Size = new System.Drawing.Size(246, 257);
 			this.lsb_Hotkeys.TabIndex = 0;
+			this.lsb_Hotkeys.SelectedIndexChanged += new System.EventHandler(this.Lsb_HotkeysSelectedIndexChanged);
 			// 
 			// tab_LangPanel
 			// 
@@ -1727,7 +1731,8 @@ namespace Mahou
 			// 
 			// grb_LPConfig
 			// 
-			this.grb_LPConfig.Controls.Add(this.chk_LPHotkeyHoldShow);
+			this.grb_LPConfig.Controls.Add(this.lbl_LPFont);
+			this.grb_LPConfig.Controls.Add(this.btn_LPFont);
 			this.grb_LPConfig.Controls.Add(this.chk_LPAeroColor);
 			this.grb_LPConfig.Controls.Add(this.lbl_LPBorderColor);
 			this.grb_LPConfig.Controls.Add(this.btn_LPBorderColor);
@@ -1745,20 +1750,10 @@ namespace Mahou
 			this.grb_LPConfig.TabIndex = 1;
 			this.grb_LPConfig.TabStop = false;
 			// 
-			// chk_LPHotkeyHoldShow
-			// 
-			this.chk_LPHotkeyHoldShow.AutoSize = true;
-			this.chk_LPHotkeyHoldShow.Location = new System.Drawing.Point(10, 21);
-			this.chk_LPHotkeyHoldShow.Name = "chk_LPHotkeyHoldShow";
-			this.chk_LPHotkeyHoldShow.Size = new System.Drawing.Size(440, 19);
-			this.chk_LPHotkeyHoldShow.TabIndex = 35;
-			this.chk_LPHotkeyHoldShow.Text = "Keep invisible and display only when hotkey to display Language Panel is hold.";
-			this.chk_LPHotkeyHoldShow.UseVisualStyleBackColor = true;
-			// 
 			// chk_LPAeroColor
 			// 
 			this.chk_LPAeroColor.AutoSize = true;
-			this.chk_LPAeroColor.Location = new System.Drawing.Point(177, 167);
+			this.chk_LPAeroColor.Location = new System.Drawing.Point(169, 158);
 			this.chk_LPAeroColor.Name = "chk_LPAeroColor";
 			this.chk_LPAeroColor.Size = new System.Drawing.Size(145, 19);
 			this.chk_LPAeroColor.TabIndex = 34;
@@ -1769,7 +1764,7 @@ namespace Mahou
 			// lbl_LPBorderColor
 			// 
 			this.lbl_LPBorderColor.AutoSize = true;
-			this.lbl_LPBorderColor.Location = new System.Drawing.Point(27, 167);
+			this.lbl_LPBorderColor.Location = new System.Drawing.Point(19, 158);
 			this.lbl_LPBorderColor.Name = "lbl_LPBorderColor";
 			this.lbl_LPBorderColor.Size = new System.Drawing.Size(75, 15);
 			this.lbl_LPBorderColor.TabIndex = 33;
@@ -1777,7 +1772,7 @@ namespace Mahou
 			// 
 			// btn_LPBorderColor
 			// 
-			this.btn_LPBorderColor.Location = new System.Drawing.Point(483, 162);
+			this.btn_LPBorderColor.Location = new System.Drawing.Point(476, 153);
 			this.btn_LPBorderColor.Name = "btn_LPBorderColor";
 			this.btn_LPBorderColor.Size = new System.Drawing.Size(25, 25);
 			this.btn_LPBorderColor.TabIndex = 32;
@@ -1787,7 +1782,7 @@ namespace Mahou
 			// lbl_LPBack
 			// 
 			this.lbl_LPBack.AutoSize = true;
-			this.lbl_LPBack.Location = new System.Drawing.Point(26, 137);
+			this.lbl_LPBack.Location = new System.Drawing.Point(18, 128);
 			this.lbl_LPBack.Name = "lbl_LPBack";
 			this.lbl_LPBack.Size = new System.Drawing.Size(104, 15);
 			this.lbl_LPBack.TabIndex = 31;
@@ -1796,7 +1791,7 @@ namespace Mahou
 			// lbl_LPFore
 			// 
 			this.lbl_LPFore.AutoSize = true;
-			this.lbl_LPFore.Location = new System.Drawing.Point(26, 107);
+			this.lbl_LPFore.Location = new System.Drawing.Point(18, 98);
 			this.lbl_LPFore.Name = "lbl_LPFore";
 			this.lbl_LPFore.Size = new System.Drawing.Size(102, 15);
 			this.lbl_LPFore.TabIndex = 30;
@@ -1804,7 +1799,7 @@ namespace Mahou
 			// 
 			// btn_LPBack
 			// 
-			this.btn_LPBack.Location = new System.Drawing.Point(483, 133);
+			this.btn_LPBack.Location = new System.Drawing.Point(476, 124);
 			this.btn_LPBack.Name = "btn_LPBack";
 			this.btn_LPBack.Size = new System.Drawing.Size(25, 25);
 			this.btn_LPBack.TabIndex = 29;
@@ -1813,7 +1808,7 @@ namespace Mahou
 			// 
 			// btn_LPFore
 			// 
-			this.btn_LPFore.Location = new System.Drawing.Point(483, 103);
+			this.btn_LPFore.Location = new System.Drawing.Point(476, 94);
 			this.btn_LPFore.Name = "btn_LPFore";
 			this.btn_LPFore.Size = new System.Drawing.Size(25, 25);
 			this.btn_LPFore.TabIndex = 28;
@@ -1827,7 +1822,7 @@ namespace Mahou
 			0,
 			0,
 			0});
-			this.nud_LPTransparency.Location = new System.Drawing.Point(466, 75);
+			this.nud_LPTransparency.Location = new System.Drawing.Point(458, 66);
 			this.nud_LPTransparency.Minimum = new decimal(new int[] {
 			1,
 			0,
@@ -1845,7 +1840,7 @@ namespace Mahou
 			// lbl_LPTrasparency
 			// 
 			this.lbl_LPTrasparency.AutoSize = true;
-			this.lbl_LPTrasparency.Location = new System.Drawing.Point(26, 78);
+			this.lbl_LPTrasparency.Location = new System.Drawing.Point(18, 69);
 			this.lbl_LPTrasparency.Name = "lbl_LPTrasparency";
 			this.lbl_LPTrasparency.Size = new System.Drawing.Size(81, 15);
 			this.lbl_LPTrasparency.TabIndex = 26;
@@ -1858,7 +1853,7 @@ namespace Mahou
 			0,
 			0,
 			0});
-			this.nud_LPRefreshRate.Location = new System.Drawing.Point(466, 46);
+			this.nud_LPRefreshRate.Location = new System.Drawing.Point(458, 37);
 			this.nud_LPRefreshRate.Maximum = new decimal(new int[] {
 			2000,
 			0,
@@ -1881,7 +1876,7 @@ namespace Mahou
 			// lbl_LPRefreshRate
 			// 
 			this.lbl_LPRefreshRate.AutoSize = true;
-			this.lbl_LPRefreshRate.Location = new System.Drawing.Point(26, 50);
+			this.lbl_LPRefreshRate.Location = new System.Drawing.Point(18, 41);
 			this.lbl_LPRefreshRate.Name = "lbl_LPRefreshRate";
 			this.lbl_LPRefreshRate.Size = new System.Drawing.Size(72, 15);
 			this.lbl_LPRefreshRate.TabIndex = 24;
@@ -2172,6 +2167,25 @@ namespace Mahou
 			this.HelpMeUnderstand.ShowAlways = true;
 			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.HelpMeUnderstand.Popup += new System.Windows.Forms.PopupEventHandler(this.HelpMeUnderstandPopup);
+			// 
+			// lbl_LPFont
+			// 
+			this.lbl_LPFont.AutoSize = true;
+			this.lbl_LPFont.Location = new System.Drawing.Point(18, 188);
+			this.lbl_LPFont.Name = "lbl_LPFont";
+			this.lbl_LPFont.Size = new System.Drawing.Size(34, 15);
+			this.lbl_LPFont.TabIndex = 36;
+			this.lbl_LPFont.Text = "Font:";
+			// 
+			// btn_LPFont
+			// 
+			this.btn_LPFont.Location = new System.Drawing.Point(458, 183);
+			this.btn_LPFont.Name = "btn_LPFont";
+			this.btn_LPFont.Size = new System.Drawing.Size(66, 25);
+			this.btn_LPFont.TabIndex = 35;
+			this.btn_LPFont.Text = "Font";
+			this.btn_LPFont.UseVisualStyleBackColor = true;
+			this.btn_LPFont.Click += new System.EventHandler(this.Btn_LangTTFontClick);
 			// 
 			// MahouUI
 			// 

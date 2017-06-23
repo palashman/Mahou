@@ -38,13 +38,15 @@ namespace Mahou
 			// 
 			// lbl_LayoutName
 			// 
-			this.lbl_LayoutName.Location = new System.Drawing.Point(31, 5);
+			this.lbl_LayoutName.Location = new System.Drawing.Point(26, 5);
 			this.lbl_LayoutName.Name = "lbl_LayoutName";
-			this.lbl_LayoutName.Size = new System.Drawing.Size(126, 15);
+			this.lbl_LayoutName.Size = new System.Drawing.Size(130, 15);
 			this.lbl_LayoutName.TabIndex = 0;
 			this.lbl_LayoutName.Text = "Layout Name";
+			this.lbl_LayoutName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.lbl_LayoutName.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LangPanelMouseDown);
 			this.lbl_LayoutName.MouseMove += new System.Windows.Forms.MouseEventHandler(this.LangPanelMouseMove);
+			this.lbl_LayoutName.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Lbl_LayoutNameMouseUp);
 			// 
 			// pct_Flag
 			// 
@@ -58,11 +60,13 @@ namespace Mahou
 			this.pct_Flag.TabStop = false;
 			this.pct_Flag.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LangPanelMouseDown);
 			this.pct_Flag.MouseMove += new System.Windows.Forms.MouseEventHandler(this.LangPanelMouseMove);
+			this.pct_Flag.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Lbl_LayoutNameMouseUp);
 			// 
 			// LangPanel
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.BackColor = System.Drawing.SystemColors.Window;
 			this.ClientSize = new System.Drawing.Size(161, 24);
 			this.ControlBox = false;
 			this.Controls.Add(this.pct_Flag);
@@ -75,11 +79,13 @@ namespace Mahou
 			this.Opacity = 0.9D;
 			this.ShowIcon = false;
 			this.ShowInTaskbar = false;
+			this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
 			this.Text = "LangPanel";
 			this.TopMost = true;
 			this.TransparencyKey = System.Drawing.Color.Peru;
 			this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LangPanelMouseDown);
 			this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.LangPanelMouseMove);
+			this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Lbl_LayoutNameMouseUp);
 			((System.ComponentModel.ISupportInitialize)(this.pct_Flag)).EndInit();
 			this.ResumeLayout(false);
 
