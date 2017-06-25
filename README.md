@@ -23,6 +23,12 @@ Mahou работает совершенно по-другому: в отличи
 
 ###### Возможности по версиям:
 
+**v2.3.4.0**<br/>
+
+- :gem: Добавлена прокрутка вкладок по колесику мыши в главном окне.
+- :gem: Добавлена функция индикатора регистра ввода для языковых подсказок и языковой панели.
+- :memo: Мелкие исправления в переводах.
+
 **v2.3.3.3**<br/>
 
 - :gem: Новая возможность - Панель языка. (она использует код из [JustUI](https://github.com/BladeMight/JustUI))
@@ -233,6 +239,13 @@ Even selected text switches just between **selected** layouts, though if you lik
 4. Starting from v1.0.4.4 in Convert selection unrecognized text by all selected layout in settings (example: ♥) just rewrites.
 
 ###### By version features:
+
+
+**v2.3.4.0**<br/>
+
+- :gem: Added tabs switch by wheel scroll in main window.
+- :gem: Added new function - input uppercase indicator for language panel and tooltips.
+- :memo: Little translation fixes.
 
 **v2.3.3.3**<br/>
 
