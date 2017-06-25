@@ -185,6 +185,7 @@ namespace Mahou {
 			}
 			if (m.Msg == WinAPI.WM_MOUSEWHEEL) {
 				if (WinAPI.WindowFromPoint(Cursor.Position) == tabs.Handle) {
+					try {
 					if (((uint)m.WParam >> 16) == 120) {
 						if (tabs.SelectedIndex + 1 > tabs.TabPages.Count -1)
 							tabs.SelectedIndex = 0;
@@ -197,6 +198,7 @@ namespace Mahou {
 						else
 							tabs.SelectedIndex -=1;
 					}
+					} catch (Exception e) { Logging.Log("Error in tabs wheel scroll, details: " + e.Message + "\r\n" + e.StackTrace + "\r\n"); }
 					tabs.Focus();
 				}
 			}
