@@ -120,6 +120,9 @@ namespace Mahou
 			// Different text for layouts
 			CheckString("Appearence", "Layout1LTText", "");
 			CheckString("Appearence", "Layout2LTText", "");
+			// Upper arrows for lang displays
+			CheckBool("Appearence", "MouseLTUpperArrow", "false");
+			CheckBool("Appearence", "CaretLTUpperArrow", "false");
 			#endregion
 			#region Timings section
 			CheckInt("Timings", "LangTooltipForMouseRefreshRate", "25");
@@ -211,6 +214,7 @@ namespace Mahou
 			CheckString("LangPanel", "Font", "Microsoft Sans Serif; 8,25pt");
 			CheckString("LangPanel", "BorderColor", "#8B5FFF");
 			CheckBool("LangPanel", "BorderAeroColor", "true");
+			CheckBool("LangPanel", "UpperArrow", "true");
 			#endregion
             #region Proxy section
             CheckString("Proxy", "ServerPort", "");

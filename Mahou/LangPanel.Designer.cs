@@ -9,6 +9,7 @@ namespace Mahou
 		private System.ComponentModel.IContainer components = null;
 		private System.Windows.Forms.Label lbl_LayoutName;
 		private System.Windows.Forms.PictureBox pct_Flag;
+		private System.Windows.Forms.PictureBox pct_Upper;
 		
 		/// <summary>
 		/// Disposes resources used by the form.
@@ -33,18 +34,20 @@ namespace Mahou
 		{
 			this.lbl_LayoutName = new System.Windows.Forms.Label();
 			this.pct_Flag = new System.Windows.Forms.PictureBox();
+			this.pct_Upper = new System.Windows.Forms.PictureBox();
 			((System.ComponentModel.ISupportInitialize)(this.pct_Flag)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.pct_Upper)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// lbl_LayoutName
 			// 
 			this.lbl_LayoutName.AutoSize = true;
-			this.lbl_LayoutName.Location = new System.Drawing.Point(26, 5);
+			this.lbl_LayoutName.Location = new System.Drawing.Point(24, 4);
 			this.lbl_LayoutName.Name = "lbl_LayoutName";
 			this.lbl_LayoutName.Size = new System.Drawing.Size(70, 13);
 			this.lbl_LayoutName.TabIndex = 0;
 			this.lbl_LayoutName.Text = "Layout Name";
-			this.lbl_LayoutName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.lbl_LayoutName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.lbl_LayoutName.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LangPanelMouseDown);
 			this.lbl_LayoutName.MouseMove += new System.Windows.Forms.MouseEventHandler(this.LangPanelMouseMove);
 			this.lbl_LayoutName.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Lbl_LayoutNameMouseUp);
@@ -63,19 +66,34 @@ namespace Mahou
 			this.pct_Flag.MouseMove += new System.Windows.Forms.MouseEventHandler(this.LangPanelMouseMove);
 			this.pct_Flag.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Lbl_LayoutNameMouseUp);
 			// 
+			// pct_Upper
+			// 
+			this.pct_Upper.BackgroundImage = global::Mahou.Properties.Resources.up;
+			this.pct_Upper.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+			this.pct_Upper.InitialImage = null;
+			this.pct_Upper.Location = new System.Drawing.Point(20, 4);
+			this.pct_Upper.Name = "pct_Upper";
+			this.pct_Upper.Size = new System.Drawing.Size(16, 16);
+			this.pct_Upper.TabIndex = 2;
+			this.pct_Upper.TabStop = false;
+			this.pct_Upper.Visible = false;
+			// 
 			// LangPanel
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.Window;
-			this.ClientSize = new System.Drawing.Size(161, 24);
+			this.ClientSize = new System.Drawing.Size(40, 24);
 			this.ControlBox = false;
+			this.Controls.Add(this.pct_Upper);
 			this.Controls.Add(this.pct_Flag);
 			this.Controls.Add(this.lbl_LayoutName);
 			this.Cursor = System.Windows.Forms.Cursors.SizeAll;
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MaximizeBox = false;
+			this.MaximumSize = new System.Drawing.Size(400, 24);
 			this.MinimizeBox = false;
+			this.MinimumSize = new System.Drawing.Size(40, 24);
 			this.Name = "LangPanel";
 			this.Opacity = 0.9D;
 			this.ShowIcon = false;
@@ -88,6 +106,7 @@ namespace Mahou
 			this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.LangPanelMouseMove);
 			this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Lbl_LayoutNameMouseUp);
 			((System.ComponentModel.ISupportInitialize)(this.pct_Flag)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.pct_Upper)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

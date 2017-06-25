@@ -162,6 +162,8 @@ namespace Mahou
 		private System.Windows.Forms.GroupBox grb_LPConfig;
 		private System.Windows.Forms.Label lbl_LPFont;
 		private System.Windows.Forms.Button btn_LPFont;
+		private System.Windows.Forms.CheckBox chk_LPUpperArrow;
+		private System.Windows.Forms.CheckBox chk_LangTTUpperArrow;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -246,8 +248,9 @@ namespace Mahou
 			this.chk_LangTTCaretOnChange = new System.Windows.Forms.CheckBox();
 			this.chk_LangTTMouseOnChange = new System.Windows.Forms.CheckBox();
 			this.grb_LangTTAppearence = new System.Windows.Forms.GroupBox();
-			this.chk_LangTTUseFlags = new System.Windows.Forms.CheckBox();
 			this.txt_LangTTText = new System.Windows.Forms.TextBox();
+			this.chk_LangTTUpperArrow = new System.Windows.Forms.CheckBox();
+			this.chk_LangTTUseFlags = new System.Windows.Forms.CheckBox();
 			this.lbl_LangTTText = new System.Windows.Forms.Label();
 			this.btn_LangTTFont = new System.Windows.Forms.Button();
 			this.grb_LangTTPositon = new System.Windows.Forms.GroupBox();
@@ -298,6 +301,9 @@ namespace Mahou
 			this.lsb_Hotkeys = new System.Windows.Forms.ListBox();
 			this.tab_LangPanel = new System.Windows.Forms.TabPage();
 			this.grb_LPConfig = new System.Windows.Forms.GroupBox();
+			this.chk_LPUpperArrow = new System.Windows.Forms.CheckBox();
+			this.lbl_LPFont = new System.Windows.Forms.Label();
+			this.btn_LPFont = new System.Windows.Forms.Button();
 			this.chk_LPAeroColor = new System.Windows.Forms.CheckBox();
 			this.lbl_LPBorderColor = new System.Windows.Forms.Label();
 			this.btn_LPBorderColor = new System.Windows.Forms.Button();
@@ -336,8 +342,6 @@ namespace Mahou
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
 			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
-			this.lbl_LPFont = new System.Windows.Forms.Label();
-			this.btn_LPFont = new System.Windows.Forms.Button();
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -1111,8 +1115,9 @@ namespace Mahou
 			// 
 			// grb_LangTTAppearence
 			// 
-			this.grb_LangTTAppearence.Controls.Add(this.chk_LangTTUseFlags);
 			this.grb_LangTTAppearence.Controls.Add(this.txt_LangTTText);
+			this.grb_LangTTAppearence.Controls.Add(this.chk_LangTTUpperArrow);
+			this.grb_LangTTAppearence.Controls.Add(this.chk_LangTTUseFlags);
 			this.grb_LangTTAppearence.Controls.Add(this.lbl_LangTTText);
 			this.grb_LangTTAppearence.Controls.Add(this.btn_LangTTFont);
 			this.grb_LangTTAppearence.Controls.Add(this.grb_LangTTPositon);
@@ -1130,24 +1135,36 @@ namespace Mahou
 			this.grb_LangTTAppearence.TabStop = false;
 			this.grb_LangTTAppearence.Text = "Language tooltip appearence";
 			// 
+			// txt_LangTTText
+			// 
+			this.txt_LangTTText.Location = new System.Drawing.Point(408, 77);
+			this.txt_LangTTText.Name = "txt_LangTTText";
+			this.txt_LangTTText.Size = new System.Drawing.Size(117, 23);
+			this.txt_LangTTText.TabIndex = 10;
+			this.txt_LangTTText.TextChanged += new System.EventHandler(this.UpdateLDTemps);
+			// 
+			// chk_LangTTUpperArrow
+			// 
+			this.chk_LangTTUpperArrow.AutoSize = true;
+			this.chk_LangTTUpperArrow.Location = new System.Drawing.Point(211, 81);
+			this.chk_LangTTUpperArrow.Name = "chk_LangTTUpperArrow";
+			this.chk_LangTTUpperArrow.Size = new System.Drawing.Size(153, 19);
+			this.chk_LangTTUpperArrow.TabIndex = 12;
+			this.chk_LangTTUpperArrow.Text = "Arrow when upper case.";
+			this.chk_LangTTUpperArrow.UseVisualStyleBackColor = true;
+			this.chk_LangTTUpperArrow.Visible = false;
+			this.chk_LangTTUpperArrow.CheckedChanged += new System.EventHandler(this.UpdateLDTemps);
+			// 
 			// chk_LangTTUseFlags
 			// 
 			this.chk_LangTTUseFlags.AutoSize = true;
-			this.chk_LangTTUseFlags.Location = new System.Drawing.Point(211, 81);
+			this.chk_LangTTUseFlags.Location = new System.Drawing.Point(406, 81);
 			this.chk_LangTTUseFlags.Name = "chk_LangTTUseFlags";
 			this.chk_LangTTUseFlags.Size = new System.Drawing.Size(73, 19);
 			this.chk_LangTTUseFlags.TabIndex = 11;
 			this.chk_LangTTUseFlags.Text = "Use flags";
 			this.chk_LangTTUseFlags.UseVisualStyleBackColor = true;
 			this.chk_LangTTUseFlags.CheckedChanged += new System.EventHandler(this.UpdateLDTemps);
-			// 
-			// txt_LangTTText
-			// 
-			this.txt_LangTTText.Location = new System.Drawing.Point(424, 77);
-			this.txt_LangTTText.Name = "txt_LangTTText";
-			this.txt_LangTTText.Size = new System.Drawing.Size(117, 23);
-			this.txt_LangTTText.TabIndex = 10;
-			this.txt_LangTTText.TextChanged += new System.EventHandler(this.UpdateLDTemps);
 			// 
 			// lbl_LangTTText
 			// 
@@ -1160,7 +1177,7 @@ namespace Mahou
 			// 
 			// btn_LangTTFont
 			// 
-			this.btn_LangTTFont.Location = new System.Drawing.Point(422, 18);
+			this.btn_LangTTFont.Location = new System.Drawing.Point(406, 18);
 			this.btn_LangTTFont.Name = "btn_LangTTFont";
 			this.btn_LangTTFont.Size = new System.Drawing.Size(117, 23);
 			this.btn_LangTTFont.TabIndex = 8;
@@ -1174,7 +1191,7 @@ namespace Mahou
 			this.grb_LangTTPositon.Controls.Add(this.lbl_LangTTPositionY);
 			this.grb_LangTTPositon.Controls.Add(this.nud_LangTTPositionX);
 			this.grb_LangTTPositon.Controls.Add(this.lbl_LangTTPositionX);
-			this.grb_LangTTPositon.Location = new System.Drawing.Point(405, 106);
+			this.grb_LangTTPositon.Location = new System.Drawing.Point(399, 106);
 			this.grb_LangTTPositon.Name = "grb_LangTTPositon";
 			this.grb_LangTTPositon.Size = new System.Drawing.Size(134, 79);
 			this.grb_LangTTPositon.TabIndex = 7;
@@ -1283,7 +1300,7 @@ namespace Mahou
 			// chk_LangTTTransparentColor
 			// 
 			this.chk_LangTTTransparentColor.AutoSize = true;
-			this.chk_LangTTTransparentColor.Location = new System.Drawing.Point(422, 52);
+			this.chk_LangTTTransparentColor.Location = new System.Drawing.Point(406, 52);
 			this.chk_LangTTTransparentColor.Name = "chk_LangTTTransparentColor";
 			this.chk_LangTTTransparentColor.Size = new System.Drawing.Size(119, 19);
 			this.chk_LangTTTransparentColor.TabIndex = 3;
@@ -1731,6 +1748,7 @@ namespace Mahou
 			// 
 			// grb_LPConfig
 			// 
+			this.grb_LPConfig.Controls.Add(this.chk_LPUpperArrow);
 			this.grb_LPConfig.Controls.Add(this.lbl_LPFont);
 			this.grb_LPConfig.Controls.Add(this.btn_LPFont);
 			this.grb_LPConfig.Controls.Add(this.chk_LPAeroColor);
@@ -1750,10 +1768,39 @@ namespace Mahou
 			this.grb_LPConfig.TabIndex = 1;
 			this.grb_LPConfig.TabStop = false;
 			// 
+			// chk_LPUpperArrow
+			// 
+			this.chk_LPUpperArrow.AutoSize = true;
+			this.chk_LPUpperArrow.Location = new System.Drawing.Point(19, 200);
+			this.chk_LPUpperArrow.Name = "chk_LPUpperArrow";
+			this.chk_LPUpperArrow.Size = new System.Drawing.Size(277, 19);
+			this.chk_LPUpperArrow.TabIndex = 37;
+			this.chk_LPUpperArrow.Text = "Display up arrow icon when input is upper case.";
+			this.chk_LPUpperArrow.UseVisualStyleBackColor = true;
+			// 
+			// lbl_LPFont
+			// 
+			this.lbl_LPFont.AutoSize = true;
+			this.lbl_LPFont.Location = new System.Drawing.Point(18, 177);
+			this.lbl_LPFont.Name = "lbl_LPFont";
+			this.lbl_LPFont.Size = new System.Drawing.Size(34, 15);
+			this.lbl_LPFont.TabIndex = 36;
+			this.lbl_LPFont.Text = "Font:";
+			// 
+			// btn_LPFont
+			// 
+			this.btn_LPFont.Location = new System.Drawing.Point(457, 172);
+			this.btn_LPFont.Name = "btn_LPFont";
+			this.btn_LPFont.Size = new System.Drawing.Size(66, 25);
+			this.btn_LPFont.TabIndex = 35;
+			this.btn_LPFont.Text = "Font";
+			this.btn_LPFont.UseVisualStyleBackColor = true;
+			this.btn_LPFont.Click += new System.EventHandler(this.Btn_LangTTFontClick);
+			// 
 			// chk_LPAeroColor
 			// 
 			this.chk_LPAeroColor.AutoSize = true;
-			this.chk_LPAeroColor.Location = new System.Drawing.Point(169, 158);
+			this.chk_LPAeroColor.Location = new System.Drawing.Point(168, 147);
 			this.chk_LPAeroColor.Name = "chk_LPAeroColor";
 			this.chk_LPAeroColor.Size = new System.Drawing.Size(145, 19);
 			this.chk_LPAeroColor.TabIndex = 34;
@@ -1764,7 +1811,7 @@ namespace Mahou
 			// lbl_LPBorderColor
 			// 
 			this.lbl_LPBorderColor.AutoSize = true;
-			this.lbl_LPBorderColor.Location = new System.Drawing.Point(19, 158);
+			this.lbl_LPBorderColor.Location = new System.Drawing.Point(18, 147);
 			this.lbl_LPBorderColor.Name = "lbl_LPBorderColor";
 			this.lbl_LPBorderColor.Size = new System.Drawing.Size(75, 15);
 			this.lbl_LPBorderColor.TabIndex = 33;
@@ -1772,7 +1819,7 @@ namespace Mahou
 			// 
 			// btn_LPBorderColor
 			// 
-			this.btn_LPBorderColor.Location = new System.Drawing.Point(476, 153);
+			this.btn_LPBorderColor.Location = new System.Drawing.Point(475, 142);
 			this.btn_LPBorderColor.Name = "btn_LPBorderColor";
 			this.btn_LPBorderColor.Size = new System.Drawing.Size(25, 25);
 			this.btn_LPBorderColor.TabIndex = 32;
@@ -1782,7 +1829,7 @@ namespace Mahou
 			// lbl_LPBack
 			// 
 			this.lbl_LPBack.AutoSize = true;
-			this.lbl_LPBack.Location = new System.Drawing.Point(18, 128);
+			this.lbl_LPBack.Location = new System.Drawing.Point(17, 117);
 			this.lbl_LPBack.Name = "lbl_LPBack";
 			this.lbl_LPBack.Size = new System.Drawing.Size(104, 15);
 			this.lbl_LPBack.TabIndex = 31;
@@ -1791,7 +1838,7 @@ namespace Mahou
 			// lbl_LPFore
 			// 
 			this.lbl_LPFore.AutoSize = true;
-			this.lbl_LPFore.Location = new System.Drawing.Point(18, 98);
+			this.lbl_LPFore.Location = new System.Drawing.Point(17, 87);
 			this.lbl_LPFore.Name = "lbl_LPFore";
 			this.lbl_LPFore.Size = new System.Drawing.Size(102, 15);
 			this.lbl_LPFore.TabIndex = 30;
@@ -1799,7 +1846,7 @@ namespace Mahou
 			// 
 			// btn_LPBack
 			// 
-			this.btn_LPBack.Location = new System.Drawing.Point(476, 124);
+			this.btn_LPBack.Location = new System.Drawing.Point(475, 113);
 			this.btn_LPBack.Name = "btn_LPBack";
 			this.btn_LPBack.Size = new System.Drawing.Size(25, 25);
 			this.btn_LPBack.TabIndex = 29;
@@ -1808,7 +1855,7 @@ namespace Mahou
 			// 
 			// btn_LPFore
 			// 
-			this.btn_LPFore.Location = new System.Drawing.Point(476, 94);
+			this.btn_LPFore.Location = new System.Drawing.Point(475, 83);
 			this.btn_LPFore.Name = "btn_LPFore";
 			this.btn_LPFore.Size = new System.Drawing.Size(25, 25);
 			this.btn_LPFore.TabIndex = 28;
@@ -1822,7 +1869,7 @@ namespace Mahou
 			0,
 			0,
 			0});
-			this.nud_LPTransparency.Location = new System.Drawing.Point(458, 66);
+			this.nud_LPTransparency.Location = new System.Drawing.Point(457, 55);
 			this.nud_LPTransparency.Minimum = new decimal(new int[] {
 			1,
 			0,
@@ -1840,7 +1887,7 @@ namespace Mahou
 			// lbl_LPTrasparency
 			// 
 			this.lbl_LPTrasparency.AutoSize = true;
-			this.lbl_LPTrasparency.Location = new System.Drawing.Point(18, 69);
+			this.lbl_LPTrasparency.Location = new System.Drawing.Point(17, 58);
 			this.lbl_LPTrasparency.Name = "lbl_LPTrasparency";
 			this.lbl_LPTrasparency.Size = new System.Drawing.Size(81, 15);
 			this.lbl_LPTrasparency.TabIndex = 26;
@@ -1853,7 +1900,7 @@ namespace Mahou
 			0,
 			0,
 			0});
-			this.nud_LPRefreshRate.Location = new System.Drawing.Point(458, 37);
+			this.nud_LPRefreshRate.Location = new System.Drawing.Point(457, 26);
 			this.nud_LPRefreshRate.Maximum = new decimal(new int[] {
 			2000,
 			0,
@@ -1876,7 +1923,7 @@ namespace Mahou
 			// lbl_LPRefreshRate
 			// 
 			this.lbl_LPRefreshRate.AutoSize = true;
-			this.lbl_LPRefreshRate.Location = new System.Drawing.Point(18, 41);
+			this.lbl_LPRefreshRate.Location = new System.Drawing.Point(17, 30);
 			this.lbl_LPRefreshRate.Name = "lbl_LPRefreshRate";
 			this.lbl_LPRefreshRate.Size = new System.Drawing.Size(72, 15);
 			this.lbl_LPRefreshRate.TabIndex = 24;
@@ -2167,25 +2214,6 @@ namespace Mahou
 			this.HelpMeUnderstand.ShowAlways = true;
 			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.HelpMeUnderstand.Popup += new System.Windows.Forms.PopupEventHandler(this.HelpMeUnderstandPopup);
-			// 
-			// lbl_LPFont
-			// 
-			this.lbl_LPFont.AutoSize = true;
-			this.lbl_LPFont.Location = new System.Drawing.Point(18, 188);
-			this.lbl_LPFont.Name = "lbl_LPFont";
-			this.lbl_LPFont.Size = new System.Drawing.Size(34, 15);
-			this.lbl_LPFont.TabIndex = 36;
-			this.lbl_LPFont.Text = "Font:";
-			// 
-			// btn_LPFont
-			// 
-			this.btn_LPFont.Location = new System.Drawing.Point(458, 183);
-			this.btn_LPFont.Name = "btn_LPFont";
-			this.btn_LPFont.Size = new System.Drawing.Size(66, 25);
-			this.btn_LPFont.TabIndex = 35;
-			this.btn_LPFont.Text = "Font";
-			this.btn_LPFont.UseVisualStyleBackColor = true;
-			this.btn_LPFont.Click += new System.EventHandler(this.Btn_LangTTFontClick);
 			// 
 			// MahouUI
 			// 

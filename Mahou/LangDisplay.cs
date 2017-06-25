@@ -10,6 +10,7 @@ namespace Mahou
 		/// </summary>
 		public bool lastTransparentBG, transparentBG, caretDisplay, mouseDisplay, DisplayFlag;
 		public string lastText = "NO";
+		Size lastsize = new Size(0,0);
 		public LangDisplay()
 		{
 			InitializeComponent();
@@ -37,6 +38,22 @@ namespace Mahou
 			if (!transparentBG) return;
 			Invalidate();
 			Update();
+		}
+		public void DisplayUpper(bool Upper) {
+			var lastvis = pct_UpperArrow.Visible;
+			if (Upper && !pct_UpperArrow.Visible)
+				pct_UpperArrow.Visible = true;
+			else if (!Upper && pct_UpperArrow.Visible)
+				pct_UpperArrow.Visible = false;
+			if (lastvis != pct_UpperArrow.Visible) {
+				ReSize();
+				if (Upper) {
+					pct_UpperArrow.Left = Width;
+					pct_UpperArrow.Top = (Height - 16)/2+1;
+					Width = Width + 16;
+				}
+				lastsize = Size;
+			}
 		}
 		/// <summary>
 		/// Toggles lang display label visibility.
@@ -94,17 +111,26 @@ namespace Mahou
 				if (!MMain.mahou.DiffAppearenceForLayouts || lbLang.Text == "") 
 					ChangeLD(clangname.ThreeLetterISOLanguageName.Substring(0, 1).ToUpper() + clangname.ThreeLetterISOLanguageName.Substring(1));
 				if (transparentBG)
-					TransparencyKey = BackColor = lbLang.BackColor = Color.Pink;
+					TransparencyKey = BackColor = lbLang.BackColor = pct_UpperArrow.BackColor = Color.Pink;
 				if (lastTransparentBG != transparentBG)
 					SetVisInvis();
 				lastTransparentBG = transparentBG;
-				if (DisplayFlag)
-					Size = BackgroundImage.Size;
-				else 
-					Size = lbLang.Size;
+				if ((caretDisplay && !MahouUI.caretLTUpperArrow) || (mouseDisplay && !MahouUI.mouseLTUpperArrow))
+					ReSize();
 			} else {
 				Logging.Log("Language tooltip text NOT changed, locale id = [" + cLid + "].", 2);
 			}
+		}
+		void ReSize() {
+			if (DisplayFlag) {
+				if (lastsize == BackgroundImage.Size) return;
+				Size = BackgroundImage.Size;
+			}
+			else {
+				if (lastsize == lbLang.Size) return;
+				Size = lbLang.Size;
+			}
+			lastsize = Size;
 		}
 		/// <summary>
 		/// Change font and colors of lang display.
@@ -117,7 +143,7 @@ namespace Mahou
 		{
 			transparentBG = tBG;
 			lbLang.ForeColor = fore;
-			lbLang.BackColor = back;
+			pct_UpperArrow.BackColor = lbLang.BackColor = back;
 			lbLang.Font = fnt;
 		}
 		/// <summary>

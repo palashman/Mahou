@@ -27,7 +27,7 @@ namespace Mahou {
 		/// Directory where Mahou.exe is.
 		/// </summary>
 		public static string nPath = AppDomain.CurrentDomain.BaseDirectory;
-		public static bool LoggingEnabled, dummy;
+		public static bool LoggingEnabled, dummy, CapsLockDisablerTimer, LangPanelUpperArrow, mouseLTUpperArrow, caretLTUpperArrow;
 		static string[] UpdInfo;
 		static bool updating, was, isold = true, checking;
 		static Timer tmr = new Timer();
@@ -569,6 +569,8 @@ namespace Mahou {
 				Logging.Log("Language saving failed, restored to English.");
 				MMain.MyConfs.Write("Appearence", "Language", "English");
 			}
+			MMain.MyConfs.Write("Appearence", "MouseLTUpperArrow", mouseLTUpperArrow.ToString());
+			MMain.MyConfs.Write("Appearence", "CaretLTUpperArrow", caretLTUpperArrow.ToString());
 			#endregion
 			#region Timings
 			MMain.MyConfs.Write("Timings", "LangTooltipForMouseRefreshRate", nud_LangTTMouseRefreshRate.Value.ToString());
@@ -599,6 +601,7 @@ namespace Mahou {
 			MMain.MyConfs.Write("LangPanel", "BorderColor", ColorTranslator.ToHtml(btn_LPBorderColor.BackColor));
 			MMain.MyConfs.Write("LangPanel", "BorderAeroColor", chk_LPAeroColor.Checked.ToString());
 			MMain.MyConfs.Write("LangPanel", "Font", fcv.ConvertToString(btn_LPFont.Font));
+			MMain.MyConfs.Write("LangPanel", "UpperArrow", chk_LPUpperArrow.Checked.ToString());
 			#endregion
 			#region Proxy
 			MMain.MyConfs.Write("Proxy", "ServerPort", txt_ProxyServerPort.Text);
@@ -630,7 +633,7 @@ namespace Mahou {
 			chk_StartupUpdatesCheck.Checked = MMain.MyConfs.ReadBool("Functions", "StartupUpdatesCheck");
 			LoggingEnabled = chk_Logging.Checked = MMain.MyConfs.ReadBool("Functions", "Logging");
 			TrayFlags = chk_FlagsInTray.Checked = MMain.MyConfs.ReadBool("Functions", "TrayFlags");
-			chk_CapsLockDTimer.Checked = MMain.MyConfs.ReadBool("Functions", "CapsLockTimer");
+			CapsLockDisablerTimer = chk_CapsLockDTimer.Checked = MMain.MyConfs.ReadBool("Functions", "CapsLockTimer");
 			BlockHKWithCtrl = chk_BlockHKWithCtrl.Checked = MMain.MyConfs.ReadBool("Functions", "BlockMahouHotkeysWithCtrl");
 			SymIgnEnabled = MMain.MyConfs.ReadBool("Functions", "SymbolIgnoreModeEnabled");
 			MCDSSupport = chk_MCDS_support.Checked = MMain.MyConfs.ReadBool("Functions", "MCDServerSupport");
@@ -671,6 +674,8 @@ namespace Mahou {
 			LDForCaretOnChange = chk_LangTTCaretOnChange.Checked = MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForCaretOnChange");
 			DiffAppearenceForLayouts = chk_LangTTDiffLayoutColors.Checked = MMain.MyConfs.ReadBool("Appearence", "DifferentColorsForLayouts");
 			MouseTTAlways = chk_MouseTTAlways.Checked = MMain.MyConfs.ReadBool("Appearence", "MouseLTAlways");
+			mouseLTUpperArrow = MMain.MyConfs.ReadBool("Appearence", "MouseLTUpperArrow");
+			caretLTUpperArrow = MMain.MyConfs.ReadBool("Appearence", "CaretLTUpperArrow");
 			#endregion
 			#region Timings
 			nud_LangTTMouseRefreshRate.Value = MMain.MyConfs.ReadInt("Timings", "LangTooltipForMouseRefreshRate");
@@ -698,6 +703,7 @@ namespace Mahou {
 			LangPanelBorderAero = chk_LPAeroColor.Checked = MMain.MyConfs.ReadBool("LangPanel", "BorderAeroColor");
 			try { btn_LPFont.Font = LangPanelFont = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("LangPanel", "Font")); 
 				} catch { WrongFontLog(MMain.MyConfs.Read("LangPanel", "Font")); }
+			LangPanelUpperArrow = chk_LPUpperArrow.Checked = MMain.MyConfs.ReadBool("LangPanel", "UpperArrow");
 			#endregion
 			#region Snippets
 			SnippetsEnabled = chk_Snippets.Checked = MMain.MyConfs.ReadBool("Snippets", "SnippetsEnabled");
@@ -1561,35 +1567,35 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 					UpdateLangDisplayControls(Layout1Fore_temp, Layout1Back_temp, Layout1TransparentBack_temp,
 					                          Layout1Font_temp, Layout1X_Pos_temp, Layout1Y_Pos_temp, Layout1Width_temp,
 					                          Layout1Height_temp, Layout1TText);
-					chk_LangTTUseFlags.Visible = false;
+					chk_LangTTUpperArrow.Visible = chk_LangTTUseFlags.Visible = false;
 					lbl_LangTTText.Visible = txt_LangTTText.Visible = true;
 					break;
 				case 1:
 					UpdateLangDisplayControls(Layout2Fore_temp, Layout2Back_temp, Layout2TransparentBack_temp,
 					                          Layout2Font_temp, Layout2X_Pos_temp, Layout2Y_Pos_temp, Layout2Width_temp,
 					                          Layout2Height_temp, Layout2TText);
-					chk_LangTTUseFlags.Visible = false;
+					chk_LangTTUpperArrow.Visible = chk_LangTTUseFlags.Visible = false;
 					lbl_LangTTText.Visible = txt_LangTTText.Visible = true;
 					break;
 				case 2:
 					UpdateLangDisplayControls(LDMouseFore_temp, LDMouseBack_temp, LDMouseTransparentBack_temp,
 					                          LDMouseFont_temp, LDMouseX_Pos_temp, LDMouseY_Pos_temp, LDMouseWidth_temp,
-					                          LDMouseHeight_temp, "", LDMouseUseFlags_temp);
-					chk_LangTTUseFlags.Visible = true;
+					                          LDMouseHeight_temp, "", LDMouseUseFlags_temp, mouseLTUpperArrow);
+					chk_LangTTUpperArrow.Visible = chk_LangTTUseFlags.Visible = true;
 					lbl_LangTTText.Visible = txt_LangTTText.Visible = false;
 					break;
 				case 3:
 					UpdateLangDisplayControls(LDCaretFore_temp, LDCaretBack_temp, LDCaretTransparentBack_temp,
 					                          LDCaretFont_temp, LDCaretX_Pos_temp, LDCaretY_Pos_temp, LDCaretWidth_temp,
-					                          LDCaretHeight_temp, "", LDCaretUseFlags_temp);
-					chk_LangTTUseFlags.Visible = true;
+					                          LDCaretHeight_temp, "", LDCaretUseFlags_temp, caretLTUpperArrow);
+					chk_LangTTUpperArrow.Visible = chk_LangTTUseFlags.Visible = true;
 					lbl_LangTTText.Visible = txt_LangTTText.Visible = false;
 					break;
 				case 4:
 					UpdateLangDisplayControls(LDCaretFore_temp, LDCaretBack_temp, LDCaretTransparentBack_temp,
 					                          LDCaretFont_temp, MCDS_Xpos_temp, MCDS_Ypos_temp, MCDS_TopIndent_temp,
 					                          MCDS_BottomIndent_temp);
-					chk_LangTTUseFlags.Visible = false;
+					chk_LangTTUpperArrow.Visible = chk_LangTTUseFlags.Visible = false;
 					lbl_LangTTText.Visible = txt_LangTTText.Visible = false;
 					break;
 			}
@@ -1606,7 +1612,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 		/// <param name="width">Width.</param>
 		/// <param name="height">Height.</param>
 		void UpdateLangDisplayControls(Color FGcolor, Color BGColor, bool TransparentBG, Font font,
-		                               int posX, int posY, int width, int height, string TTText = "", bool UseFlags = false) {
+		                               int posX, int posY, int width, int height, string TTText = "", bool UseFlags = false, bool arrow = false) {
 			btn_LangTTForegroundColor.BackColor = FGcolor;
 			btn_LangTTBackgroundColor.BackColor = BGColor;
 			chk_LangTTTransparentColor.Checked = TransparentBG;
@@ -1617,6 +1623,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			nud_LangTTHeight.Value = height;
 			txt_LangTTText.Text = TTText;
 			chk_LangTTUseFlags.Checked = UseFlags;
+			chk_LangTTUpperArrow.Checked = arrow;
 		}
 		/// <summary>
 		/// Updates Lang Display temporary variables based on selected [layout appearence]. 
@@ -1654,6 +1661,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 					LDMouseWidth_temp = (int)nud_LangTTWidth.Value;
 					LDMouseHeight_temp = (int)nud_LangTTHeight.Value;
 					LDMouseUseFlags_temp = chk_LangTTUseFlags.Checked;
+					mouseLTUpperArrow = chk_LangTTUpperArrow.Checked;
 					LDMouseTransparentBack_temp = chk_LangTTTransparentColor.Checked;
 					break;
 				case 3:
@@ -1665,6 +1673,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 					LDCaretWidth_temp = (int)nud_LangTTWidth.Value;
 					LDCaretHeight_temp = (int)nud_LangTTHeight.Value;
 					LDCaretUseFlags_temp = chk_LangTTUseFlags.Checked;
+					caretLTUpperArrow = chk_LangTTUpperArrow.Checked;
 					LDCaretTransparentBack_temp = chk_LangTTTransparentColor.Checked;
 					break;
 				case 4:
@@ -2089,6 +2098,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 														"MCDS"
 														});
 			chk_LangTTUseFlags.Text = MMain.Lang[Languages.Element.UseFlags];
+			chk_LangTTUpperArrow.Text = MMain.Lang[Languages.Element.LDUpperArrow];
 			#endregion
 			#region Timings
 			lbl_LangTTMouseRefreshRate.Text = MMain.Lang[Languages.Element.LDForMouseRefreshRate];
@@ -2134,6 +2144,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			chk_LPAeroColor.Text = MMain.Lang[Languages.Element.UseAeroColor];
 			lbl_LPFont.Text = MMain.Lang[Languages.Element.LDFont] + ":";
 			btn_LPFont.Text = MMain.Lang[Languages.Element.LDFont];
+			chk_LPUpperArrow.Text = MMain.Lang[Languages.Element.DisplayUpperArrow];
 			#endregion
 			#region Updtaes
 			btn_CheckForUpdates.Text = MMain.Lang[Languages.Element.CheckForUpdates];

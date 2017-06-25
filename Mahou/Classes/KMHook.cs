@@ -131,6 +131,20 @@ namespace Mahou
 					CheckLayoutLater.Start();
 				}
 				#endregion
+				#region
+				var upper = false;
+				if (MahouUI.LangPanelUpperArrow || MahouUI.mouseLTUpperArrow || MahouUI.caretLTUpperArrow)
+					upper = IsUpperInput();
+				if (MMain.mahou.LangPanelDisplay)
+					if (MahouUI.LangPanelUpperArrow)
+						MMain.mahou._langPanel.DisplayUpper(upper);
+				if (MMain.mahou.MouseLangTooltipEnabled)
+					if (MahouUI.mouseLTUpperArrow)
+						MMain.mahou.mouseLangDisplay.DisplayUpper(upper);
+				if (MMain.mahou.CaretLangTooltipEnabled)
+					if (MahouUI.caretLTUpperArrow)
+						MMain.mahou.caretLangDisplay.DisplayUpper(upper);
+				#endregion
 				#region Snippets
 				if (MMain.mahou.SnippetsEnabled) {
 					if (((Key >= Keys.D0 && Key <= Keys.Z) || // This is 0-9 & A-Z
@@ -428,6 +442,16 @@ namespace Mahou
 		}
 		#endregion
 		#region Functions/Struct
+		static bool IsUpperInput() {
+			bool caps = Control.IsKeyLocked(Keys.CapsLock);
+			if (MahouUI.CapsLockDisablerTimer)
+				caps = false;
+			if ((shift && !caps) || (!shift && caps))
+				return true;
+			if ((shift && caps) || (!shift && !caps))
+				return false;
+			return false;
+		}
 		static bool ExcludedProgram() {
 			var prc = Locales.ActiveWindowProcess();
 			if (MMain.mahou.ExcludedPrograms.Contains(prc.ProcessName + ".exe")) {

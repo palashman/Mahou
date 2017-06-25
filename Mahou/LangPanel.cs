@@ -10,6 +10,7 @@ namespace Mahou {
 	public partial class LangPanel : Form {
 		public LangPanel() {
 			InitializeComponent();
+			Height = 24;
 			AeroCheck();
 		}
 		#region Screen-Snap
@@ -20,12 +21,24 @@ namespace Mahou {
 			lbl_LayoutName.Text = layoutName;
 			pct_Flag.BackgroundImage = flag;
 			Width = lbl_LayoutName.Left + lbl_LayoutName.Width + 4;
-			Invalidate();
+			ReSnap();
+		}
+		public void DisplayUpper(bool Upper) {
+			pct_Upper.Visible = Upper;
+			if (Upper)
+				lbl_LayoutName.Left = 4+16+16;
+			else 
+				lbl_LayoutName.Left = 4+16;
+			Width = lbl_LayoutName.Left + lbl_LayoutName.Width + 4;
+			ReSnap();
+        }
+		void ReSnap() {
 			var scr = Screen.FromPoint(Location);
 			if (Location.X + Width > scr.Bounds.Width)
 				Left = scr.Bounds.Width - Width;
 			if (snap_r && Left != scr.Bounds.Width - Width)
 				Left = scr.Bounds.Width - Width;
+			Invalidate();
 		}
 		void LangPanelMouseDown(object sender, MouseEventArgs e) {
 			int top = 0, left = 0;

@@ -65,6 +65,7 @@ public class Languages
 		MCDSBottomIndent,
 		UseFlags,
 		Always,
+		LDUpperArrow,
 		#endregion
 		#region Timings
 		LDForMouseRefreshRate,
@@ -102,6 +103,7 @@ public class Languages
 		Transparency,
 		BorderColor,
 		UseAeroColor,
+		DisplayUpperArrow,
 		#endregion
 		#region Updates
 		CheckForUpdates,
@@ -222,10 +224,10 @@ public class Languages
 		{ Element.LDOnlyOnChange, "Only on change." }, 
 		{ Element.LDDifferentAppearence, "Use different appearence for layouts." }, 
 		{ Element.Language, "Language:" }, 
-		{ Element.LDAppearence, "Language tooltip appearence" }, 
+		{ Element.LDAppearence, "Language tooltip appearence:" }, 
 		{ Element.LDAroundMouse, "Around mouse" }, 
 		{ Element.LDAroundCaret, "Around caret" }, 
-		{ Element.LDTransparentBG, "Transparent color" }, 
+		{ Element.LDTransparentBG, "Transparent color." }, 
 		{ Element.LDFont, "Font" }, 
 		{ Element.LDFore, "Foreground color:" }, 
 		{ Element.LDBack, "Background color:" }, 
@@ -236,8 +238,9 @@ public class Languages
 		{ Element.LDHeight, "Height" }, 
 		{ Element.MCDSTopIndent, "Top" }, 
 		{ Element.MCDSBottomIndent, "Bottom" }, 
-		{ Element.UseFlags, "Use flags" },
+		{ Element.UseFlags, "Use flags." },
 		{ Element.Always, "Always." },
+		{ Element.LDUpperArrow, "Arrow when upper case." },
 		#endregion
 		#region Timings
 		{ Element.LDForMouseRefreshRate, "Language tooltip around mouse refresh rate(ms):" }, 
@@ -275,6 +278,7 @@ public class Languages
 		{ Element.Transparency, "Transparency:" },
 		{ Element.BorderColor, "Border color:" },
 		{ Element.UseAeroColor, "Use Aero/Accent color." },
+		{ Element.DisplayUpperArrow, "Display up arrow icon when input is upper case." },
 		#endregion
 		#region Updates
 		{ Element.CheckForUpdates, "Check for updates:" }, 
@@ -420,10 +424,10 @@ public class Languages
 		{ Element.LDOnlyOnChange, "Только при смене." }, 
 		{ Element.LDDifferentAppearence, "Использовать разный вид для раскладок." }, 
 		{ Element.Language, "Язык:" }, 
-		{ Element.LDAppearence, "Вид подсказки языка" }, 
+		{ Element.LDAppearence, "Вид подсказки языка:" }, 
 		{ Element.LDAroundMouse, "Возле мыши" }, 
 		{ Element.LDAroundCaret, "Возле каретки" }, 
-		{ Element.LDTransparentBG, "Прозрачный цвет" }, 
+		{ Element.LDTransparentBG, "Прозрачный цвет." }, 
 		{ Element.LDFont, "Шрифт" }, 
 		{ Element.LDFore, "Цвет текста:" }, 
 		{ Element.LDBack, "Цвет фона:" }, 
@@ -434,8 +438,9 @@ public class Languages
 		{ Element.LDHeight, "Высота" }, 
 		{ Element.MCDSTopIndent, "Сверху" }, 
 		{ Element.MCDSBottomIndent, "Снизу" }, 
-		{ Element.UseFlags, "Использовать флаги" }, 
+		{ Element.UseFlags, "Использовать флаги." }, 
 		{ Element.Always, "Всегда." },
+		{ Element.LDUpperArrow, "Стелка при верхнем регистре." },
 		#endregion
 		#region Timings
 		{ Element.LDForMouseRefreshRate, "Скорость обновления подсказки языка возле мыши(мс):" }, 
@@ -473,6 +478,7 @@ public class Languages
 		{ Element.Transparency, "Прозрачность:" },
 		{ Element.BorderColor, "Цвет рамки:" },
 		{ Element.UseAeroColor, "Использовать Аэро/Главный цвет." },
+		{ Element.DisplayUpperArrow, "Отображать стрелку когда ввод верхнего регистра." },
 		#endregion
 		#region Updates
 		{ Element.CheckForUpdates, "Проверить обновления:" }, 
