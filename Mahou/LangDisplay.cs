@@ -8,7 +8,7 @@ namespace Mahou
 		/// <summary>
 		/// Used to determine if lang display is used for caret display.
 		/// </summary>
-		public bool lastTransparentBG, transparentBG, caretDisplay, mouseDisplay, DisplayFlag;
+		public bool lastTransparentBG, transparentBG, caretDisplay, mouseDisplay, DisplayFlag, onInit = true;
 		public string lastText = "NO";
 		Size lastsize = new Size(0,0);
 		public LangDisplay()
@@ -115,8 +115,9 @@ namespace Mahou
 				if (lastTransparentBG != transparentBG)
 					SetVisInvis();
 				lastTransparentBG = transparentBG;
-				if ((caretDisplay && !MahouUI.caretLTUpperArrow) || (mouseDisplay && !MahouUI.mouseLTUpperArrow))
-					ReSize();
+				if ((caretDisplay && !MahouUI.caretLTUpperArrow) || (mouseDisplay && !MahouUI.mouseLTUpperArrow) || onInit) {
+					ReSize(); onInit = false;
+				}
 			} else {
 				Logging.Log("Language tooltip text NOT changed, locale id = [" + cLid + "].", 2);
 			}
