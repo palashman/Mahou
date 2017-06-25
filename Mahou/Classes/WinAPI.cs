@@ -164,7 +164,9 @@ public static class WinAPI
 	[DllImport("user32.dll")]
 	public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 	[DllImport("user32.dll")]
-    public static extern bool SetForegroundWindow(IntPtr hWnd);
+    public static extern bool SetForegroundWindow(IntPtr hWnd);[
+		DllImport("user32.dll")]
+	public static extern IntPtr WindowFromPoint(Point p);
 	#endregion
 	#region CaretPos requires
 	[DllImport("user32.dll", SetLastError=true)]

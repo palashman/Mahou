@@ -183,6 +183,23 @@ namespace Mahou {
 				ToggleVisibility();
         		Logging.Log("Another instance detected, closing it.");
 			}
+			if (m.Msg == WinAPI.WM_MOUSEWHEEL) {
+				if (WinAPI.WindowFromPoint(Cursor.Position) == tabs.Handle) {
+					if (((uint)m.WParam >> 16) == 120) {
+						if (tabs.SelectedIndex + 1 > tabs.TabPages.Count -1)
+							tabs.SelectedIndex = 0;
+						else
+							tabs.SelectedIndex += 1;
+					}
+					else {
+						if (tabs.SelectedIndex -1 < 0)
+							tabs.SelectedIndex = tabs.TabPages.Count-1;
+						else
+							tabs.SelectedIndex -=1;
+					}
+					tabs.Focus();
+				}
+			}
 //			Logging.Log("MSG: "+m.Msg+", LP: "+m.LParam+", WP: "+m.WParam+", KMS: "+KMHook.self+" 0x312");
 			if (m.Msg == WinAPI.WM_HOTKEY && !KMHook.self && KMHook.IsHotkey) {
 				var id = (Hotkey.HKID)m.WParam.ToInt32();
