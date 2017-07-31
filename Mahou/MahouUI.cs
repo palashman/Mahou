@@ -223,21 +223,23 @@ namespace Mahou {
 					KMHook.ConvertLast(words);
 				} else if (KMHook.waitfornum) { FlushConvertMoreWords(); }
 				#endregion
-				Hotkey.CallHotkey(HKCSelection, id, ref hksOK, KMHook.ConvertSelection);
-				Hotkey.CallHotkey(HKTitleCase, id, ref hksTTCOK, KMHook.ToTitleSelection);
-				Hotkey.CallHotkey(HKSwapCase, id, ref hksTSCOK, KMHook.ToSwapSelection);
-				Hotkey.CallHotkey(HKRandomCase, id, ref hksTRCOK, KMHook.ToRandomSelection);
-				Hotkey.CallHotkey(HKConMorWor, id, ref hkcwdsOK, PrepareConvertMoreWords);
-				Hotkey.CallHotkey(HKTransliteration, id, ref hksTrslOK, KMHook.TransliterateSelection);
-				Hotkey.CallHotkey(HKCLast, id, ref hklOK, () => KMHook.ConvertLast(MMain.c_word));
-				Hotkey.CallHotkey(HKCLine, id, ref hklineOK, () => { 
-					var line = new List<KMHook.YuKey>();
-					foreach (var word in MMain.c_words) {
-						line.AddRange(word);
-					}
-					KMHook.ConvertLast(line);
-				});
-				KMHook.csdoing = false;
+				if (!KMHook.ExcludedProgram()) {
+					Hotkey.CallHotkey(HKCSelection, id, ref hksOK, KMHook.ConvertSelection);
+					Hotkey.CallHotkey(HKTitleCase, id, ref hksTTCOK, KMHook.ToTitleSelection);
+					Hotkey.CallHotkey(HKSwapCase, id, ref hksTSCOK, KMHook.ToSwapSelection);
+					Hotkey.CallHotkey(HKRandomCase, id, ref hksTRCOK, KMHook.ToRandomSelection);
+					Hotkey.CallHotkey(HKConMorWor, id, ref hkcwdsOK, PrepareConvertMoreWords);
+					Hotkey.CallHotkey(HKTransliteration, id, ref hksTrslOK, KMHook.TransliterateSelection);
+					Hotkey.CallHotkey(HKCLast, id, ref hklOK, () => KMHook.ConvertLast(MMain.c_word));
+					Hotkey.CallHotkey(HKCLine, id, ref hklineOK, () => { 
+						var line = new List<KMHook.YuKey>();
+						foreach (var word in MMain.c_words) {
+							line.AddRange(word);
+						}
+						KMHook.ConvertLast(line);
+					});
+					KMHook.csdoing = false;
+				}
 				if (HKSymIgn.Enabled) {
 					Hotkey.CallHotkey(HKSymIgn, id, ref hkSIOK, () => { 
 						if (SymIgnEnabled) {

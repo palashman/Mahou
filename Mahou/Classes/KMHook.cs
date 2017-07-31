@@ -452,9 +452,9 @@ namespace Mahou
 				return false;
 			return false;
 		}
-		static bool ExcludedProgram() {
+		public static bool ExcludedProgram() {
 			var prc = Locales.ActiveWindowProcess();
-			if (MMain.mahou.ExcludedPrograms.Contains(prc.ProcessName + ".exe")) {
+			if (MMain.mahou.ExcludedPrograms.Contains(prc.ProcessName.Replace(" ", "_") + ".exe")) {
 				Logging.Log(prc.ProcessName + ".exe->excluded");
 				return true;
 			}
@@ -473,7 +473,7 @@ namespace Mahou
 				KeybdEvent(Keys.CapsLock, 2);
 				self = false;
 			}
-			if ((wParam == (IntPtr)WinAPI.WM_KEYUP || wParam == (IntPtr)WinAPI.WM_SYSKEYUP) && !self) {
+			if ((wParam == (IntPtr)WinAPI.WM_KEYUP || wParam == (IntPtr)WinAPI.WM_SYSKEYUP) && !self && !ExcludedProgram()) {
 				#region Switch between layouts with one key
 				var speclayout = (string)typeof(MahouUI).GetField("Layout"+specKeyId).GetValue(MMain.mahou);
 				if (speclayout == MMain.Lang[Languages.Element.SwitchBetween] ||
