@@ -1318,7 +1318,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 		}
 		public void PersistentLayoutCheck(string ProcessNames, string Layout) {
 			try {
-				var actProcName = Locales.ActiveWindowProcess().ProcessName + ".exe";
+				var actProcName = Locales.ActiveWindowProcess().ProcessName.Replace(" ", "_") + ".exe";
 				Logging.Log("Checking active window's process name: ["+actProcName+"] with processes: ["+ProcessNames+"], for layout: ["+Layout+"].");
 				if (ProcessNames.Contains(actProcName)) {
 					uint CurrentLayout = Locales.GetCurrentLocale();
