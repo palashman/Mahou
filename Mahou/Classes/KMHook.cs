@@ -284,7 +284,7 @@ namespace Mahou
 					   Key == Keys.Tab || Key == Keys.PageDown || Key == Keys.PageUp ||
 					   Key == Keys.Left || Key == Keys.Right || Key == Keys.Down || Key == Keys.Up ||
 					   Key == Keys.BrowserSearch || 
-					   (ctrl && (Key != Keys.Menu  || //Ctrl modifier and key which is not modifier
+					   ((ctrl || win || alt) && (Key != Keys.Menu  || //Ctrl modifier and key which is not modifier
 								Key != Keys.LMenu ||
 								Key != Keys.RMenu ||
 								Key != Keys.LWin ||
