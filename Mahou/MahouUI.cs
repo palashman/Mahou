@@ -224,7 +224,11 @@ namespace Mahou {
 				} else if (KMHook.waitfornum) { FlushConvertMoreWords(); }
 				#endregion
 				if (!KMHook.ExcludedProgram()) {
-					Hotkey.CallHotkey(HKCSelection, id, ref hksOK, KMHook.ConvertSelection);
+					if (Hotkey.GetMods(HKCSelection_tempMods) == Hotkey.GetMods(HKCLast_tempMods) &&
+					    HKCSelection_tempKey == HKCLast_tempKey)
+						Hotkey.CallHotkey(HKCLast, id, ref hksOK, KMHook.ConvertSelection); // Use HKCLast id for cs if hotkeys are the same
+					else 
+						Hotkey.CallHotkey(HKCSelection, id, ref hksOK, KMHook.ConvertSelection);
 					Hotkey.CallHotkey(HKTitleCase, id, ref hksTTCOK, KMHook.ToTitleSelection);
 					Hotkey.CallHotkey(HKSwapCase, id, ref hksTSCOK, KMHook.ToSwapSelection);
 					Hotkey.CallHotkey(HKRandomCase, id, ref hksTRCOK, KMHook.ToRandomSelection);
