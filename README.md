@@ -23,6 +23,24 @@ Mahou работает совершенно по-другому: в отличи
 
 ###### Возможности по версиям:
 
+**v2.3.4.4~v2.3.5.0**<br/>
+
+- 💎 Добавлено исправление для QWERTZ клавиатур. #107
+- 💎 Добавлено исправление *смерти* хука при нажатии на применить.(не подтверждено). #102
+- 💎 Исправлено правило очистки слов по Alt+Tab.
+- 💎 Исправлено совместимость при назначении на одну горяч. главишу конвертации выделения и последнего слова. #104
+- 💎 Добавлено исправление пробелов для имен файлов в Mahou(заменяйте пробел на _).
+- 🐛 Исправлена работа функции программ исключений. #101
+- 🐛 Добавлено исправление в KMHook, ожидание инициализации MMain.mahou.
+- 🐛 Исправлена ошибка двойных hook'ов.
+- 🐛 Исправлено запоминание позиции галочки в горяч. клавишах. #108
+- 💎 Исправлено включение неправлильной вкладки при проверке обновления при запуске и нажатии на ок.
+- 💎 Добавлена возможность разделять имена процессов линиями.
+- 💬 Добавлены новые подсказки.
+- 💎 Имена процессов теперь не зависят от регистра.
+- 💎 Mahou теперь имеет 2 строки с вкладками.
+- 💎 Добавлена возможность включить переключение раскладки 1 клавишей даже в исключенных программах. #109
+
 **v2.3.4.0**<br/>
 
 - :gem: Добавлена прокрутка вкладок по колесику мыши в главном окне.
@@ -240,6 +258,25 @@ Even selected text switches just between **selected** layouts, though if you lik
 
 ###### By version features:
 
+
+
+**v2.3.4.0**<br/>
+
+- 💎 Added QWERTZ keyboard fix. #107
+- 💎 Added fix for hooks die on apply(unconfirmed). #102
+- 💎 Fixed Selection and Last Word conversion with same hotkey. #104
+- 💎 Added space fix in process names for persistent layout process names and excluded process names (replace space with _).
+- 🐛 Fixed excluded programs feature. #101
+- 🐛 Added fix for bug in KMHook for non-initialized MahouUI.
+- 🐛 Fixed double hooks bug.
+- 💎 Restored fix for ctrl/alt/win+tab clear words.
+- 🐛 Fixed hotkey enabled checkbox wasn't remembering its state for hotkeys. #108
+- 💎 Fixed update on click from message box was showing not right tab.
+- 💎 Added line breaks as seperators for process names.
+- 💎 Make process names case insensitive in Mahou.
+- 💎 Make Mahou have 2 row of tabs.
+- 💬 Added new tooltips.
+- 💎 Added feature to change layout by 1 key in excluded programs. #109
 
 **v2.3.4.0**<br/>
 
