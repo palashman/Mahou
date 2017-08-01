@@ -165,6 +165,7 @@ namespace Mahou
 		private System.Windows.Forms.CheckBox chk_LPUpperArrow;
 		private System.Windows.Forms.CheckBox chk_LangTTUpperArrow;
 		private System.Windows.Forms.CheckBox chk_qwertz;
+		private System.Windows.Forms.CheckBox chk_Change1KeyL;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -274,6 +275,7 @@ namespace Mahou
 			this.chk_LangTooltipCaret = new System.Windows.Forms.CheckBox();
 			this.chk_LangTooltipMouse = new System.Windows.Forms.CheckBox();
 			this.tab_timings = new System.Windows.Forms.TabPage();
+			this.chk_Change1KeyL = new System.Windows.Forms.CheckBox();
 			this.lbl_ExcludedPrograms = new System.Windows.Forms.Label();
 			this.txt_ExcludedPrograms = new System.Windows.Forms.TextBox();
 			this.nud_SelectedTextGetTriesCount = new System.Windows.Forms.NumericUpDown();
@@ -1380,9 +1382,9 @@ namespace Mahou
 			// 
 			// tab_timings
 			// 
+			this.tab_timings.Controls.Add(this.nud_SelectedTextGetTriesCount);
 			this.tab_timings.Controls.Add(this.lbl_ExcludedPrograms);
 			this.tab_timings.Controls.Add(this.txt_ExcludedPrograms);
-			this.tab_timings.Controls.Add(this.nud_SelectedTextGetTriesCount);
 			this.tab_timings.Controls.Add(this.chk_SelectedTextGetMoreTries);
 			this.tab_timings.Controls.Add(this.nud_CapsLockRefreshRate);
 			this.tab_timings.Controls.Add(this.lbl_CapsLockRefreshRate);
@@ -1396,6 +1398,7 @@ namespace Mahou
 			this.tab_timings.Controls.Add(this.lbl_LangTTCaretRefreshRate);
 			this.tab_timings.Controls.Add(this.nud_LangTTMouseRefreshRate);
 			this.tab_timings.Controls.Add(this.lbl_LangTTMouseRefreshRate);
+			this.tab_timings.Controls.Add(this.chk_Change1KeyL);
 			this.tab_timings.Location = new System.Drawing.Point(4, 44);
 			this.tab_timings.Name = "tab_timings";
 			this.tab_timings.Padding = new System.Windows.Forms.Padding(3);
@@ -1404,10 +1407,20 @@ namespace Mahou
 			this.tab_timings.Text = "Timings";
 			this.tab_timings.UseVisualStyleBackColor = true;
 			// 
+			// chk_Change1KeyL
+			// 
+			this.chk_Change1KeyL.AutoSize = true;
+			this.chk_Change1KeyL.Location = new System.Drawing.Point(187, 203);
+			this.chk_Change1KeyL.Name = "chk_Change1KeyL";
+			this.chk_Change1KeyL.Size = new System.Drawing.Size(243, 19);
+			this.chk_Change1KeyL.TabIndex = 23;
+			this.chk_Change1KeyL.Text = "Change layout by 1 key even in excluded.";
+			this.chk_Change1KeyL.UseVisualStyleBackColor = true;
+			// 
 			// lbl_ExcludedPrograms
 			// 
 			this.lbl_ExcludedPrograms.AutoSize = true;
-			this.lbl_ExcludedPrograms.Location = new System.Drawing.Point(218, 204);
+			this.lbl_ExcludedPrograms.Location = new System.Drawing.Point(18, 204);
 			this.lbl_ExcludedPrograms.Name = "lbl_ExcludedPrograms";
 			this.lbl_ExcludedPrograms.Size = new System.Drawing.Size(111, 15);
 			this.lbl_ExcludedPrograms.TabIndex = 22;
@@ -1653,7 +1666,7 @@ namespace Mahou
 			this.tab_hotkeys.Location = new System.Drawing.Point(4, 44);
 			this.tab_hotkeys.Name = "tab_hotkeys";
 			this.tab_hotkeys.Padding = new System.Windows.Forms.Padding(3);
-			this.tab_hotkeys.Size = new System.Drawing.Size(559, 285);
+			this.tab_hotkeys.Size = new System.Drawing.Size(559, 268);
 			this.tab_hotkeys.TabIndex = 4;
 			this.tab_hotkeys.Text = "Hotkeys";
 			this.tab_hotkeys.UseVisualStyleBackColor = true;
@@ -1755,7 +1768,7 @@ namespace Mahou
 			this.tab_LangPanel.Location = new System.Drawing.Point(4, 44);
 			this.tab_LangPanel.Name = "tab_LangPanel";
 			this.tab_LangPanel.Padding = new System.Windows.Forms.Padding(3);
-			this.tab_LangPanel.Size = new System.Drawing.Size(559, 285);
+			this.tab_LangPanel.Size = new System.Drawing.Size(559, 268);
 			this.tab_LangPanel.TabIndex = 9;
 			this.tab_LangPanel.Text = "Language panel";
 			this.tab_LangPanel.UseVisualStyleBackColor = true;
@@ -1963,7 +1976,7 @@ namespace Mahou
 			this.tab_updates.Location = new System.Drawing.Point(4, 44);
 			this.tab_updates.Name = "tab_updates";
 			this.tab_updates.Padding = new System.Windows.Forms.Padding(3);
-			this.tab_updates.Size = new System.Drawing.Size(559, 253);
+			this.tab_updates.Size = new System.Drawing.Size(559, 268);
 			this.tab_updates.TabIndex = 5;
 			this.tab_updates.Text = "Updates";
 			this.tab_updates.UseVisualStyleBackColor = true;
@@ -2107,7 +2120,7 @@ namespace Mahou
 			this.tab_about.Location = new System.Drawing.Point(4, 44);
 			this.tab_about.Name = "tab_about";
 			this.tab_about.Padding = new System.Windows.Forms.Padding(3);
-			this.tab_about.Size = new System.Drawing.Size(559, 253);
+			this.tab_about.Size = new System.Drawing.Size(559, 268);
 			this.tab_about.TabIndex = 6;
 			this.tab_about.Text = "About";
 			this.tab_about.UseVisualStyleBackColor = true;

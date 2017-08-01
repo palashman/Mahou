@@ -486,143 +486,145 @@ namespace Mahou
 				KeybdEvent(Keys.CapsLock, 2);
 				self = false;
 			}
-			if ((wParam == (IntPtr)WinAPI.WM_KEYUP || wParam == (IntPtr)WinAPI.WM_SYSKEYUP) && !self && !ExcludedProgram()) {
-				#region Switch between layouts with one key
-				var speclayout = (string)typeof(MahouUI).GetField("Layout"+specKeyId).GetValue(MMain.mahou);
-				if (speclayout == MMain.Lang[Languages.Element.SwitchBetween] ||
-				     speclayout == MMain.Lang[Languages.Element.SwitchBetween]) {
-					if (specificKey == 8 && Key == Keys.CapsLock && shift && !alt && !ctrl) {
-						self = true;
-						Logging.Log("Changing layout by Shift+CapsLock key.");
-						ChangeLayout();
-						Thread.Sleep(5);
-						if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
-							KeybdEvent(Keys.CapsLock, 0);
-							KeybdEvent(Keys.CapsLock, 2);
+			if ((wParam == (IntPtr)WinAPI.WM_KEYUP || wParam == (IntPtr)WinAPI.WM_SYSKEYUP) && !self) {
+				if (MMain.mahou.ChangeLayoutInExcluded || !ExcludedProgram()) {
+					#region Switch between layouts with one key
+					var speclayout = (string)typeof(MahouUI).GetField("Layout"+specKeyId).GetValue(MMain.mahou);
+					if (speclayout == MMain.Lang[Languages.Element.SwitchBetween] ||
+					     speclayout == MMain.Lang[Languages.Element.SwitchBetween]) {
+						if (specificKey == 8 && Key == Keys.CapsLock && shift && !alt && !ctrl) {
+							self = true;
+							Logging.Log("Changing layout by Shift+CapsLock key.");
+							ChangeLayout();
+							Thread.Sleep(5);
+							if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
+								KeybdEvent(Keys.CapsLock, 0);
+								KeybdEvent(Keys.CapsLock, 2);
+							}
+							self = false;
+						} else 
+						if (!shift && !alt && !ctrl && specificKey == 1 && Key == Keys.CapsLock) {
+							self = true;
+							ChangeLayout();
+							if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
+								KeybdEvent(Keys.CapsLock, 0);
+								KeybdEvent(Keys.CapsLock, 2);
+							}
+							Logging.Log("Changing layout by CapsLock key.");
+							self = false;
 						}
-						self = false;
-					} else 
-					if (!shift && !alt && !ctrl && specificKey == 1 && Key == Keys.CapsLock) {
-						self = true;
-						ChangeLayout();
-						if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
-							KeybdEvent(Keys.CapsLock, 0);
-							KeybdEvent(Keys.CapsLock, 2);
-						}
-						Logging.Log("Changing layout by CapsLock key.");
-						self = false;
-					}
-					if (specificKey == 2 && Key == Keys.LControlKey && !keyAfterCTRL) {
-						self = true;
-						Logging.Log("Changing layout by LCtrl key.");
-						ChangeLayout();
-						self = false;
-					}
-					if (specificKey == 3 && Key == Keys.RControlKey && !keyAfterCTRL) {
-						self = true;
-						Logging.Log("Changing layout by RCtrl key.");
-						ChangeLayout();
-						self = false;
-					}
-					if (specificKey == 4 && Key == Keys.LShiftKey && !keyAfterSHIFT) {
-						self = true;
-						Logging.Log("Changing layout by LShift key.");
-						ChangeLayout();
-						self = false;
-					}
-					if (specificKey == 5 && Key == Keys.RShiftKey && !keyAfterSHIFT) {
-						self = true;
-						Logging.Log("Changing layout by RShift key.");
-						ChangeLayout();
-						self = false;
-					}
-					if (specificKey == 6 && Key == Keys.LMenu && !keyAfterALT) {
-						self = true;
-						Logging.Log("Changing layout by LAlt key.");
-						ChangeLayout();
-						self = false;
-					}
-					if (specificKey == 7 && Key == Keys.RMenu && !keyAfterALT) {
-						self = true;
-						Logging.Log("Changing layout by RAlt key.");
-						ChangeLayout();
-						self = false;
-					}
-					if (specificKey == 9 && Key == Keys.RMenu) {
-						self = true;
-						Logging.Log("Changing layout by AltGr key.");
-						ChangeLayout();
-						self = false;
-					}
-					#endregion
-				} else {
-					#region By layout switch
-					self = true;
-					var matched = false;
-					if (specificKey == 8 && Key == Keys.CapsLock && shift && !alt && !ctrl) {
-						Logging.Log("Switching to specific layout by Shift+CapsLock key.");
-						ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
-						Thread.Sleep(5);
-						if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
-							KeybdEvent(Keys.CapsLock, 0);
-							KeybdEvent(Keys.CapsLock, 2);
-						}
-						matched = true;
-					} else
-					if (specificKey == 1 && Key == Keys.CapsLock) {
-						Logging.Log("Switching to specific layout by Caps Lock key.");
-						ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
-						matched = true;
-					}
-					if (ignoreLCtrl >= 1 && Key == Keys.LControlKey) {
-						ignoreLCtrl--;
-						Logging.Log("Ignored LCtrl via PostMessage bug.");
-					} else {
 						if (specificKey == 2 && Key == Keys.LControlKey && !keyAfterCTRL) {
-							Logging.Log("Switching to specific layout by  LCtrl key.");
+							self = true;
+							Logging.Log("Changing layout by LCtrl key.");
+							ChangeLayout();
+							self = false;
+						}
+						if (specificKey == 3 && Key == Keys.RControlKey && !keyAfterCTRL) {
+							self = true;
+							Logging.Log("Changing layout by RCtrl key.");
+							ChangeLayout();
+							self = false;
+						}
+						if (specificKey == 4 && Key == Keys.LShiftKey && !keyAfterSHIFT) {
+							self = true;
+							Logging.Log("Changing layout by LShift key.");
+							ChangeLayout();
+							self = false;
+						}
+						if (specificKey == 5 && Key == Keys.RShiftKey && !keyAfterSHIFT) {
+							self = true;
+							Logging.Log("Changing layout by RShift key.");
+							ChangeLayout();
+							self = false;
+						}
+						if (specificKey == 6 && Key == Keys.LMenu && !keyAfterALT) {
+							self = true;
+							Logging.Log("Changing layout by LAlt key.");
+							ChangeLayout();
+							self = false;
+						}
+						if (specificKey == 7 && Key == Keys.RMenu && !keyAfterALT) {
+							self = true;
+							Logging.Log("Changing layout by RAlt key.");
+							ChangeLayout();
+							self = false;
+						}
+						if (specificKey == 9 && Key == Keys.RMenu) {
+							self = true;
+							Logging.Log("Changing layout by AltGr key.");
+							ChangeLayout();
+							self = false;
+						}
+						#endregion
+					} else {
+						#region By layout switch
+						self = true;
+						var matched = false;
+						if (specificKey == 8 && Key == Keys.CapsLock && shift && !alt && !ctrl) {
+							Logging.Log("Switching to specific layout by Shift+CapsLock key.");
+							ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
+							Thread.Sleep(5);
+							if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
+								KeybdEvent(Keys.CapsLock, 0);
+								KeybdEvent(Keys.CapsLock, 2);
+							}
+							matched = true;
+						} else
+						if (specificKey == 1 && Key == Keys.CapsLock) {
+							Logging.Log("Switching to specific layout by Caps Lock key.");
 							ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 							matched = true;
 						}
+						if (ignoreLCtrl >= 1 && Key == Keys.LControlKey) {
+							ignoreLCtrl--;
+							Logging.Log("Ignored LCtrl via PostMessage bug.");
+						} else {
+							if (specificKey == 2 && Key == Keys.LControlKey && !keyAfterCTRL) {
+								Logging.Log("Switching to specific layout by  LCtrl key.");
+								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
+								matched = true;
+							}
+						}
+						if (specificKey == 3 && Key == Keys.RControlKey && !keyAfterCTRL) {
+							Logging.Log("Switching to specific layout by RCtrl key.");
+							ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
+							matched = true;
+						}
+						if (specificKey == 4 && Key == Keys.LShiftKey && !keyAfterSHIFT) {
+							Logging.Log("Switching to specific layout by LShift key.");
+							ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
+							matched = true;
+						}
+						if (specificKey == 5 && Key == Keys.RShiftKey && !keyAfterSHIFT) {
+							Logging.Log("Switching to specific layout by RShift key.");
+							ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
+							matched = true;
+						}
+						if (specificKey == 6 && Key == Keys.LMenu && !keyAfterALT) {
+							Logging.Log("Switching to specific layout by LAlt key.");
+							ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);	
+							matched = true;
+						}
+						if (specificKey == 7 && Key == Keys.RMenu && !keyAfterALT) {
+							Logging.Log("Switching to specific layout by RAlt key.");
+							ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
+							matched = true;
+						}
+						if (specificKey == 9 && Key == Keys.RMenu) {
+							Logging.Log("Switching to specific layout by AltGr key.");
+							ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
+							matched = true;
+						}
+						try {
+							if (matched) 
+								Logging.Log("Available layout from string ["+speclayout+"] & id ["+specKeyId+"].");
+						} catch { 
+							Logging.Log("No layout available from string ["+speclayout+"] & id ["+specKeyId+"]."); 
+						}
+						self = false;
 					}
-					if (specificKey == 3 && Key == Keys.RControlKey && !keyAfterCTRL) {
-						Logging.Log("Switching to specific layout by RCtrl key.");
-						ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
-						matched = true;
-					}
-					if (specificKey == 4 && Key == Keys.LShiftKey && !keyAfterSHIFT) {
-						Logging.Log("Switching to specific layout by LShift key.");
-						ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
-						matched = true;
-					}
-					if (specificKey == 5 && Key == Keys.RShiftKey && !keyAfterSHIFT) {
-						Logging.Log("Switching to specific layout by RShift key.");
-						ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
-						matched = true;
-					}
-					if (specificKey == 6 && Key == Keys.LMenu && !keyAfterALT) {
-						Logging.Log("Switching to specific layout by LAlt key.");
-						ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);	
-						matched = true;
-					}
-					if (specificKey == 7 && Key == Keys.RMenu && !keyAfterALT) {
-						Logging.Log("Switching to specific layout by RAlt key.");
-						ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
-						matched = true;
-					}
-					if (specificKey == 9 && Key == Keys.RMenu) {
-						Logging.Log("Switching to specific layout by AltGr key.");
-						ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
-						matched = true;
-					}
-					try {
-						if (matched) 
-							Logging.Log("Available layout from string ["+speclayout+"] & id ["+specKeyId+"].");
-					} catch { 
-						Logging.Log("No layout available from string ["+speclayout+"] & id ["+specKeyId+"]."); 
-					}
-					self = false;
+					#endregion
 				}
-				#endregion
 			}
 		}
 		/// <summary>

@@ -46,7 +46,7 @@ namespace Mahou {
 					TrayFlags, SymIgnEnabled, TrayIconVisible, SnippetsEnabled, ChangeLayouByKey, EmulateLS,
 					RePress, BlockHKWithCtrl, blueIcon, SwitchBetweenLayouts, SelectedTextGetMoreTries, ReSelect,
 					ConvertSelectionLS, ConvertSelectionLSPlus, MCDSSupport, OneLayoutWholeWord, RestartHooks,
-					MouseTTAlways, OneLayout, MouseLangTooltipEnabled, CaretLangTooltipEnabled, QWERTZ_fix;
+					MouseTTAlways, OneLayout, MouseLangTooltipEnabled, CaretLangTooltipEnabled, QWERTZ_fix, ChangeLayoutInExcluded;
 		/// <summary> Temporary modifiers of hotkeys. </summary>
 		string Mainhk_tempMods, ExitHk_tempMods, HKCLast_tempMods, HKCSelection_tempMods, 
 			    HKCLine_tempMods, HKSymIgn_tempMods, HKConMorWor_tempMods, HKTitleCase_tempMods,
@@ -590,6 +590,7 @@ namespace Mahou {
 			MMain.MyConfs.Write("Timings", "SelectedTextGetMoreTries", chk_SelectedTextGetMoreTries.Checked.ToString());
 			MMain.MyConfs.Write("Timings", "SelectedTextGetMoreTriesCount", nud_SelectedTextGetTriesCount.Value.ToString());
 			MMain.MyConfs.Write("Timings", "ExcludedPrograms", txt_ExcludedPrograms.Text.Replace(Environment.NewLine, "^cr^lf"));
+			MMain.MyConfs.Write("Timings", "ChangeLayoutInExcluded", chk_Change1KeyL.Checked.ToString());
 			#endregion
 			#region Snippets
 			MMain.MyConfs.Write("Snippets", "SnippetsEnabled", chk_Snippets.Checked.ToString());
@@ -696,6 +697,7 @@ namespace Mahou {
 			SelectedTextGetMoreTries = chk_SelectedTextGetMoreTries.Checked = MMain.MyConfs.ReadBool("Timings", "SelectedTextGetMoreTries");
 			nud_SelectedTextGetTriesCount.Value = MMain.MyConfs.ReadInt("Timings", "SelectedTextGetMoreTriesCount");
 			ExcludedPrograms = txt_ExcludedPrograms.Text = MMain.MyConfs.Read("Timings", "ExcludedPrograms").Replace("^cr^lf", Environment.NewLine);
+			ChangeLayoutInExcluded = chk_Change1KeyL.Checked = MMain.MyConfs.ReadBool("Timings", "ChangeLayoutInExcluded");
 			SelectedTextGetMoreTriesCount = (int)nud_SelectedTextGetTriesCount.Value;
 			#endregion
 			#region LangPanel
@@ -2121,6 +2123,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			lbl_CapsLockRefreshRate.Text = MMain.Lang[Languages.Element.CapsLockRefreshRate];
 			chk_SelectedTextGetMoreTries.Text = MMain.Lang[Languages.Element.MoreTriesToGetSelectedText];
 			lbl_ExcludedPrograms.Text =  MMain.Lang[Languages.Element.ExcludedPrograms];
+			chk_Change1KeyL.Text =  MMain.Lang[Languages.Element.Change1KeyLayoutInExcluded];
 			#endregion
 			#region Snippets
 			chk_Snippets.Text = MMain.Lang[Languages.Element.SnippetsEnabled];
