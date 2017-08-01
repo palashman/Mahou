@@ -371,7 +371,7 @@ public class Languages
 		{ Element.TT_PersistentLayout, "Write here process names in which you want to have persistent layout, separators are spaces(though symbols as ,.^& etc are too supported)."},
 		{ Element.TT_RestartHooks, "Restart global keyboard and mouse hooks on every Mahou's hotkey action end.\r\nEnabling this will make hooks (almost) impossible to kill, useful if Mahou stops catching pressed keys."},
 		{ Element.TT_OneLayout, "Allows to store global layout in Mahou, insted of layout per window/program.\r\n(if You have Windows 8 or greater this feature is built in Windows, so you don't need to use enable it in Mahou)"},
-		{ Element.TT_QWERTZ, "Makes right substitutes in QWERTZ keyboards for chars: ß, ä, ö, ü, Ä, Ö, Ü in Convert Selection\r\n(!! but convert selection layout switching(or +) not supported)." },
+		{ Element.TT_QWERTZ, "Makes right substitutes in QWERTZ keyboards for chars: ß, ä, ö, ü, Ä, Ö, Ü, Y, Z in Convert Selection\r\n(!! but convert selection layout switching(or +) not supported)." },
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Snippets contains error in syntax, check if there are errors, details on snippets syntax you can find on Wiki." }
@@ -571,7 +571,7 @@ public class Languages
 		{ Element.TT_PersistentLayout, "Напишите здесь названия процессов в которых вы бы хотели иметь постоянную раскладку, разделитель - пробел(хотя другие символы вроде ,.^& и т.д. тоже поддерживаются)."},
 		{ Element.TT_RestartHooks, "Перезапускает глобальные перехваты(HOOK'и) клавиатуры и мыши по окончанию действия любой горячей клавиши Mahou.\r\nВключая эту функцию перехватов будет (почти) что невозможно *убить*, полезно если Mahou перестаёт ловить введенные клавиши."},
 		{ Element.TT_OneLayout, "Позволяет хранить раскладку в Mahou, вместо раскладки для каждого окна/программы.\r\n(если у Вас Windows 8 и выше, то там уже стоит данная функция по умолчанию, нет необходимости включать ее в Mahou)"},
-		{ Element.TT_QWERTZ, "Делает правильные замены в клавиатурах QWERTZ для букв: ß, ä, ö, ü, Ä, Ö, Ü в Конверт выделения\r\n(!! но не совместимо со сменой раскладки в конверт выделения (или +))." },
+		{ Element.TT_QWERTZ, "Делает правильные замены в клавиатурах QWERTZ для букв: ß, ä, ö, ü, Ä, Ö, Ü, Y, Z в Конверт выделения\r\n(!! но не совместимо со сменой раскладки в конверт выделения (или +))." },
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Сниппеты содержат ошибки в синтаксисе, проверьте ваши сниппеты, детали синтаксиса можете найти на Wiki." }
