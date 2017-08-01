@@ -561,8 +561,8 @@ namespace Mahou {
 			MMain.MyConfs.Write("PersistentLayout", "ActivateForLayout2", chk_PersistentLayout2Active.Checked.ToString());
 			MMain.MyConfs.Write("PersistentLayout", "Layout1CheckInterval", nud_PersistentLayout1Interval.Value.ToString());
 			MMain.MyConfs.Write("PersistentLayout", "Layout2CheckInterval", nud_PersistentLayout2Interval.Value.ToString());
-			MMain.MyConfs.Write("PersistentLayout", "Layout1Processes", txt_PersistentLayout1Processes.Text.Replace(Environment.NewLine, " "));
-			MMain.MyConfs.Write("PersistentLayout", "Layout2Processes", txt_PersistentLayout2Processes.Text.Replace(Environment.NewLine, " "));
+			MMain.MyConfs.Write("PersistentLayout", "Layout1Processes", txt_PersistentLayout1Processes.Text.Replace(Environment.NewLine, "^cr^lf"));
+			MMain.MyConfs.Write("PersistentLayout", "Layout2Processes", txt_PersistentLayout2Processes.Text.Replace(Environment.NewLine, "^cr^lf"));
 			#endregion
 			#region Appearence
 			MMain.MyConfs.Write("Appearence", "DisplayLangTooltipForMouse", chk_LangTooltipMouse.Checked.ToString());
@@ -589,7 +589,7 @@ namespace Mahou {
 			MMain.MyConfs.Write("Timings", "ScrollLockStateRefreshRate", nud_ScrollLockRefreshRate.Value.ToString());
 			MMain.MyConfs.Write("Timings", "SelectedTextGetMoreTries", chk_SelectedTextGetMoreTries.Checked.ToString());
 			MMain.MyConfs.Write("Timings", "SelectedTextGetMoreTriesCount", nud_SelectedTextGetTriesCount.Value.ToString());
-			MMain.MyConfs.Write("Timings", "ExcludedPrograms", txt_ExcludedPrograms.Text.Replace(Environment.NewLine, " "));
+			MMain.MyConfs.Write("Timings", "ExcludedPrograms", txt_ExcludedPrograms.Text.Replace(Environment.NewLine, "^cr^lf"));
 			#endregion
 			#region Snippets
 			MMain.MyConfs.Write("Snippets", "SnippetsEnabled", chk_Snippets.Checked.ToString());
@@ -672,8 +672,8 @@ namespace Mahou {
 			chk_PersistentLayout2Active.Checked = MMain.MyConfs.ReadBool("PersistentLayout", "ActivateForLayout2");
 			nud_PersistentLayout1Interval.Value = MMain.MyConfs.ReadInt("PersistentLayout", "Layout1CheckInterval");
 			nud_PersistentLayout2Interval.Value = MMain.MyConfs.ReadInt("PersistentLayout", "Layout2CheckInterval");
-			PersistentLayout1Processes = txt_PersistentLayout1Processes.Text = MMain.MyConfs.Read("PersistentLayout", "Layout1Processes");
-			PersistentLayout2Processes = txt_PersistentLayout2Processes.Text = MMain.MyConfs.Read("PersistentLayout", "Layout2Processes");
+			PersistentLayout1Processes = txt_PersistentLayout1Processes.Text = MMain.MyConfs.Read("PersistentLayout", "Layout1Processes").Replace("^cr^lf", Environment.NewLine);
+			PersistentLayout2Processes = txt_PersistentLayout2Processes.Text = MMain.MyConfs.Read("PersistentLayout", "Layout2Processes").Replace("^cr^lf", Environment.NewLine);
 			#endregion
 			#region Appearence
 			chk_LangTooltipMouse.Checked = MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForMouse");
@@ -695,7 +695,7 @@ namespace Mahou {
 			nud_ScrollLockRefreshRate.Value = MMain.MyConfs.ReadInt("Timings", "ScrollLockStateRefreshRate");
 			SelectedTextGetMoreTries = chk_SelectedTextGetMoreTries.Checked = MMain.MyConfs.ReadBool("Timings", "SelectedTextGetMoreTries");
 			nud_SelectedTextGetTriesCount.Value = MMain.MyConfs.ReadInt("Timings", "SelectedTextGetMoreTriesCount");
-			ExcludedPrograms = txt_ExcludedPrograms.Text = MMain.MyConfs.Read("Timings", "ExcludedPrograms");
+			ExcludedPrograms = txt_ExcludedPrograms.Text = MMain.MyConfs.Read("Timings", "ExcludedPrograms").Replace("^cr^lf", Environment.NewLine);
 			SelectedTextGetMoreTriesCount = (int)nud_SelectedTextGetTriesCount.Value;
 			#endregion
 			#region LangPanel
@@ -1327,9 +1327,9 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 		}
 		public void PersistentLayoutCheck(string ProcessNames, string Layout) {
 			try {
-				var actProcName = Locales.ActiveWindowProcess().ProcessName.Replace(" ", "_") + ".exe";
+				var actProcName = Locales.ActiveWindowProcess().ProcessName.ToLower().Replace(" ", "_") + ".exe";
 				Logging.Log("Checking active window's process name: ["+actProcName+"] with processes: ["+ProcessNames+"], for layout: ["+Layout+"].");
-				if (ProcessNames.Contains(actProcName)) {
+				if (ProcessNames.ToLower().Replace(Environment.NewLine, " ").Contains(actProcName)) {
 					uint CurrentLayout = Locales.GetCurrentLocale();
 					uint PersistentLayout = Locales.GetLocaleFromString(Layout).uId;
 					Logging.Log("Checking current layout: ["+CurrentLayout+"] with selected persistent layout: ["+PersistentLayout+"].");

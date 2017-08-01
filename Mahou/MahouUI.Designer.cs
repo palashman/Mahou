@@ -397,9 +397,10 @@ namespace Mahou
 			this.tabs.Controls.Add(this.tab_updates);
 			this.tabs.Controls.Add(this.tab_about);
 			this.tabs.Location = new System.Drawing.Point(0, 0);
+			this.tabs.Multiline = true;
 			this.tabs.Name = "tabs";
 			this.tabs.SelectedIndex = 0;
-			this.tabs.Size = new System.Drawing.Size(567, 301);
+			this.tabs.Size = new System.Drawing.Size(567, 316);
 			this.tabs.TabIndex = 0;
 			// 
 			// tab_functions
@@ -421,10 +422,10 @@ namespace Mahou
 			this.tab_functions.Controls.Add(this.chk_CSLayoutSwitching);
 			this.tab_functions.Controls.Add(this.chk_TrayIcon);
 			this.tab_functions.Controls.Add(this.chk_AutoStart);
-			this.tab_functions.Location = new System.Drawing.Point(4, 24);
+			this.tab_functions.Location = new System.Drawing.Point(4, 44);
 			this.tab_functions.Name = "tab_functions";
 			this.tab_functions.Padding = new System.Windows.Forms.Padding(3);
-			this.tab_functions.Size = new System.Drawing.Size(559, 273);
+			this.tab_functions.Size = new System.Drawing.Size(559, 268);
 			this.tab_functions.TabIndex = 0;
 			this.tab_functions.Text = "Functions";
 			this.tab_functions.UseVisualStyleBackColor = true;
@@ -625,10 +626,10 @@ namespace Mahou
 			this.tab_layouts.Controls.Add(this.lbl_LayoutNum1);
 			this.tab_layouts.Controls.Add(this.cbb_MainLayout1);
 			this.tab_layouts.Controls.Add(this.chk_SwitchBetweenLayouts);
-			this.tab_layouts.Location = new System.Drawing.Point(4, 24);
+			this.tab_layouts.Location = new System.Drawing.Point(4, 44);
 			this.tab_layouts.Name = "tab_layouts";
 			this.tab_layouts.Padding = new System.Windows.Forms.Padding(3);
-			this.tab_layouts.Size = new System.Drawing.Size(559, 273);
+			this.tab_layouts.Size = new System.Drawing.Size(559, 268);
 			this.tab_layouts.TabIndex = 1;
 			this.tab_layouts.Text = "Layouts";
 			this.tab_layouts.UseVisualStyleBackColor = true;
@@ -930,10 +931,10 @@ namespace Mahou
 			// 
 			this.tab_persistent.Controls.Add(this.grb_PersistentLayout2);
 			this.tab_persistent.Controls.Add(this.grb_PersistentLayout1);
-			this.tab_persistent.Location = new System.Drawing.Point(4, 24);
+			this.tab_persistent.Location = new System.Drawing.Point(4, 44);
 			this.tab_persistent.Name = "tab_persistent";
 			this.tab_persistent.Padding = new System.Windows.Forms.Padding(3);
-			this.tab_persistent.Size = new System.Drawing.Size(559, 273);
+			this.tab_persistent.Size = new System.Drawing.Size(559, 268);
 			this.tab_persistent.TabIndex = 8;
 			this.tab_persistent.Text = "Persistent layout";
 			this.tab_persistent.UseVisualStyleBackColor = true;
@@ -1055,10 +1056,10 @@ namespace Mahou
 			this.tab_appearence.Controls.Add(this.grb_LangTTAppearence);
 			this.tab_appearence.Controls.Add(this.chk_LangTooltipCaret);
 			this.tab_appearence.Controls.Add(this.chk_LangTooltipMouse);
-			this.tab_appearence.Location = new System.Drawing.Point(4, 24);
+			this.tab_appearence.Location = new System.Drawing.Point(4, 44);
 			this.tab_appearence.Name = "tab_appearence";
 			this.tab_appearence.Padding = new System.Windows.Forms.Padding(3);
-			this.tab_appearence.Size = new System.Drawing.Size(559, 273);
+			this.tab_appearence.Size = new System.Drawing.Size(559, 268);
 			this.tab_appearence.TabIndex = 2;
 			this.tab_appearence.Text = "Appearence";
 			this.tab_appearence.UseVisualStyleBackColor = true;
@@ -1395,10 +1396,10 @@ namespace Mahou
 			this.tab_timings.Controls.Add(this.lbl_LangTTCaretRefreshRate);
 			this.tab_timings.Controls.Add(this.nud_LangTTMouseRefreshRate);
 			this.tab_timings.Controls.Add(this.lbl_LangTTMouseRefreshRate);
-			this.tab_timings.Location = new System.Drawing.Point(4, 24);
+			this.tab_timings.Location = new System.Drawing.Point(4, 44);
 			this.tab_timings.Name = "tab_timings";
 			this.tab_timings.Padding = new System.Windows.Forms.Padding(3);
-			this.tab_timings.Size = new System.Drawing.Size(559, 273);
+			this.tab_timings.Size = new System.Drawing.Size(559, 268);
 			this.tab_timings.TabIndex = 7;
 			this.tab_timings.Text = "Timings";
 			this.tab_timings.UseVisualStyleBackColor = true;
@@ -1615,10 +1616,10 @@ namespace Mahou
 			// 
 			this.tab_snippets.Controls.Add(this.txt_Snippets);
 			this.tab_snippets.Controls.Add(this.chk_Snippets);
-			this.tab_snippets.Location = new System.Drawing.Point(4, 24);
+			this.tab_snippets.Location = new System.Drawing.Point(4, 44);
 			this.tab_snippets.Name = "tab_snippets";
 			this.tab_snippets.Padding = new System.Windows.Forms.Padding(3);
-			this.tab_snippets.Size = new System.Drawing.Size(559, 273);
+			this.tab_snippets.Size = new System.Drawing.Size(559, 268);
 			this.tab_snippets.TabIndex = 3;
 			this.tab_snippets.Text = "Snippets";
 			this.tab_snippets.UseVisualStyleBackColor = true;
@@ -1649,10 +1650,10 @@ namespace Mahou
 			// 
 			this.tab_hotkeys.Controls.Add(this.grb_Hotkey);
 			this.tab_hotkeys.Controls.Add(this.lsb_Hotkeys);
-			this.tab_hotkeys.Location = new System.Drawing.Point(4, 24);
+			this.tab_hotkeys.Location = new System.Drawing.Point(4, 44);
 			this.tab_hotkeys.Name = "tab_hotkeys";
 			this.tab_hotkeys.Padding = new System.Windows.Forms.Padding(3);
-			this.tab_hotkeys.Size = new System.Drawing.Size(559, 273);
+			this.tab_hotkeys.Size = new System.Drawing.Size(559, 285);
 			this.tab_hotkeys.TabIndex = 4;
 			this.tab_hotkeys.Text = "Hotkeys";
 			this.tab_hotkeys.UseVisualStyleBackColor = true;
@@ -1751,10 +1752,10 @@ namespace Mahou
 			this.tab_LangPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.tab_LangPanel.Controls.Add(this.grb_LPConfig);
 			this.tab_LangPanel.Controls.Add(this.chk_DisplayLangPanel);
-			this.tab_LangPanel.Location = new System.Drawing.Point(4, 24);
+			this.tab_LangPanel.Location = new System.Drawing.Point(4, 44);
 			this.tab_LangPanel.Name = "tab_LangPanel";
 			this.tab_LangPanel.Padding = new System.Windows.Forms.Padding(3);
-			this.tab_LangPanel.Size = new System.Drawing.Size(559, 273);
+			this.tab_LangPanel.Size = new System.Drawing.Size(559, 285);
 			this.tab_LangPanel.TabIndex = 9;
 			this.tab_LangPanel.Text = "Language panel";
 			this.tab_LangPanel.UseVisualStyleBackColor = true;
@@ -1959,10 +1960,10 @@ namespace Mahou
 			this.tab_updates.Controls.Add(this.grb_ProxyConfig);
 			this.tab_updates.Controls.Add(this.grb_MahouReleaseTitle);
 			this.tab_updates.Controls.Add(this.btn_CheckForUpdates);
-			this.tab_updates.Location = new System.Drawing.Point(4, 24);
+			this.tab_updates.Location = new System.Drawing.Point(4, 44);
 			this.tab_updates.Name = "tab_updates";
 			this.tab_updates.Padding = new System.Windows.Forms.Padding(3);
-			this.tab_updates.Size = new System.Drawing.Size(559, 273);
+			this.tab_updates.Size = new System.Drawing.Size(559, 253);
 			this.tab_updates.TabIndex = 5;
 			this.tab_updates.Text = "Updates";
 			this.tab_updates.UseVisualStyleBackColor = true;
@@ -2103,10 +2104,10 @@ namespace Mahou
 			this.tab_about.Controls.Add(this.lnk_Wiki);
 			this.tab_about.Controls.Add(this.lnk_Site);
 			this.tab_about.Controls.Add(this.lnk_Repository);
-			this.tab_about.Location = new System.Drawing.Point(4, 24);
+			this.tab_about.Location = new System.Drawing.Point(4, 44);
 			this.tab_about.Name = "tab_about";
 			this.tab_about.Padding = new System.Windows.Forms.Padding(3);
-			this.tab_about.Size = new System.Drawing.Size(559, 273);
+			this.tab_about.Size = new System.Drawing.Size(559, 253);
 			this.tab_about.TabIndex = 6;
 			this.tab_about.Text = "About";
 			this.tab_about.UseVisualStyleBackColor = true;
@@ -2190,7 +2191,7 @@ namespace Mahou
 			// btn_OK
 			// 
 			this.btn_OK.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.btn_OK.Location = new System.Drawing.Point(0, 303);
+			this.btn_OK.Location = new System.Drawing.Point(12, 324);
 			this.btn_OK.Name = "btn_OK";
 			this.btn_OK.Size = new System.Drawing.Size(121, 27);
 			this.btn_OK.TabIndex = 1;
@@ -2201,7 +2202,7 @@ namespace Mahou
 			// btn_Cancel
 			// 
 			this.btn_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.btn_Cancel.Location = new System.Drawing.Point(444, 303);
+			this.btn_Cancel.Location = new System.Drawing.Point(432, 324);
 			this.btn_Cancel.Name = "btn_Cancel";
 			this.btn_Cancel.Size = new System.Drawing.Size(121, 27);
 			this.btn_Cancel.TabIndex = 2;
@@ -2211,7 +2212,7 @@ namespace Mahou
 			// 
 			// btn_Apply
 			// 
-			this.btn_Apply.Location = new System.Drawing.Point(222, 303);
+			this.btn_Apply.Location = new System.Drawing.Point(221, 324);
 			this.btn_Apply.Name = "btn_Apply";
 			this.btn_Apply.Size = new System.Drawing.Size(121, 27);
 			this.btn_Apply.TabIndex = 3;
@@ -2232,7 +2233,7 @@ namespace Mahou
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(565, 331);
+			this.ClientSize = new System.Drawing.Size(565, 361);
 			this.Controls.Add(this.btn_Apply);
 			this.Controls.Add(this.btn_Cancel);
 			this.Controls.Add(this.btn_OK);
