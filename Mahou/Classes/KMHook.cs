@@ -257,6 +257,16 @@ namespace Mahou
 							keyAfterSHIFT = false;
 					}
 					#endregion
+					if ((ctrl||win||alt) && Key == Keys.Tab) {
+							Logging.Log("Last word cleared.");
+							MMain.c_word.Clear();
+							MMain.c_words.Clear();
+							Logging.Log("Words cleared.");
+							if (MMain.mahou.SnippetsEnabled) {
+								c_snip.Clear();
+								Logging.Log("Snippet cleared.");
+							}
+						}
 					#region Other, when KeyDown
 					if (nCode >= 0 && wParam == (IntPtr)WinAPI.WM_KEYDOWN &&
 					    !self && !waitfornum && !IsHotkey) {
