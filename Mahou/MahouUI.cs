@@ -2264,6 +2264,10 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 		void Chk_CheckedChanged(object sender, EventArgs e) {
 			ToggleDependentControlsEnabledState();
 		}
+		void Chk_HKCheckedChanged(object sender, EventArgs e) {
+			UpdateHKTemps(sender, e);
+			ToggleDependentControlsEnabledState();
+		}
 		void Chk_AutoStartCheckedChanged(object sender, EventArgs e) {
 			if (chk_AutoStart.Checked)
 				CreateShortcut();
