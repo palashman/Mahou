@@ -53,373 +53,377 @@ namespace Mahou
 		#region Keyboard, Mouse & Event hooks callbacks
 		public static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
 		{
-			try {
-//				Debug.WriteLine(MahouUI.currentLayout);
-//				if (MahouUI.currentLayout == 0)
-//					MahouUI.currentLayout = Locales.GetCurrentLocale();
-				if (MMain.mahou.CaretLangTooltipEnabled)
-					ff_wheeled = false;
-				int vkCode = Marshal.ReadInt32(lParam);
-				var Key = (Keys)vkCode; // "Key" will further be used instead of "(Keys)vkCode"
-				if (MMain.c_words.Count == 0) {
-					MMain.c_words.Add(new List<YuKey>());
-				}
-				if ((Key < Keys.D0 || Key > Keys.D9) && waitfornum && (uint)Key != MMain.mahou.HKConMorWor.VirtualKeyCode && (wParam == (IntPtr)WinAPI.WM_KEYDOWN))
-					MMain.mahou.FlushConvertMoreWords();
-				#region Checks modifiers that are down
-				switch (Key) {
-					case Keys.LShiftKey:
-					case Keys.RShiftKey:
-					case Keys.ShiftKey:
-						shift = ((wParam == (IntPtr)WinAPI.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)WinAPI.WM_KEYDOWN) ? true : false);
-						break;
-					case Keys.RControlKey:
-					case Keys.LControlKey:
-					case Keys.ControlKey:
-						ctrl = ((wParam == (IntPtr)WinAPI.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)WinAPI.WM_KEYDOWN) ? true : false);
-						break;
-					case Keys.RMenu:
-					case Keys.LMenu:
-					case Keys.Menu:
-						alt = ((wParam == (IntPtr)WinAPI.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)WinAPI.WM_KEYDOWN) ? true : false);
-						break;
-					case Keys.RWin:
-					case Keys.LWin:
-						win = ((wParam == (IntPtr)WinAPI.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)WinAPI.WM_KEYDOWN) ? true : false);
-						break;
-				}
-				// Additional fix for scroll tip.
-				if (!self && MMain.mahou.ScrollTip &&
-				   Key == Keys.Scroll && wParam == (IntPtr)WinAPI.WM_KEYDOWN) {
-					self = true;
-					KeybdEvent(Keys.Scroll, 0);
-					KeybdEvent(Keys.Scroll, 2);
-					self = false;
-				}
-				uint mods = 0;
-				if (alt)
-					mods += WinAPI.MOD_ALT;
-				if (ctrl)
-					mods += WinAPI.MOD_CONTROL;
-				if (shift)
-					mods += WinAPI.MOD_SHIFT;
-				if (win)
-					mods += WinAPI.MOD_WIN;
-				if (MMain.mahou.HasHotkey(new Hotkey(false, (uint)Key, mods, 77)) && !self) {
-					Logging.Log("Pressed Mahou, hotkey words would not be cleared.");
-					IsHotkey = true;
-				} else
-					IsHotkey = false;
-				if ((Key >= Keys.D0 || Key <= Keys.D9) && waitfornum)
-					IsHotkey = true;
-				//Key log
-				if (!self)
-					Logging.Log("Catched Key=[" + Key + "] with VKCode=[" + vkCode + "] and message=[" + (int)wParam + "], modifiers=[" + (shift ? "Shift" : "") + (alt ? "Alt" : "") + (ctrl ? "Ctrl" : "") + (win ? "Win" : "") + "].");
-				// Anti win-stuck rule
-				if (win && Key == Keys.L)
-					win = false;
-				// Clear currentLayout in MMain.mahou rule
-				if (((win || alt || ctrl) && Key == Keys.Tab) ||
-				    win && (Key != Keys.None && 
-				            Key != Keys.LWin && 
-				            Key != Keys.RWin)) // On any Win+[AnyKey] hotkey
-					MahouUI.currentLayout = 0;
-				if ((wParam == (IntPtr)WinAPI.WM_KEYUP || wParam == (IntPtr)WinAPI.WM_SYSKEYUP) && (
-				    ((alt || ctrl) && (Key == Keys.Shift || Key == Keys.LShiftKey || Key == Keys.RShiftKey)) ||
-				     shift && (Key == Keys.Menu || Key == Keys.LMenu || Key == Keys.RMenu) ||
-				     (Environment.OSVersion.Version.Major == 10 && win && Key == Keys.Space))) {
-					CheckLayoutLater.Start();
-				}
-				#endregion
-				#region
-				var upper = false;
-				if (MahouUI.LangPanelUpperArrow || MahouUI.mouseLTUpperArrow || MahouUI.caretLTUpperArrow)
-					upper = IsUpperInput();
-				if (MMain.mahou.LangPanelDisplay)
-					if (MahouUI.LangPanelUpperArrow)
-						MMain.mahou._langPanel.DisplayUpper(upper);
-				if (MMain.mahou.MouseLangTooltipEnabled)
-					if (MahouUI.mouseLTUpperArrow)
-						MMain.mahou.mouseLangDisplay.DisplayUpper(upper);
-				if (MMain.mahou.CaretLangTooltipEnabled)
-					if (MahouUI.caretLTUpperArrow)
-						MMain.mahou.caretLangDisplay.DisplayUpper(upper);
-				#endregion
-				#region Snippets
-				if (MMain.mahou.SnippetsEnabled) {
-					if (((Key >= Keys.D0 && Key <= Keys.Z) || // This is 0-9 & A-Z
-					   Key >= Keys.Oem1 && Key <= Keys.OemBackslash // All other printable
-					   ) && !self && !win && !alt && !ctrl && wParam == (IntPtr)WinAPI.WM_KEYUP) {
-						var stb = new StringBuilder(10);
-						var byt = new byte[256];
-						if (shift) {
-							byt[(int)Keys.ShiftKey] = 0xFF;
-						}
-						WinAPI.ToUnicodeEx((uint)vkCode, (uint)vkCode, byt, stb, stb.Capacity, 0, (IntPtr)(Locales.GetCurrentLocale() & 0xffff));
-						c_snip.Add(stb.ToString()[0]);
-					}
-					if (wParam == (IntPtr)WinAPI.WM_KEYUP && Key == Keys.Space) {
-						var snip = "";
-						foreach (var ch in c_snip) {
-							snip += ch;
-						}
-						Logging.Log("Current snippet is [" + snip + "].");
-						for (int i = 0; i < snipps.Length; i++) {
-							if (snip == snipps[i]) {
-								Logging.Log("Current snippet [" + snip + "] matched existing snippet [" + snipps[i] + "].");
-								self = true;
-								for (int e = -1; e < c_snip.Count; e++) {
-									KInputs.MakeInput(new [] { KInputs.AddKey(Keys.Back, true),
-										KInputs.AddKey(Keys.Back, false) 
-									});
-								}
-								Logging.Log("Last word, words cleared due to snippet expansion.");
-								Logging.Log("Expanding snippet [" + snip + "] to [" + snipps[i] + "].");
-								MMain.c_words.Clear();
-								MMain.c_word.Clear();
-								try {
-									KInputs.MakeInput(KInputs.AddString(exps[i]));
-								} catch {
-									Logging.Log("Some snippets configured wrong, check them.", 1);
-									// If not use TASK, form(MessageBox) won't accept the keys(Enter/Escape/Alt+F4).
-									var msg = new [] {"", ""};
-									msg[0] = MMain.Lang[Languages.Element.MSG_SnippetsError];
-									msg[1] = MMain.Lang[Languages.Element.Error];
-									var tsk = new System.Threading.Tasks.Task(() => MessageBox.Show(msg[0], msg[1], MessageBoxButtons.OK, MessageBoxIcon.Error));
-									tsk.Start();
-									KInputs.MakeInput(KInputs.AddString(snip));
-								}
-								self = false;
-							}
-						}
-						c_snip.Clear();
-					}
-				}
-				#endregion
-				#region Release Re-Pressed keys
-				if (hotkeywithmodsfired && !self &&
-				    (wParam == (IntPtr)WinAPI.WM_KEYUP || wParam == (IntPtr)WinAPI.WM_SYSKEYUP) &&
-				   (Key == Keys.LShiftKey || Key == Keys.LMenu || Key == Keys.LControlKey || Key == Keys.LWin)) {
-					self = true;
-					hotkeywithmodsfired = false;
-					mods = 0;
-					if (cwas) {
-						cwas = false;
-						mods += WinAPI.MOD_CONTROL;
-					}
-					if (swas) {
-						swas = false;
-						mods += WinAPI.MOD_SHIFT;
-					}
-					if (awas) {
-						awas = false;
-						mods += WinAPI.MOD_ALT;
-					}
-					if (wwas) {
-						wwas = false;
-						mods += WinAPI.MOD_WIN;
-					}
-					SendModsUp((int)mods);
-					self = false;
-				}
-				#endregion
-				#region One key layout switch
-				if (!self && wParam == (IntPtr)WinAPI.WM_KEYUP)
-					if (Key == Keys.LControlKey || Key == Keys.RControlKey || Key == Keys.ControlKey)
-						clickAfterCTRL = false;
-					if (Key != Keys.LMenu && Key != Keys.RMenu && Key != Keys.Menu)
-						clickAfterALT = false;
-					if (Key != Keys.LShiftKey && Key != Keys.RShiftKey && Key != Keys.Shift)
-						clickAfterSHIFT = false;
-				if (!self && MMain.mahou.ChangeLayouByKey) {
-					if (Key == Keys.LControlKey || Key == Keys.RControlKey ||
-				   	Key == Keys.LShiftKey || Key == Keys.RShiftKey ||
-				    Key == Keys.LMenu || Key == Keys.RMenu ||
-				    Key == Keys.LWin || Key == Keys.RWin ||
-				    Key == Keys.CapsLock) {
-						SpecificKey(Key, wParam, MMain.mahou.Key1, 1);
-						SpecificKey(Key, wParam, MMain.mahou.Key2, 2);
-						SpecificKey(Key, wParam, MMain.mahou.Key3, 3);
-						SpecificKey(Key, wParam, MMain.mahou.Key4, 4);
-					}
-					if (ctrl && (Key != Keys.LControlKey && Key != Keys.RControlKey && Key != Keys.ControlKey || clickAfterCTRL))
-						keyAfterCTRL = true;
-					else 
-						keyAfterCTRL = false;
-					if (alt && (Key != Keys.LMenu && Key != Keys.RMenu && Key != Keys.Menu || clickAfterALT))
-						keyAfterALT = true;
-					else 
-						keyAfterALT = false;
-					if (shift && (Key != Keys.LShiftKey && Key != Keys.RShiftKey && Key != Keys.Shift || clickAfterSHIFT))
-						keyAfterSHIFT = true;
-					else 
-						keyAfterSHIFT = false;
-				}
-				#endregion
-				#region Other, when KeyDown
-				if (nCode >= 0 && wParam == (IntPtr)WinAPI.WM_KEYDOWN &&
-				    !self && !waitfornum && !IsHotkey) {
-					if (Key == Keys.Back) { //Removes last item from current word when user press Backspace
-						if (MMain.c_word.Count != 0) {
-							MMain.c_word.RemoveAt(MMain.c_word.Count - 1);
-						}
-						if (MMain.c_words.Count > 0) {
-							if (MMain.c_words[MMain.c_words.Count - 1].Count - 1 > 0) {
-								Logging.Log("Removed key [" + MMain.c_words[MMain.c_words.Count - 1][MMain.c_words[MMain.c_words.Count - 1].Count - 1].key + "] from last word in words.");
-								MMain.c_words[MMain.c_words.Count - 1].RemoveAt(MMain.c_words[MMain.c_words.Count - 1].Count - 1);
-							} else {
-								Logging.Log("Removed one empty word from current words.");
-								MMain.c_words.RemoveAt(MMain.c_words.Count - 1);
-							}
-						}
-						if (MMain.mahou.SnippetsEnabled) {
-							if (c_snip.Count != 0) {
-								c_snip.RemoveAt(c_snip.Count - 1);
-								Logging.Log("Removed one character from current snippet.");
-							}
-						}
-					}
-					//Pressing any of these Keys will empty current word, and snippet
-					if (Key == Keys.Enter || Key == Keys.Home || Key == Keys.End ||
-					   Key == Keys.Tab || Key == Keys.PageDown || Key == Keys.PageUp ||
-					   Key == Keys.Left || Key == Keys.Right || Key == Keys.Down || Key == Keys.Up ||
-					   Key == Keys.BrowserSearch || 
-					   ((ctrl || win || alt) && (Key != Keys.Menu  || //Ctrl modifier and key which is not modifier
-								Key != Keys.LMenu ||
-								Key != Keys.RMenu ||
-								Key != Keys.LWin ||
-								Key != Keys.ShiftKey ||
-								Key != Keys.RShiftKey ||
-								Key != Keys.LShiftKey ||
-								Key != Keys.RWin ||
-								Key != Keys.ControlKey ||
-								Key != Keys.LControlKey ||
-								Key != Keys.RControlKey ))) { 
-						Logging.Log("Last word cleared.");
-						MMain.c_word.Clear();
-						MMain.c_words.Clear();
-						Logging.Log("Words cleared.");
-						if (MMain.mahou.SnippetsEnabled) {
-							c_snip.Clear();
-							Logging.Log("Snippet cleared.");
-						}
-					}
-					if (Key == Keys.Space) {
-						Logging.Log("Adding one new empty word to words, and adding to it [Space] key.");
+			if (MMain.mahouInitOk) {
+				try {
+	//				Debug.WriteLine(MahouUI.currentLayout);
+	//				if (MahouUI.currentLayout == 0)
+	//					MahouUI.currentLayout = Locales.GetCurrentLocale();
+					if (MMain.mahou.CaretLangTooltipEnabled)
+						ff_wheeled = false;
+					int vkCode = Marshal.ReadInt32(lParam);
+					var Key = (Keys)vkCode; // "Key" will further be used instead of "(Keys)vkCode"
+					if (MMain.c_words.Count == 0) {
 						MMain.c_words.Add(new List<YuKey>());
-						MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() { key = Keys.Space });
-						if (MMain.mahou.AddOneSpace && MMain.c_word.Count != 0 &&
-						   MMain.c_word[MMain.c_word.Count - 1].key != Keys.Space) {
-							Logging.Log("Eat one space passed, next space will clear last word.");
-							MMain.c_word.Add(new YuKey() { key = Keys.Space });
-							afterEOS = true;
-						} else {
-							MMain.c_word.Clear();
+					}
+					if ((Key < Keys.D0 || Key > Keys.D9) && waitfornum && (uint)Key != MMain.mahou.HKConMorWor.VirtualKeyCode && (wParam == (IntPtr)WinAPI.WM_KEYDOWN))
+						MMain.mahou.FlushConvertMoreWords();
+					#region Checks modifiers that are down
+					switch (Key) {
+						case Keys.LShiftKey:
+						case Keys.RShiftKey:
+						case Keys.ShiftKey:
+							shift = ((wParam == (IntPtr)WinAPI.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)WinAPI.WM_KEYDOWN) ? true : false);
+							break;
+						case Keys.RControlKey:
+						case Keys.LControlKey:
+						case Keys.ControlKey:
+							ctrl = ((wParam == (IntPtr)WinAPI.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)WinAPI.WM_KEYDOWN) ? true : false);
+							break;
+						case Keys.RMenu:
+						case Keys.LMenu:
+						case Keys.Menu:
+							alt = ((wParam == (IntPtr)WinAPI.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)WinAPI.WM_KEYDOWN) ? true : false);
+							break;
+						case Keys.RWin:
+						case Keys.LWin:
+							win = ((wParam == (IntPtr)WinAPI.WM_SYSKEYDOWN) ? true : false) || ((wParam == (IntPtr)WinAPI.WM_KEYDOWN) ? true : false);
+							break;
+					}
+					// Additional fix for scroll tip.
+					if (!self && MMain.mahou.ScrollTip &&
+					   Key == Keys.Scroll && wParam == (IntPtr)WinAPI.WM_KEYDOWN) {
+						self = true;
+						KeybdEvent(Keys.Scroll, 0);
+						KeybdEvent(Keys.Scroll, 2);
+						self = false;
+					}
+					uint mods = 0;
+					if (alt)
+						mods += WinAPI.MOD_ALT;
+					if (ctrl)
+						mods += WinAPI.MOD_CONTROL;
+					if (shift)
+						mods += WinAPI.MOD_SHIFT;
+					if (win)
+						mods += WinAPI.MOD_WIN;
+					if (MMain.mahou.HasHotkey(new Hotkey(false, (uint)Key, mods, 77)) && !self) {
+						Logging.Log("Pressed Mahou, hotkey words would not be cleared.");
+						IsHotkey = true;
+					} else
+						IsHotkey = false;
+					if ((Key >= Keys.D0 || Key <= Keys.D9) && waitfornum)
+						IsHotkey = true;
+					//Key log
+					if (!self)
+						Logging.Log("Catched Key=[" + Key + "] with VKCode=[" + vkCode + "] and message=[" + (int)wParam + "], modifiers=[" + (shift ? "Shift" : "") + (alt ? "Alt" : "") + (ctrl ? "Ctrl" : "") + (win ? "Win" : "") + "].");
+					// Anti win-stuck rule
+					if (win && Key == Keys.L)
+						win = false;
+					// Clear currentLayout in MMain.mahou rule
+					if (((win || alt || ctrl) && Key == Keys.Tab) ||
+					    win && (Key != Keys.None && 
+					            Key != Keys.LWin && 
+					            Key != Keys.RWin)) // On any Win+[AnyKey] hotkey
+						MahouUI.currentLayout = 0;
+					if ((wParam == (IntPtr)WinAPI.WM_KEYUP || wParam == (IntPtr)WinAPI.WM_SYSKEYUP) && (
+					    ((alt || ctrl) && (Key == Keys.Shift || Key == Keys.LShiftKey || Key == Keys.RShiftKey)) ||
+					     shift && (Key == Keys.Menu || Key == Keys.LMenu || Key == Keys.RMenu) ||
+					     (Environment.OSVersion.Version.Major == 10 && win && Key == Keys.Space))) {
+						CheckLayoutLater.Start();
+					}
+					#endregion
+					#region
+					var upper = false;
+					if (MahouUI.LangPanelUpperArrow || MahouUI.mouseLTUpperArrow || MahouUI.caretLTUpperArrow)
+						upper = IsUpperInput();
+					if (MMain.mahou.LangPanelDisplay)
+						if (MahouUI.LangPanelUpperArrow)
+							MMain.mahou._langPanel.DisplayUpper(upper);
+					if (MMain.mahou.MouseLangTooltipEnabled)
+						if (MahouUI.mouseLTUpperArrow)
+							MMain.mahou.mouseLangDisplay.DisplayUpper(upper);
+					if (MMain.mahou.CaretLangTooltipEnabled)
+						if (MahouUI.caretLTUpperArrow)
+							MMain.mahou.caretLangDisplay.DisplayUpper(upper);
+					#endregion
+					#region Snippets
+					if (MMain.mahou.SnippetsEnabled) {
+						if (((Key >= Keys.D0 && Key <= Keys.Z) || // This is 0-9 & A-Z
+						   Key >= Keys.Oem1 && Key <= Keys.OemBackslash // All other printable
+						   ) && !self && !win && !alt && !ctrl && wParam == (IntPtr)WinAPI.WM_KEYUP) {
+							var stb = new StringBuilder(10);
+							var byt = new byte[256];
+							if (shift) {
+								byt[(int)Keys.ShiftKey] = 0xFF;
+							}
+							WinAPI.ToUnicodeEx((uint)vkCode, (uint)vkCode, byt, stb, stb.Capacity, 0, (IntPtr)(Locales.GetCurrentLocale() & 0xffff));
+							c_snip.Add(stb.ToString()[0]);
+						}
+						if (wParam == (IntPtr)WinAPI.WM_KEYUP && Key == Keys.Space) {
+							var snip = "";
+							foreach (var ch in c_snip) {
+								snip += ch;
+							}
+							Logging.Log("Current snippet is [" + snip + "].");
+							for (int i = 0; i < snipps.Length; i++) {
+								if (snip == snipps[i]) {
+									Logging.Log("Current snippet [" + snip + "] matched existing snippet [" + snipps[i] + "].");
+									self = true;
+									for (int e = -1; e < c_snip.Count; e++) {
+										KInputs.MakeInput(new [] { KInputs.AddKey(Keys.Back, true),
+											KInputs.AddKey(Keys.Back, false) 
+										});
+									}
+									Logging.Log("Last word, words cleared due to snippet expansion.");
+									Logging.Log("Expanding snippet [" + snip + "] to [" + snipps[i] + "].");
+									MMain.c_words.Clear();
+									MMain.c_word.Clear();
+									try {
+										KInputs.MakeInput(KInputs.AddString(exps[i]));
+									} catch {
+										Logging.Log("Some snippets configured wrong, check them.", 1);
+										// If not use TASK, form(MessageBox) won't accept the keys(Enter/Escape/Alt+F4).
+										var msg = new [] {"", ""};
+										msg[0] = MMain.Lang[Languages.Element.MSG_SnippetsError];
+										msg[1] = MMain.Lang[Languages.Element.Error];
+										var tsk = new System.Threading.Tasks.Task(() => MessageBox.Show(msg[0], msg[1], MessageBoxButtons.OK, MessageBoxIcon.Error));
+										tsk.Start();
+										KInputs.MakeInput(KInputs.AddString(snip));
+									}
+									self = false;
+								}
+							}
+							c_snip.Clear();
+						}
+					}
+					#endregion
+					#region Release Re-Pressed keys
+					if (hotkeywithmodsfired && !self &&
+					    (wParam == (IntPtr)WinAPI.WM_KEYUP || wParam == (IntPtr)WinAPI.WM_SYSKEYUP) &&
+					   (Key == Keys.LShiftKey || Key == Keys.LMenu || Key == Keys.LControlKey || Key == Keys.LWin)) {
+						self = true;
+						hotkeywithmodsfired = false;
+						mods = 0;
+						if (cwas) {
+							cwas = false;
+							mods += WinAPI.MOD_CONTROL;
+						}
+						if (swas) {
+							swas = false;
+							mods += WinAPI.MOD_SHIFT;
+						}
+						if (awas) {
+							awas = false;
+							mods += WinAPI.MOD_ALT;
+						}
+						if (wwas) {
+							wwas = false;
+							mods += WinAPI.MOD_WIN;
+						}
+						SendModsUp((int)mods);
+						self = false;
+					}
+					#endregion
+					#region One key layout switch
+					if (!self && wParam == (IntPtr)WinAPI.WM_KEYUP)
+						if (Key == Keys.LControlKey || Key == Keys.RControlKey || Key == Keys.ControlKey)
+							clickAfterCTRL = false;
+						if (Key != Keys.LMenu && Key != Keys.RMenu && Key != Keys.Menu)
+							clickAfterALT = false;
+						if (Key != Keys.LShiftKey && Key != Keys.RShiftKey && Key != Keys.Shift)
+							clickAfterSHIFT = false;
+					if (!self && MMain.mahou.ChangeLayouByKey) {
+						if (Key == Keys.LControlKey || Key == Keys.RControlKey ||
+					   	Key == Keys.LShiftKey || Key == Keys.RShiftKey ||
+					    Key == Keys.LMenu || Key == Keys.RMenu ||
+					    Key == Keys.LWin || Key == Keys.RWin ||
+					    Key == Keys.CapsLock) {
+							SpecificKey(Key, wParam, MMain.mahou.Key1, 1);
+							SpecificKey(Key, wParam, MMain.mahou.Key2, 2);
+							SpecificKey(Key, wParam, MMain.mahou.Key3, 3);
+							SpecificKey(Key, wParam, MMain.mahou.Key4, 4);
+						}
+						if (ctrl && (Key != Keys.LControlKey && Key != Keys.RControlKey && Key != Keys.ControlKey || clickAfterCTRL))
+							keyAfterCTRL = true;
+						else 
+							keyAfterCTRL = false;
+						if (alt && (Key != Keys.LMenu && Key != Keys.RMenu && Key != Keys.Menu || clickAfterALT))
+							keyAfterALT = true;
+						else 
+							keyAfterALT = false;
+						if (shift && (Key != Keys.LShiftKey && Key != Keys.RShiftKey && Key != Keys.Shift || clickAfterSHIFT))
+							keyAfterSHIFT = true;
+						else 
+							keyAfterSHIFT = false;
+					}
+					#endregion
+					#region Other, when KeyDown
+					if (nCode >= 0 && wParam == (IntPtr)WinAPI.WM_KEYDOWN &&
+					    !self && !waitfornum && !IsHotkey) {
+						if (Key == Keys.Back) { //Removes last item from current word when user press Backspace
+							if (MMain.c_word.Count != 0) {
+								MMain.c_word.RemoveAt(MMain.c_word.Count - 1);
+							}
+							if (MMain.c_words.Count > 0) {
+								if (MMain.c_words[MMain.c_words.Count - 1].Count - 1 > 0) {
+									Logging.Log("Removed key [" + MMain.c_words[MMain.c_words.Count - 1][MMain.c_words[MMain.c_words.Count - 1].Count - 1].key + "] from last word in words.");
+									MMain.c_words[MMain.c_words.Count - 1].RemoveAt(MMain.c_words[MMain.c_words.Count - 1].Count - 1);
+								} else {
+									Logging.Log("Removed one empty word from current words.");
+									MMain.c_words.RemoveAt(MMain.c_words.Count - 1);
+								}
+							}
+							if (MMain.mahou.SnippetsEnabled) {
+								if (c_snip.Count != 0) {
+									c_snip.RemoveAt(c_snip.Count - 1);
+									Logging.Log("Removed one character from current snippet.");
+								}
+							}
+						}
+						//Pressing any of these Keys will empty current word, and snippet
+						if (Key == Keys.Enter || Key == Keys.Home || Key == Keys.End ||
+						   Key == Keys.Tab || Key == Keys.PageDown || Key == Keys.PageUp ||
+						   Key == Keys.Left || Key == Keys.Right || Key == Keys.Down || Key == Keys.Up ||
+						   Key == Keys.BrowserSearch || 
+						   ((ctrl || win || alt) && (Key != Keys.Menu  || //Ctrl modifier and key which is not modifier
+									Key != Keys.LMenu ||
+									Key != Keys.RMenu ||
+									Key != Keys.LWin ||
+									Key != Keys.ShiftKey ||
+									Key != Keys.RShiftKey ||
+									Key != Keys.LShiftKey ||
+									Key != Keys.RWin ||
+									Key != Keys.ControlKey ||
+									Key != Keys.LControlKey ||
+									Key != Keys.RControlKey ))) { 
 							Logging.Log("Last word cleared.");
-							afterEOS = false;
-						}
-					}
-					if (((Key >= Keys.D0 && Key <= Keys.Z) || // This is 0-9 & A-Z
-					   Key >= Keys.Oem1 && Key <= Keys.OemBackslash || // All other printable
-					   (Control.IsKeyLocked(Keys.NumLock) && ( // while numlock is on
-					   Key >= Keys.NumPad0 && Key <= Keys.NumPad9)) || // Numpad numbers 
-					   Key == Keys.Decimal || Key == Keys.Subtract || Key == Keys.Multiply ||
-					   Key == Keys.Divide || Key == Keys.Add // Numpad symbols
-					  ) && !win && !alt && !ctrl) {
-						if (afterEOS) { //Clears word after Eat ONE space
 							MMain.c_word.Clear();
-							afterEOS = false;
+							MMain.c_words.Clear();
+							Logging.Log("Words cleared.");
+							if (MMain.mahou.SnippetsEnabled) {
+								c_snip.Clear();
+								Logging.Log("Snippet cleared.");
+							}
 						}
-						if (!shift) {
-							MMain.c_word.Add(new YuKey() {
-								key = Key,
-								upper = false
-							});
-							MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() {
-								key = Key,
-								upper = false
-							});
-						} else {
-							MMain.c_word.Add(new YuKey() {
-								key = Key,
-								upper = true
-							});
-							MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() {
-								key = Key,
-								upper = true
-							});
+						if (Key == Keys.Space) {
+							Logging.Log("Adding one new empty word to words, and adding to it [Space] key.");
+							MMain.c_words.Add(new List<YuKey>());
+							MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() { key = Keys.Space });
+							if (MMain.mahou.AddOneSpace && MMain.c_word.Count != 0 &&
+							   MMain.c_word[MMain.c_word.Count - 1].key != Keys.Space) {
+								Logging.Log("Eat one space passed, next space will clear last word.");
+								MMain.c_word.Add(new YuKey() { key = Keys.Space });
+								afterEOS = true;
+							} else {
+								MMain.c_word.Clear();
+								Logging.Log("Last word cleared.");
+								afterEOS = false;
+							}
+						}
+						if (((Key >= Keys.D0 && Key <= Keys.Z) || // This is 0-9 & A-Z
+						   Key >= Keys.Oem1 && Key <= Keys.OemBackslash || // All other printable
+						   (Control.IsKeyLocked(Keys.NumLock) && ( // while numlock is on
+						   Key >= Keys.NumPad0 && Key <= Keys.NumPad9)) || // Numpad numbers 
+						   Key == Keys.Decimal || Key == Keys.Subtract || Key == Keys.Multiply ||
+						   Key == Keys.Divide || Key == Keys.Add // Numpad symbols
+						  ) && !win && !alt && !ctrl) {
+							if (afterEOS) { //Clears word after Eat ONE space
+								MMain.c_word.Clear();
+								afterEOS = false;
+							}
+							if (!shift) {
+								MMain.c_word.Add(new YuKey() {
+									key = Key,
+									upper = false
+								});
+								MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() {
+									key = Key,
+									upper = false
+								});
+							} else {
+								MMain.c_word.Add(new YuKey() {
+									key = Key,
+									upper = true
+								});
+								MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() {
+									key = Key,
+									upper = true
+								});
+							}
 						}
 					}
-				}
-				#endregion
-				#region Alt+Numpad (fully workable)
-				if (!self && incapt &&
-				   (Key == Keys.RMenu || Key == Keys.LMenu || Key == Keys.Menu) &&
-				   wParam == (IntPtr)WinAPI.WM_KEYUP) {
-					Logging.Log("Capture of numpads ended, captured [" + tempNumpads.Count + "] numpads.");
-					if (tempNumpads.Count > 0) { // Prevents zero numpads(alt only) keys
-						MMain.c_word.Add(new YuKey() {
-							altnum = true,
-							numpads = new List<Keys>(tempNumpads)//new List => VERY important here!!!
-						});                                      //It prevents pointer to tempNumpads, which is cleared.
-						MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() {
-							altnum = true,
-							numpads = new List<Keys>(tempNumpads)
-						});
+					#endregion
+					#region Alt+Numpad (fully workable)
+					if (!self && incapt &&
+					   (Key == Keys.RMenu || Key == Keys.LMenu || Key == Keys.Menu) &&
+					   wParam == (IntPtr)WinAPI.WM_KEYUP) {
+						Logging.Log("Capture of numpads ended, captured [" + tempNumpads.Count + "] numpads.");
+						if (tempNumpads.Count > 0) { // Prevents zero numpads(alt only) keys
+							MMain.c_word.Add(new YuKey() {
+								altnum = true,
+								numpads = new List<Keys>(tempNumpads)//new List => VERY important here!!!
+							});                                      //It prevents pointer to tempNumpads, which is cleared.
+							MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() {
+								altnum = true,
+								numpads = new List<Keys>(tempNumpads)
+							});
+						}
+						tempNumpads.Clear();
+						incapt = false;
 					}
-					tempNumpads.Clear();
-					incapt = false;
-				}
-				if (!self && !incapt && alt && wParam == (IntPtr)WinAPI.WM_SYSKEYDOWN) {
-					Logging.Log("Alt is down, starting capture of Numpads...");
-					incapt = true;
-				}
-				if (!self && alt && incapt) {
-					if (Key >= Keys.NumPad0 && Key <= Keys.NumPad9 && wParam == (IntPtr)WinAPI.WM_SYSKEYUP) {
-//					Console.WriteLine("Alt is down, and \"" + Key + "\" is released.");
-						tempNumpads.Add(Key);
+					if (!self && !incapt && alt && wParam == (IntPtr)WinAPI.WM_SYSKEYDOWN) {
+						Logging.Log("Alt is down, starting capture of Numpads...");
+						incapt = true;
 					}
+					if (!self && alt && incapt) {
+						if (Key >= Keys.NumPad0 && Key <= Keys.NumPad9 && wParam == (IntPtr)WinAPI.WM_SYSKEYUP) {
+	//					Console.WriteLine("Alt is down, and \"" + Key + "\" is released.");
+							tempNumpads.Add(Key);
+						}
+					}
+					#endregion
+				} catch (Exception e) {
+					Logging.Log("Keyboard HOOK died! Stack Trace & Error Message:\r\n" + e.Message + "\r\n" + e.StackTrace, 1);
+					Logging.Log("Restarting HOOKs...");
+					MMain.RestartHook();
 				}
-				#endregion
-			} catch (Exception e) {
-				Logging.Log("Keyboard HOOK died! Stack Trace & Error Message:\r\n" + e.Message + "\r\n" + e.StackTrace, 1);
-				Logging.Log("Restarting HOOKs...");
-				MMain.RestartHook();
 			}
 			return WinAPI.CallNextHookEx(MMain._hookID, nCode, wParam, lParam);
 		}
 		public static IntPtr MouseHookCallback(int nCode, IntPtr wParam, IntPtr lParam)
 		{
-			try {
-			if (nCode >= 0) {
-				if ((uint)wParam == WinAPI.WM_MOUSEWHEEL && MMain.mahou.caretLangDisplay.Visible && MMain.mahou.CaretLangTooltipEnabled) {
-					var _fw = WinAPI.GetForegroundWindow();
-					var _clsNMb = new StringBuilder(40);
-					WinAPI.GetClassName(_fw, _clsNMb, _clsNMb.Capacity);
-					if (_clsNMb.ToString() == "MozillaWindowClass")
-						ff_wheeled = true;
-				}
-				if ((WinAPI.WM_LBUTTONDOWN == (uint)wParam) || WinAPI.WM_RBUTTONDOWN == (uint)wParam) {
-					if (ctrl)
-						clickAfterCTRL = true;
-					if (shift)
-						clickAfterSHIFT = true;
-					if (alt)
-						clickAfterALT = true;
-					MahouUI.currentLayout = 0;
-					MMain.c_word.Clear();
-					MMain.c_words.Clear();
-					Logging.Log("Last word & words cleared [with mouse click].");
-					if (MMain.mahou.SnippetsEnabled) {
-						c_snip.Clear();
-						Logging.Log("Current snippet cleared[with mouse click].");
+			if (MMain.mahouInitOk) {
+				try {
+				if (nCode >= 0) {
+					if ((uint)wParam == WinAPI.WM_MOUSEWHEEL && MMain.mahou.caretLangDisplay.Visible && MMain.mahou.CaretLangTooltipEnabled) {
+						var _fw = WinAPI.GetForegroundWindow();
+						var _clsNMb = new StringBuilder(40);
+						WinAPI.GetClassName(_fw, _clsNMb, _clsNMb.Capacity);
+						if (_clsNMb.ToString() == "MozillaWindowClass")
+							ff_wheeled = true;
+					}
+					if ((WinAPI.WM_LBUTTONDOWN == (uint)wParam) || WinAPI.WM_RBUTTONDOWN == (uint)wParam) {
+						if (ctrl)
+							clickAfterCTRL = true;
+						if (shift)
+							clickAfterSHIFT = true;
+						if (alt)
+							clickAfterALT = true;
+						MahouUI.currentLayout = 0;
+						MMain.c_word.Clear();
+						MMain.c_words.Clear();
+						Logging.Log("Last word & words cleared [with mouse click].");
+						if (MMain.mahou.SnippetsEnabled) {
+							c_snip.Clear();
+							Logging.Log("Current snippet cleared[with mouse click].");
+						}
 					}
 				}
-			}
-			} catch(Exception e) {
-				Logging.Log("Mouse HOOK died! Stack Trace & Error Message:\r\n"+e.Message+"\r\n"+e.StackTrace, 1);
-				Logging.Log("Restarting HOOKs...");
-				MMain.StopHook(); MMain.StartHook();
+				} catch(Exception e) {
+					Logging.Log("Mouse HOOK died! Stack Trace & Error Message:\r\n"+e.Message+"\r\n"+e.StackTrace, 1);
+					Logging.Log("Restarting HOOKs...");
+					MMain.StopHook(); MMain.StartHook();
+				}
 			}
 			return WinAPI.CallNextHookEx(MMain._mouse_hookID, nCode, wParam, lParam);
 		}

@@ -29,6 +29,7 @@ namespace Mahou
 		public static Dictionary<Languages.Element, string> Lang = Languages.English;
 		public static Configs MyConfs = new Configs();
 		public static MahouUI mahou;
+		public static bool mahouInitOk = false;
 		public static List<string> lcnmid = new List<string>();
 		#endregion
 		[STAThread] //DO NOT REMOVE THIS
@@ -70,6 +71,7 @@ namespace Mahou
 						MyConfs.Write("Layouts", "MainLayout2", lcnmid[1]);
 					}
 					mahou = new MahouUI();
+					mahouInitOk = true;
 					if (MyConfs.Read("Layouts", "MainLayout1") == "" && MyConfs.Read("Layouts", "MainLayout2") == "") {
 						mahou.cbb_MainLayout1.SelectedIndex = 0;
 						mahou.cbb_MainLayout2.SelectedIndex = 1;
@@ -103,7 +105,7 @@ namespace Mahou
 		{
 			_mouse_hookID = KMHook.SetHook(_mouse_proc, WinAPI.WH_MOUSE_LL);
 			_hookID = KMHook.SetHook(_proc, WinAPI.WH_KEYBOARD_LL);
-			Thread.Sleep(10); //Give some time for it to apply
+//			Thread.Sleep(10); //Give some time for it to apply
 			Logging.Log("Global hooks started.");
 		}
 		public static void StopHook()
@@ -111,7 +113,7 @@ namespace Mahou
 			WinAPI.UnhookWindowsHookEx(_hookID);
 			WinAPI.UnhookWindowsHookEx(_mouse_hookID);
 			_hookID = _mouse_hookID = IntPtr.Zero;
-			Thread.Sleep(10); //Give some time for it to apply
+//			Thread.Sleep(10); //Give some time for it to apply
 			Logging.Log("Global hooks stopped.");
 		}
 		public static bool MahouActive()

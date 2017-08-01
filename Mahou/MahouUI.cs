@@ -29,7 +29,7 @@ namespace Mahou {
 		public static string nPath = AppDomain.CurrentDomain.BaseDirectory;
 		public static bool LoggingEnabled, dummy, CapsLockDisablerTimer, LangPanelUpperArrow, mouseLTUpperArrow, caretLTUpperArrow;
 		static string[] UpdInfo;
-		static bool updating, was, isold = true, checking;
+		static bool updating, was, isold = true, checking, btn_apply;
 		static Timer tmr = new Timer();
 		static Timer old = new Timer();
 		public static Bitmap FLAG;
@@ -746,7 +746,8 @@ namespace Mahou {
 					_langPanel.HideWnd();
 			}
 			Memory.Flush();
-			HookDieOnApplyConfigsFix();
+			if (btn_apply)
+				HookDieOnApplyConfigsFix();
 			Logging.Log("All configurations loaded.");
 		}
 		/// <summary>
@@ -2317,10 +2318,12 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			}
 		}
 		void Btn_OKClick(object sender, EventArgs e) {
+			btn_apply = true;
 			ToggleVisibility();
 			SaveConfigs();
 		}
 		void Btn_ApplyClick(object sender, EventArgs e) {
+			btn_apply = true;
 			SaveConfigs();
 		}
 		void Btn_CancelClick(object sender, EventArgs e) {
