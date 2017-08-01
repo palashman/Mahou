@@ -46,7 +46,7 @@ namespace Mahou {
 					TrayFlags, SymIgnEnabled, TrayIconVisible, SnippetsEnabled, ChangeLayouByKey, EmulateLS,
 					RePress, BlockHKWithCtrl, blueIcon, SwitchBetweenLayouts, SelectedTextGetMoreTries, ReSelect,
 					ConvertSelectionLS, ConvertSelectionLSPlus, MCDSSupport, OneLayoutWholeWord, RestartHooks,
-					MouseTTAlways, OneLayout, MouseLangTooltipEnabled, CaretLangTooltipEnabled;
+					MouseTTAlways, OneLayout, MouseLangTooltipEnabled, CaretLangTooltipEnabled, QWERTZ_fix;
 		/// <summary> Temporary modifiers of hotkeys. </summary>
 		string Mainhk_tempMods, ExitHk_tempMods, HKCLast_tempMods, HKCSelection_tempMods, 
 			    HKCLine_tempMods, HKSymIgn_tempMods, HKConMorWor_tempMods, HKTitleCase_tempMods,
@@ -554,6 +554,7 @@ namespace Mahou {
 				try { MMain.MyConfs.Write("Layouts", "SpecificLayout4", cbb_Layout4.SelectedItem.ToString()); } catch { }
 			} catch { Logging.Log("Some settings in layouts tab failed to save, they are skipped."); }
 			MMain.MyConfs.Write("Layouts", "OneLayout", chk_OneLayout.Checked.ToString());
+			MMain.MyConfs.Write("Layouts", "QWERTZfix", chk_qwertz.Checked.ToString());
 			#endregion
 			#region Persistent Layout
 			MMain.MyConfs.Write("PersistentLayout", "ActivateForLayout1", chk_PersistentLayout1Active.Checked.ToString());
@@ -663,6 +664,7 @@ namespace Mahou {
 			Key3 = MMain.MyConfs.ReadInt("Layouts", "SpecificKey3");
 			Key4 = MMain.MyConfs.ReadInt("Layouts", "SpecificKey4");
 			OneLayout = chk_OneLayout.Checked = MMain.MyConfs.ReadBool("Layouts", "OneLayout");
+			QWERTZ_fix = chk_qwertz.Checked = MMain.MyConfs.ReadBool("Layouts", "QWERTZfix");
 			RefreshComboboxes();
 			#endregion
 			#region Persistent Layout
@@ -744,6 +746,7 @@ namespace Mahou {
 					_langPanel.HideWnd();
 			}
 			Memory.Flush();
+			HookDieOnApplyConfigsFix();
 			Logging.Log("All configurations loaded.");
 		}
 		/// <summary>
@@ -857,16 +860,17 @@ namespace Mahou {
 				TopMost = false;
 				WinAPI.SetForegroundWindow(Handle);
 			}
+			Memory.Flush();
+		}
+		public void HookDieOnApplyConfigsFix() {
 			// Sometimes when logging is enabled, hooks may die without error...
 			// This fixes it, but you need manually to show/hide main window:
 			// 1. Click tray icon. 2. Start Mahou.exe
-			// This bug is under look...			
-			if (MMain.MyConfs.ReadBool("Functions", "Logging")) {
-				MMain.RestartHook();
-				KMHook.win = KMHook.alt = KMHook.shift = KMHook.ctrl = false;
-				KMHook.SendModsUp(15); // All modifiers
-			}
-			Memory.Flush();
+			// This bug is under look...
+			Logging.Log("Hook die on apply configs fix...");
+			MMain.RestartHook();
+			KMHook.win = KMHook.alt = KMHook.shift = KMHook.ctrl = false;
+			KMHook.SendModsUp(15); // All modifiers
 		}
 		public void ToggleLangPanel() {
 			if (_langPanel.Visible) {
@@ -2070,6 +2074,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			grb_Layouts.Text = MMain.Lang[Languages.Element.Layouts];
 			grb_Keys.Text = MMain.Lang[Languages.Element.Keys];
 			chk_OneLayout.Text = MMain.Lang[Languages.Element.OneLayout];
+			chk_qwertz.Text = MMain.Lang[Languages.Element.QWERTZ];
 			#endregion
 			#region Persistent Layout
 			tab_persistent.Text = MMain.Lang[Languages.Element.PersistentLayout];
@@ -2206,6 +2211,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			HelpMeUnderstand.SetToolTip(txt_PersistentLayout2Processes, MMain.Lang[Languages.Element.TT_PersistentLayout]);
 			HelpMeUnderstand.SetToolTip(chk_RestartHooks, MMain.Lang[Languages.Element.TT_RestartHooks]);
 			HelpMeUnderstand.SetToolTip(chk_OneLayout, MMain.Lang[Languages.Element.TT_OneLayout]);
+			HelpMeUnderstand.SetToolTip(chk_qwertz, MMain.Lang[Languages.Element.TT_QWERTZ]);
 		}
 		void HelpMeUnderstandPopup(object sender, PopupEventArgs e) {
 			HelpMeUnderstand.ToolTipTitle = e.AssociatedControl.Text;

@@ -55,6 +55,7 @@ namespace Mahou
 			CheckString("Layouts", "SpecificLayout2", "");
 			CheckString("Layouts", "SpecificLayout3", "");
 			CheckString("Layouts", "SpecificLayout4", "");
+			CheckBool("Layouts", "QWERTZfix", "false");
 			#endregion
 			#region Persistent Layout
 			CheckBool("PersistentLayout", "ActivateForLayout1", "false");

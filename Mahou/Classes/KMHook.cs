@@ -384,8 +384,7 @@ namespace Mahou
 			} catch (Exception e) {
 				Logging.Log("Keyboard HOOK died! Stack Trace & Error Message:\r\n" + e.Message + "\r\n" + e.StackTrace, 1);
 				Logging.Log("Restarting HOOKs...");
-				MMain.StopHook();
-				MMain.StartHook();
+				MMain.RestartHook();
 			}
 			return WinAPI.CallNextHookEx(MMain._hookID, nCode, wParam, lParam);
 		}
@@ -722,6 +721,12 @@ namespace Mahou
 								var wordL1 = "";
 								var wordL2 = "";
 								foreach (var c in w) {
+									var T3 = GermanLayoutFix(c);
+									if (T3 != "") {
+										wordL1 += T3;
+										wordL2 += T3;
+										continue;
+									}
 									var T1 = InAnother(c, l2 & 0xffff, l1 & 0xffff);
 									wordL1 += T1;
 									if (T1 == "") {
@@ -755,6 +760,8 @@ namespace Mahou
 								var T = InAnother(c, l2 & 0xffff, l1 & 0xffff);
 								if (T == "")
 									T = InAnother(c, l1 & 0xffff, l2 & 0xffff);
+								if (T == "");
+									T = GermanLayoutFix(c);
 								if (T == "")
 									T = ClipStr[index].ToString();							
 								result += T;
@@ -939,6 +946,59 @@ namespace Mahou
 					});
 				}
 			}
+		}
+		static string GermanLayoutFix(char c) {
+			if (!MMain.mahou.QWERTZ_fix)
+				return "";
+			var T = "";
+			switch (c) {
+				case 'ä':
+					T = "э"; break; 
+				case 'э':
+					T = "ä"; break;
+				case 'ö':
+					T = "ж"; break;
+				case 'ж':
+					T = "ö"; break;
+				case 'ü':
+					T = "х"; break;
+				case 'х':
+					T = "ü"; break;
+				case 'Ä':
+					T = "Э"; break;
+				case 'Э':
+					T = "Ä"; break;
+				case 'Ö':
+					T = "Ж"; break;
+				case 'Ж':
+					T = "Ö"; break;
+				case 'Ü':
+					T = "Х"; break;
+				case 'Х':
+					T = "Ü"; break;
+				case 'Я':
+					T = "Y"; break;
+				case 'Y':
+					T = "Я"; break;
+				case 'Н':
+					T = "Z"; break;
+				case 'Z':
+					T = "Н"; break;
+				case 'я':
+					T = "y"; break;
+				case 'y':
+					T = "я"; break;
+				case 'н':
+					T = "z"; break;
+				case 'z':
+					T = "н"; break;
+				case '-':
+					T = "ß"; break;
+				default:
+					T = ""; break;
+			}
+			Logging.Log("German fix T:" + T +  "/ c: " + c);
+			return T;
 		}
 		static bool WaitForClip2BeFree() {
 			IntPtr CB_Blocker = IntPtr.Zero;

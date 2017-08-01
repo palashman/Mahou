@@ -164,6 +164,7 @@ namespace Mahou
 		private System.Windows.Forms.Button btn_LPFont;
 		private System.Windows.Forms.CheckBox chk_LPUpperArrow;
 		private System.Windows.Forms.CheckBox chk_LangTTUpperArrow;
+		private System.Windows.Forms.CheckBox chk_qwertz;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -342,6 +343,7 @@ namespace Mahou
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
 			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
+			this.chk_qwertz = new System.Windows.Forms.CheckBox();
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -606,6 +608,7 @@ namespace Mahou
 			// 
 			// tab_layouts
 			// 
+			this.tab_layouts.Controls.Add(this.chk_qwertz);
 			this.tab_layouts.Controls.Add(this.chk_OneLayout);
 			this.tab_layouts.Controls.Add(this.lbl_Arrow4);
 			this.tab_layouts.Controls.Add(this.lbl_Arrow3);
@@ -2214,6 +2217,16 @@ namespace Mahou
 			this.HelpMeUnderstand.ShowAlways = true;
 			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.HelpMeUnderstand.Popup += new System.Windows.Forms.PopupEventHandler(this.HelpMeUnderstandPopup);
+			// 
+			// chk_qwertz
+			// 
+			this.chk_qwertz.AutoSize = true;
+			this.chk_qwertz.Location = new System.Drawing.Point(300, 88);
+			this.chk_qwertz.Name = "chk_qwertz";
+			this.chk_qwertz.Size = new System.Drawing.Size(140, 19);
+			this.chk_qwertz.TabIndex = 18;
+			this.chk_qwertz.Text = "QWERTZ keyboard fix";
+			this.chk_qwertz.UseVisualStyleBackColor = true;
 			// 
 			// MahouUI
 			// 
