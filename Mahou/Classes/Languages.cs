@@ -174,6 +174,7 @@ public class Languages
 		TT_RestartHooks,
 		TT_OneLayout,
 		TT_QWERTZ,
+		TT_Change1KeyLayoutInExcluded,
 		#endregion
 		#region Messages
 		MSG_SnippetsError
@@ -374,7 +375,7 @@ public class Languages
 		{ Element.TT_RestartHooks, "Restart global keyboard and mouse hooks on every Mahou's hotkey action end.\r\nEnabling this will make hooks (almost) impossible to kill, useful if Mahou stops catching pressed keys."},
 		{ Element.TT_OneLayout, "Allows to store global layout in Mahou, insted of layout per window/program.\r\n(if You have Windows 8 or greater this feature is built in Windows, so you don't need to use enable it in Mahou)"},
 		{ Element.TT_QWERTZ, "Makes right substitutes in QWERTZ keyboards for chars: ß, ä, ö, ü, Ä, Ö, Ü, Y, Z in Convert Selection\r\n(!! but convert selection layout switching(or +) not supported)." },
-		{ Element.TT_Change1KeyLayoutInExclude, "Function is in Layouts tab -> [Change to specific layout by keys]." },
+		{ Element.TT_Change1KeyLayoutInExcluded, "Function is in Layouts tab -> [Change to specific layout by keys]." },
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Snippets contains error in syntax, check if there are errors, details on snippets syntax you can find on Wiki." }
@@ -576,7 +577,7 @@ public class Languages
 		{ Element.TT_RestartHooks, "Перезапускает глобальные перехваты(HOOK'и) клавиатуры и мыши по окончанию действия любой горячей клавиши Mahou.\r\nВключая эту функцию перехватов будет (почти) что невозможно *убить*, полезно если Mahou перестаёт ловить введенные клавиши."},
 		{ Element.TT_OneLayout, "Позволяет хранить раскладку в Mahou, вместо раскладки для каждого окна/программы.\r\n(если у Вас Windows 8 и выше, то там уже стоит данная функция по умолчанию, нет необходимости включать ее в Mahou)"},
 		{ Element.TT_QWERTZ, "Делает правильные замены в клавиатурах QWERTZ для букв: ß, ä, ö, ü, Ä, Ö, Ü, Y, Z в Конверт выделения\r\n(!! но не совместимо со сменой раскладки в конверт выделения (или +))." },
-		{ Element.TT_Change1KeyLayoutInExclude, "Функция находится во вкладке раскладки -> [Переключать раскладки по клавишам]." },
+		{ Element.TT_Change1KeyLayoutInExcluded, "Функция находится во вкладке раскладки -> [Переключать раскладки по клавишам]." },
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Сниппеты содержат ошибки в синтаксисе, проверьте ваши сниппеты, детали синтаксиса можете найти на Wiki." }
