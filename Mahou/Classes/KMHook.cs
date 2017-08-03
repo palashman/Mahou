@@ -776,7 +776,7 @@ namespace Mahou
 								var T = InAnother(c, l2 & 0xffff, l1 & 0xffff);
 								if (T == "")
 									T = InAnother(c, l1 & 0xffff, l2 & 0xffff);
-								if (T == "");
+								if (T == "")
 									T = GermanLayoutFix(c);
 								if (T == "")
 									T = ClipStr[index].ToString();							
