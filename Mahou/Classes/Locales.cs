@@ -32,7 +32,7 @@ namespace Mahou
 				IfCmdExe(actv, out pid); 
 				if (pid != 0) 
 					tid = pid;
-			} catch (Exception e) { Logging.Log("Error in IfCmdExe (getconkbl.dll), details: \r\n" + e.Message + e.StackTrace +"\r\n", 1);
+			} catch (Exception e) { Logging.Log("Error in IfCmdExe (getconkbl.dll), details: \r\n" + e.Message + e.StackTrace +"\r\n", 1); }
 			//Produces TOO much logging, disabled.
             //Logging.Log("Current locale id is [" + (uint)(layout.ToInt32() & 0xFFFF) + "].");
 			return (uint)layout;
