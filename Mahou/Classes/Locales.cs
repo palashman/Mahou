@@ -31,7 +31,7 @@ namespace Mahou
 			try {
 				IfCmdExe(actv, out pid); 
 				if (pid != 0) 
-					tid = pid;
+					layout = (IntPtr)pid;
 			} catch (Exception e) { Logging.Log("Error in IfCmdExe (getconkbl.dll), details: \r\n" + e.Message + e.StackTrace +"\r\n", 1); }
 			//Produces TOO much logging, disabled.
             //Logging.Log("Current locale id is [" + (uint)(layout.ToInt32() & 0xFFFF) + "].");
@@ -53,7 +53,6 @@ namespace Mahou
 				Debug.WriteLine("Tried to get console layout id, return [{0}], pid [{1}].", lid, pid);
 				layoutId = lid;
 			} else layoutId = 0;
-			MahouUI.currentLayout = MahouUI.GlobalLayout = layoutId;
 		}
 		/// <summary>
 		/// Returns focused or foreground window.
