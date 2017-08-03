@@ -45,12 +45,12 @@ namespace Mahou
 				WinAPI.GetWindowThreadProcessId(hwnd, out pid);
 				uint lid = 0;
 				try {
-					Debug.WriteLine("INIT: {0}.", Initialize());
+					Logging.Log("INIT: "+Initialize());
 					lid = GetConsoleAppKbLayout(pid);
 				} catch {
 					Logging.Log("getconkbl.dll not found, console layout get will not be right.", 2); 
 				}
-				Debug.WriteLine("Tried to get console layout id, return [{0}], pid [{1}].", lid, pid);
+				Logging.Log("Tried to get console layout id, return ["+lid+"], pid ["+pid+"].");
 				layoutId = lid;
 			} else layoutId = 0;
 		}
