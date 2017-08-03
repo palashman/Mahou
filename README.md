@@ -23,6 +23,12 @@ Mahou работает совершенно по-другому: в отличи
 
 ###### Возможности по версиям:
 
+
+**v2.3.5.1~v2.3.5.2**<br/>
+
+- :gem: Исправлена проблема конвертации выделения в обычном режиме(из-за лишней ; в коде).
+- :gem: Восстановлена поддержка getconkbl.dll.  P.S. Также есть pack Mahou и getconkbl.dll в [этом](https://github.com/BladeMight/Mahou/releases/tag/v2.3.5.2) релизе на github.
+
 **v2.3.4.4~v2.3.5.0**<br/>
 
 - 💎 Добавлено исправление для QWERTZ клавиатур. [#107](https://github.com/BladeMight/Mahou/issues/107)
@@ -258,9 +264,12 @@ Even selected text switches just between **selected** layouts, though if you lik
 
 ###### By version features:
 
+**v2.3.5.1~v2.3.5.2**<br/>
 
+- 🐛 Fixed mistake symbol ; in default convert selection mode. (It caused it not to convert at all.)
+- 💎 Restored getconkbl.dll support. P.S. There is also an pack with Mahou x86 and getconkbl.dll in [this](https://github.com/BladeMight/Mahou/releases/tag/v2.3.5.2) release on github.
 
-**v2.3.4.0**<br/>
+**v2.3.4.4~v2.3.5.0**<br/>
 
 - 💎 Added QWERTZ keyboard fix. [#107](https://github.com/BladeMight/Mahou/issues/107)
 - 💎 Added fix for hooks die on apply(unconfirmed). [#102](https://github.com/BladeMight/Mahou/issues/102)
