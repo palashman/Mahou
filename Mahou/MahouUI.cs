@@ -2187,6 +2187,19 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			Logging.Log("Language changed.");
 			SetTooltips();
 		}
+		#region Textbox + Ctrl+A
+		public class TextBoxCA : TextBox {
+			protected override bool ProcessCmdKey(ref Message msg, Keys keyData) {
+			    var keyCode = (Keys) (msg.WParam.ToInt32() & Convert.ToInt32(Keys.KeyCode));
+			    if ((msg.Msg == WinAPI.WM_KEYDOWN && keyCode == Keys.A) &&
+			        (ModifierKeys == Keys.Control) && this.Focused) {
+			        this.SelectAll();
+			        return true;
+			    }            
+			    return base.ProcessCmdKey(ref msg, keyData);
+			}
+		}
+		#endregion
 		#region Tooltips
 		void SetTooltips() {
 			HelpMeUnderstand.SetToolTip(chk_CSLayoutSwitching, MMain.Lang[Languages.Element.TT_ConvertSelectionSwitch]);
