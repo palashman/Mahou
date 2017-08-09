@@ -237,12 +237,12 @@ namespace Mahou
 			this.nud_PersistentLayout2Interval = new System.Windows.Forms.NumericUpDown();
 			this.lbl_PersistentLayout2Interval = new System.Windows.Forms.Label();
 			this.chk_PersistentLayout2Active = new System.Windows.Forms.CheckBox();
-			this.txt_PersistentLayout2Processes = new  MahouUI.TextBoxCA();
+			this.txt_PersistentLayout2Processes = new Mahou.MahouUI.TextBoxCA();
 			this.grb_PersistentLayout1 = new System.Windows.Forms.GroupBox();
 			this.nud_PersistentLayout1Interval = new System.Windows.Forms.NumericUpDown();
 			this.lbl_PersistentLayout1Interval = new System.Windows.Forms.Label();
 			this.chk_PersistentLayout1Active = new System.Windows.Forms.CheckBox();
-			this.txt_PersistentLayout1Processes = new  MahouUI.TextBoxCA();
+			this.txt_PersistentLayout1Processes = new Mahou.MahouUI.TextBoxCA();
 			this.tab_appearence = new System.Windows.Forms.TabPage();
 			this.chk_MouseTTAlways = new System.Windows.Forms.CheckBox();
 			this.cbb_Language = new System.Windows.Forms.ComboBox();
@@ -275,10 +275,9 @@ namespace Mahou
 			this.chk_LangTooltipCaret = new System.Windows.Forms.CheckBox();
 			this.chk_LangTooltipMouse = new System.Windows.Forms.CheckBox();
 			this.tab_timings = new System.Windows.Forms.TabPage();
-			this.chk_Change1KeyL = new System.Windows.Forms.CheckBox();
-			this.lbl_ExcludedPrograms = new System.Windows.Forms.Label();
-			this.txt_ExcludedPrograms = new  MahouUI.TextBoxCA();
 			this.nud_SelectedTextGetTriesCount = new System.Windows.Forms.NumericUpDown();
+			this.lbl_ExcludedPrograms = new System.Windows.Forms.Label();
+			this.txt_ExcludedPrograms = new Mahou.MahouUI.TextBoxCA();
 			this.chk_SelectedTextGetMoreTries = new System.Windows.Forms.CheckBox();
 			this.nud_CapsLockRefreshRate = new System.Windows.Forms.NumericUpDown();
 			this.lbl_CapsLockRefreshRate = new System.Windows.Forms.Label();
@@ -292,8 +291,9 @@ namespace Mahou
 			this.lbl_LangTTCaretRefreshRate = new System.Windows.Forms.Label();
 			this.nud_LangTTMouseRefreshRate = new System.Windows.Forms.NumericUpDown();
 			this.lbl_LangTTMouseRefreshRate = new System.Windows.Forms.Label();
+			this.chk_Change1KeyL = new System.Windows.Forms.CheckBox();
 			this.tab_snippets = new System.Windows.Forms.TabPage();
-			this.txt_Snippets = new  MahouUI.TextBoxCA();
+			this.txt_Snippets = new Mahou.MahouUI.TextBoxCA();
 			this.chk_Snippets = new System.Windows.Forms.CheckBox();
 			this.tab_hotkeys = new System.Windows.Forms.TabPage();
 			this.grb_Hotkey = new System.Windows.Forms.GroupBox();
@@ -332,11 +332,11 @@ namespace Mahou
 			this.txt_ProxyServerPort = new System.Windows.Forms.TextBox();
 			this.lbl_ProxyServerPort = new System.Windows.Forms.Label();
 			this.grb_MahouReleaseTitle = new System.Windows.Forms.GroupBox();
-			this.txt_UpdateDetails = new MahouUI.TextBoxCA();
+			this.txt_UpdateDetails = new Mahou.MahouUI.TextBoxCA();
 			this.btn_CheckForUpdates = new System.Windows.Forms.Button();
 			this.tab_about = new System.Windows.Forms.TabPage();
 			this.btn_DebugInfo = new System.Windows.Forms.Button();
-			this.txt_Help = new MahouUI.TextBoxCA();
+			this.txt_Help = new Mahou.MahouUI.TextBoxCA();
 			this.lnk_Releases = new System.Windows.Forms.LinkLabel();
 			this.lnk_Email = new System.Windows.Forms.LinkLabel();
 			this.lnk_Wiki = new System.Windows.Forms.LinkLabel();
@@ -1407,35 +1407,6 @@ namespace Mahou
 			this.tab_timings.Text = "Timings";
 			this.tab_timings.UseVisualStyleBackColor = true;
 			// 
-			// chk_Change1KeyL
-			// 
-			this.chk_Change1KeyL.AutoSize = true;
-			this.chk_Change1KeyL.Location = new System.Drawing.Point(187, 203);
-			this.chk_Change1KeyL.Name = "chk_Change1KeyL";
-			this.chk_Change1KeyL.Size = new System.Drawing.Size(243, 19);
-			this.chk_Change1KeyL.TabIndex = 23;
-			this.chk_Change1KeyL.Text = "Change layout by 1 key even in excluded.";
-			this.chk_Change1KeyL.UseVisualStyleBackColor = true;
-			// 
-			// lbl_ExcludedPrograms
-			// 
-			this.lbl_ExcludedPrograms.AutoSize = true;
-			this.lbl_ExcludedPrograms.Location = new System.Drawing.Point(18, 204);
-			this.lbl_ExcludedPrograms.Name = "lbl_ExcludedPrograms";
-			this.lbl_ExcludedPrograms.Size = new System.Drawing.Size(111, 15);
-			this.lbl_ExcludedPrograms.TabIndex = 22;
-			this.lbl_ExcludedPrograms.Text = "Excluded programs:";
-			// 
-			// txt_ExcludedPrograms
-			// 
-			this.txt_ExcludedPrograms.Location = new System.Drawing.Point(8, 225);
-			this.txt_ExcludedPrograms.Multiline = true;
-			this.txt_ExcludedPrograms.Name = "txt_ExcludedPrograms";
-			this.txt_ExcludedPrograms.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.txt_ExcludedPrograms.Size = new System.Drawing.Size(541, 42);
-			this.txt_ExcludedPrograms.TabIndex = 21;
-			this.txt_ExcludedPrograms.Text = "LA.exe SomeProgram.exe";
-			// 
 			// nud_SelectedTextGetTriesCount
 			// 
 			this.nud_SelectedTextGetTriesCount.Location = new System.Drawing.Point(429, 181);
@@ -1457,6 +1428,25 @@ namespace Mahou
 			0,
 			0,
 			0});
+			// 
+			// lbl_ExcludedPrograms
+			// 
+			this.lbl_ExcludedPrograms.AutoSize = true;
+			this.lbl_ExcludedPrograms.Location = new System.Drawing.Point(18, 204);
+			this.lbl_ExcludedPrograms.Name = "lbl_ExcludedPrograms";
+			this.lbl_ExcludedPrograms.Size = new System.Drawing.Size(111, 15);
+			this.lbl_ExcludedPrograms.TabIndex = 22;
+			this.lbl_ExcludedPrograms.Text = "Excluded programs:";
+			// 
+			// txt_ExcludedPrograms
+			// 
+			this.txt_ExcludedPrograms.Location = new System.Drawing.Point(8, 225);
+			this.txt_ExcludedPrograms.Multiline = true;
+			this.txt_ExcludedPrograms.Name = "txt_ExcludedPrograms";
+			this.txt_ExcludedPrograms.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+			this.txt_ExcludedPrograms.Size = new System.Drawing.Size(541, 42);
+			this.txt_ExcludedPrograms.TabIndex = 21;
+			this.txt_ExcludedPrograms.Text = "LA.exe SomeProgram.exe";
 			// 
 			// chk_SelectedTextGetMoreTries
 			// 
@@ -1625,6 +1615,16 @@ namespace Mahou
 			this.lbl_LangTTMouseRefreshRate.TabIndex = 0;
 			this.lbl_LangTTMouseRefreshRate.Text = "Language tooltip around mouse refresh rate(ms):";
 			// 
+			// chk_Change1KeyL
+			// 
+			this.chk_Change1KeyL.AutoSize = true;
+			this.chk_Change1KeyL.Location = new System.Drawing.Point(187, 203);
+			this.chk_Change1KeyL.Name = "chk_Change1KeyL";
+			this.chk_Change1KeyL.Size = new System.Drawing.Size(243, 19);
+			this.chk_Change1KeyL.TabIndex = 23;
+			this.chk_Change1KeyL.Text = "Change layout by 1 key even in excluded.";
+			this.chk_Change1KeyL.UseVisualStyleBackColor = true;
+			// 
 			// tab_snippets
 			// 
 			this.tab_snippets.Controls.Add(this.txt_Snippets);
@@ -1640,6 +1640,7 @@ namespace Mahou
 			// txt_Snippets
 			// 
 			this.txt_Snippets.Location = new System.Drawing.Point(8, 31);
+			this.txt_Snippets.MaxLength = 0;
 			this.txt_Snippets.Multiline = true;
 			this.txt_Snippets.Name = "txt_Snippets";
 			this.txt_Snippets.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
