@@ -635,7 +635,7 @@ namespace Mahou
 			try { //Used to catch errors
 				self = true;
 				Logging.Log("Starting Convert selection.");
-				string ClipStr = GetClipStr();
+				string ClipStr = Regex.Replace(GetClipStr(), "\r\n?|\n", "\n");
 				if (!String.IsNullOrEmpty(ClipStr)) {
 					csdoing = true;
 					Logging.Log("Starting conversion of [" + ClipStr + "].");
@@ -731,6 +731,7 @@ namespace Mahou
 						if (MMain.mahou.OneLayoutWholeWord) {
 							Logging.Log("Using one layout whole word convert selection mode.");
 							var allWords = ClipStr.Split(' ');
+							var word_index = 0;
 							foreach (var w in allWords) {
 								int wordL1Minuses = 0;
 								int wordL2Minuses = 0;
@@ -744,11 +745,15 @@ namespace Mahou
 										continue;
 									}
 									var T1 = InAnother(c, l2 & 0xffff, l1 & 0xffff);
+									if (c == '\n')
+										T1 = "\n";
 									wordL1 += T1;
 									if (T1 == "") {
 										wordL1Minuses++;
 									}
 									var T2 = InAnother(c, l1 & 0xffff, l2 & 0xffff);
+									if (c == '\n')
+										T2 = "\n";
 									wordL2 += T2;
 									if (T2 == "") {
 										wordL2Minuses++;
@@ -764,8 +769,9 @@ namespace Mahou
 									result += wordL2;
 								else
 									result += wordL1;
-								if (w != allWords.Last())
+								if (word_index != allWords.Length - 1)
 									result += " ";
+								word_index +=1;
 								Logging.Log("Layout 1 minuses: " + wordL1Minuses + "wordL1: " + wordL1 + 
 								                ", Layout 2 minuses: " + wordL2Minuses + "wordL2: " + wordL2);
 								index++;
@@ -774,6 +780,8 @@ namespace Mahou
 							Logging.Log("Using default convert selection mode.");
 							foreach (char c in ClipStr) {
 								var T = InAnother(c, l2 & 0xffff, l1 & 0xffff);
+								if (c == '\n')
+									T = "\n";
 								if (T == "")
 									T = InAnother(c, l1 & 0xffff, l2 & 0xffff);
 								if (T == "")

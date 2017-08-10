@@ -115,7 +115,7 @@ static class KInputs
     /// <param name="inputs">Array of INPUT to be inputted.</param>
     public static void MakeInput(WinAPI.INPUT[] inputs) //Simply, sends input
     {
-    	var done = WinAPI.SendInput((UInt32)inputs.Length, inputs, Marshal.SizeOf(typeof(WinAPI.INPUT)));
+    	var done = WinAPI.SendInput((UInt32)inputs.Length+1, inputs, Marshal.SizeOf(typeof(WinAPI.INPUT)));
     	if (done != inputs.Length)
     		Mahou.Logging.Log("ERROR during send input, lenght: " +done+ ", Win32ERR: " + Marshal.GetLastWin32Error());
     }
