@@ -1,3 +1,4 @@
+# Snippets dictionary for Mahou. Paste file where Mahou.exe is, or its contents into Snippets in Mahou.
 ->ujl
 ====>год<====
 ->xtkjdtr
