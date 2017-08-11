@@ -27,7 +27,7 @@ namespace Mahou
             trIcon.Text = "Mahou (魔法)\nA magical layout switcher.";
             trIcon.ContextMenu = cMenu;
             trIcon.MouseClick += (_,__) => { if (__.Button == MouseButtons.Left) ShowHideHandler(_,__); };
-            trIcon.BalloonTipClicked += ExitHandler;
+            trIcon.BalloonTipClicked += (_, __) => System.Diagnostics.Process.Start(@"C:\Windows\system32\rundll32.exe", "shell32.dll,Control_RunDLL input.dll");
         }
         /// <summary>
         /// Exit event handler..

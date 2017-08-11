@@ -29,7 +29,7 @@ namespace Mahou {
 		public static string nPath = AppDomain.CurrentDomain.BaseDirectory;
 		public static bool LoggingEnabled, dummy, CapsLockDisablerTimer, LangPanelUpperArrow, mouseLTUpperArrow, caretLTUpperArrow;
 		static string[] UpdInfo;
-		static bool updating, was, isold = true, checking, btn_apply;
+		static bool updating, was, isold = true, checking;
 		static Timer tmr = new Timer();
 		static Timer old = new Timer();
 		public static Bitmap FLAG;
@@ -45,7 +45,7 @@ namespace Mahou {
 		public bool DiffAppearenceForLayouts, LDForCaretOnChange, LDForMouseOnChange, ScrollTip, AddOneSpace,
 					TrayFlags, SymIgnEnabled, TrayIconVisible, SnippetsEnabled, ChangeLayouByKey, EmulateLS,
 					RePress, BlockHKWithCtrl, blueIcon, SwitchBetweenLayouts, SelectedTextGetMoreTries, ReSelect,
-					ConvertSelectionLS, ConvertSelectionLSPlus, MCDSSupport, OneLayoutWholeWord, RestartHooks,
+					ConvertSelectionLS, ConvertSelectionLSPlus, MCDSSupport, OneLayoutWholeWord,
 					MouseTTAlways, OneLayout, MouseLangTooltipEnabled, CaretLangTooltipEnabled, QWERTZ_fix, ChangeLayoutInExcluded;
 		/// <summary> Temporary modifiers of hotkeys. </summary>
 		string Mainhk_tempMods, ExitHk_tempMods, HKCLast_tempMods, HKCSelection_tempMods, 
@@ -203,7 +203,7 @@ namespace Mahou {
 				}
 			}
 //			Logging.Log("MSG: "+m.Msg+", LP: "+m.LParam+", WP: "+m.WParam+", KMS: "+KMHook.self+" 0x312");
-			if (m.Msg == WinAPI.WM_HOTKEY && !KMHook.self && KMHook.IsHotkey) {
+			if (m.Msg == WinAPI.WM_HOTKEY) {
 				var id = (Hotkey.HKID)m.WParam.ToInt32();
 				#region Convert multiple words 
 				if (m.WParam.ToInt32() >= 100 && m.WParam.ToInt32() <= 109 && KMHook.waitfornum) {
@@ -261,11 +261,6 @@ namespace Mahou {
 				Hotkey.CallHotkey(MMain.mahou.Mainhk, id, ref hkShWndOK, ToggleVisibility);
 				Hotkey.CallHotkey(MMain.mahou.HKToggleLP, id, ref hkToglLPOK, ToggleLangPanel);
 				Hotkey.CallHotkey(MMain.mahou.ExitHk, id, ref hkExitOK, ExitProgram);
-			}
-			if (m.Msg == WinAPI.WM_HOTKEY) {
-				// Restart hook after each hotkey action.
-				if (RestartHooks)
-					MMain.RestartHook();
 			}
 			base.WndProc(ref m);
 		}
@@ -530,7 +525,6 @@ namespace Mahou {
 			MMain.MyConfs.Write("Functions", "BlockMahouHotkeysWithCtrl", chk_BlockHKWithCtrl.Checked.ToString());
 			MMain.MyConfs.Write("Functions", "MCDServerSupport", chk_MCDS_support.Checked.ToString());
 			MMain.MyConfs.Write("Functions", "OneLayoutWholeWord", chk_OneLayoutWholeWord.Checked.ToString());
-			MMain.MyConfs.Write("Functions", "RestartHooksOnHotkeyActionEnd", chk_RestartHooks.Checked.ToString());
 			MMain.MyConfs.Write("Appearence", "MouseLTAlways", chk_MouseTTAlways.Checked.ToString());
 			#endregion
 			#region Layouts
@@ -640,13 +634,16 @@ namespace Mahou {
 			ScrollTip = chk_HighlightScroll.Checked = MMain.MyConfs.ReadBool("Functions", "ScrollTip");
 			chk_StartupUpdatesCheck.Checked = MMain.MyConfs.ReadBool("Functions", "StartupUpdatesCheck");
 			LoggingEnabled = chk_Logging.Checked = MMain.MyConfs.ReadBool("Functions", "Logging");
+			if (LoggingEnabled) 
+				MMain._logTimer.Change(300, 0);
+			else 
+				MMain._logTimer.Change(0, 0);
 			TrayFlags = chk_FlagsInTray.Checked = MMain.MyConfs.ReadBool("Functions", "TrayFlags");
 			CapsLockDisablerTimer = chk_CapsLockDTimer.Checked = MMain.MyConfs.ReadBool("Functions", "CapsLockTimer");
 			BlockHKWithCtrl = chk_BlockHKWithCtrl.Checked = MMain.MyConfs.ReadBool("Functions", "BlockMahouHotkeysWithCtrl");
 			SymIgnEnabled = MMain.MyConfs.ReadBool("Functions", "SymbolIgnoreModeEnabled");
 			MCDSSupport = chk_MCDS_support.Checked = MMain.MyConfs.ReadBool("Functions", "MCDServerSupport");
 			OneLayoutWholeWord = chk_OneLayoutWholeWord.Checked = MMain.MyConfs.ReadBool("Functions", "OneLayoutWholeWord");
-			RestartHooks = chk_RestartHooks.Checked = MMain.MyConfs.ReadBool("Functions", "RestartHooksOnHotkeyActionEnd");
 			MouseLangTooltipEnabled = MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForMouse");
 			CaretLangTooltipEnabled = MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForCaret");
 			#endregion
@@ -748,15 +745,12 @@ namespace Mahou {
 					_langPanel.HideWnd();
 			}
 			Memory.Flush();
-			if (btn_apply)
-				HookDieOnApplyConfigsFix();
 			Logging.Log("All configurations loaded.");
 		}
 		/// <summary>
 		/// Refreshes comboboxes items.
 		/// </summary>
 		void RefreshComboboxes() {
-			Locales.IfLessThan2();
 			MMain.locales = Locales.AllList();
 			cbb_Layout1.Items.Clear();
 			cbb_Layout2.Items.Clear();
@@ -864,16 +858,6 @@ namespace Mahou {
 				WinAPI.SetForegroundWindow(Handle);
 			}
 			Memory.Flush();
-		}
-		public void HookDieOnApplyConfigsFix() {
-			// Sometimes when logging is enabled, hooks may die without error...
-			// This fixes it, but you need manually to show/hide main window:
-			// 1. Click tray icon. 2. Start Mahou.exe
-			// This bug is under look...
-			Logging.Log("Hook die on apply configs fix...");
-			MMain.RestartHook();
-			KMHook.win = KMHook.alt = KMHook.shift = KMHook.ctrl = false;
-			KMHook.SendModsUp(15); // All modifiers
 		}
 		public void ToggleLangPanel() {
 			if (_langPanel.Visible) {
@@ -1247,31 +1231,29 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			};
 			ScrlCheck.Interval = MMain.MyConfs.ReadInt("Timings", "ScrollLockStateRefreshRate");
 			ScrlCheck.Tick += (_, __) => {
-				if (ScrollTip && !KMHook.self && !KMHook.alt) {
-					KMHook.self = true;
-					if (Locales.GetCurrentLocale() == 
-					    Locales.GetLocaleFromString(MainLayout1).uId) {
-						if (!Control.IsKeyLocked(Keys.Scroll)) { // Turn on 
-							KMHook.KeybdEvent(Keys.Scroll, 0);
-							KMHook.KeybdEvent(Keys.Scroll, 2);
+				if (ScrollTip && !KMHook.alt) {
+					KMHook.DoSelf(() => {
+						if (Locales.GetCurrentLocale() == 
+						    Locales.GetLocaleFromString(MainLayout1).uId) {
+							if (!Control.IsKeyLocked(Keys.Scroll)) { // Turn on 
+								KMHook.KeybdEvent(Keys.Scroll, 0);
+								KMHook.KeybdEvent(Keys.Scroll, 2);
+							}
+						} else {
+							if (Control.IsKeyLocked(Keys.Scroll)) {
+								KMHook.KeybdEvent(Keys.Scroll, 0);
+								KMHook.KeybdEvent(Keys.Scroll, 2);
+							}
 						}
-					} else {
-						if (Control.IsKeyLocked(Keys.Scroll)) {
-							KMHook.KeybdEvent(Keys.Scroll, 0);
-							KMHook.KeybdEvent(Keys.Scroll, 2);
-						}
-					}
-					KMHook.self = false;
+	                });
 				}
 			};
-			capsCheck.Tick += (_, __) => {
-				KMHook.self = true;
+			capsCheck.Tick += (_, __) => KMHook.DoSelf(() => {
 				if (Control.IsKeyLocked(Keys.CapsLock)) {
 					KMHook.KeybdEvent(Keys.CapsLock, 0);
 					KMHook.KeybdEvent(Keys.CapsLock, 2);
 				}
-				KMHook.self = false;
-			};
+			});
 			capsCheck.Interval = MMain.MyConfs.ReadInt("Timings", "CapsLockDisableRefreshRate");
 			KMHook.doublekey.Tick += (_, __) => {
 				if (hklOK)
@@ -2051,7 +2033,6 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			tab_about.Text = MMain.Lang[Languages.Element.tab_About];
 			lnk_plugin.Text = "ST3 " + MMain.Lang[Languages.Element.Plugin];
 			chk_OneLayoutWholeWord.Text = MMain.Lang[Languages.Element.OneLayoutWholeWord];
-			chk_RestartHooks.Text = MMain.Lang[Languages.Element.RestartHooks];
 			#endregion
 			#region Functions
 			chk_AutoStart.Text = MMain.Lang[Languages.Element.AutoStart];
@@ -2227,7 +2208,6 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			HelpMeUnderstand.SetToolTip(txt_ExcludedPrograms, MMain.Lang[Languages.Element.TT_ExcludedPrograms]);
 			HelpMeUnderstand.SetToolTip(txt_PersistentLayout1Processes, MMain.Lang[Languages.Element.TT_PersistentLayout]);
 			HelpMeUnderstand.SetToolTip(txt_PersistentLayout2Processes, MMain.Lang[Languages.Element.TT_PersistentLayout]);
-			HelpMeUnderstand.SetToolTip(chk_RestartHooks, MMain.Lang[Languages.Element.TT_RestartHooks]);
 			HelpMeUnderstand.SetToolTip(chk_OneLayout, MMain.Lang[Languages.Element.TT_OneLayout]);
 			HelpMeUnderstand.SetToolTip(chk_qwertz, MMain.Lang[Languages.Element.TT_QWERTZ]);
 			HelpMeUnderstand.SetToolTip(chk_Change1KeyL, MMain.Lang[Languages.Element.TT_Change1KeyLayoutInExcluded]);
@@ -2340,12 +2320,10 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			}
 		}
 		void Btn_OKClick(object sender, EventArgs e) {
-			btn_apply = true;
 			ToggleVisibility();
 			SaveConfigs();
 		}
 		void Btn_ApplyClick(object sender, EventArgs e) {
-			btn_apply = true;
 			SaveConfigs();
 		}
 		void Btn_CancelClick(object sender, EventArgs e) {
@@ -2515,7 +2493,10 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			RegisterHotkeys();
 		}
 		void MahouUIActivated(object sender, EventArgs e) {
-			UnregisterHotkeys(true);
+			if (tabs.SelectedIndex == tabs.TabPages.IndexOf(tab_hotkeys))
+				UnregisterHotkeys(true);
+			else 
+				RegisterHotkeys();
 		}
 		#endregion
 	}

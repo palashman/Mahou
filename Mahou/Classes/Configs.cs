@@ -37,7 +37,6 @@ namespace Mahou
             CheckBool("Functions", "SymbolIgnoreModeEnabled", "false");
             CheckBool("Functions", "MCDServerSupport", "false");
             CheckBool("Functions", "OneLayoutWholeWord", "true");
-            CheckBool("Functions", "RestartHooksOnHotkeyActionEnd", "true");
             #endregion
 			#region Layouts section
 			CheckBool("Layouts", "SwitchBetweenLayouts", "true");

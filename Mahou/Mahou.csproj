@@ -137,6 +137,7 @@
     <Compile Include="Classes\TrayIcon.cs" />
     <Compile Include="Classes\Configs.cs" />
     <Compile Include="Classes\WinAPI.cs" />
+    <Compile Include="Classes\RawInputForm.cs" />
     <Compile Include="LangDisplay.cs">
       <SubType>Form</SubType>
     </Compile>

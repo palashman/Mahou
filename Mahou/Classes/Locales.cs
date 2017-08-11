@@ -115,9 +115,7 @@ namespace Mahou
 		public static void IfLessThan2()
 		{
 			if (AllList().Length < 2) {
-				MessageBox.Show("This program switches texts by system's layouts(locales/languages), please add at least 2!\nProgram will exit.",
-				                "You have too less layouts(locales/languages)!!",MessageBoxButtons.OK,MessageBoxIcon.Warning);
-				Application.Exit();
+				MMain.mahou.icon.trIcon.ShowBalloonTip(4500, "You have too less layouts(locales/languages)!!", "This program switches texts by system's layouts(locales/languages), please add at least 2!", ToolTipIcon.Warning);
 			}
 		}
 		/// <summary>

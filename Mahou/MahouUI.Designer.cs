@@ -142,7 +142,6 @@ namespace Mahou
 		private System.Windows.Forms.Label lbl_PersistentLayout1Interval;
 		private System.Windows.Forms.CheckBox chk_PersistentLayout1Active;
 		private MahouUI.TextBoxCA txt_PersistentLayout1Processes;
-		private System.Windows.Forms.CheckBox chk_RestartHooks;
 		private System.Windows.Forms.CheckBox chk_LangTTUseFlags;
 		private System.Windows.Forms.CheckBox chk_MouseTTAlways;
 		private System.Windows.Forms.CheckBox chk_OneLayout;
@@ -189,7 +188,6 @@ namespace Mahou
 			this.components = new System.ComponentModel.Container();
 			this.tabs = new System.Windows.Forms.TabControl();
 			this.tab_functions = new System.Windows.Forms.TabPage();
-			this.chk_RestartHooks = new System.Windows.Forms.CheckBox();
 			this.chk_OneLayoutWholeWord = new System.Windows.Forms.CheckBox();
 			this.lnk_plugin = new System.Windows.Forms.LinkLabel();
 			this.chk_MCDS_support = new System.Windows.Forms.CheckBox();
@@ -404,10 +402,10 @@ namespace Mahou
 			this.tabs.SelectedIndex = 0;
 			this.tabs.Size = new System.Drawing.Size(567, 316);
 			this.tabs.TabIndex = 0;
+			this.tabs.SelectedIndexChanged += new System.EventHandler(this.MahouUIActivated);
 			// 
 			// tab_functions
 			// 
-			this.tab_functions.Controls.Add(this.chk_RestartHooks);
 			this.tab_functions.Controls.Add(this.chk_OneLayoutWholeWord);
 			this.tab_functions.Controls.Add(this.lnk_plugin);
 			this.tab_functions.Controls.Add(this.chk_MCDS_support);
@@ -431,16 +429,6 @@ namespace Mahou
 			this.tab_functions.TabIndex = 0;
 			this.tab_functions.Text = "Functions";
 			this.tab_functions.UseVisualStyleBackColor = true;
-			// 
-			// chk_RestartHooks
-			// 
-			this.chk_RestartHooks.AutoSize = true;
-			this.chk_RestartHooks.Location = new System.Drawing.Point(302, 141);
-			this.chk_RestartHooks.Name = "chk_RestartHooks";
-			this.chk_RestartHooks.Size = new System.Drawing.Size(212, 19);
-			this.chk_RestartHooks.TabIndex = 16;
-			this.chk_RestartHooks.Text = "Restart hooks on hotkey action end";
-			this.chk_RestartHooks.UseVisualStyleBackColor = true;
 			// 
 			// chk_OneLayoutWholeWord
 			// 

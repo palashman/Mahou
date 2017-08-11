@@ -18,18 +18,15 @@ namespace Mahou
 		#region All Main variables, arrays etc.
 		public static List<KMHook.YuKey> c_word = new List<KMHook.YuKey>();
 		public static List<List<KMHook.YuKey>> c_words = new List<List<KMHook.YuKey>>();
-		public static IntPtr _hookID = IntPtr.Zero;
-		public static IntPtr _mouse_hookID = IntPtr.Zero;
 		public static IntPtr _evt_hookID = IntPtr.Zero;
-		public static WinAPI.LowLevelProc _proc = KMHook.HookCallback;
-		public static WinAPI.LowLevelProc _mouse_proc = KMHook.MouseHookCallback;
 		public static WinAPI.WinEventDelegate _evt_proc = KMHook.EventHookCallback;
 		public static Locales.Locale[] locales = Locales.AllList();
 		public static string _language = "";
 		public static Dictionary<Languages.Element, string> Lang = Languages.English;
 		public static Configs MyConfs = new Configs();
 		public static MahouUI mahou;
-		public static bool mahouInitOk = false;
+		public static RawInputForm rif;
+		public static System.Threading.Timer _logTimer = new System.Threading.Timer((_) => Logging.UpdateLog(), null, 20, 300);
 		public static List<string> lcnmid = new List<string>();
 		#endregion
 		[STAThread] //DO NOT REMOVE THIS
@@ -47,77 +44,48 @@ namespace Mahou
 					WinAPI.PostMessage((IntPtr)0xffff, ao, 0, 0);
 					return;
 				}
-				if (locales.Length < 2) {
-					Logging.Log("Too less layouts/locales. Program will exit.");
-					Locales.IfLessThan2();
-				} else {
-					if (MyConfs.ReadBool("FirstStart", "First")) {
-						if (System.Globalization.CultureInfo.InstalledUICulture.TwoLetterISOLanguageName == "ru") {
-							MyConfs.Write("Appearence", "Language", "Русский");
-    						MahouUI.InitLanguage();
-							MyConfs.Write("Layouts", "SpecificLayout1", Lang[Languages.Element.SwitchBetween]);
-							MyConfs.Write("FirstStart", "First", "False");
-						}
-					} else {
+				if (MyConfs.ReadBool("FirstStart", "First")) {
+					if (System.Globalization.CultureInfo.InstalledUICulture.TwoLetterISOLanguageName == "ru") {
+						MyConfs.Write("Appearence", "Language", "Русский");
 						MahouUI.InitLanguage();
+						MyConfs.Write("Layouts", "SpecificLayout1", Lang[Languages.Element.SwitchBetween]);
+						MyConfs.Write("FirstStart", "First", "False");
 					}
-					foreach (Locales.Locale lc in MMain.locales) {	
-						MMain.lcnmid.Add(lc.Lang + "(" + lc.uId + ")");
-					}
-					//for first run, add your locale 1 & locale 2 to settings
-					if (MyConfs.Read("Layouts", "MainLayout1") == "" && MyConfs.Read("Layouts", "MainLayout2") == "") {
-						Logging.Log("Initializing locales.");
-						MyConfs.Write("Layouts", "MainLayout1", lcnmid[0]);
-						MyConfs.Write("Layouts", "MainLayout2", lcnmid[1]);
-					}
-					mahou = new MahouUI();
-					mahouInitOk = true;
-					if (MyConfs.Read("Layouts", "MainLayout1") == "" && MyConfs.Read("Layouts", "MainLayout2") == "") {
-						mahou.cbb_MainLayout1.SelectedIndex = 0;
-						mahou.cbb_MainLayout2.SelectedIndex = 1;
-					}
-					//Refreshes icon text language at startup
-//					mahou.icon.RefreshText(MMain.UI[44], MMain.UI[42], MMain.UI[43]);
-					KMHook.ReInitSnippets();
-					Application.EnableVisualStyles(); // Huh i did not noticed that it was missing... '~'
-					_evt_hookID = WinAPI.SetWinEventHook(WinAPI.EVENT_SYSTEM_FOREGROUND, WinAPI.EVENT_SYSTEM_FOREGROUND,
-					                                     IntPtr.Zero, _evt_proc, 0, 0, WinAPI.WINEVENT_OUTOFCONTEXT);
-					KMHook.CheckLayoutLater.Tick += (_, __) => { MahouUI.GlobalLayout = Locales.GetCurrentLocale(); KMHook.CheckLayoutLater.Stop();};
-					if (args.Length != 0)
-					if (args[0] == "_!_updated_!_") {
-						Logging.Log("Mahou updated.");
-						mahou.ToggleVisibility();
-						MessageBox.Show(Lang[Languages.Element.UpdateComplete], Lang[Languages.Element.UpdateComplete], MessageBoxButtons.OK, MessageBoxIcon.Information);
-					}
-					StartHook();
-					MahouUI.GlobalLayout = MahouUI.currentLayout = Locales.GetLocaleFromString(mahou.MainLayout1).uId;
-					Application.Run();
-					StopHook();
+				} else {
+					MahouUI.InitLanguage();
 				}
+				foreach (Locales.Locale lc in MMain.locales) {	
+					MMain.lcnmid.Add(lc.Lang + "(" + lc.uId + ")");
+				}
+				//for first run, add your locale 1 & locale 2 to settings
+				if (MyConfs.Read("Layouts", "MainLayout1") == "" && MyConfs.Read("Layouts", "MainLayout2") == "") {
+					Logging.Log("Initializing locales.");
+					MyConfs.Write("Layouts", "MainLayout1", lcnmid[0]);
+					MyConfs.Write("Layouts", "MainLayout2", lcnmid[1]);
+				}
+				rif = new RawInputForm();
+				mahou = new MahouUI();
+				Locales.IfLessThan2();
+				if (MyConfs.Read("Layouts", "MainLayout1") == "" && MyConfs.Read("Layouts", "MainLayout2") == "") {
+					mahou.cbb_MainLayout1.SelectedIndex = 0;
+					mahou.cbb_MainLayout2.SelectedIndex = 1;
+				}
+				KMHook.ReInitSnippets();
+				Application.EnableVisualStyles(); // Huh i did not noticed that it was missing... '~'
+				_evt_hookID = WinAPI.SetWinEventHook(WinAPI.EVENT_SYSTEM_FOREGROUND, WinAPI.EVENT_SYSTEM_FOREGROUND,
+				                                     IntPtr.Zero, _evt_proc, 0, 0, WinAPI.WINEVENT_OUTOFCONTEXT);
+				KMHook.CheckLayoutLater.Tick += (_, __) => { MahouUI.GlobalLayout = Locales.GetCurrentLocale(); KMHook.CheckLayoutLater.Stop();};
+				if (args.Length != 0)
+				if (args[0] == "_!_updated_!_") {
+					Logging.Log("Mahou updated.");
+					mahou.ToggleVisibility();
+					MessageBox.Show(Lang[Languages.Element.UpdateComplete], Lang[Languages.Element.UpdateComplete], MessageBoxButtons.OK, MessageBoxIcon.Information);
+				}
+				MahouUI.GlobalLayout = MahouUI.currentLayout = Locales.GetLocaleFromString(mahou.MainLayout1).uId;
+				Application.Run();
 			}
 		}
-		#region Actions with hooks
-		public static void RestartHook() {
-			StopHook();
-			StartHook();
-		}
-		public static void StartHook()
-		{
-			_mouse_hookID = KMHook.SetHook(_mouse_proc, WinAPI.WH_MOUSE_LL);
-			_hookID = KMHook.SetHook(_proc, WinAPI.WH_KEYBOARD_LL);
-//			Thread.Sleep(10); //Give some time for it to apply
-			Logging.Log("Global hooks started.");
-		}
-		public static void StopHook()
-		{
-			WinAPI.UnhookWindowsHookEx(_hookID);
-			WinAPI.UnhookWindowsHookEx(_mouse_hookID);
-			_hookID = _mouse_hookID = IntPtr.Zero;
-//			Thread.Sleep(10); //Give some time for it to apply
-			Logging.Log("Global hooks stopped.");
-		}
-		public static bool MahouActive()
-		{
+		public static bool MahouActive() {
 			var ActHandle = WinAPI.GetForegroundWindow();
 			if (ActHandle == IntPtr.Zero) {
 				return false;
@@ -126,6 +94,5 @@ namespace Mahou
 			Logging.Log("Mahou is active = ["+active+"]" + ", Mahou handle [" + mahou.Handle +"], fore win handle ["+ActHandle+"]");
 			return active;
 		}
-		#endregion
 	}
 }

@@ -29,7 +29,6 @@ public class Languages
 		BlockCtrlHKs,
 		MCDSSupport,
 		OneLayoutWholeWord,
-		RestartHooks,
 		#endregion
 		#region Layouts
 		SwitchBetween,
@@ -208,7 +207,6 @@ public class Languages
 		{ Element.BlockCtrlHKs, "Block Mahou hotkeys with Ctrl." }, 
 		{ Element.MCDSSupport, "Enable MCDS support." }, 
 		{ Element.OneLayoutWholeWord, "Use layout for whole word in CS." }, 
-		{ Element.RestartHooks, "Restart HOOKs on hotkey action end." }, 
 		#endregion
 		#region Layouts
 		{ Element.SwitchBetween, "Switch between layouts" }, 
@@ -412,7 +410,6 @@ public class Languages
 		{ Element.BlockCtrlHKs, "Блокировать горячие клавиши Mahou содержащие Ctrl." }, 
 		{ Element.MCDSSupport, "Включить поддержку MCDS." }, 
 		{ Element.OneLayoutWholeWord, "Считать раскладку для всего слова в КВ." }, 
-		{ Element.RestartHooks, "Перезапускать HOOK'и." }, 
 		#endregion
 		#region Layouts
 		{ Element.SwitchBetween, "Переключать между раскладками" }, 
