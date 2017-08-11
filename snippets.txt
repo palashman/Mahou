@@ -2002,6 +2002,18 @@
 ====>обработка<====
 ->xtvgbjyf
 ====>чемпиона<====
+->ghbdtnе
+====>привет<====
+->gjrf
+====>gjrf<====
+->e;t
+====>уже<====
+->rjn
+====>кот<====
+->tcn
+====>ест<====
+->tcnm
+====>есть<====
 # From Russian to English list from here [https://gist.github.com/deekayen/4148741]
 ->еру
 ====>the<====
