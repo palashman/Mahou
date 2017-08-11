@@ -9,7 +9,7 @@ namespace Mahou
 	public static class Logging
 	{
 		readonly static string logdir = Path.Combine(MahouUI.nPath, "Logs");
-		readonly static string log = Path.Combine(logdir, DateTime.Today.ToString("yyyy.MM.dd") + ".log");
+		readonly static string log = Path.Combine(logdir, DateTime.Today.ToString("yyyy.MM.dd") + ".txt");
 		static object locky = new Object(); // To prevent `file in use` error in multi-threads
 		static BlockingCollection<string> _logMessages = new BlockingCollection<string>();
 		/// <summary>
