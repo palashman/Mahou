@@ -10,7 +10,7 @@ mahouWver =  "Mahou-v" & ver
 shell.Run "cmd.exe /c " & _
  "cd bin\Release_x86_x64 &&" & _ 
  "7z a " & mahouWver  & ".zip" & " -mx=9 Mahou.exe && " &  _
- "md5sum " & mahouWver  & ".zip" & " > " & mahouWver & "_MD5.txt"
+ "md5sum " & mahouWver  & ".zip" & " > " & mahouWver & "_MD5.txt", 1, true
 ' Update chocolatey
 dim RegEx
 set RegEx = new RegExp
