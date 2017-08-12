@@ -143,6 +143,9 @@ namespace Mahou {
 		    	nud_PersistentLayout1Interval.Minimum = nud_PersistentLayout2Interval.Minimum =	1;
 			nud_LangTTPositionX.Minimum = nud_LangTTPositionY.Minimum = -100;
 			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version + "-dev";
+			var commit = MMain.MyConfs.Read("Updates", "LatestCommit");
+			if (MMain.MyConfs.Read("Updates", "LatestCommit").Length == 7)
+				Text += " <"+commit+">";
 			RegisterHotkeys();
 			RefreshAllIcons();
 			//Background startup check for updates
