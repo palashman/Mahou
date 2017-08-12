@@ -3,14 +3,14 @@
 SET configuration=%1
 SET platform=%2
 SET const=TRACE;
-IF [%1] == [clean] GOTO CLEAN
-IF [%1] == [] SET configuration=Release
-IF [%1] == [debug] SET const=DEBUG;%const%
-IF [%2] == [x86_x64] SET platform="Any CPU"
-IF [%2] == [] SET platform="Any CPU"
-IF [%1] == [-h] GOTO HELP
-IF [%1] == [--help] GOTO HELP
-IF [%1] == [/?] GOTO HELP
+IF /I [%1] == [clean] GOTO CLEAN
+IF /I [%1] == [] SET configuration=Release
+IF /I [%1] == [debug] SET const=DEBUG;%const%
+IF /I [%2] == [x86_x64] SET platform="Any CPU"
+IF /I [%2] == [] SET platform="Any CPU"
+IF /I [%1] == [-h] GOTO HELP
+IF /I [%1] == [--help] GOTO HELP
+IF /I [%1] == [/?] GOTO HELP
 IF NOT [%3] == [] SET const=%3;%const%
 ECHO %windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe .\Mahou.sln /nologo /m /t:Build /p:Configuration=%configuration% /p:Platform=%platform% /p:DefineConstants="%const%"
 @%windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe .\Mahou.sln /nologo /m /t:Build /p:Configuration=%configuration% /p:Platform=%platform% /p:DefineConstants="%const%"
