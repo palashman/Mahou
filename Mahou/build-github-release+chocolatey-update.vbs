@@ -3,7 +3,7 @@ set shell = WScript.CreateObject("WScript.Shell")
 dim mahouWver
 dim ver
 ' Create release
-shell.Run "build.cmd release x86_x64 GITHUB_RELEASE", 1, true
+shell.Run "clean.cmd && build.cmd release x86_x64 GITHUB_RELEASE", 1, true
 ver = fso.GetFileVersion("bin\Release_x86_x64\Mahou.exe")
 mahouWver =  "Mahou-v" & ver
 ' Create zip of release with MD5(for chocolatey)
