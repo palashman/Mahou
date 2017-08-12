@@ -37,14 +37,16 @@ namespace Mahou
 			_logMessages.Add(tologmsg);
 			}
 		public static void UpdateLog() {
-			foreach (var msg in _logMessages.GetConsumingEnumerable()) {
-				#if VSCDEBUG
-					Console.WriteLine(msg);
-				#elif DEBUG 
-					Debug.WriteLine(msg);
-				#else
-					File.AppendAllText(log, msg);
-				#endif
+			lock (locky) {
+				foreach (var msg in _logMessages.GetConsumingEnumerable()) {
+					#if VSCDEBUG
+						Console.WriteLine(msg);
+					#elif DEBUG 
+						Debug.WriteLine(msg);
+					#else
+						File.AppendAllText(log, msg);
+					#endif
+				}
 			}
 		}
 	}
