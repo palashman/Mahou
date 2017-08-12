@@ -2169,6 +2169,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			lbl_ProxyServerPort.Text = MMain.Lang[Languages.Element.ProxyServer];
 			lbl_ProxyLogin.Text = MMain.Lang[Languages.Element.ProxyLogin];
 			lbl_ProxyPassword.Text = MMain.Lang[Languages.Element.ProxyPass];
+			lbl_UpdateChannel.Text = MMain.Lang[Languages.Element.UpdatesChannel];
 			#endregion
 			#region About
 			btn_DebugInfo.Text = MMain.Lang[Languages.Element.DbgInf];

@@ -119,6 +119,7 @@ public class Languages
 		ProxyPass,
 		Error,
 		NetError,
+		UpdatesChannel,
 		#endregion
 		#region About
 		DbgInf,
@@ -297,6 +298,7 @@ public class Languages
 		{ Element.ProxyPass, "Password:" }, 
 		{ Element.Error, "Error..." }, 
 		{ Element.NetError, "Connection to github.com can't be established, check your network connection or proxy settings..." },
+		{ Element.UpdatesChannel, "Updates channel:" },
 		#endregion
 		#region About
 		{ Element.DbgInf, "Debug info" }, 
@@ -501,6 +503,7 @@ public class Languages
 		{ Element.Error, "Ошибка..." }, 
 		{ Element.NetError, "Соединение с github.com не может быть установлено, " +
 			"проверьте подключение к интернету или ваши настройки прокси..."}, 
+		{ Element.UpdatesChannel, "Канал обновлений:" },
 		#endregion
 		#region About
 		{ Element.DbgInf, "Отладочная информация" }, 
