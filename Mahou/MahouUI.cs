@@ -751,6 +751,7 @@ namespace Mahou {
 		/// Refreshes comboboxes items.
 		/// </summary>
 		void RefreshComboboxes() {
+			cbb_UpdatesChannel.SelectedIndex = cbb_UpdatesChannel.Items.IndexOf(MMain.MyConfs.Read("Updates", "Channel"));
 			MMain.locales = Locales.AllList();
 			cbb_Layout1.Items.Clear();
 			cbb_Layout2.Items.Clear();
@@ -1917,9 +1918,11 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 		/// </summary>
 		void GetUpdateInfo() {
 			var Info = new List<string>(); // Update info
+			var url = "https://github.com/BladeMight/Mahou/releases/latest";
+			var beta = MMain.MyConfs.Read("Updates", "Channel") != "Stable";
+			if (beta) 
+				url = "https://github.com/BladeMight/Mahou/releases/tag/latest-commit";
 			try {
-				// Latest Mahou release url
-				const string url = "https://github.com/BladeMight/Mahou/releases/latest";
 				var request = (HttpWebRequest)WebRequest.Create(url);
 				// For proxy
 				if (!String.IsNullOrEmpty(txt_ProxyLogin.Text)) {
@@ -1945,12 +1948,19 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 					var Version = Regex.Match(data, "<span class=\"css-truncate-target\">(.*)</span>").Groups[1].Value;
 					var Link = "https://github.com" + Regex.Match(data,
 						           "<ul class=\"release-downloads\">\n.*<li>\n.+href=\"(/.*\\.\\w{3})").Groups[1].Value;
+					var Commit = "";
+					if (beta) {
+						Commit = (Regex.Match(data, "<ul class=\"tag-references\">[\n-z]+commit/(.+)\"").Groups[1].Value);
+						Link = "https://github.com/BladeMight/Mahou/releases/download/latest-commit/Release_x86_x64.zip";
+					}
 //					Debug.WriteLine(Title);
 //					Debug.WriteLine(Description);
 					Info.Add(Title);
 					Info.Add(Regex.Replace(Description, "\n", "\r\n")); // Regex needed to properly display new lines.
 					Info.Add(Version);
 					Info.Add(Link);
+					if (Commit != "")
+						Info.Add(Commit);
 					Logging.Log("Check for updates succeded, GitHub version: "+ Version + ".");
 				} else {
 				   response.Close();
@@ -1997,7 +2007,9 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			System.Threading.Tasks.Task.Factory.StartNew(GetUpdateInfo).Wait();
 			SetUInfo();
 			try {
-				if (flVersion("v" + Application.ProductVersion) < flVersion(UpdInfo[2])) {
+				if (UpdInfo[2] == "latest-commit" ? 
+				    MMain.MyConfs.Read("Updates", "LatestCommit") != UpdInfo[4] :
+				    flVersion("v" + Application.ProductVersion) < flVersion(UpdInfo[2])) {
 					Logging.Log("New version available, showing dialog...");
 					if (MessageBox.Show(new Form() { TopMost = false, Visible = false }, UpdInfo[1], UpdInfo[0],
 						     MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.OK) {
@@ -2012,9 +2024,16 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 		/// Sets UI info controls(version/title/description) text.
 		/// </summary>
 		void SetUInfo() {
-			grb_MahouReleaseTitle.Text = UpdInfo[0];
-			txt_UpdateDetails.Text = UpdInfo[1];
-			btn_DownloadUpdate.Text = Regex.Replace(btn_DownloadUpdate.Text, @"\<.+?\>", UpdInfo[2]);
+			this.grb_MahouReleaseTitle.Invoke((MethodInvoker)delegate {
+			    this.grb_MahouReleaseTitle.Text = UpdInfo[0];
+			});
+			this.txt_UpdateDetails.Invoke((MethodInvoker)delegate {
+			    txt_UpdateDetails.Text = UpdInfo[1];
+			});
+			this.btn_DownloadUpdate.Invoke((MethodInvoker)delegate {
+               	btn_DownloadUpdate.Text = MMain.Lang[Languages.Element.DownloadUpdate]; // Resotre download button text
+			    btn_DownloadUpdate.Text = Regex.Replace(btn_DownloadUpdate.Text, @"\<.+?\>", UpdInfo[2]);
+			});
 		}
 		#endregion
 		/// <summary>
@@ -2418,19 +2437,33 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				btn_CheckForUpdates.Text = MMain.Lang[Languages.Element.CheckingForUpdates];
 				UpdInfo = null;
 				System.Threading.Tasks.Task.Factory.StartNew(GetUpdateInfo).Wait();
-				tmr.Tick += (_, __) => {
+				tmr.Tick += (_, __) => {;
 					btn_CheckForUpdates.Text = btChkTextWas;
 					SetUInfo();
 					checking = false;
 					tmr.Interval = 3000;
 					tmr.Stop();
 				};
+				tmr.Interval = 1900;
 				if (UpdInfo[2] == MMain.Lang[Languages.Element.Error]) {
 					tmr.Interval = 1000;
 					tmr.Start();
 				} else {
-					if (flVersion("v" + Application.ProductVersion) <
-					   flVersion(UpdInfo[2])) {
+					if (cbb_UpdatesChannel.SelectedIndex != 0) {
+						if (MMain.MyConfs.Read("Updates", "LatestCommit") != UpdInfo[4]) {
+							btn_CheckForUpdates.Text = MMain.Lang[Languages.Element.TimeToUpdate];
+							tmr.Start();
+							SetUInfo();
+							grb_DownloadUpdate.Enabled = true;
+						} else {
+							btn_CheckForUpdates.Text = MMain.Lang[Languages.Element.YouHaveLatest];
+							tmr.Start();
+							grb_DownloadUpdate.Enabled = false;
+							SetUInfo();
+						}
+					}
+					else if (flVersion("v" + Application.ProductVersion) <
+					   flVersion(UpdInfo[2]) || this.Text.Contains("dev")) {
 						btn_CheckForUpdates.Text = MMain.Lang[Languages.Element.TimeToUpdate];
 						tmr.Start();
 						SetUInfo();
@@ -2456,6 +2489,9 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 					if (!String.IsNullOrEmpty(txt_ProxyServerPort.Text)) {
 						wc.Proxy = MakeProxy();
 					}
+					if (UpdInfo.Length > 4)
+						MMain.MyConfs.Write("Updates", "LatestCommit", UpdInfo[4]);
+					else MMain.MyConfs.Write("Updates", "LatestCommit", "Downgraded to Stable");
 					Logging.Log("Downloading Mahou update: "+UpdInfo[3]);
 					wc.DownloadFileAsync(new Uri(UpdInfo[3]), Path.Combine(new [] { nPath, fn }));
 					btn_DownloadUpdate.Text = "Downloading " + fn;
@@ -2497,6 +2533,9 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				UnregisterHotkeys(true);
 			else 
 				RegisterHotkeys();
+		}
+		void Cbb_UpdatesChannelSelectedIndexChanged(object sender, EventArgs e) {
+			MMain.MyConfs.Write("Updates", "Channel", (sender as ComboBox).SelectedItem.ToString());
 		}
 		#endregion
 	}

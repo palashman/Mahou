@@ -217,6 +217,10 @@ namespace Mahou
 			CheckBool("LangPanel", "BorderAeroColor", "true");
 			CheckBool("LangPanel", "UpperArrow", "true");
 			#endregion
+			#region Updates
+			CheckString("Updates", "Channel", "Stable");
+			CheckString("Updates", "LatestCommit", "");
+			#endregion
             #region Proxy section
             CheckString("Proxy", "ServerPort", "");
             CheckString("Proxy", "UserName", "");

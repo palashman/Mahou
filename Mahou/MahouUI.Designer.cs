@@ -165,6 +165,8 @@ namespace Mahou
 		private System.Windows.Forms.CheckBox chk_LangTTUpperArrow;
 		private System.Windows.Forms.CheckBox chk_qwertz;
 		private System.Windows.Forms.CheckBox chk_Change1KeyL;
+		private System.Windows.Forms.Label lbl_UpdateChannel;
+		private System.Windows.Forms.ComboBox cbb_UpdatesChannel;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -319,6 +321,8 @@ namespace Mahou
 			this.lbl_LPRefreshRate = new System.Windows.Forms.Label();
 			this.chk_DisplayLangPanel = new System.Windows.Forms.CheckBox();
 			this.tab_updates = new System.Windows.Forms.TabPage();
+			this.cbb_UpdatesChannel = new System.Windows.Forms.ComboBox();
+			this.lbl_UpdateChannel = new System.Windows.Forms.Label();
 			this.grb_DownloadUpdate = new System.Windows.Forms.GroupBox();
 			this.prb_UpdateDownloadProgress = new System.Windows.Forms.ProgressBar();
 			this.btn_DownloadUpdate = new System.Windows.Forms.Button();
@@ -1958,6 +1962,8 @@ namespace Mahou
 			// 
 			// tab_updates
 			// 
+			this.tab_updates.Controls.Add(this.cbb_UpdatesChannel);
+			this.tab_updates.Controls.Add(this.lbl_UpdateChannel);
 			this.tab_updates.Controls.Add(this.grb_DownloadUpdate);
 			this.tab_updates.Controls.Add(this.grb_ProxyConfig);
 			this.tab_updates.Controls.Add(this.grb_MahouReleaseTitle);
@@ -1970,28 +1976,49 @@ namespace Mahou
 			this.tab_updates.Text = "Updates";
 			this.tab_updates.UseVisualStyleBackColor = true;
 			// 
+			// cbb_UpdatesChannel
+			// 
+			this.cbb_UpdatesChannel.FormattingEnabled = true;
+			this.cbb_UpdatesChannel.Items.AddRange(new object[] {
+			"Stable",
+			"LatestCommit(Beta)"});
+			this.cbb_UpdatesChannel.Location = new System.Drawing.Point(310, 32);
+			this.cbb_UpdatesChannel.Name = "cbb_UpdatesChannel";
+			this.cbb_UpdatesChannel.Size = new System.Drawing.Size(243, 23);
+			this.cbb_UpdatesChannel.TabIndex = 5;
+			this.cbb_UpdatesChannel.SelectedIndexChanged += new System.EventHandler(this.Cbb_UpdatesChannelSelectedIndexChanged);
+			// 
+			// lbl_UpdateChannel
+			// 
+			this.lbl_UpdateChannel.AutoSize = true;
+			this.lbl_UpdateChannel.Location = new System.Drawing.Point(88, 35);
+			this.lbl_UpdateChannel.Name = "lbl_UpdateChannel";
+			this.lbl_UpdateChannel.Size = new System.Drawing.Size(98, 15);
+			this.lbl_UpdateChannel.TabIndex = 4;
+			this.lbl_UpdateChannel.Text = "Updates channel:";
+			// 
 			// grb_DownloadUpdate
 			// 
 			this.grb_DownloadUpdate.Controls.Add(this.prb_UpdateDownloadProgress);
 			this.grb_DownloadUpdate.Controls.Add(this.btn_DownloadUpdate);
 			this.grb_DownloadUpdate.Enabled = false;
-			this.grb_DownloadUpdate.Location = new System.Drawing.Point(310, 32);
+			this.grb_DownloadUpdate.Location = new System.Drawing.Point(310, 59);
 			this.grb_DownloadUpdate.Name = "grb_DownloadUpdate";
-			this.grb_DownloadUpdate.Size = new System.Drawing.Size(243, 120);
+			this.grb_DownloadUpdate.Size = new System.Drawing.Size(243, 95);
 			this.grb_DownloadUpdate.TabIndex = 3;
 			this.grb_DownloadUpdate.TabStop = false;
 			this.grb_DownloadUpdate.Text = "Download update";
 			// 
 			// prb_UpdateDownloadProgress
 			// 
-			this.prb_UpdateDownloadProgress.Location = new System.Drawing.Point(7, 69);
+			this.prb_UpdateDownloadProgress.Location = new System.Drawing.Point(7, 53);
 			this.prb_UpdateDownloadProgress.Name = "prb_UpdateDownloadProgress";
 			this.prb_UpdateDownloadProgress.Size = new System.Drawing.Size(230, 23);
 			this.prb_UpdateDownloadProgress.TabIndex = 6;
 			// 
 			// btn_DownloadUpdate
 			// 
-			this.btn_DownloadUpdate.Location = new System.Drawing.Point(6, 40);
+			this.btn_DownloadUpdate.Location = new System.Drawing.Point(6, 24);
 			this.btn_DownloadUpdate.Name = "btn_DownloadUpdate";
 			this.btn_DownloadUpdate.Size = new System.Drawing.Size(231, 23);
 			this.btn_DownloadUpdate.TabIndex = 5;
@@ -2009,7 +2036,7 @@ namespace Mahou
 			this.grb_ProxyConfig.Controls.Add(this.lbl_ProxyServerPort);
 			this.grb_ProxyConfig.Location = new System.Drawing.Point(310, 158);
 			this.grb_ProxyConfig.Name = "grb_ProxyConfig";
-			this.grb_ProxyConfig.Size = new System.Drawing.Size(246, 109);
+			this.grb_ProxyConfig.Size = new System.Drawing.Size(243, 107);
 			this.grb_ProxyConfig.TabIndex = 2;
 			this.grb_ProxyConfig.TabStop = false;
 			this.grb_ProxyConfig.Text = "Proxy configuration";
@@ -2066,9 +2093,9 @@ namespace Mahou
 			// grb_MahouReleaseTitle
 			// 
 			this.grb_MahouReleaseTitle.Controls.Add(this.txt_UpdateDetails);
-			this.grb_MahouReleaseTitle.Location = new System.Drawing.Point(3, 32);
+			this.grb_MahouReleaseTitle.Location = new System.Drawing.Point(3, 59);
 			this.grb_MahouReleaseTitle.Name = "grb_MahouReleaseTitle";
-			this.grb_MahouReleaseTitle.Size = new System.Drawing.Size(301, 235);
+			this.grb_MahouReleaseTitle.Size = new System.Drawing.Size(301, 208);
 			this.grb_MahouReleaseTitle.TabIndex = 1;
 			this.grb_MahouReleaseTitle.TabStop = false;
 			this.grb_MahouReleaseTitle.Text = "<Mahou release title>";
@@ -2083,7 +2110,7 @@ namespace Mahou
 			this.txt_UpdateDetails.Name = "txt_UpdateDetails";
 			this.txt_UpdateDetails.ReadOnly = true;
 			this.txt_UpdateDetails.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.txt_UpdateDetails.Size = new System.Drawing.Size(295, 213);
+			this.txt_UpdateDetails.Size = new System.Drawing.Size(295, 186);
 			this.txt_UpdateDetails.TabIndex = 0;
 			// 
 			// btn_CheckForUpdates
@@ -2297,6 +2324,7 @@ namespace Mahou
 			((System.ComponentModel.ISupportInitialize)(this.nud_LPTransparency)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nud_LPRefreshRate)).EndInit();
 			this.tab_updates.ResumeLayout(false);
+			this.tab_updates.PerformLayout();
 			this.grb_DownloadUpdate.ResumeLayout(false);
 			this.grb_ProxyConfig.ResumeLayout(false);
 			this.grb_ProxyConfig.PerformLayout();
