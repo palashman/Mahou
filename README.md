@@ -23,6 +23,11 @@ Mahou работает совершенно по-другому: в отличи
 
 ###### Возможности по версиям:
 
+**v2.3.5.4~v2.3.5.6**<br/>
+- :gem: Добавлена поддержка Ctrl+A(выделить всё) для многострочных текстовых форм.
+- :memo: Увеличено максимальное количество отображаемых символов в сниппетах.
+- :bug: Испрально прерывание конвертации при одинаковых словах в конвертации выделения с "Считать расклдлаку для всего слова" включенной. 
+- :bug: Исправлено *съедание* линий в конвертации выделения в некоторых программах.
 
 **v2.3.5.1~v2.3.5.2**<br/>
 
@@ -263,6 +268,13 @@ Even selected text switches just between **selected** layouts, though if you lik
 4. Starting from v1.0.4.4 in Convert selection unrecognized text by all selected layout in settings (example: ♥) just rewrites.
 
 ###### By version features:
+
+**v2.3.5.4~v2.3.5.6**<br/>
+- :gem: Added Ctrl+A support for multi-line textboxes.
+- :memo: Increased Max snippets textbox display chars.
+- :memo: Another inits for Ctrl+A multiline textboxes.
+- :bug: Fixed repeated words conversion termination in convert selection one layout whole word. 
+- :bug: Fixed lines eating in convert selection in some programs.
 
 **v2.3.5.1~v2.3.5.2**<br/>
 
