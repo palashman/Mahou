@@ -1045,9 +1045,11 @@ namespace Mahou
 		/// </summary>
 		/// <param name="self_action">Action that will be done without RawInput listeners.</param>
 		public static void DoSelf(Action self_action) {
+			MMain.mahou.UnregisterHotkeys();
 			MMain.rif.RegisterRawInputDevices(IntPtr.Zero, WinAPI.RawInputDeviceFlags.Remove);
 			self_action();
 			MMain.rif.RegisterRawInputDevices(MMain.rif.Handle);
+			MMain.mahou.RegisterHotkeys();
 		}
 		/// <summary>
 		/// Converts last word/line/words.
