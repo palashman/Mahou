@@ -81,6 +81,7 @@ public class Languages
 		#region Snippets
 		SnippetsEnabled,
 		SnippetSpaceAfter,
+		SnippetSwitchToGuessLayout,
 		#endregion
 		#region Hotkeys
 		ToggleMainWnd,
@@ -176,6 +177,7 @@ public class Languages
 		TT_OneLayout,
 		TT_QWERTZ,
 		TT_Change1KeyLayoutInExcluded,
+		TT_SnippetsSwitchToGuessLayout,
 		#endregion
 		#region Messages
 		MSG_SnippetsError
@@ -261,6 +263,7 @@ public class Languages
 		#region Snippets
 		{ Element.SnippetsEnabled, "Enable snippets." }, 
 		{ Element.SnippetSpaceAfter, "Add 1 space after snippets." }, 
+		{ Element.SnippetSwitchToGuessLayout, "Switch to guess layout after snippet." }, 
 		#endregion
 		#region Hotkeys
 		{ Element.ToggleMainWnd, "Toggle settings window" }, 
@@ -378,6 +381,7 @@ public class Languages
 		{ Element.TT_OneLayout, "Allows to store global layout in Mahou, insted of layout per window/program.\r\n(if You have Windows 8 or greater this feature is built in Windows, so you don't need to use enable it in Mahou)"},
 		{ Element.TT_QWERTZ, "Makes right substitutes in QWERTZ keyboards for chars: ß, ä, ö, ü, Ä, Ö, Ü, Y, Z in Convert Selection\r\n(!! but convert selection layout switching(or +) not supported)." },
 		{ Element.TT_Change1KeyLayoutInExcluded, "Function is in Layouts tab -> [Change to specific layout by keys]." },
+		{ Element.TT_SnippetsSwitchToGuessLayout, "Switches to *guessed* layout after snippet expanded.\r\nGuess works like in whole \"One Layout for whole word in Convert Selection\" function."},
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Snippets contains error in syntax, check if there are errors, details on snippets syntax you can find on Wiki." }
@@ -466,6 +470,7 @@ public class Languages
 		#region Snippets
 		{ Element.SnippetsEnabled, "Включить сниппеты." }, 
 		{ Element.SnippetSpaceAfter, "Добавлять 1 пробел после сниппетов." },
+		{ Element.SnippetSwitchToGuessLayout, "Переключать на предполагаемую раскладку сниппетов." }, 
 		#endregion
 		#region Hotkeys
 		{ Element.ToggleMainWnd, "Переключить видимость главного окна" }, 
@@ -581,6 +586,7 @@ public class Languages
 		{ Element.TT_OneLayout, "Позволяет хранить раскладку в Mahou, вместо раскладки для каждого окна/программы.\r\n(если у Вас Windows 8 и выше, то там уже стоит данная функция по умолчанию, нет необходимости включать ее в Mahou)"},
 		{ Element.TT_QWERTZ, "Делает правильные замены в клавиатурах QWERTZ для букв: ß, ä, ö, ü, Ä, Ö, Ü, Y, Z в Конверт выделения\r\n(!! но не совместимо со сменой раскладки в конверт выделения (или +))." },
 		{ Element.TT_Change1KeyLayoutInExcluded, "Функция находится во вкладке раскладки -> [Переключать раскладки по клавишам]." },
+		{ Element.TT_SnippetsSwitchToGuessLayout, "Меняет раскладку в *угаданную* после того как сниипет конвертировался.\r\nУгадывание работает так же как в функции \"Одна раскладка для целого слова в Конверт Выделения\"."},
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Сниппеты содержат ошибки в синтаксисе, проверьте ваши сниппеты, детали синтаксиса можете найти на Wiki." }

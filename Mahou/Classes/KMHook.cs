@@ -174,6 +174,11 @@ namespace Mahou
 									KInputs.MakeInput(KInputs.AddString(exps[i]));
 									if (MMain.mahou.SnippetSpaceAfter)
 										KInputs.MakeInput(KInputs.AddString(" "));
+									if (MMain.mahou.SnippetsSwitchToGuessLayout) {
+										var guess = WordGuessLayout(exps[i]);
+										Logging.Log("Changing to guess layout [" + guess.Item2 + "] after snippet ["+ guess.Item1 + "].");
+										ChangeToLayout(Locales.ActiveWindow(), guess.Item2);
+									}
 								} catch {
 									Logging.Log("Some snippets configured wrong, check them.", 1);
 									// If not use TASK, form(MessageBox) won't accept the keys(Enter/Escape/Alt+F4).
@@ -685,47 +690,10 @@ namespace Mahou
 								var allWords = ClipStr.Split(' ');
 								var word_index = 0;
 								foreach (var w in allWords) {
-									int wordL1Minuses = 0;
-									int wordL2Minuses = 0;
-									var wordL1 = "";
-									var wordL2 = "";
-									foreach (var c in w) {
-										var T3 = GermanLayoutFix(c);
-										if (T3 != "") {
-											wordL1 += T3;
-											wordL2 += T3;
-											continue;
-										}
-										var T1 = InAnother(c, l2 & 0xffff, l1 & 0xffff);
-										if (c == '\n')
-											T1 = "\n";
-										wordL1 += T1;
-										if (T1 == "") {
-											wordL1Minuses++;
-										}
-										var T2 = InAnother(c, l1 & 0xffff, l2 & 0xffff);
-										if (c == '\n')
-											T2 = "\n";
-										wordL2 += T2;
-										if (T2 == "") {
-											wordL2Minuses++;
-										}
-										if (T1 == "" && T2 == "") {
-											Logging.Log("Char ["+c+"] is not in any of two layouts ["+l1+"], ["+l2+"] just rewriting.");
-											wordL1 += ClipStr[index].ToString();
-											wordL2 += ClipStr[index].ToString();
-										}
-										index++;
-									}
-									if (wordL1Minuses > wordL2Minuses)
-										result += wordL2;
-									else
-										result += wordL1;
+									result += WordGuessLayout(w).Item1;
 									if (word_index != allWords.Length - 1)
 										result += " ";
 									word_index +=1;
-									Logging.Log("Layout 1 minuses: " + wordL1Minuses + "wordL1: " + wordL1 + 
-									                ", Layout 2 minuses: " + wordL2Minuses + "wordL2: " + wordL2);
 									index++;
 								}
 							} else {
@@ -1399,6 +1367,60 @@ namespace Mahou
 					break;
 			}
 			SendModsUp((int)mods);
+		}
+		public static Tuple<string, uint> WordGuessLayout(string word) {
+			var l1 = Locales.GetLocaleFromString(MMain.mahou.MainLayout1).uId;
+			var l2 = Locales.GetLocaleFromString(MMain.mahou.MainLayout2).uId;
+			uint layout = 0;
+			var result = "";
+			var index = 0;
+			int wordL1Minuses = 0;
+			int wordL2Minuses = 0;
+			var wordL1 = "";
+			var wordL2 = "";
+			foreach (var c in word) {
+				var T3 = GermanLayoutFix(c);
+				if (T3 != "") {
+					wordL1 += T3;
+					wordL2 += T3;
+					continue;
+				}
+				var T1 = InAnother(c, l2 & 0xffff, l1 & 0xffff);
+				if (c == '\n')
+					T1 = "\n";
+				wordL1 += T1;
+				if (T1 == "") {
+					wordL1Minuses++;
+				}
+				var T2 = InAnother(c, l1 & 0xffff, l2 & 0xffff);
+				if (c == '\n')
+					T2 = "\n";
+				wordL2 += T2;
+				if (T2 == "") {
+					wordL2Minuses++;
+				}
+				if (T1 == "" && T2 == "") {
+					Logging.Log("Char ["+c+"] is not in any of two layouts ["+l1+"], ["+l2+"] just rewriting.");
+					wordL1 += word[index].ToString();
+					wordL2 += word[index].ToString();
+				}
+				index++;
+			}
+			if (wordL1Minuses > wordL2Minuses) {
+				result = wordL2;
+				layout = l1;
+			}
+			else {
+				result = wordL1;
+				layout = l2;
+			}
+			if (wordL1Minuses == wordL2Minuses) {
+				result = word;
+				layout = 0;
+			}
+			Logging.Log("Layout 1 minuses: " + wordL1Minuses + "wordL1: " + wordL1 + 
+			                ", Layout 2 minuses: " + wordL2Minuses + "wordL2: " + wordL2);
+			return Tuple.Create(result, layout);
 		}
 		/// <summary>
 		/// Re-Initializes snippets.

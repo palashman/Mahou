@@ -139,6 +139,7 @@ namespace Mahou
 			#region Snippets section
 			CheckBool("Snippets", "SnippetsEnabled", "false");
 			CheckBool("Snippets", "SpaceAfter", "false");
+			CheckBool("Snippets", "SwitchToGuessLayout", "false");
 			#endregion
 			#region Hotkeys section
 			// Toggle main window hotkey

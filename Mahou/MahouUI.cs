@@ -47,7 +47,7 @@ namespace Mahou {
 					RePress, BlockHKWithCtrl, blueIcon, SwitchBetweenLayouts, SelectedTextGetMoreTries, ReSelect,
 					ConvertSelectionLS, ConvertSelectionLSPlus, MCDSSupport, OneLayoutWholeWord,
 					MouseTTAlways, OneLayout, MouseLangTooltipEnabled, CaretLangTooltipEnabled, QWERTZ_fix, 
-					ChangeLayoutInExcluded, SnippetSpaceAfter;
+					ChangeLayoutInExcluded, SnippetSpaceAfter, SnippetsSwitchToGuessLayout;
 		/// <summary> Temporary modifiers of hotkeys. </summary>
 		string Mainhk_tempMods, ExitHk_tempMods, HKCLast_tempMods, HKCSelection_tempMods, 
 			    HKCLine_tempMods, HKSymIgn_tempMods, HKConMorWor_tempMods, HKTitleCase_tempMods,
@@ -597,6 +597,7 @@ namespace Mahou {
 			#region Snippets
 			MMain.MyConfs.Write("Snippets", "SnippetsEnabled", chk_Snippets.Checked.ToString());
 			MMain.MyConfs.Write("Snippets", "SpaceAfter", chk_SpinnetSpaceAfter.Checked.ToString());
+			MMain.MyConfs.Write("Snippets", "SwitchToGuessLayout", chk_SnippetsSwitchToGuessLayout.Checked.ToString());
 			if (chk_Snippets.Checked)
 				File.WriteAllText(snipfile, txt_Snippets.Text);
 			#endregion
@@ -724,6 +725,7 @@ namespace Mahou {
 			#region Snippets
 			SnippetsEnabled = chk_Snippets.Checked = MMain.MyConfs.ReadBool("Snippets", "SnippetsEnabled");
 			SnippetSpaceAfter = chk_SpinnetSpaceAfter.Checked = MMain.MyConfs.ReadBool("Snippets", "SpaceAfter");
+			SnippetsSwitchToGuessLayout = chk_SnippetsSwitchToGuessLayout.Checked = MMain.MyConfs.ReadBool("Snippets", "SwitchToGuessLayout");
 			if (File.Exists(snipfile)) {
 				txt_Snippets.Text = File.ReadAllText(snipfile);
 				KMHook.ReInitSnippets();
@@ -2138,6 +2140,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			#region Snippets
 			chk_Snippets.Text = MMain.Lang[Languages.Element.SnippetsEnabled];
 			chk_SpinnetSpaceAfter.Text = MMain.Lang[Languages.Element.SnippetSpaceAfter];
+			chk_SnippetsSwitchToGuessLayout.Text = MMain.Lang[Languages.Element.SnippetSwitchToGuessLayout];
 			#endregion
 			#region Hotkeys
 			grb_Hotkey.Text = MMain.Lang[Languages.Element.Hotkey];
@@ -2242,6 +2245,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			HelpMeUnderstand.SetToolTip(chk_OneLayout, MMain.Lang[Languages.Element.TT_OneLayout]);
 			HelpMeUnderstand.SetToolTip(chk_qwertz, MMain.Lang[Languages.Element.TT_QWERTZ]);
 			HelpMeUnderstand.SetToolTip(chk_Change1KeyL, MMain.Lang[Languages.Element.TT_Change1KeyLayoutInExcluded]);
+			HelpMeUnderstand.SetToolTip(chk_SnippetsSwitchToGuessLayout, MMain.Lang[Languages.Element.TT_SnippetsSwitchToGuessLayout]);
 		}
 		void HelpMeUnderstandPopup(object sender, PopupEventArgs e) {
 			HelpMeUnderstand.ToolTipTitle = e.AssociatedControl.Text;

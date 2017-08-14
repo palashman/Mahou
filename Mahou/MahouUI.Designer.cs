@@ -168,6 +168,7 @@ namespace Mahou
 		private System.Windows.Forms.Label lbl_UpdateChannel;
 		private System.Windows.Forms.ComboBox cbb_UpdatesChannel;
 		private System.Windows.Forms.CheckBox chk_SpinnetSpaceAfter;
+		private System.Windows.Forms.CheckBox chk_SnippetsSwitchToGuessLayout;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -294,6 +295,7 @@ namespace Mahou
 			this.lbl_LangTTMouseRefreshRate = new System.Windows.Forms.Label();
 			this.chk_Change1KeyL = new System.Windows.Forms.CheckBox();
 			this.tab_snippets = new System.Windows.Forms.TabPage();
+			this.chk_SpinnetSpaceAfter = new System.Windows.Forms.CheckBox();
 			this.txt_Snippets = new Mahou.MahouUI.TextBoxCA();
 			this.chk_Snippets = new System.Windows.Forms.CheckBox();
 			this.tab_hotkeys = new System.Windows.Forms.TabPage();
@@ -349,7 +351,7 @@ namespace Mahou
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
 			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
-			this.chk_SpinnetSpaceAfter = new System.Windows.Forms.CheckBox();
+			this.chk_SnippetsSwitchToGuessLayout = new System.Windows.Forms.CheckBox();
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -1621,6 +1623,7 @@ namespace Mahou
 			// 
 			// tab_snippets
 			// 
+			this.tab_snippets.Controls.Add(this.chk_SnippetsSwitchToGuessLayout);
 			this.tab_snippets.Controls.Add(this.chk_SpinnetSpaceAfter);
 			this.tab_snippets.Controls.Add(this.txt_Snippets);
 			this.tab_snippets.Controls.Add(this.chk_Snippets);
@@ -1632,14 +1635,24 @@ namespace Mahou
 			this.tab_snippets.Text = "Snippets";
 			this.tab_snippets.UseVisualStyleBackColor = true;
 			// 
+			// chk_SpinnetSpaceAfter
+			// 
+			this.chk_SpinnetSpaceAfter.AutoSize = true;
+			this.chk_SpinnetSpaceAfter.Location = new System.Drawing.Point(275, 6);
+			this.chk_SpinnetSpaceAfter.Name = "chk_SpinnetSpaceAfter";
+			this.chk_SpinnetSpaceAfter.Size = new System.Drawing.Size(167, 19);
+			this.chk_SpinnetSpaceAfter.TabIndex = 2;
+			this.chk_SpinnetSpaceAfter.Text = "Add 1 space after snippets.";
+			this.chk_SpinnetSpaceAfter.UseVisualStyleBackColor = true;
+			// 
 			// txt_Snippets
 			// 
-			this.txt_Snippets.Location = new System.Drawing.Point(8, 31);
+			this.txt_Snippets.Location = new System.Drawing.Point(8, 56);
 			this.txt_Snippets.MaxLength = 0;
 			this.txt_Snippets.Multiline = true;
 			this.txt_Snippets.Name = "txt_Snippets";
 			this.txt_Snippets.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.txt_Snippets.Size = new System.Drawing.Size(541, 236);
+			this.txt_Snippets.Size = new System.Drawing.Size(541, 206);
 			this.txt_Snippets.TabIndex = 1;
 			this.txt_Snippets.Text = "->mahou\r\n====>Mahou (魔法) - Magical layout switcher.<====\r\n->eml\r\n====>BladeMight@" +
 	"gmail.com<====";
@@ -2261,15 +2274,15 @@ namespace Mahou
 			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.HelpMeUnderstand.Popup += new System.Windows.Forms.PopupEventHandler(this.HelpMeUnderstandPopup);
 			// 
-			// chk_SpinnetSpaceAfter
+			// chk_SnippetsGuessLayout
 			// 
-			this.chk_SpinnetSpaceAfter.AutoSize = true;
-			this.chk_SpinnetSpaceAfter.Location = new System.Drawing.Point(275, 6);
-			this.chk_SpinnetSpaceAfter.Name = "chk_SpinnetSpaceAfter";
-			this.chk_SpinnetSpaceAfter.Size = new System.Drawing.Size(167, 19);
-			this.chk_SpinnetSpaceAfter.TabIndex = 2;
-			this.chk_SpinnetSpaceAfter.Text = "Add 1 space after snippets.";
-			this.chk_SpinnetSpaceAfter.UseVisualStyleBackColor = true;
+			this.chk_SnippetsSwitchToGuessLayout.AutoSize = true;
+			this.chk_SnippetsSwitchToGuessLayout.Location = new System.Drawing.Point(8, 31);
+			this.chk_SnippetsSwitchToGuessLayout.Name = "chk_SnippetsGuessLayout";
+			this.chk_SnippetsSwitchToGuessLayout.Size = new System.Drawing.Size(216, 19);
+			this.chk_SnippetsSwitchToGuessLayout.TabIndex = 4;
+			this.chk_SnippetsSwitchToGuessLayout.Text = "Switch to guess layout after snippet.";
+			this.chk_SnippetsSwitchToGuessLayout.UseVisualStyleBackColor = true;
 			// 
 			// MahouUI
 			// 
