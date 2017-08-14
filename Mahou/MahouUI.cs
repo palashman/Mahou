@@ -1937,7 +1937,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			try {
 				var request = (HttpWebRequest)WebRequest.Create(url);
 				// For proxy
-				if (!String.IsNullOrEmpty(txt_ProxyLogin.Text)) {
+				if (!String.IsNullOrEmpty(txt_ProxyServerPort.Text)) {
 					request.Proxy = MakeProxy();
 				}
 				request.ServicePoint.SetTcpKeepAlive(true, 5000, 1000);
