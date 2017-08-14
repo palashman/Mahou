@@ -80,6 +80,7 @@ public class Languages
 		#endregion
 		#region Snippets
 		SnippetsEnabled,
+		SnippetSpaceAfter,
 		#endregion
 		#region Hotkeys
 		ToggleMainWnd,
@@ -259,6 +260,7 @@ public class Languages
 		#endregion
 		#region Snippets
 		{ Element.SnippetsEnabled, "Enable snippets." }, 
+		{ Element.SnippetSpaceAfter, "Add 1 space after snippets." }, 
 		#endregion
 		#region Hotkeys
 		{ Element.ToggleMainWnd, "Toggle settings window" }, 
@@ -463,6 +465,7 @@ public class Languages
 		#endregion
 		#region Snippets
 		{ Element.SnippetsEnabled, "Включить сниппеты." }, 
+		{ Element.SnippetSpaceAfter, "Добавлять 1 пробел после сниппетов." },
 		#endregion
 		#region Hotkeys
 		{ Element.ToggleMainWnd, "Переключить видимость главного окна" }, 

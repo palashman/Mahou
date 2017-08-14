@@ -46,7 +46,8 @@ namespace Mahou {
 					TrayFlags, SymIgnEnabled, TrayIconVisible, SnippetsEnabled, ChangeLayouByKey, EmulateLS,
 					RePress, BlockHKWithCtrl, blueIcon, SwitchBetweenLayouts, SelectedTextGetMoreTries, ReSelect,
 					ConvertSelectionLS, ConvertSelectionLSPlus, MCDSSupport, OneLayoutWholeWord,
-					MouseTTAlways, OneLayout, MouseLangTooltipEnabled, CaretLangTooltipEnabled, QWERTZ_fix, ChangeLayoutInExcluded;
+					MouseTTAlways, OneLayout, MouseLangTooltipEnabled, CaretLangTooltipEnabled, QWERTZ_fix, 
+					ChangeLayoutInExcluded, SnippetSpaceAfter;
 		/// <summary> Temporary modifiers of hotkeys. </summary>
 		string Mainhk_tempMods, ExitHk_tempMods, HKCLast_tempMods, HKCSelection_tempMods, 
 			    HKCLine_tempMods, HKSymIgn_tempMods, HKConMorWor_tempMods, HKTitleCase_tempMods,
@@ -595,6 +596,7 @@ namespace Mahou {
 			#endregion
 			#region Snippets
 			MMain.MyConfs.Write("Snippets", "SnippetsEnabled", chk_Snippets.Checked.ToString());
+			MMain.MyConfs.Write("Snippets", "SpaceAfter", chk_SpinnetSpaceAfter.Checked.ToString());
 			if (chk_Snippets.Checked)
 				File.WriteAllText(snipfile, txt_Snippets.Text);
 			#endregion
@@ -721,6 +723,7 @@ namespace Mahou {
 			#endregion
 			#region Snippets
 			SnippetsEnabled = chk_Snippets.Checked = MMain.MyConfs.ReadBool("Snippets", "SnippetsEnabled");
+			SnippetSpaceAfter = chk_SpinnetSpaceAfter.Checked = MMain.MyConfs.ReadBool("Snippets", "SpaceAfter");
 			if (File.Exists(snipfile)) {
 				txt_Snippets.Text = File.ReadAllText(snipfile);
 				KMHook.ReInitSnippets();
@@ -2134,6 +2137,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			#endregion
 			#region Snippets
 			chk_Snippets.Text = MMain.Lang[Languages.Element.SnippetsEnabled];
+			chk_SpinnetSpaceAfter.Text = MMain.Lang[Languages.Element.SnippetSpaceAfter];
 			#endregion
 			#region Hotkeys
 			grb_Hotkey.Text = MMain.Lang[Languages.Element.Hotkey];

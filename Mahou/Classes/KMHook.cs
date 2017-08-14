@@ -172,6 +172,8 @@ namespace Mahou
 								MMain.c_word.Clear();
 								try {
 									KInputs.MakeInput(KInputs.AddString(exps[i]));
+									if (MMain.mahou.SnippetSpaceAfter)
+										KInputs.MakeInput(KInputs.AddString(" "));
 								} catch {
 									Logging.Log("Some snippets configured wrong, check them.", 1);
 									// If not use TASK, form(MessageBox) won't accept the keys(Enter/Escape/Alt+F4).

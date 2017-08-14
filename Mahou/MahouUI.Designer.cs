@@ -167,6 +167,7 @@ namespace Mahou
 		private System.Windows.Forms.CheckBox chk_Change1KeyL;
 		private System.Windows.Forms.Label lbl_UpdateChannel;
 		private System.Windows.Forms.ComboBox cbb_UpdatesChannel;
+		private System.Windows.Forms.CheckBox chk_SpinnetSpaceAfter;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -348,6 +349,7 @@ namespace Mahou
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
 			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
+			this.chk_SpinnetSpaceAfter = new System.Windows.Forms.CheckBox();
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -1619,6 +1621,7 @@ namespace Mahou
 			// 
 			// tab_snippets
 			// 
+			this.tab_snippets.Controls.Add(this.chk_SpinnetSpaceAfter);
 			this.tab_snippets.Controls.Add(this.txt_Snippets);
 			this.tab_snippets.Controls.Add(this.chk_Snippets);
 			this.tab_snippets.Location = new System.Drawing.Point(4, 44);
@@ -2257,6 +2260,16 @@ namespace Mahou
 			this.HelpMeUnderstand.ShowAlways = true;
 			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.HelpMeUnderstand.Popup += new System.Windows.Forms.PopupEventHandler(this.HelpMeUnderstandPopup);
+			// 
+			// chk_SpinnetSpaceAfter
+			// 
+			this.chk_SpinnetSpaceAfter.AutoSize = true;
+			this.chk_SpinnetSpaceAfter.Location = new System.Drawing.Point(275, 6);
+			this.chk_SpinnetSpaceAfter.Name = "chk_SpinnetSpaceAfter";
+			this.chk_SpinnetSpaceAfter.Size = new System.Drawing.Size(167, 19);
+			this.chk_SpinnetSpaceAfter.TabIndex = 2;
+			this.chk_SpinnetSpaceAfter.Text = "Add 1 space after snippets.";
+			this.chk_SpinnetSpaceAfter.UseVisualStyleBackColor = true;
 			// 
 			// MahouUI
 			// 
