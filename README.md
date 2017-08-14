@@ -23,6 +23,17 @@ Mahou работает совершенно по-другому: в отличи
 
 ###### Возможности по версиям:
 
+**v2.4.0.0**<br/>
+
+:gem::sparkle::gem::sparkle: Low-level hook'и заменены RawInputDevices слушателями(WM_INPUT).
+:tv: Добавлена возможность конветраций в окне Mahou(но не во вкладек горячих клавиш.).
+:gem: Улучшен логгинг, теперь логгинг ведеться на отдельном потоке, благодаря чему не тормозит главный поток.
+:speech_balloon: Изменено правило "если меньше 2 раскладок" в подсказку в трее, добавлено действие при нажатии на подсказку, и убран выход из программы из-за правила.
+:memo: Логи теперь сохраняются с расширением *.txt.
+:gem: Добавлена возможность каналов обновлений.
+:gem: Добавлен канал обновлений `latest-commit`.
+:gem: Добавлена функция "Добавлять 1 пробел после сниппетов."
+
 **v2.3.5.4~v2.3.5.6**<br/>
 - :gem: Добавлена поддержка Ctrl+A(выделить всё) для многострочных текстовых форм.
 - :memo: Увеличено максимальное количество отображаемых символов в сниппетах.
@@ -268,6 +279,22 @@ Even selected text switches just between **selected** layouts, though if you lik
 4. Starting from v1.0.4.4 in Convert selection unrecognized text by all selected layout in settings (example: ♥) just rewrites.
 
 ###### By version features:
+
+**v2.4.0.0**<br/>
+
+:gem::sparkle::gem::sparkle: Replaced low-level hooks with RawInputDevices listeners(WM_INPUT).
+:memo: Removed a lot of usage of [self] and replaced it completely with DoSelf(action) function.
+:tv: Added conversion functionality in Mahou window(but not in hotkeys tab).
+:memo: Added convert selection selected text get in Mahou window fix(usuall way not worked in Mahou window).
+:gem: Improved logging, now it logs on separate thread, which makes it not to slow down main thread.
+:speech_balloon: Changed if less than 2 layouts message box to tray icon tooltip, and removed shutdown.
+:speech_balloon: Added on-click action for balloon tooltip.(open layouts configurations)
+:memo: Removed some unused variables/code.
+:memo: Save logs with *.txt extension.
+:gem: Added update channels feature.
+:gem: Added `latest-commit` update channel.
+:gem: Added "Add 1 space after snippets" feature.
+:memo: Quite overhaul.
 
 **v2.3.5.4~v2.3.5.6**<br/>
 - :gem: Added Ctrl+A support for multi-line textboxes.
