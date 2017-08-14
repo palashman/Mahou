@@ -63,8 +63,8 @@ namespace Mahou
 					MyConfs.Write("Layouts", "MainLayout1", lcnmid[0]);
 					MyConfs.Write("Layouts", "MainLayout2", lcnmid[1]);
 				}
-				rif = new RawInputForm();
 				mahou = new MahouUI();
+				rif = new RawInputForm();
 				Locales.IfLessThan2();
 				if (MyConfs.Read("Layouts", "MainLayout1") == "" && MyConfs.Read("Layouts", "MainLayout2") == "") {
 					mahou.cbb_MainLayout1.SelectedIndex = 0;
