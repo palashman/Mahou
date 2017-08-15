@@ -20,8 +20,31 @@ namespace Mahou {
 	                if (input.Header.Type == WinAPI.RawInputType.Mouse)
 	            		if (input.Data.Mouse.Data.ButtonFlags != WinAPI.RawMouseButtons.None)
 	            	    	KMHook.ListenMouse(input.Data.Mouse.Data.ButtonFlags);
-	                if (input.Header.Type == WinAPI.RawInputType.Keyboard)
-	        	    	KMHook.ListenKeyboard(input.Data.Keyboard.VKey, input.Data.Keyboard.Message);
+	                if (input.Header.Type == WinAPI.RawInputType.Keyboard) {
+	                	var kbd = input.Data.Keyboard;
+	                	var k = kbd.VKey;
+	                	switch (k) {
+	                		case (int)Keys.ShiftKey:
+	                			if (kbd.MakeCode == 42)
+	                				k = (int)Keys.LShiftKey;
+	                			else
+	                				k = (int)Keys.RShiftKey;
+	                			break;
+	                		case (int)Keys.ControlKey:
+	                			if (kbd.Flags < 2)
+	                				k = (int)Keys.LControlKey;
+	                			else 
+	                				k = (int)Keys.RControlKey;
+	                			break;
+	                		case (int)Keys.Menu:
+	                			if (kbd.Flags < 2)
+	                				k = (int)Keys.LMenu;
+	                			else 
+	                				k = (int)Keys.RMenu;
+	                			break;
+	                	}
+	        	    	KMHook.ListenKeyboard(k, input.Data.Keyboard.Message);
+	                }
 	            }
 			}
             base.WndProc(ref m);
