@@ -597,6 +597,7 @@ namespace Mahou
 				DoSelf(() => {
 					Logging.Log("Starting Convert selection.");
 					string ClipStr = Regex.Replace(GetClipStr(), "\r\n?|\n", "\n");
+					ClipStr = Regex.Replace(ClipStr, @"(\d+)[,.?бю/]", "$1.");
 					if (!String.IsNullOrEmpty(ClipStr)) {
 						csdoing = true;
 						Logging.Log("Starting conversion of [" + ClipStr + "].");
