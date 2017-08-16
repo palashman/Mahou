@@ -2,7 +2,7 @@
 
 # Русский [read in English](#english)
 
-![](http://i.piccy.info/i9/29fa819a849fa70f38ddfcf9c29d1c99/1480349941/6018/1094353/Mahou.jpg)
+![](http://i.imgur.com/3BpvbgI.png)
 
 # Mahou (魔法) - Волшебный переключатель раскладок.
 
@@ -273,7 +273,7 @@ Mahou находится под GPL v2+.
 
 # English
 
-![](http://i.piccy.info/i9/29fa819a849fa70f38ddfcf9c29d1c99/1480349941/6018/1094353/Mahou.jpg)
+![](http://i.imgur.com/3BpvbgI.png)
 
 # Mahou (魔法) - The magic Layout Switcher.
 
