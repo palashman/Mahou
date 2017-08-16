@@ -132,20 +132,6 @@ namespace Mahou {
 		FontDialog fntd = new FontDialog();
 		public static FontConverter fcv = new FontConverter();
 		public static string snipfile = Path.Combine(MahouUI.nPath, "snippets.txt");
-		const string task_import_vbs = @"set fso = CreateObject(""Scripting.FileSystemObject"")
-set shell = WScript.CreateObject(""WScript.Shell"")
-Set networkInfo = CreateObject(""WScript.NetWork"") 
-cnt = ""<?xml version=""""1.0"""" encoding=""""UTF-16""""?>"" & vbCrLf & ""<Task version=""""1.2"""" xmlns=""""http://schemas.microsoft.com/windows/2004/02/mit/task"""">"" & vbCrLf & ""  <RegistrationInfo>"" & vbCrLf & ""    <Date>2017-08-16T15:11:10.596</Date>"" & vbCrLf & ""    <Author>Kirin\BladeMight</Author>"" & vbCrLf & ""    <Description>Starts Mahou with highest priveleges.</Description>"" & vbCrLf & ""  </RegistrationInfo>"" & vbCrLf & ""  <Triggers>"" & vbCrLf & ""    <LogonTrigger>"" & vbCrLf & ""      <Enabled>true</Enabled>"" & vbCrLf & ""    </LogonTrigger>"" & vbCrLf & ""    <BootTrigger>"" & vbCrLf & ""      <Enabled>true</Enabled>"" & vbCrLf & ""    </BootTrigger>"" & vbCrLf & ""  </Triggers>"" & vbCrLf & ""  <Principals>"" & vbCrLf & ""    <Principal id=""""Author"""">"" & vbCrLf & ""      "" & ""<UserId>"" & networkInfo.ComputerName & ""\"" & networkInfo.UserName  & ""</UserId>"" & vbCrLf & ""      <LogonType>InteractiveToken</LogonType>"" & vbCrLf & ""      <RunLevel>HighestAvailable</RunLevel>"" & vbCrLf & ""    </Principal>"" & vbCrLf & ""  </Principals>"" & vbCrLf & ""  <Settings>"" & vbCrLf & ""    <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>"" & vbCrLf & ""    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>"" & vbCrLf & ""    <StopIfGoingOnBatteries>true</StopIfGoingOnBatteries>"" & vbCrLf & ""    <AllowHardTerminate>true</AllowHardTerminate>"" & vbCrLf & ""    <StartWhenAvailable>true</StartWhenAvailable>"" & vbCrLf & ""    <RunOnlyIfNetworkAvailable>false</RunOnlyIfNetworkAvailable>"" & vbCrLf & ""    <IdleSettings>"" & vbCrLf & ""      <StopOnIdleEnd>true</StopOnIdleEnd>"" & vbCrLf & ""      <RestartOnIdle>false</RestartOnIdle>"" & vbCrLf & ""    </IdleSettings>"" & vbCrLf & ""    <AllowStartOnDemand>true</AllowStartOnDemand>"" & vbCrLf & ""    <Enabled>true</Enabled>"" & vbCrLf & ""    <Hidden>false</Hidden>"" & vbCrLf & ""    <RunOnlyIfIdle>false</RunOnlyIfIdle>"" & vbCrLf & ""    <WakeToRun>false</WakeToRun>"" & vbCrLf & ""    <ExecutionTimeLimit>PT0S</ExecutionTimeLimit>"" & vbCrLf & ""    <Priority>7</Priority>"" & vbCrLf & ""  </Settings>"" & vbCrLf & ""  <Actions Context=""""Author"""">"" & vbCrLf & ""    <Exec>"" & vbCrLf & ""      "" & ""<Command>"" & WScript.Arguments(0) & ""Mahou.exe"" & ""</Command>"" & vbCrLf & ""    </Exec>"" & vbCrLf & ""  </Actions>"" & vbCrLf & ""</Task>""
-xml_path = ""MahouAutostart+.xml""
-set xml = fso.CreateTextFile(xml_path, true)
-xml.Write(cnt)
-xml.close
-shell.Run ""schtasks /delete /TN MahouAutostart+ /f"", 0, true
-if WScript.Arguments.Count = 1 then
-    shell.Run ""schtasks /create /xml MahouAutostart+.xml /TN MahouAutostart+"", 0, true
-end if
-fso.DeleteFile(xml_path)
-fso.DeleteFile(WScript.ScriptFullName)";
 		#endregion
 		public MahouUI() {
 			InitializeComponent();
@@ -1390,18 +1376,76 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			if (LangPanelDisplay && !langPanelRefresh.Enabled)
 				langPanelRefresh.Start();
 		}
+		void AutoStartTask(bool deleteonly = false) {
+			var xml = @"<?xml version=""1.0"" encoding=""UTF-16""?>
+<Task version=""1.2"" xmlns=""http://schemas.microsoft.com/windows/2004/02/mit/task"">
+  <RegistrationInfo>
+    <Date>2017-08-16T15:11:10.596</Date>
+    <Author>Kirin\BladeMight</Author>
+    <Description>Starts Mahou with highest priveleges.</Description>
+  </RegistrationInfo>
+  <Triggers>
+    <LogonTrigger>
+      <Enabled>true</Enabled>
+    </LogonTrigger>
+    <BootTrigger>
+      <Enabled>true</Enabled>
+    </BootTrigger>
+  </Triggers>
+  <Principals>
+    <Principal id=""Author"">
+      <UserId>" + Environment.UserDomainName + "\\" + Environment.UserName + @"</UserId>
+      <LogonType>InteractiveToken</LogonType>
+      <RunLevel>HighestAvailable</RunLevel>
+    </Principal>
+  </Principals>
+  <Settings>
+    <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>
+    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
+    <StopIfGoingOnBatteries>true</StopIfGoingOnBatteries>
+    <AllowHardTerminate>true</AllowHardTerminate>
+    <StartWhenAvailable>true</StartWhenAvailable>
+    <RunOnlyIfNetworkAvailable>false</RunOnlyIfNetworkAvailable>
+    <IdleSettings>
+      <StopOnIdleEnd>true</StopOnIdleEnd>
+      <RestartOnIdle>false</RestartOnIdle>
+    </IdleSettings>
+    <AllowStartOnDemand>true</AllowStartOnDemand>
+    <Enabled>true</Enabled>
+    <Hidden>false</Hidden>
+    <RunOnlyIfIdle>false</RunOnlyIfIdle>
+    <WakeToRun>false</WakeToRun>
+    <ExecutionTimeLimit>PT0S</ExecutionTimeLimit>
+    <Priority>7</Priority>
+  </Settings>
+  <Actions Context=""Author"">
+    <Exec>
+      <Command>" + Assembly.GetExecutingAssembly().Location + @"</Command>
+    </Exec>
+  </Actions>
+</Task>";
+			var xml_path = Path.GetTempPath() + "MahouStartup+.xml";
+			System.Threading.Tasks.Task.Factory.StartNew(() => File.WriteAllText(xml_path, xml)).Wait();
+			var pif = new ProcessStartInfo { 
+				FileName = "schtasks.exe",
+				WindowStyle = ProcessWindowStyle.Hidden,
+				Arguments = "/delete /TN MahouAutostart+ /f",
+				CreateNoWindow = true,
+				Verb = "runas"
+			};
+			Process.Start(pif).WaitForExit();
+			if (!deleteonly) {
+				pif.Arguments = "/create /xml \"" + xml_path + "\" /TN MahouAutostart+";
+				Process.Start(pif).WaitForExit();
+			}
+			File.Delete(xml_path);
+		}
 		/// <summary>
 		/// Creates startup shortcut/task v3.0+v2.0.
 		/// </summary>
 		void CreateAutoStart() {
 			if (AutoStartAsAdmin) {
-				var import_task = new ProcessStartInfo();
-				import_task.Verb = "runas";
-				File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "MahouStartupTaskImport.vbs", task_import_vbs);
-				import_task.FileName = "wscript.exe";
-				import_task.WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory;
-				import_task.Arguments = AppDomain.CurrentDomain.BaseDirectory + "MahouStartupTaskImport.vbs" + " " + AppDomain.CurrentDomain.BaseDirectory;
-				Process.Start(import_task);
+				AutoStartTask();
 //				if (AutoStartExist(false))
 //					AutoStartRemove(false);
 				Logging.Log("Startup task created.");
@@ -1459,13 +1503,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 		/// </summary>
 		void AutoStartRemove(bool admin) {
 			if (admin) {
-				var import_task = new ProcessStartInfo();
-				import_task.Verb = "runas";
-				File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "MahouStartupTaskImport.vbs", task_import_vbs);
-				import_task.FileName = "wscript.exe";
-				import_task.WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory;
-				import_task.Arguments = AppDomain.CurrentDomain.BaseDirectory + "MahouStartupTaskImport.vbs" + " " + AppDomain.CurrentDomain.BaseDirectory + " REM";
-				Process.Start(import_task);
+				AutoStartTask(true);
 				Logging.Log("Startup task removed.");
 			} else {
 				if (File.Exists(Path.Combine(
