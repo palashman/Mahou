@@ -23,6 +23,16 @@ Mahou работает совершенно по-другому: в отличи
 
 ###### Возможности по версиям:
 
+**v2.4.0.5**<br/>
+
+- :gem: Добавлена функция переключения на предполагаемую раскладку после конвертации сниппета.
+- :bug: Исправлено что прокси не работало если поле пароля было пустым.
+- :bug: Исправлено когда CapsLock/ScrollLock назначены как гор. клавишы вызывались таймерами.
+- :bug: Исправлено что WM_INPUT не разделял L/R модификаторы.
+- :bug: Исправлено конфликт гор. клавиш конвертации с модификаторами и функцией смены раскладки 1 клавишей.
+- :bug: Исправлено что последние слова/линия очищались если гор. клавиша с Ctrl модификатором.
+- :bug: Исправлено конфликт функции "нажимать заново модификаторы после действий гор. клавиш" с модификаторами и функцией смены раскладки 1 клавишей.
+
 **v2.4.0.0**<br/>
 
 - :gem::sparkle::gem::sparkle: Low-level hook'и заменены RawInputDevices слушателями(WM_INPUT).
@@ -279,6 +289,16 @@ Even selected text switches just between **selected** layouts, though if you lik
 4. Starting from v1.0.4.4 in Convert selection unrecognized text by all selected layout in settings (example: ♥) just rewrites.
 
 ###### By version features:
+
+**v2.4.0.5**<br/>
+
+- :gem: Added switch to guess layout after snippet expanded feature.
+- :bug: Fixed wrong control emptiness check for proxy.
+- :bug: Fixed CapsLock/ScrollLock when assigned as hotkeys was called by timers.
+- :bug: Fixed WM_INPUT was not distinguish L/R modifiers.
+- :bug: Fixed conflict with conversion hotkeys and change layout by 1 modifier.
+- :bug: Fixed convert last word/line was clearing with ctrl modifier.
+- :bug: Fixed conflict between repress modifiers and change layout with 1 key.
 
 **v2.4.0.0**<br/>
 
