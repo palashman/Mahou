@@ -291,7 +291,7 @@ Even selected text switches just between **selected** layouts, though if you lik
 3. To convert line hit <kbd>Shift</kbd>+<kbd>Pause</kbd>.
 4. To change layout by one key press <kbd>CapsLock</kbd>.
 5. Starting from v1.0.4.4 in Convert selection unrecognized text by all selected layout in settings (example: ♥) just rewrites.
-6. Read the [wiki](https://github.com/BladeMight/Mahou/wiki/Functions-list) or [ask me](#License).
+6. Read the [wiki](https://github.com/BladeMight/Mahou/wiki/Functions-list) or [ask me](#license).
 
 ###### By version features:
 
