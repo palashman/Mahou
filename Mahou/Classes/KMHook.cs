@@ -293,16 +293,16 @@ namespace Mahou
 				   Key == Keys.Tab || Key == Keys.PageDown || Key == Keys.PageUp ||
 				   Key == Keys.Left || Key == Keys.Right || Key == Keys.Down || Key == Keys.Up ||
 				   Key == Keys.BrowserSearch || 
-				   ((ctrl || win || alt) && (Key != Keys.Menu  || //Ctrl modifier and key which is not modifier
-							Key != Keys.LMenu ||
-							Key != Keys.RMenu ||
-							Key != Keys.LWin ||
-							Key != Keys.ShiftKey ||
-							Key != Keys.RShiftKey ||
-							Key != Keys.LShiftKey ||
-							Key != Keys.RWin ||
-							Key != Keys.ControlKey ||
-							Key != Keys.LControlKey ||
+				   ((ctrl || win || alt) && (Key != Keys.Menu  && //Ctrl modifier and key which is not modifier
+							Key != Keys.LMenu &&
+							Key != Keys.RMenu &&
+							Key != Keys.LWin &&
+							Key != Keys.ShiftKey &&
+							Key != Keys.RShiftKey &&
+							Key != Keys.LShiftKey &&
+							Key != Keys.RWin &&
+							Key != Keys.ControlKey &&
+							Key != Keys.LControlKey &&
 							Key != Keys.RControlKey ))) { 
 					Logging.Log("Last word cleared.");
 					MMain.c_word.Clear();
