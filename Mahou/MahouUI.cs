@@ -2567,10 +2567,14 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			RegisterHotkeys();
 		}
 		void MahouUIActivated(object sender, EventArgs e) {
-			if (tabs.SelectedIndex == tabs.TabPages.IndexOf(tab_hotkeys))
+			if (tabs.SelectedIndex == tabs.TabPages.IndexOf(tab_hotkeys)) {
 				UnregisterHotkeys(true);
-			else 
+				ScrlCheck.Stop();
+				capsCheck.Stop();
+			} else {
 				RegisterHotkeys();
+				ToggleTimers();
+			}
 		}
 		void Cbb_UpdatesChannelSelectedIndexChanged(object sender, EventArgs e) {
 			MMain.MyConfs.Write("Updates", "Channel", (sender as ComboBox).SelectedItem.ToString());
