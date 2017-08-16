@@ -27,7 +27,8 @@ namespace Mahou {
 		/// Directory where Mahou.exe is.
 		/// </summary>
 		public static string nPath = AppDomain.CurrentDomain.BaseDirectory;
-		public static bool LoggingEnabled, dummy, CapsLockDisablerTimer, LangPanelUpperArrow, mouseLTUpperArrow, caretLTUpperArrow;
+		public static bool LoggingEnabled, dummy, CapsLockDisablerTimer, LangPanelUpperArrow, mouseLTUpperArrow, caretLTUpperArrow,
+						   ShiftInHotkey, AltInHotkey, CtrlInHotkey, WinInHotkey;
 		static string[] UpdInfo;
 		static bool updating, was, isold = true, checking;
 		static Timer tmr = new Timer();
@@ -250,6 +251,10 @@ namespace Mahou {
 						}
 						KMHook.ConvertLast(line);
 					});
+					ShiftInHotkey = Hotkey.ContainsModifier(((int)m.LParam & 0xFFFF), (int)WinAPI.MOD_SHIFT) ? true : false;
+					AltInHotkey = Hotkey.ContainsModifier(((int)m.LParam & 0xFFFF), (int)WinAPI.MOD_ALT) ? true : false;
+					CtrlInHotkey = Hotkey.ContainsModifier(((int)m.LParam & 0xFFFF), (int)WinAPI.MOD_CONTROL) ? true : false;
+					WinInHotkey = Hotkey.ContainsModifier(((int)m.LParam & 0xFFFF), (int)WinAPI.MOD_WIN) ? true : false;
 					KMHook.csdoing = false;
 				}
 				if (HKSymIgn.Enabled) {

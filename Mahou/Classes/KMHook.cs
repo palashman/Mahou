@@ -232,11 +232,11 @@ namespace Mahou
 				if (Key != Keys.LShiftKey && Key != Keys.RShiftKey && Key != Keys.Shift)
 					clickAfterSHIFT = false;
 			if (MMain.mahou.ChangeLayouByKey) {
-				if (Key == Keys.LControlKey || Key == Keys.RControlKey ||
-			   	Key == Keys.LShiftKey || Key == Keys.RShiftKey ||
-			    Key == Keys.LMenu || Key == Keys.RMenu ||
-			    Key == Keys.LWin || Key == Keys.RWin ||
-			    Key == Keys.CapsLock) {
+					if (((Key == Keys.LControlKey || Key == Keys.RControlKey) && !MahouUI.CtrlInHotkey) ||
+					    ((Key == Keys.LShiftKey || Key == Keys.RShiftKey) && !MahouUI.ShiftInHotkey) ||
+					    ((Key == Keys.LMenu || Key == Keys.RMenu) && !MahouUI.AltInHotkey) ||
+					    ((Key == Keys.LWin || Key == Keys.RWin) && !MahouUI.WinInHotkey) ||
+			    		Key == Keys.CapsLock) {
 					SpecificKey(Key, MSG, MMain.mahou.Key1, 1);
 					SpecificKey(Key, MSG, MMain.mahou.Key2, 2);
 					SpecificKey(Key, MSG, MMain.mahou.Key3, 3);
@@ -388,6 +388,9 @@ namespace Mahou
 					tempNumpads.Add(Key);
 				}
 			}
+			#endregion
+			#region Reset Modifiers in Hotkeys
+			MahouUI.ShiftInHotkey = MahouUI.AltInHotkey = MahouUI.WinInHotkey = MahouUI.CtrlInHotkey = false;
 			#endregion
 		}
 		public static void ListenMouse(WinAPI.RawMouseButtons MSG) {
