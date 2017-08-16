@@ -196,7 +196,7 @@ public class Languages
 		{ Element.tab_About, "About" }, 
 		#endregion
 		#region Functions
-		{ Element.AutoStart, "Start with Windows." }, 
+		{ Element.AutoStart, "Start with Windows(as Administrator)." }, 
 		{ Element.TrayIcon, "Show tray icon." }, 
 		{ Element.ConvertSelectionLS, "Convert selection layout switching." }, 
 		{ Element.ReSelect, "Re-select text after conversion." }, 
@@ -403,7 +403,7 @@ public class Languages
 		{ Element.tab_About, "О..." }, 
 		#endregion
 		#region Functions
-		{ Element.AutoStart, "Запускать вместе с Windows." }, 
+		{ Element.AutoStart, "Запускать с Windows(от Администратора)." }, 
 		{ Element.TrayIcon, "Показывать иконку в трее." }, 
 		{ Element.ConvertSelectionLS, "Смена раскладки в Конверт выделения." }, 
 		{ Element.ReSelect, "Выделять заново текст после конвертации." }, 
