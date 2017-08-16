@@ -7,8 +7,8 @@
 # Mahou (魔法) - Волшебный переключатель раскладок.
 
 ### Как работает
-Mahou работает совершенно по-другому: в отличии от других переключателей раскладок, он переключает *не по следующей раскладке*, а по **указанным в настройках** раскладкам.<br/>
-Даже выделенный текст переключается между **выбранными** раскладками, но если Вам нравилось цикличное переключение, то, начиная с версии `v1.0.2.9`, есть **Циклич. режим** (Cycle Mode).
+Mahou работает так как **Вы** хотите, настраивайте как пожелаете, по умолчанию в отличии от других переключателей раскладок, он переключает *не по следующей раскладке*, а по **указанным в настройках** раскладкам.<br/>
+Даже выделенный текст переключается между **выбранными** раскладками, но если Вам нравилось цикличное переключение, то, начиная с версии `v1.0.2.9`, есть **Циклич. режим**, в `v2.0.0.0` и выше чтобы его включить нужно выключить функцию `Переключать между раскладками`.
 
 ### Для работы необходим [.Net 4.0 или выше](https://www.microsoft.com/ru-ru/download/details.aspx?id=53345). Начиная с v1.4.3.9, исправлены ошибки при работе в .Net 4.0.
 
@@ -19,41 +19,42 @@ Mahou работает совершенно по-другому: в отличи
 2. Для конвертации последнего введённого слова нажмите <kbd>Pause</kbd>.
 3. Для конвертации последней линии нажмите <kbd>Shift</kbd>+<kbd>Pause</kbd>.
 4. Для переключения раскладки одной клавишей нажмите <kbd>CapsLock</kbd>.
-4. Начиная с v1.0.4.4, при конвертации выделения текст, не распознанный ни в одной из выбранных в настройках раскладках (пример: ♥), просто переписывается.
+5. Начиная с v1.0.4.4, при конвертации выделения текст, не распознанный ни в одной из выбранных в настройках раскладках (пример: ♥), просто переписывается.
+6. Почитайте [wiki](https://github.com/BladeMight/Mahou/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA-%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B9) или [спросите меня](#%D0%9B%D0%B8%D1%86%D0%B5%D0%BD%D0%B7%D0%B8%D1%8F).
 
 ###### Возможности по версиям:
 
 **v2.4.0.5**<br/>
 
-- :gem: Добавлена функция переключения на предполагаемую раскладку после конвертации сниппета.
-- :bug: Исправлено что прокси не работало если поле пароля было пустым.
-- :bug: Исправлено когда CapsLock/ScrollLock назначены как гор. клавишы вызывались таймерами.
-- :bug: Исправлено что WM_INPUT не разделял L/R модификаторы.
-- :bug: Исправлено конфликт гор. клавиш конвертации с модификаторами и функцией смены раскладки 1 клавишей.
-- :bug: Исправлено что последние слова/линия очищались если гор. клавиша с Ctrl модификатором.
-- :bug: Исправлено конфликт функции "нажимать заново модификаторы после действий гор. клавиш" с модификаторами и функцией смены раскладки 1 клавишей.
+- 💎 Добавлена функция переключения на предполагаемую раскладку после конвертации сниппета.
+- 🐛 Исправлено что прокси не работало если поле пароля было пустым.
+- 🐛 Исправлено когда CapsLock/ScrollLock назначены как гор. клавишы вызывались таймерами.
+- 🐛 Исправлено что WM_INPUT не разделял L/R модификаторы.
+- 🐛 Исправлено конфликт гор. клавиш конвертации с модификаторами и функцией смены раскладки 1 клавишей.
+- 🐛 Исправлено что последние слова/линия очищались если гор. клавиша с Ctrl модификатором.
+- 🐛 Исправлено конфликт функции "нажимать заново модификаторы после действий гор. клавиш" с модификаторами и функцией смены раскладки 1 клавишей.
 
 **v2.4.0.0**<br/>
 
-- :gem::sparkle::gem::sparkle: Low-level hook'и заменены RawInputDevices слушателями(WM_INPUT).
+- 💎:sparkle:💎:sparkle: Low-level hook'и заменены RawInputDevices слушателями(WM_INPUT).
 - :tv: Добавлена возможность конветраций в окне Mahou(но не во вкладек горячих клавиш.).
-- :gem: Улучшен логгинг, теперь логгинг ведеться на отдельном потоке, благодаря чему не тормозит главный поток.
+- 💎 Улучшен логгинг, теперь логгинг ведеться на отдельном потоке, благодаря чему не тормозит главный поток.
 - :speech_balloon: Изменено правило "если меньше 2 раскладок" в подсказку в трее, добавлено действие при нажатии на подсказку, и убран выход из программы из-за правила.
-- :memo: Логи теперь сохраняются с расширением *.txt.
-- :gem: Добавлена возможность каналов обновлений.
-- :gem: Добавлен канал обновлений `latest-commit`.
-- :gem: Добавлена функция "Добавлять 1 пробел после сниппетов."
+- 📝 Логи теперь сохраняются с расширением *.txt.
+- 💎 Добавлена возможность каналов обновлений.
+- 💎 Добавлен канал обновлений `latest-commit`.
+- 💎 Добавлена функция "Добавлять 1 пробел после сниппетов."
 
 **v2.3.5.4~v2.3.5.6**<br/>
-- :gem: Добавлена поддержка Ctrl+A(выделить всё) для многострочных текстовых форм.
-- :memo: Увеличено максимальное количество отображаемых символов в сниппетах.
-- :bug: Испрально прерывание конвертации при одинаковых словах в конвертации выделения с "Считать расклдлаку для всего слова" включенной. 
-- :bug: Исправлено *съедание* линий в конвертации выделения в некоторых программах.
+- 💎 Добавлена поддержка Ctrl+A(выделить всё) для многострочных текстовых форм.
+- 📝 Увеличено максимальное количество отображаемых символов в сниппетах.
+- 🐛 Испрально прерывание конвертации при одинаковых словах в конвертации выделения с "Считать расклдлаку для всего слова" включенной. 
+- 🐛 Исправлено *съедание* линий в конвертации выделения в некоторых программах.
 
 **v2.3.5.1~v2.3.5.2**<br/>
 
-- :gem: Исправлена проблема конвертации выделения в обычном режиме(из-за лишней ; в коде).
-- :gem: Восстановлена поддержка getconkbl.dll.  P.S. Также есть pack Mahou и getconkbl.dll в [этом](https://github.com/BladeMight/Mahou/releases/tag/v2.3.5.2) релизе на github.
+- 💎 Исправлена проблема конвертации выделения в обычном режиме(из-за лишней ; в коде).
+- 💎 Восстановлена поддержка getconkbl.dll.  P.S. Также есть pack Mahou и getconkbl.dll в [этом](https://github.com/BladeMight/Mahou/releases/tag/v2.3.5.2) релизе на github.
 
 **v2.3.4.4~v2.3.5.0**<br/>
 
@@ -75,64 +76,64 @@ Mahou работает совершенно по-другому: в отличи
 
 **v2.3.4.0**<br/>
 
-- :gem: Добавлена прокрутка вкладок по колесику мыши в главном окне.
-- :gem: Добавлена функция индикатора регистра ввода для языковых подсказок и языковой панели.
-- :memo: Мелкие исправления в переводах.
+- 💎 Добавлена прокрутка вкладок по колесику мыши в главном окне.
+- 💎 Добавлена функция индикатора регистра ввода для языковых подсказок и языковой панели.
+- 📝 Мелкие исправления в переводах.
 
 **v2.3.3.3**<br/>
 
-- :gem: Новая возможность - Панель языка. (она использует код из [JustUI](https://github.com/BladeMight/JustUI))
-- :gem: Новая горячия клавиша - Показать/скрыть панель языка.
-- :bug: Исправлены некоторые ошибки интерфейса.
+- 💎 Новая возможность - Панель языка. (она использует код из [JustUI](https://github.com/BladeMight/JustUI))
+- 💎 Новая горячия клавиша - Показать/скрыть панель языка.
+- 🐛 Исправлены некоторые ошибки интерфейса.
 
 **v2.3.1.7**<br/>
 
-- :bug: Исправлена несовместимость прозрачного фона и функции флагов в подсказках языка.
-- :bug: Исправлено зависание позиции подсказки каретки в Firefox после прокрутки колесиком.
-- :bug: Исправлена проблема запуска Mahou без Mahou.ini.
-- :bug: Исправлена несовместимость диалогового окна удаления файлов с подсказкой каретки в Windows 10.
-- :bug: Исправлена ошибка приводящая к остановке смены флагов в трее.
+- 🐛 Исправлена несовместимость прозрачного фона и функции флагов в подсказках языка.
+- 🐛 Исправлено зависание позиции подсказки каретки в Firefox после прокрутки колесиком.
+- 🐛 Исправлена проблема запуска Mahou без Mahou.ini.
+- 🐛 Исправлена несовместимость диалогового окна удаления файлов с подсказкой каретки в Windows 10.
+- 🐛 Исправлена ошибка приводящая к остановке смены флагов в трее.
 
 **v2.3.1.4**<br/>
 
-- :bug: Исправлена серьезная ошибка x64 в из версии 2.3.1.3.
-- :bug: Исправлен конфилкт подсказки языка в виде флага с функцией флагов в трее.
+- 🐛 Исправлена серьезная ошибка x64 в из версии 2.3.1.3.
+- 🐛 Исправлен конфилкт подсказки языка в виде флага с функцией флагов в трее.
 
 **v2.3.0.7~v2.3.1.3**<br/>
 
-- :gem: Добавлена новая функция - Единая раскладка для всех программ.
-- :gem: Добавлена новая возможность - Всегда показывать подсказку языка возле мыши.
-- :gem: Добавлена новая функция - Флаги в подсказках языка.
-- :gem: Добавлено мини исправление для функции перезапуска HOOK'ов.
-- :bug: Исправлена проблема в с двойными горячими клавишами состаящих только из модификаторов.
+- 💎 Добавлена новая функция - Единая раскладка для всех программ.
+- 💎 Добавлена новая возможность - Всегда показывать подсказку языка возле мыши.
+- 💎 Добавлена новая функция - Флаги в подсказках языка.
+- 💎 Добавлено мини исправление для функции перезапуска HOOK'ов.
+- 🐛 Исправлена проблема в с двойными горячими клавишами состаящих только из модификаторов.
 
 **v2.3.0.6**<br/>
 
-- :gem: Исправлена серьёзная ошибка функции Конвертации нескольких слов из версии 2.3.0.5.
+- 💎 Исправлена серьёзная ошибка функции Конвертации нескольких слов из версии 2.3.0.5.
 
 **v2.3.0.5**<br/>
-- :bug: Исправлена серьёзная несовместимость подсказки языка лампочкой Scroll-Lock и функции Конвертации нескольких слов настроенной на Scroll-Lock.
-- :bug: Исправлено неожиданное отключение двойных горячих клавиш в 2.3.0.0.
-- :bug: Испралено невозможность запустить Mahou из-за неверных настроек шрифтов(или их отсутствия в системе) и цветов в Mahou.ini.
-- :memo: Исправлены некоторые опечатки в русском языке интерфейса.
-- :bug: Исправлена очистка введенных слов при Ctrl+Любая клавиша, теперь Mahou не очищает слова если *Любая клавиша* - модификатор.
+- 🐛 Исправлена серьёзная несовместимость подсказки языка лампочкой Scroll-Lock и функции Конвертации нескольких слов настроенной на Scroll-Lock.
+- 🐛 Исправлено неожиданное отключение двойных горячих клавиш в 2.3.0.0.
+- 🐛 Испралено невозможность запустить Mahou из-за неверных настроек шрифтов(или их отсутствия в системе) и цветов в Mahou.ini.
+- 📝 Исправлены некоторые опечатки в русском языке интерфейса.
+- 🐛 Исправлена очистка введенных слов при Ctrl+Любая клавиша, теперь Mahou не очищает слова если *Любая клавиша* - модификатор.
 
 **v2.3.0.0**<br/>
-- :gem: Добавлена функция перезапуска HOOK'ов.
-- :gem: Переписан способ регистрации горячих клавиш.
-- :gem: Добавлена поддержка AltGr для функции Переключать раскладки по клавишам.
-- :gem: Обновлена функция конвертации нескольких слов для поддержки нового способа регистрации горячих
+- 💎 Добавлена функция перезапуска HOOK'ов.
+- 💎 Переписан способ регистрации горячих клавиш.
+- 💎 Добавлена поддержка AltGr для функции Переключать раскладки по клавишам.
+- 💎 Обновлена функция конвертации нескольких слов для поддержки нового способа регистрации горячих
 - [...](https://github.com/BladeMight/Mahou/releases/v2.3.0.0)
 
 **v2.1.2.6**<br/>
-- :gem: Добавлена функция постоянной раскладки для процессов.
+- 💎 Добавлена функция постоянной раскладки для процессов.
 
 **v2.1.2.0~v2.1.2.3**<br/>
-- :gem: Добавлена поддержка getconkbl.dll, который позволяет получить правильную раскладку в консольных приложениях. ТОЛЬКО x86 версии обоих(Mahou и getconkbl.dll) поддерживаются. (вы можете взять dll [отсюда]( https://github.com/Elfy/getconkbl), поставьте ее в папку где находится Mahou.exe, возможно потребуется перезапуск Mahou)
-- :bug: Исправлены проблемы связанные с восстановлением буфера.
-- :gem: Добавлена Shift+CapsLock к переключеать раскладки по клавишам.
-- :speech_balloon: Обновлен способ показа подсказок, :rocket: теперь быстрее показывается, и таймаут исчезания - 20 сек.
-- :gem: Обновлен способ локализации.
+- 💎 Добавлена поддержка getconkbl.dll, который позволяет получить правильную раскладку в консольных приложениях. ТОЛЬКО x86 версии обоих(Mahou и getconkbl.dll) поддерживаются. (вы можете взять dll [отсюда]( https://github.com/Elfy/getconkbl), поставьте ее в папку где находится Mahou.exe, возможно потребуется перезапуск Mahou)
+- 🐛 Исправлены проблемы связанные с восстановлением буфера.
+- 💎 Добавлена Shift+CapsLock к переключеать раскладки по клавишам.
+- 💬 Обновлен способ показа подсказок, :rocket: теперь быстрее показывается, и таймаут исчезания - 20 сек.
+- 💎 Обновлен способ локализации.
 
 **v2.1.1.2~v2.1.1.6**<br/>
 - Обновлена wiki.
@@ -240,9 +241,12 @@ Mahou работает совершенно по-другому: в отличи
 - <kbd>Pause</kbd> - Конверт последнего слова.
 - <kbd>Shift</kbd>+<kbd>Pause</kbd> - Конверт линии.
 - <kbd>Scroll</kbd> - Конверт выделения.
-- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>Insert</kbd> - Показать/скрыть главное окно.
-- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>F12</kbd> - Завершить Mahou.
-- [Подробнее...](https://github.com/BladeMight/Mahou/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA-%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B9#%D0%93%D0%BE%D1%80%D1%8F%D1%87%D0%B8%D0%B5-%D0%BA%D0%BB%D0%B0%D0%B2%D0%B8%D1%88%D0%B8)
+- <kbd>Shift</kbd>+<kbd>F11</kbd> - Конверт нескольких последних слов, для выбора количества нажимайте 1-9(0 = 10) на клавиатуре(не NumPad)..
+- <kbd>Shift</kbd>+<kbd>F9</kbd> - Переключить видимость языковой панели.
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>Win</kbd>+<kbd>Insert</kbd> - Показать/скрыть главное окно.
+- <kbd>Shift</kbd>+<kbd>Alt</kbd><kbd>PageUp</kbd> - Перезапустить Mahou.
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>Win</kbd>+<kbd>F12</kbd> - Завершить Mahou.
+- Остальные гор. клавиши выключены по умолчанию или имеют описание в Mahou.
 
 ### [Скачать или посмотреть заметки о выпусках.](https://github.com/BladeMight/Mahou/releases)
 
@@ -255,7 +259,7 @@ Mahou работает совершенно по-другому: в отличи
 Mahou находится под GPL v2+.
 
 ### Связаться со мной
-Если Вы нашли ошибку напишите её [здесь](https://github.com/BladeMight/Mahou/issues)
+Если Вы нашли ошибку или есть идея как улучшить Mahou напишите её [здесь](https://github.com/BladeMight/Mahou/issues)
 или свяжитесь со мной через [email](mailto:BladeMight@gmail.com) (можете спрашивать о чем угодно)
 
 ### Поддержать проект материально
@@ -271,11 +275,11 @@ Mahou находится под GPL v2+.
 
 ![](http://i.piccy.info/i9/29fa819a849fa70f38ddfcf9c29d1c99/1480349941/6018/1094353/Mahou.jpg)
 
-# Mahou (魔法) - The magic Layout Switcher
+# Mahou (魔法) - The magic Layout Switcher.
 
 ### How it works
-Mahou works completely different from other Layout Swtichers, it switches *not by next layout*, but by **specified in settings** layouts. <br/>
-Even selected text switches just between **selected** layouts, though if you liked cycling through, starting from `v1.0.2.9` there is **Cycle Mode**.
+Mahou works like **You** want, configure it as you wish, by default it switches *not by next layout*, but by **specified in settings** layouts. <br/>
+Even selected text switches just between **selected** layouts, though if you liked cycling through, starting from `v1.0.2.9` there is **Cycle Mode**, in `v2.0.0.0` and above to activate it you just need to disable function `Switch between layouts`.
 
 ### Mahou requires [.Net 4.0 or greater](https://www.microsoft.com/en-us/download/details.aspx?id=53345) to work properly. Beginning from v1.4.3.9 error when running on .Net 4.0 were fixed.
 
@@ -286,42 +290,43 @@ Even selected text switches just between **selected** layouts, though if you lik
 2. To convert input hit <kbd>Pause</kbd> when typing.
 3. To convert line hit <kbd>Shift</kbd>+<kbd>Pause</kbd>.
 4. To change layout by one key press <kbd>CapsLock</kbd>.
-4. Starting from v1.0.4.4 in Convert selection unrecognized text by all selected layout in settings (example: ♥) just rewrites.
+5. Starting from v1.0.4.4 in Convert selection unrecognized text by all selected layout in settings (example: ♥) just rewrites.
+6. Read the [wiki](https://github.com/BladeMight/Mahou/wiki/Functions-list) or [ask me](#License).
 
 ###### By version features:
 
 **v2.4.0.5**<br/>
 
-- :gem: Added switch to guess layout after snippet expanded feature.
-- :bug: Fixed wrong control emptiness check for proxy.
-- :bug: Fixed CapsLock/ScrollLock when assigned as hotkeys was called by timers.
-- :bug: Fixed WM_INPUT was not distinguish L/R modifiers.
-- :bug: Fixed conflict with conversion hotkeys and change layout by 1 modifier.
-- :bug: Fixed convert last word/line was clearing with ctrl modifier.
-- :bug: Fixed conflict between repress modifiers and change layout with 1 key.
+- 💎 Added switch to guess layout after snippet expanded feature.
+- 🐛 Fixed wrong control emptiness check for proxy.
+- 🐛 Fixed CapsLock/ScrollLock when assigned as hotkeys was called by timers.
+- 🐛 Fixed WM_INPUT was not distinguish L/R modifiers.
+- 🐛 Fixed conflict with conversion hotkeys and change layout by 1 modifier.
+- 🐛 Fixed convert last word/line was clearing with ctrl modifier.
+- 🐛 Fixed conflict between repress modifiers and change layout with 1 key.
 
 **v2.4.0.0**<br/>
 
-- :gem::sparkle::gem::sparkle: Replaced low-level hooks with RawInputDevices listeners(WM_INPUT).
-- :memo: Removed a lot of usage of [self] and replaced it completely with DoSelf(action) function.
-- :tv: Added conversion functionality in Mahou window(but not in hotkeys tab).
-- :memo: Added convert selection selected text get in Mahou window fix(usuall way not worked in Mahou window).
-- :gem: Improved logging, now it logs on separate thread, which makes it not to slow down main thread.
-- :speech_balloon: Changed if less than 2 layouts message box to tray icon tooltip, and removed shutdown.
-- :speech_balloon: Added on-click action for balloon tooltip.(open layouts configurations)
-- :memo: Removed some unused variables/code.
-- :memo: Save logs with *.txt extension.
-- :gem: Added update channels feature.
-- :gem: Added `latest-commit` update channel.
-- :gem: Added "Add 1 space after snippets" feature.
-- :memo: Quite overhaul.
+- 💎❇💎❇ Replaced low-level hooks with RawInputDevices listeners(WM_INPUT).
+- 📝 Removed a lot of usage of [self] and replaced it completely with DoSelf(action) function.
+- 📺 Added conversion functionality in Mahou window(but not in hotkeys tab).
+- 📝 Added convert selection selected text get in Mahou window fix(usuall way not worked in Mahou window).
+- 💎 Improved logging, now it logs on separate thread, which makes it not to slow down main thread.
+- 💬 Changed if less than 2 layouts message box to tray icon tooltip, and removed shutdown.
+- 💬 Added on-click action for balloon tooltip.(open layouts configurations)
+- 📝 Removed some unused variables/code.
+- 📝 Save logs with *.txt extension.
+- 💎 Added update channels feature.
+- 💎 Added `latest-commit` update channel.
+- 💎 Added "Add 1 space after snippets" feature.
+- 📝 Quite overhaul.
 
 **v2.3.5.4~v2.3.5.6**<br/>
-- :gem: Added Ctrl+A support for multi-line textboxes.
-- :memo: Increased Max snippets textbox display chars.
-- :memo: Another inits for Ctrl+A multiline textboxes.
-- :bug: Fixed repeated words conversion termination in convert selection one layout whole word. 
-- :bug: Fixed lines eating in convert selection in some programs.
+- 💎 Added Ctrl+A support for multi-line textboxes.
+- 📝 Increased Max snippets textbox display chars.
+- 📝 Another inits for Ctrl+A multiline textboxes.
+- 🐛 Fixed repeated words conversion termination in convert selection one layout whole word. 
+- 🐛 Fixed lines eating in convert selection in some programs.
 
 **v2.3.5.1~v2.3.5.2**<br/>
 
@@ -348,65 +353,65 @@ Even selected text switches just between **selected** layouts, though if you lik
 
 **v2.3.4.0**<br/>
 
-- :gem: Added tabs switch by wheel scroll in main window.
-- :gem: Added new function - input uppercase indicator for language panel and tooltips.
-- :memo: Little translation fixes.
+- 💎 Added tabs switch by wheel scroll in main window.
+- 💎 Added new function - input uppercase indicator for language panel and tooltips.
+- 📝 Little translation fixes.
 
 **v2.3.3.3**<br/>
 
-- :gem: Added new feature - Language Panel. (uses some code of [JustUI](https://github.com/BladeMight/JustUI))
-- :gem: Added new Hotkey to toggle Language Panel visibility.
-- :bug: Fixed bugs in UI.
+- 💎 Added new feature - Language Panel. (uses some code of [JustUI](https://github.com/BladeMight/JustUI))
+- 💎 Added new Hotkey to toggle Language Panel visibility.
+- 🐛 Fixed bugs in UI.
 
 **v2.3.1.7**<br/>
 
-- :bug: Fixed transparent color and flags together producing both text and flags.
-- :bug: Fixed caret lang display in Firefox was stuck on screen on mouse wheel.
-- :bug: Fixed error on first startup when Mahou.ini not exist.
-- :bug: Fixed delete dialog conflict with caret lang display on windows 10.
-- :bug: Fixed wrong rule in combined refresh of flags in Mouse Lang Display and tray flags while mouse tip was disabled but display mouse tooltip always was enabled.
+- 🐛 Fixed transparent color and flags together producing both text and flags.
+- 🐛 Fixed caret lang display in Firefox was stuck on screen on mouse wheel.
+- 🐛 Fixed error on first startup when Mahou.ini not exist.
+- 🐛 Fixed delete dialog conflict with caret lang display on windows 10.
+- 🐛 Fixed wrong rule in combined refresh of flags in Mouse Lang Display and tray flags while mouse tip was disabled but display mouse tooltip always was enabled.
 
 **v2.3.1.4**<br/>
 
-- :bug: fixed serious x64 bug from v2.3.1.3(which has been reloaded too).
-- :bug: Fixed tray flags & tooltip flags confilct.
+- 🐛 fixed serious x64 bug from v2.3.1.3(which has been reloaded too).
+- 🐛 Fixed tray flags & tooltip flags confilct.
 
 **v2.3.0.7~v2.3.1.3**<br/>
 
-- :gem: Added new feature - One(global) layout.
-- :gem: Added new feature - Always show mouse tooltip.
-- :speech_balloon: Added new tooltips.
-- :gem: Added new feature, flags in language tooltips.
+- 💎 Added new feature - One(global) layout.
+- 💎 Added new feature - Always show mouse tooltip.
+- 💬 Added new tooltips.
+- 💎 Added new feature, flags in language tooltips.
 🐛 Fixed double hotkey feature for only-modifiers hotkeys (from v2.3.0.5).
 
 **v2.3.0.6**<br/>
 
-- :gem: Fixed serious bug in Convert Multiple Words function from v2.3.0.5.
+- 💎 Fixed serious bug in Convert Multiple Words function from v2.3.0.5.
 
 **v2.3.0.5**<br/>
 
-- :bug: Fixed double hotkey ability was inacessible until restart in v2.3.0.0.
-- :gem: Fixed serious uncompatibility between Scroll-Tip and Convert Multiple words as Scroll hotkey.
-- :bug: Fixed Mahou wasn't start up if fonts or colors are wrongly configured in Mahou.ini.
-- :gem: Fixed Mahou was clearing catched words on Ctrl+Any key(even modifier) modifiers were excluded.
-- :memo: Fixed some typos in Russian UI translation. подсказки языка лампочкой Scroll-Lock и функции Конвертации нескольких слов настроенной на Scroll-Lock.
+- 🐛 Fixed double hotkey ability was inacessible until restart in v2.3.0.0.
+- 💎 Fixed serious uncompatibility between Scroll-Tip and Convert Multiple words as Scroll hotkey.
+- 🐛 Fixed Mahou wasn't start up if fonts or colors are wrongly configured in Mahou.ini.
+- 💎 Fixed Mahou was clearing catched words on Ctrl+Any key(even modifier) modifiers were excluded.
+- 📝 Fixed some typos in Russian UI translation. подсказки языка лампочкой Scroll-Lock и функции Конвертации нескольких слов настроенной на Scroll-Lock.
 
 **v2.3.0.0**<br/>
-- :gem: Added Restart Hooks on each Mahou hotkey action end.
-- :gem: Hotkeys overhaul migrated to Windows-style(RegisterHotkey()) which is a way more stable.
-- :gem: Added AltGr support for switch layout with one key.
-- :gem: Updated Convert Multiple words style to new Hotkeys style.
+- 💎 Added Restart Hooks on each Mahou hotkey action end.
+- 💎 Hotkeys overhaul migrated to Windows-style(RegisterHotkey()) which is a way more stable.
+- 💎 Added AltGr support for switch layout with one key.
+- 💎 Updated Convert Multiple words style to new Hotkeys style.
 - [...](https://github.com/BladeMight/Mahou/releases/v2.3.0.0)
 
 **v2.1.2.6**<br/>
-- :gem: Added Persistent layout function for processes.
+- 💎 Added Persistent layout function for processes.
 
 **v2.1.2.0~v2.1.2.3**<br/>
-- :gem: Added support for getconkbl.dll, which adds support for console apps right layout recognition. ONLY x86 version of both(Mahou and getconkbl.dll) are supported. (you can get dll from [here]( https://github.com/Elfy/getconkbl), put it in directory where Mahou.exe is)
-- :bug: Fixed some clipboard restore issues.
-- :gem: Added Shift+CapsLock to by key switch.
-- :speech_balloon: Updated tooltip appear style, :rocket: now faster (re)show, and timeout to hide to 20 sec.
-- :gem: Updated translation to dictionary style.
+- 💎 Added support for getconkbl.dll, which adds support for console apps right layout recognition. ONLY x86 version of both(Mahou and getconkbl.dll) are supported. (you can get dll from [here]( https://github.com/Elfy/getconkbl), put it in directory where Mahou.exe is)
+- 🐛 Fixed some clipboard restore issues.
+- 💎 Added Shift+CapsLock to by key switch.
+- 💬 Updated tooltip appear style, 🚀 now faster (re)show, and timeout to hide to 20 sec.
+- 💎 Updated translation to dictionary style.
 
 **v2.1.1.2~v2.1.1.6**<br/>
 - Updated wiki.
@@ -511,11 +516,15 @@ Even selected text switches just between **selected** layouts, though if you lik
 
 ### Hotkeys
 - <kbd>Pause</kbd> - Convert last input.
+- <kbd>Scroll</kbd> - Convert selection.
 - <kbd>Shift</kbd>+<kbd>Pause</kbd> - Convert last inputted line.
 - <kbd>Scroll</kbd> - Convert selected text.
-- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>Insert</kbd> - To toggle configs windows visibility.
-- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>F12</kbd> - To exit Mahou.
-- [More...](https://github.com/BladeMight/Mahou/wiki/Functions-list#hotkeys)
+- <kbd>Shift</kbd>+<kbd>F11</kbd> - Convert multiple last words, to select quantity press 1-9(0 = 10) after hotkey on keyboard(not NumPad)..
+- <kbd>Shift</kbd>+<kbd>F9</kbd> - Toggle language panel visibility.
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>Win</kbd>+<kbd>Insert</kbd> - To toggle configs windows visibility.
+- <kbd>Shift</kbd>+<kbd>Alt</kbd><kbd>PageUp</kbd> - Restart Mahou.
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>Win</kbd>+<kbd>F12</kbd> - To exit Mahou.
+- Other hotkeys disabled by default or have description in Mahou.
 
 ### [Download or view release notes.](https://github.com/BladeMight/Mahou/releases)
 
@@ -528,7 +537,7 @@ Check out [Mahou Wiki](https://github.com/BladeMight/Mahou/wiki).
 Mahou is under GPL v2+
 
 ### Contact
-If you found an issue write [here](https://github.com/BladeMight/Mahou/issues)
+If you found an issue or have an idea how to improve Mahou write [here](https://github.com/BladeMight/Mahou/issues)
 or contact me though [email](mailto:BladeMight@gmail.com) (You can ask anything)
 
 ### Donate
