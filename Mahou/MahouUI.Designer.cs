@@ -169,6 +169,10 @@ namespace Mahou
 		private System.Windows.Forms.ComboBox cbb_UpdatesChannel;
 		private System.Windows.Forms.CheckBox chk_SpinnetSpaceAfter;
 		private System.Windows.Forms.CheckBox chk_SnippetsSwitchToGuessLayout;
+		private System.Windows.Forms.Label lbl_AutoStartArrow;
+		private System.Windows.Forms.ComboBox cbb_AutostartType;
+		private System.Windows.Forms.Label lbl_TaskExist;
+		private System.Windows.Forms.Label lbl_LinkExist;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -192,6 +196,10 @@ namespace Mahou
 			this.components = new System.ComponentModel.Container();
 			this.tabs = new System.Windows.Forms.TabControl();
 			this.tab_functions = new System.Windows.Forms.TabPage();
+			this.lbl_TaskExist = new System.Windows.Forms.Label();
+			this.lbl_LinkExist = new System.Windows.Forms.Label();
+			this.lbl_AutoStartArrow = new System.Windows.Forms.Label();
+			this.cbb_AutostartType = new System.Windows.Forms.ComboBox();
 			this.chk_OneLayoutWholeWord = new System.Windows.Forms.CheckBox();
 			this.lnk_plugin = new System.Windows.Forms.LinkLabel();
 			this.chk_MCDS_support = new System.Windows.Forms.CheckBox();
@@ -295,6 +303,7 @@ namespace Mahou
 			this.lbl_LangTTMouseRefreshRate = new System.Windows.Forms.Label();
 			this.chk_Change1KeyL = new System.Windows.Forms.CheckBox();
 			this.tab_snippets = new System.Windows.Forms.TabPage();
+			this.chk_SnippetsSwitchToGuessLayout = new System.Windows.Forms.CheckBox();
 			this.chk_SpinnetSpaceAfter = new System.Windows.Forms.CheckBox();
 			this.txt_Snippets = new Mahou.MahouUI.TextBoxCA();
 			this.chk_Snippets = new System.Windows.Forms.CheckBox();
@@ -351,7 +360,6 @@ namespace Mahou
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
 			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
-			this.chk_SnippetsSwitchToGuessLayout = new System.Windows.Forms.CheckBox();
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -414,6 +422,10 @@ namespace Mahou
 			// 
 			// tab_functions
 			// 
+			this.tab_functions.Controls.Add(this.lbl_TaskExist);
+			this.tab_functions.Controls.Add(this.lbl_LinkExist);
+			this.tab_functions.Controls.Add(this.lbl_AutoStartArrow);
+			this.tab_functions.Controls.Add(this.cbb_AutostartType);
 			this.tab_functions.Controls.Add(this.chk_OneLayoutWholeWord);
 			this.tab_functions.Controls.Add(this.lnk_plugin);
 			this.tab_functions.Controls.Add(this.chk_MCDS_support);
@@ -438,10 +450,49 @@ namespace Mahou
 			this.tab_functions.Text = "Functions";
 			this.tab_functions.UseVisualStyleBackColor = true;
 			// 
+			// lbl_TaskExist
+			// 
+			this.lbl_TaskExist.AutoSize = true;
+			this.lbl_TaskExist.ForeColor = System.Drawing.Color.RoyalBlue;
+			this.lbl_TaskExist.Location = new System.Drawing.Point(269, 16);
+			this.lbl_TaskExist.Name = "lbl_TaskExist";
+			this.lbl_TaskExist.Size = new System.Drawing.Size(14, 15);
+			this.lbl_TaskExist.TabIndex = 19;
+			this.lbl_TaskExist.Text = "T";
+			this.lbl_TaskExist.Visible = false;
+			// 
+			// lbl_LinkExist
+			// 
+			this.lbl_LinkExist.AutoSize = true;
+			this.lbl_LinkExist.ForeColor = System.Drawing.Color.DarkOrange;
+			this.lbl_LinkExist.Location = new System.Drawing.Point(260, 16);
+			this.lbl_LinkExist.Name = "lbl_LinkExist";
+			this.lbl_LinkExist.Size = new System.Drawing.Size(13, 15);
+			this.lbl_LinkExist.TabIndex = 18;
+			this.lbl_LinkExist.Text = "L";
+			this.lbl_LinkExist.Visible = false;
+			// 
+			// lbl_AutoStartArrow
+			// 
+			this.lbl_AutoStartArrow.AutoSize = true;
+			this.lbl_AutoStartArrow.Location = new System.Drawing.Point(281, 15);
+			this.lbl_AutoStartArrow.Name = "lbl_AutoStartArrow";
+			this.lbl_AutoStartArrow.Size = new System.Drawing.Size(20, 15);
+			this.lbl_AutoStartArrow.TabIndex = 17;
+			this.lbl_AutoStartArrow.Text = "->";
+			// 
+			// cbb_AutostartType
+			// 
+			this.cbb_AutostartType.FormattingEnabled = true;
+			this.cbb_AutostartType.Location = new System.Drawing.Point(302, 12);
+			this.cbb_AutostartType.Name = "cbb_AutostartType";
+			this.cbb_AutostartType.Size = new System.Drawing.Size(247, 23);
+			this.cbb_AutostartType.TabIndex = 16;
+			// 
 			// chk_OneLayoutWholeWord
 			// 
 			this.chk_OneLayoutWholeWord.AutoSize = true;
-			this.chk_OneLayoutWholeWord.Location = new System.Drawing.Point(302, 116);
+			this.chk_OneLayoutWholeWord.Location = new System.Drawing.Point(302, 141);
 			this.chk_OneLayoutWholeWord.Name = "chk_OneLayoutWholeWord";
 			this.chk_OneLayoutWholeWord.Size = new System.Drawing.Size(220, 19);
 			this.chk_OneLayoutWholeWord.TabIndex = 15;
@@ -452,7 +503,7 @@ namespace Mahou
 			// lnk_plugin
 			// 
 			this.lnk_plugin.AutoSize = true;
-			this.lnk_plugin.Location = new System.Drawing.Point(493, 92);
+			this.lnk_plugin.Location = new System.Drawing.Point(493, 117);
 			this.lnk_plugin.Name = "lnk_plugin";
 			this.lnk_plugin.Size = new System.Drawing.Size(63, 15);
 			this.lnk_plugin.TabIndex = 14;
@@ -463,7 +514,7 @@ namespace Mahou
 			// chk_MCDS_support
 			// 
 			this.chk_MCDS_support.AutoSize = true;
-			this.chk_MCDS_support.Location = new System.Drawing.Point(302, 91);
+			this.chk_MCDS_support.Location = new System.Drawing.Point(302, 116);
 			this.chk_MCDS_support.Name = "chk_MCDS_support";
 			this.chk_MCDS_support.Size = new System.Drawing.Size(144, 19);
 			this.chk_MCDS_support.TabIndex = 13;
@@ -483,7 +534,7 @@ namespace Mahou
 			// chk_FlagsInTray
 			// 
 			this.chk_FlagsInTray.AutoSize = true;
-			this.chk_FlagsInTray.Location = new System.Drawing.Point(302, 41);
+			this.chk_FlagsInTray.Location = new System.Drawing.Point(302, 66);
 			this.chk_FlagsInTray.Name = "chk_FlagsInTray";
 			this.chk_FlagsInTray.Size = new System.Drawing.Size(201, 19);
 			this.chk_FlagsInTray.TabIndex = 11;
@@ -493,7 +544,7 @@ namespace Mahou
 			// chk_CapsLockDTimer
 			// 
 			this.chk_CapsLockDTimer.AutoSize = true;
-			this.chk_CapsLockDTimer.Location = new System.Drawing.Point(302, 16);
+			this.chk_CapsLockDTimer.Location = new System.Drawing.Point(302, 41);
 			this.chk_CapsLockDTimer.Name = "chk_CapsLockDTimer";
 			this.chk_CapsLockDTimer.Size = new System.Drawing.Size(204, 19);
 			this.chk_CapsLockDTimer.TabIndex = 10;
@@ -514,7 +565,7 @@ namespace Mahou
 			// chk_StartupUpdatesCheck
 			// 
 			this.chk_StartupUpdatesCheck.AutoSize = true;
-			this.chk_StartupUpdatesCheck.Location = new System.Drawing.Point(302, 66);
+			this.chk_StartupUpdatesCheck.Location = new System.Drawing.Point(302, 91);
 			this.chk_StartupUpdatesCheck.Name = "chk_StartupUpdatesCheck";
 			this.chk_StartupUpdatesCheck.Size = new System.Drawing.Size(178, 19);
 			this.chk_StartupUpdatesCheck.TabIndex = 8;
@@ -1635,6 +1686,16 @@ namespace Mahou
 			this.tab_snippets.Text = "Snippets";
 			this.tab_snippets.UseVisualStyleBackColor = true;
 			// 
+			// chk_SnippetsSwitchToGuessLayout
+			// 
+			this.chk_SnippetsSwitchToGuessLayout.AutoSize = true;
+			this.chk_SnippetsSwitchToGuessLayout.Location = new System.Drawing.Point(8, 31);
+			this.chk_SnippetsSwitchToGuessLayout.Name = "chk_SnippetsSwitchToGuessLayout";
+			this.chk_SnippetsSwitchToGuessLayout.Size = new System.Drawing.Size(216, 19);
+			this.chk_SnippetsSwitchToGuessLayout.TabIndex = 4;
+			this.chk_SnippetsSwitchToGuessLayout.Text = "Switch to guess layout after snippet.";
+			this.chk_SnippetsSwitchToGuessLayout.UseVisualStyleBackColor = true;
+			// 
 			// chk_SpinnetSpaceAfter
 			// 
 			this.chk_SpinnetSpaceAfter.AutoSize = true;
@@ -2273,16 +2334,6 @@ namespace Mahou
 			this.HelpMeUnderstand.ShowAlways = true;
 			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.HelpMeUnderstand.Popup += new System.Windows.Forms.PopupEventHandler(this.HelpMeUnderstandPopup);
-			// 
-			// chk_SnippetsGuessLayout
-			// 
-			this.chk_SnippetsSwitchToGuessLayout.AutoSize = true;
-			this.chk_SnippetsSwitchToGuessLayout.Location = new System.Drawing.Point(8, 31);
-			this.chk_SnippetsSwitchToGuessLayout.Name = "chk_SnippetsGuessLayout";
-			this.chk_SnippetsSwitchToGuessLayout.Size = new System.Drawing.Size(216, 19);
-			this.chk_SnippetsSwitchToGuessLayout.TabIndex = 4;
-			this.chk_SnippetsSwitchToGuessLayout.Text = "Switch to guess layout after snippet.";
-			this.chk_SnippetsSwitchToGuessLayout.UseVisualStyleBackColor = true;
 			// 
 			// MahouUI
 			// 

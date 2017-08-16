@@ -22,6 +22,7 @@ namespace Mahou
             CheckBool("FirstStart", "First", "true");
         	#endregion
             #region Functions section
+            CheckBool("Functions", "AutoStartAsAdmin", "false");
             CheckBool("Functions", "TrayIconVisible", "true");
             CheckBool("Functions", "ConvertSelectionLayoutSwitching", "false");
             CheckBool("Functions", "ReSelect", "true");

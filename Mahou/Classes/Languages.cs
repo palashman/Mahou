@@ -15,6 +15,8 @@ public class Languages
 		#endregion
 		#region Functions
 		AutoStart,
+		CreateTask,
+		CreateShortcut,
 		TrayIcon,
 		ConvertSelectionLS,
 		ReSelect,
@@ -196,7 +198,9 @@ public class Languages
 		{ Element.tab_About, "About" }, 
 		#endregion
 		#region Functions
-		{ Element.AutoStart, "Start with Windows(as Administrator)." }, 
+		{ Element.AutoStart, "Start with Windows." }, 
+		{ Element.CreateTask, "Create task (will run as Administrator)."},
+		{ Element.CreateShortcut, "Create shortcut in startup folder."},
 		{ Element.TrayIcon, "Show tray icon." }, 
 		{ Element.ConvertSelectionLS, "Convert selection layout switching." }, 
 		{ Element.ReSelect, "Re-select text after conversion." }, 
@@ -403,7 +407,9 @@ public class Languages
 		{ Element.tab_About, "О..." }, 
 		#endregion
 		#region Functions
-		{ Element.AutoStart, "Запускать с Windows(от Администратора)." }, 
+		{ Element.AutoStart, "Запускать с Windows" }, 
+		{ Element.CreateTask, "Создать задачу (от Администртора)."},
+		{ Element.CreateShortcut, "Создать ярлык в папке авто-запуска."},
 		{ Element.TrayIcon, "Показывать иконку в трее." }, 
 		{ Element.ConvertSelectionLS, "Смена раскладки в Конверт выделения." }, 
 		{ Element.ReSelect, "Выделять заново текст после конвертации." }, 

@@ -28,7 +28,7 @@ namespace Mahou {
 		/// </summary>
 		public static string nPath = AppDomain.CurrentDomain.BaseDirectory;
 		public static bool LoggingEnabled, dummy, CapsLockDisablerTimer, LangPanelUpperArrow, mouseLTUpperArrow, caretLTUpperArrow,
-						   ShiftInHotkey, AltInHotkey, CtrlInHotkey, WinInHotkey;
+						   ShiftInHotkey, AltInHotkey, CtrlInHotkey, WinInHotkey, AutoStartAsAdmin;
 		static string[] UpdInfo;
 		static bool updating, was, isold = true, checking;
 		static Timer tmr = new Timer();
@@ -535,13 +535,15 @@ fso.DeleteFile(WScript.ScriptFullName)";
 		/// Saves current settings to INI.
 		/// </summary>
 		void SaveConfigs() {
+			MMain.MyConfs.Write("Functions", "AutoStartAsAdmin", (cbb_AutostartType.SelectedIndex != 0).ToString());
+			AutoStartAsAdmin = (cbb_AutostartType.SelectedIndex != 0);
 			if (chk_AutoStart.Checked) {
-				if (!StartupTaskExist())
-					CreateStartupTask();
+				if (!AutoStartExist(AutoStartAsAdmin))
+					CreateAutoStart();
 			}
 			else {
-				if(StartupTaskExist())
-					DeleteShortcut();
+				if(AutoStartExist(AutoStartAsAdmin))
+					AutoStartRemove(AutoStartAsAdmin);
 			}
 			var tmpLangTTAppearenceIndex = lsb_LangTTAppearenceForList.SelectedIndex;
 			var tmpHotkeysIndex = lsb_Hotkeys.SelectedIndex;
@@ -659,7 +661,10 @@ fso.DeleteFile(WScript.ScriptFullName)";
 			InitLanguage();
 			RefreshLanguage();
 			#region Functions
-			chk_AutoStart.Checked = StartupTaskExist();
+			AutoStartAsAdmin = MMain.MyConfs.ReadBool("Functions", "AutoStartAsAdmin");
+			chk_AutoStart.Checked = AutoStartExist(AutoStartAsAdmin);
+			lbl_TaskExist.Visible = AutoStartExist(true);
+			lbl_LinkExist.Visible = AutoStartExist(false);
 			TrayIconVisible = chk_TrayIcon.Checked = MMain.MyConfs.ReadBool("Functions", "TrayIconVisible");
 			ConvertSelectionLS = chk_CSLayoutSwitching.Checked = MMain.MyConfs.ReadBool("Functions", "ConvertSelectionLayoutSwitching");
 			ReSelect = chk_ReSelect.Checked = MMain.MyConfs.ReadBool("Functions", "ReSelect");
@@ -788,6 +793,7 @@ fso.DeleteFile(WScript.ScriptFullName)";
 		/// Refreshes comboboxes items.
 		/// </summary>
 		void RefreshComboboxes() {
+			cbb_AutostartType.SelectedIndex = AutoStartAsAdmin ? 1 : 0;
 			cbb_UpdatesChannel.SelectedIndex = cbb_UpdatesChannel.Items.IndexOf(MMain.MyConfs.Read("Updates", "Channel"));
 			MMain.locales = Locales.AllList();
 			cbb_Layout1.Items.Clear();
@@ -1385,46 +1391,92 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				langPanelRefresh.Start();
 		}
 		/// <summary>
-		/// Creates startup shortcut v3.0 now creates task in TaskScheduler.
+		/// Creates startup shortcut/task v3.0+v2.0.
 		/// </summary>
-		void CreateStartupTask() {
-			var import_task = new ProcessStartInfo();
-			import_task.Verb = "runas";
-			File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "MahouStartupTaskImport.vbs", task_import_vbs);
-			import_task.FileName = "wscript.exe";
-			import_task.WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory;
-			import_task.Arguments = AppDomain.CurrentDomain.BaseDirectory + "MahouStartupTaskImport.vbs" + " " + AppDomain.CurrentDomain.BaseDirectory;
-			Process.Start(import_task);
-			Logging.Log("Startup task created.");
-		}
-		bool StartupTaskExist() {
-			var pif = new Process {
-				StartInfo = new ProcessStartInfo {
-					FileName = "cmd.exe",
-					Arguments = "/c schtasks.exe /query /TN MahouAutoStart+ >NUL 2>&1 && echo Y",
-					RedirectStandardOutput = true,
-					CreateNoWindow = true,
-					UseShellExecute = false
-				}
-			};
-			pif.Start();
-			while (!pif.StandardOutput.EndOfStream) {
-				return pif.StandardOutput.ReadLine().Contains("Y");
+		void CreateAutoStart() {
+			if (AutoStartAsAdmin) {
+				var import_task = new ProcessStartInfo();
+				import_task.Verb = "runas";
+				File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "MahouStartupTaskImport.vbs", task_import_vbs);
+				import_task.FileName = "wscript.exe";
+				import_task.WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory;
+				import_task.Arguments = AppDomain.CurrentDomain.BaseDirectory + "MahouStartupTaskImport.vbs" + " " + AppDomain.CurrentDomain.BaseDirectory;
+				Process.Start(import_task);
+//				if (AutoStartExist(false))
+//					AutoStartRemove(false);
+				Logging.Log("Startup task created.");
+			} else {
+				var exelocation = Assembly.GetExecutingAssembly().Location;
+	 			var shortcutLocation = Path.Combine(
+	 				                       Environment.GetFolderPath(Environment.SpecialFolder.Startup),
+	 				                       "Mahou.lnk");
+	 			if (File.Exists(shortcutLocation))
+	 				return;
+	 			Type t = Type.GetTypeFromCLSID(new Guid("72C24DD5-D70A-438B-8A42-98424B88AFB8")); //Windows Script Host Shell Object
+	 			dynamic shell = Activator.CreateInstance(t);
+	 			try {
+	 				var lnk = shell.CreateShortcut(shortcutLocation);
+	 				try {
+	 					lnk.TargetPath = exelocation;
+	 					lnk.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+	 					lnk.IconLocation = exelocation + ", 0";
+	 					lnk.Description = "Mahou - Magic layout switcher";
+	 					lnk.Save();
+	 				} finally {
+	 					Marshal.FinalReleaseComObject(lnk);
+	 				}
+				} finally {
+					Marshal.FinalReleaseComObject(shell);
+	 			}
+//				if (AutoStartExist(true))
+//					AutoStartRemove(true);
+				Logging.Log("Startup shortcut created.");
 			}
-			return false;
+		}
+		bool AutoStartExist(bool admin) {
+			if (admin) {
+				var pif = new Process {
+					StartInfo = new ProcessStartInfo {
+						FileName = "cmd.exe",
+						Arguments = "/c schtasks.exe /query /TN MahouAutoStart+ >NUL 2>&1 && echo Y",
+						RedirectStandardOutput = true,
+						CreateNoWindow = true,
+						UseShellExecute = false
+					}
+				};
+				pif.Start();
+				while (!pif.StandardOutput.EndOfStream) {
+					return pif.StandardOutput.ReadLine().Contains("Y");
+				}
+				return false;
+			}
+			return File.Exists(Path.Combine(
+				    Environment.GetFolderPath(Environment.SpecialFolder.Startup),
+				    "Mahou.lnk"));
 		}
 		/// <summary>
-		/// Deletes startup shortcut.
+		/// Remove startup with Windows.
 		/// </summary>
-		void DeleteShortcut() {
-			var import_task = new ProcessStartInfo();
-			import_task.Verb = "runas";
-			File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "MahouStartupTaskImport.vbs", task_import_vbs);
-			import_task.FileName = "wscript.exe";
-			import_task.WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory;
-			import_task.Arguments = AppDomain.CurrentDomain.BaseDirectory + "MahouStartupTaskImport.vbs" + " " + AppDomain.CurrentDomain.BaseDirectory + " REM";
-			Process.Start(import_task);
-			Logging.Log("Startup task removed.");
+		void AutoStartRemove(bool admin) {
+			if (admin) {
+				var import_task = new ProcessStartInfo();
+				import_task.Verb = "runas";
+				File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "MahouStartupTaskImport.vbs", task_import_vbs);
+				import_task.FileName = "wscript.exe";
+				import_task.WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory;
+				import_task.Arguments = AppDomain.CurrentDomain.BaseDirectory + "MahouStartupTaskImport.vbs" + " " + AppDomain.CurrentDomain.BaseDirectory + " REM";
+				Process.Start(import_task);
+				Logging.Log("Startup task removed.");
+			} else {
+				if (File.Exists(Path.Combine(
+					    Environment.GetFolderPath(Environment.SpecialFolder.Startup),
+					    "Mahou.lnk"))) {
+					File.Delete(Path.Combine(
+						Environment.GetFolderPath(Environment.SpecialFolder.Startup),
+						"Mahou.lnk"));
+				}
+				Logging.Log("Startup shortcut removed.");
+			}
 		}
 		/// <summary>
 		/// Exits Mahou.
@@ -2093,6 +2145,11 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			#endregion
 			#region Functions
 			chk_AutoStart.Text = MMain.Lang[Languages.Element.AutoStart];
+			cbb_AutostartType.Items.Clear();
+			cbb_AutostartType.Items.AddRange(new [] { 
+			                                 	MMain.Lang[Languages.Element.CreateShortcut],
+			                                 	MMain.Lang[Languages.Element.CreateTask]
+			                                 });
 			chk_TrayIcon.Text = MMain.Lang[Languages.Element.TrayIcon];
 			chk_CSLayoutSwitching.Text = MMain.Lang[Languages.Element.ConvertSelectionLS];
 			chk_ReSelect.Text = MMain.Lang[Languages.Element.ReSelect];
