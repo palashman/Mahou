@@ -1018,29 +1018,30 @@ namespace Mahou
 		/// <summary>
 		/// Re-presses modifiers you hold when hotkey fired(due to SendModsUp()).
 		/// </summary>
-		public static void RePress() 
-		{
-			//Repress's modifiers by RePress variables
-			if (shiftRP) {
-				KeybdEvent(Keys.LShiftKey, 0);
-				swas = true;
-				shiftRP = false;
-			}
-			if (altRP) {
-				KeybdEvent(Keys.LMenu, 0);
-				awas = true;
-				altRP = false;
-			}
-			if (ctrlRP) {
-				KeybdEvent(Keys.LControlKey, 0);
-				cwas = true;
-				ctrlRP = false;
-			}
-			if (winRP) {
-				KeybdEvent(Keys.LWin, 0);
-				wwas = true;
-				winRP = false;
-			}
+		public static void RePress()  {
+			DoSelf(() => {
+				//Repress's modifiers by RePress variables
+				if (shiftRP) {
+					KeybdEvent(Keys.LShiftKey, 0);
+					swas = true;
+					shiftRP = false;
+				}
+				if (altRP) {
+					KeybdEvent(Keys.LMenu, 0);
+					awas = true;
+					altRP = false;
+				}
+				if (ctrlRP) {
+					KeybdEvent(Keys.LControlKey, 0);
+					cwas = true;
+					ctrlRP = false;
+				}
+				if (winRP) {
+					KeybdEvent(Keys.LWin, 0);
+					wwas = true;
+					winRP = false;
+				}
+			       });
 		}
 		/// <summary>
 		/// Do action without RawInput listeners(e.g. not catch).
