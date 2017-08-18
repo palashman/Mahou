@@ -2078,7 +2078,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 						           "<ul class=\"release-downloads\">\n.*<li>\n.+href=\"(/.*\\.\\w{3})").Groups[1].Value;
 					var Commit = "";
 					if (beta) {
-						Commit = (Regex.Match(Title, @"\[(.+)\]").Groups[1].Value);
+						Commit = (Regex.Match(Title, @"\(\[?(.+?)(\]|\s)").Groups[1].Value);
 						Link = "https://github.com/BladeMight/Mahou/releases/download/latest-commit/Release_x86_x64.zip";
 					}
 //					Debug.WriteLine(Title);
