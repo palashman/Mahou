@@ -12,7 +12,8 @@ namespace Mahou
 		public static extern uint RegisterWindowMessage(string message);
 		#endregion
 		#region Prevent another instance variables
-		public const string appGUid = "ec511418-1d57-4dbe-a0c3-c6022b33735b";
+		/// GGPU = Global GUID PC User
+		public static string GGPU_Mutex = "Global\\" +"ec511418-1d57-4dbe-a0c3-c6022b33735b_" + Environment.UserDomainName + "_" + Environment.UserName;
 		public static uint ao = RegisterWindowMessage("AlderyOpenedMahou!");
 		#endregion
 		#region All Main variables, arrays etc.
@@ -39,7 +40,7 @@ namespace Mahou
 				Logging.Log("Unexpected error occurred, Mahou exited, error details:\r\n" + e.Message+"\r\n" + e.StackTrace, 1);
 			};
 			Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
-			using (var mutex = new Mutex(false, "Global\\" + appGUid)) {
+			using (var mutex = new Mutex(false, GGPU_Mutex)) {
 				if (!mutex.WaitOne(0, false)) {
 					WinAPI.PostMessage((IntPtr)0xffff, ao, 0, 0);
 					return;
