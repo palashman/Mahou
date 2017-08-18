@@ -19,7 +19,6 @@ namespace Mahou
 			clickAfterCTRL, clickAfterALT, clickAfterSHIFT,
 			hotkeywithmodsfired, csdoing, incapt, waitfornum, 
 			IsHotkey, ff_wheeled;
-		static int ignoreLCtrl = 0;
 		static string lastClipText = "";
 		static List<Keys> tempNumpads = new List<Keys>();
 		static List<char> c_snip = new List<char>();
@@ -536,15 +535,10 @@ namespace Mahou
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
 							}
-							if (ignoreLCtrl >= 1 && Key == Keys.LControlKey) {
-								ignoreLCtrl--;
-								Logging.Log("Ignored LCtrl via PostMessage bug.");
-							} else {
-								if (specificKey == 2 && Key == Keys.LControlKey && !keyAfterCTRL) {
-									Logging.Log("Switching to specific layout by  LCtrl key.");
-									ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
-									matched = true;
-								}
+							if (specificKey == 2 && Key == Keys.LControlKey && !keyAfterCTRL) {
+								Logging.Log("Switching to specific layout by  LCtrl key.");
+								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
+								matched = true;
 							}
 							if (specificKey == 3 && Key == Keys.RControlKey && !keyAfterCTRL) {
 								Logging.Log("Switching to specific layout by RCtrl key.");
@@ -1204,7 +1198,6 @@ namespace Mahou
 		}
 		public static void ChangeToLayout(IntPtr hwnd, uint LayoutId, bool lc_fix = false) {
 			WinAPI.PostMessage(hwnd, WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, LayoutId);
-			ignoreLCtrl = 1;
 			MahouUI.currentLayout = MahouUI.GlobalLayout = LayoutId;
 //			if (lc_fix) {
 //				var latest_self = self;
