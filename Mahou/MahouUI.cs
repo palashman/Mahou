@@ -683,6 +683,14 @@ namespace Mahou {
 			Layout2 = MMain.MyConfs.Read("Layouts", "SpecificLayout2");
 			Layout3 = MMain.MyConfs.Read("Layouts", "SpecificLayout3");
 			Layout4 = MMain.MyConfs.Read("Layouts", "SpecificLayout4");
+			TestLayout(Layout1, 1);
+			TestLayout(Layout2, 2);
+			TestLayout(Layout3, 3);
+			TestLayout(Layout4, 4);
+			Layout1 = MMain.MyConfs.Read("Layouts", "SpecificLayout1");
+			Layout2 = MMain.MyConfs.Read("Layouts", "SpecificLayout2");
+			Layout3 = MMain.MyConfs.Read("Layouts", "SpecificLayout3");
+			Layout4 = MMain.MyConfs.Read("Layouts", "SpecificLayout4");
 			Key1 = MMain.MyConfs.ReadInt("Layouts", "SpecificKey1");
 			Key2 = MMain.MyConfs.ReadInt("Layouts", "SpecificKey2");
 			Key3 = MMain.MyConfs.ReadInt("Layouts", "SpecificKey3");
@@ -774,6 +782,12 @@ namespace Mahou {
 			}
 			Memory.Flush();
 			Logging.Log("All configurations loaded.");
+		}
+		void TestLayout(string layout, int id) {
+			if ((layout == Languages.English[Languages.Element.SwitchBetween] && MMain.Lang == Languages.Russian) ||
+			    (layout == Languages.Russian[Languages.Element.SwitchBetween] && MMain.Lang == Languages.English)) {
+				MMain.MyConfs.Write("Layouts", "SpecificLayout" + id, MMain.Lang[Languages.Element.SwitchBetween]);
+			}
 		}
 		/// <summary>
 		/// Refreshes comboboxes items.
