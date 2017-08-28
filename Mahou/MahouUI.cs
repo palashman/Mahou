@@ -613,16 +613,16 @@ namespace Mahou {
 			#endregion
 			#region Snippets
 			MMain.MyConfs.Write("Snippets", "SnippetsEnabled", chk_Snippets.Checked.ToString());
-			MMain.MyConfs.Write("Snippets", "SpaceAfter", chk_SpinnetSpaceAfter.Checked.ToString());
+			MMain.MyConfs.Write("Snippets", "SpaceAfter", chk_SnippetsSpaceAfter.Checked.ToString());
 			MMain.MyConfs.Write("Snippets", "SwitchToGuessLayout", chk_SnippetsSwitchToGuessLayout.Checked.ToString());
 			if (chk_Snippets.Checked)
 				File.WriteAllText(snipfile, txt_Snippets.Text);
 			#endregion
 			#region AutoSwitch
-			MMain.MyConfs.Write("AutoSwitch", "Enabled", chk_AutoSwitchEnabled.Checked.ToString());
+			MMain.MyConfs.Write("AutoSwitch", "Enabled", chk_AutoSwitch.Checked.ToString());
 			MMain.MyConfs.Write("AutoSwitch", "SpaceAfter", chk_AutoSwitchSpaceAfter.Checked.ToString());
 			MMain.MyConfs.Write("AutoSwitch", "SwitchToGuessLayout", chk_AutoSwitchSwitchToGuessLayout.Checked.ToString());
-			if (chk_AutoSwitchEnabled.Checked)
+			if (chk_AutoSwitch.Checked)
 				File.WriteAllText(AS_dictfile, txt_AutoSwitchDictionary.Text);
 			#endregion
 			#region Appearence & Hotkeys
@@ -756,18 +756,25 @@ namespace Mahou {
 			LangPanelUpperArrow = chk_LPUpperArrow.Checked = MMain.MyConfs.ReadBool("LangPanel", "UpperArrow");
 			#endregion
 			#region AutoSwitch
-			AutoSwitchEnabled = chk_AutoSwitchEnabled.Checked = MMain.MyConfs.ReadBool("AutoSwitch", "Enabled");
+			AutoSwitchEnabled = chk_AutoSwitch.Checked = MMain.MyConfs.ReadBool("AutoSwitch", "Enabled");
 			AutoSwitchSpaceAfter = chk_AutoSwitchSpaceAfter.Checked = MMain.MyConfs.ReadBool("AutoSwitch", "SpaceAfter");
 			AutoSwitchSwitchToGuessLayout = chk_AutoSwitchSwitchToGuessLayout.Checked = MMain.MyConfs.ReadBool("AutoSwitch", "SwitchToGuessLayout");
-			if (File.Exists(AS_dictfile))
+			if (File.Exists(AS_dictfile)) {
 				txt_AutoSwitchDictionary.Text = File.ReadAllText(AS_dictfile);
+				var snipc = GetSnippetsCount(txt_AutoSwitchDictionary.Text);
+				lbl_AutoSwitchWordsCount.Text = lbl_AutoSwitchWordsCount.Text.Split(' ')[0] + " "  + snipc.Item1 + ((snipc.Item2 == Color.Red) ? "?" : "");
+				lbl_AutoSwitchWordsCount.ForeColor = snipc.Item2;
+			}
 			#endregion
 			#region Snippets
 			SnippetsEnabled = chk_Snippets.Checked = MMain.MyConfs.ReadBool("Snippets", "SnippetsEnabled");
-			SnippetSpaceAfter = chk_SpinnetSpaceAfter.Checked = MMain.MyConfs.ReadBool("Snippets", "SpaceAfter");
+			SnippetSpaceAfter = chk_SnippetsSpaceAfter.Checked = MMain.MyConfs.ReadBool("Snippets", "SpaceAfter");
 			SnippetsSwitchToGuessLayout = chk_SnippetsSwitchToGuessLayout.Checked = MMain.MyConfs.ReadBool("Snippets", "SwitchToGuessLayout");
 			if (File.Exists(snipfile)) {
 				txt_Snippets.Text = File.ReadAllText(snipfile);
+				var snipc = GetSnippetsCount(txt_Snippets.Text);
+				lbl_SnippetsCount.Text = lbl_SnippetsCount.Text.Split(' ')[0] + " " + snipc.Item1 + ((snipc.Item2 == Color.Red) ? "?" : "");
+				lbl_SnippetsCount.ForeColor = snipc.Item2;
 				KMHook.DoLater.Tick += (_, __) => { KMHook.ReInitSnippets(); KMHook.DoLater.Stop(); };
 				KMHook.DoLater.Interval = 250;
 				KMHook.DoLater.Start();
@@ -800,6 +807,15 @@ namespace Mahou {
 			}
 			Memory.Flush();
 			Logging.Log("All configurations loaded.");
+		}
+		Tuple<int, Color> GetSnippetsCount(string snippets) {
+			var minlt = Regex.Matches(snippets, "->").Count;
+			var eq4lt = Regex.Matches(snippets, "====>").Count;
+			var rteq4 = Regex.Matches(snippets, "<====").Count;
+			Debug.WriteLine(minlt + " " + eq4lt + " " + rteq4);
+			if (minlt == eq4lt && minlt == rteq4)
+				return new Tuple<int, Color>(minlt, Color.Orange);
+			return new Tuple<int, Color>(minlt, Color.Red);
 		}
 		void TestLayout(string layout, int id) {
 			if ((layout == Languages.English[Languages.Element.SwitchBetween] && MMain.Lang == Languages.Russian) ||
@@ -887,7 +903,9 @@ namespace Mahou {
 				chk_LangTTMouseOnChange.Enabled = !chk_MouseTTAlways.Checked;
 			}
 			// Snippets tab
-			txt_Snippets.Enabled = chk_Snippets.Checked;
+			txt_Snippets.Enabled = chk_SnippetsSwitchToGuessLayout.Enabled = chk_SnippetsSpaceAfter.Enabled = chk_Snippets.Checked;
+			// Auto Switch tab
+			txt_AutoSwitchDictionary.Enabled = chk_AutoSwitchSwitchToGuessLayout.Enabled = chk_AutoSwitchSpaceAfter.Enabled = chk_AutoSwitch.Checked;
 			// Persistent Layout tab
 			txt_PersistentLayout1Processes.Enabled = lbl_PersistentLayout1Interval.Enabled = nud_PersistentLayout1Interval.Enabled =
 				chk_PersistentLayout1Active.Checked;
@@ -2073,15 +2091,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				was = true;
 			}
 		}
-		/// <summary>
-		/// Gets update info, and sets it to static [UpdInfo] string.
-		/// </summary>
-		void GetUpdateInfo() {
-			var Info = new List<string>(); // Update info
-			var url = "https://github.com/BladeMight/Mahou/releases/latest";
-			var beta = MMain.MyConfs.Read("Updates", "Channel") != "Stable";
-			if (beta) 
-				url = "https://github.com/BladeMight/Mahou/releases/tag/latest-commit";
+		string getResponce(string url) {
 			try {
 				var request = (HttpWebRequest)WebRequest.Create(url);
 				// For proxy
@@ -2091,42 +2101,89 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				request.ServicePoint.SetTcpKeepAlive(true, 5000, 1000);
                 var response = (HttpWebResponse)System.Threading.Tasks.Task.Factory
                     .FromAsync<WebResponse>(request.BeginGetResponse,request.EndGetResponse, null).Result;
-				//Console.WriteLine(response.StatusCode)
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
+                if (response.StatusCode == HttpStatusCode.OK) {
 					var data = new StreamReader(response.GetResponseStream(), true).ReadToEnd();
 					response.Close();
-					// Below are REGEX HTML PARSES!!
-					// I'm not kidding...
-					// They really works :)
-					var Title = Regex.Match(data,
-						            "<h1 class=\"release-title\">\n.*<a href=\".*\">(.*)</a>").Groups[1].Value;
-					var Description = Regex.Replace(Regex.Match(data,
-                                           //These looks unsafe, but really they works!
-						                  "<div class=\"markdown-body\">\n\\s+(.+?)[\\n\\s]+</div>",
-						                  RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value, "<[^>]*>", "");
-					var Version = Regex.Match(data, "<span class=\"css-truncate-target\">(.*)</span>").Groups[1].Value;
-					var Link = "https://github.com" + Regex.Match(data,
-						           "<ul class=\"release-downloads\">\n.*<li>\n.+href=\"(/.*\\.\\w{3})").Groups[1].Value;
-					var Commit = "";
-					if (beta) {
-						Commit = (Regex.Match(Title, @"\(\[?(.+?)(\]|\s)").Groups[1].Value);
-						Link = "https://github.com/BladeMight/Mahou/releases/download/latest-commit/Release_x86_x64.zip";
-					}
+					Logging.Log("Responce of url [" + url + "] succeded.");
+					return data;
+				}
+			    response.Close();
+			} catch(Exception e) {
+				Logging.Log("Responce of url [" + url + "] done with error, message:\r\n" + e.Message, 1);
+			}
+		    return null;
+			
+		}
+		void btn_UpdateAutoSwitchDictionary_Click(object sender, EventArgs e) {
+			btn_UpdateAutoSwitchDictionary.Text = MMain.Lang[Languages.Element.Checking];
+			var dict = Regex.Replace(getResponce("https://raw.githubusercontent.com/BladeMight/Mahou/master/AS_dict.txt"),
+			                         "\r?\n", Environment.NewLine);
+			tmr.Interval = 1200;
+			if (dict != null) {
+				btn_UpdateAutoSwitchDictionary.ForeColor = Color.BlueViolet;
+				btn_UpdateAutoSwitchDictionary.Text = "OK";
+				tmr.Tick += (o, oo) => { 
+					btn_UpdateAutoSwitchDictionary.Text = MMain.Lang[Languages.Element.AutoSwitchUpdateDictionary];
+					btn_UpdateAutoSwitchDictionary.ForeColor = Color.FromKnownColor(KnownColor.ControlText);
+					tmr.Stop();
+				};
+				tmr.Interval = 750;
+				tmr.Start();
+				this.txt_AutoSwitchDictionary.Invoke((MethodInvoker)delegate {
+	         		this.txt_AutoSwitchDictionary.Text = dict;
+				});
+				File.WriteAllText(AS_dictfile, dict);
+			} else {
+				btn_UpdateAutoSwitchDictionary.ForeColor = Color.OrangeRed;
+				btn_UpdateAutoSwitchDictionary.Text = MMain.Lang[Languages.Element.Error];
+				tmr.Tick += (o, oo) => { 
+					btn_UpdateAutoSwitchDictionary.Text = MMain.Lang[Languages.Element.AutoSwitchUpdateDictionary];
+					btn_UpdateAutoSwitchDictionary.ForeColor = Color.FromKnownColor(KnownColor.ControlText);
+					tmr.Stop(); 
+				};
+				tmr.Interval = 750;
+				tmr.Start();
+			}
+		}
+		/// <summary>
+		/// Gets update info, and sets it to static [UpdInfo] string.
+		/// </summary>
+		void GetUpdateInfo() {
+			var Info = new List<string>(); // Update info
+			var url = "https://github.com/BladeMight/Mahou/releases/latest";
+			var beta = MMain.MyConfs.Read("Updates", "Channel") != "Stable";
+			if (beta) 
+				url = "https://github.com/BladeMight/Mahou/releases/tag/latest-commit";
+			var data = getResponce(url);
+			if (!String.IsNullOrEmpty(data)) {
+				// Below are REGEX HTML PARSES!!
+				// I'm not kidding...
+				// They really works :)
+				var Title = Regex.Match(data,
+					            "<h1 class=\"release-title\">\n.*<a href=\".*\">(.*)</a>").Groups[1].Value;
+				var Description = Regex.Replace(Regex.Match(data,
+                                       //These looks unsafe, but really they works!
+					                  "<div class=\"markdown-body\">\n\\s+(.+?)[\\n\\s]+</div>",
+					                  RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value, "<[^>]*>", "");
+				var Version = Regex.Match(data, "<span class=\"css-truncate-target\">(.*)</span>").Groups[1].Value;
+				var Link = "https://github.com" + Regex.Match(data,
+					           "<ul class=\"release-downloads\">\n.*<li>\n.+href=\"(/.*\\.\\w{3})").Groups[1].Value;
+				var Commit = "";
+				if (beta) {
+					Commit = (Regex.Match(Title, @"\(\[?(.+?)(\]|\s)").Groups[1].Value);
+					Link = "https://github.com/BladeMight/Mahou/releases/download/latest-commit/Release_x86_x64.zip";
+				}
 //					Debug.WriteLine(Title);
 //					Debug.WriteLine(Description);
-					Info.Add(Title);
-					Info.Add(Regex.Replace(Description, "\n", "\r\n")); // Regex needed to properly display new lines.
-					Info.Add(Version);
-					Info.Add(Link);
-					if (Commit != "")
-						Info.Add(Commit);
-					Logging.Log("Check for updates succeded, GitHub version/commit: "+ (beta ? Commit : Version) + ".");
-				} else {
-				   response.Close();
-				}
-			} catch {
-				Logging.Log("Check for updates failed, error message:", 1);
+				Info.Add(Title);
+				Info.Add(Regex.Replace(Description, "\n", "\r\n")); // Regex needed to properly display new lines.
+				Info.Add(Version);
+				Info.Add(Link);
+				if (Commit != "")
+					Info.Add(Commit);
+				Logging.Log("Check for updates succeded, GitHub version/commit: "+ (beta ? Commit : Version) + ".");
+			} else {
+				Logging.Log("Check for updates failed, error above.", 1);
 				Info = new List<string>{
 						MMain.Lang[Languages.Element.Error],
 						MMain.Lang[Languages.Element.NetError],
@@ -2206,6 +2263,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			tab_appearence.Text = MMain.Lang[Languages.Element.tab_Appearence];
 			tab_timings.Text = MMain.Lang[Languages.Element.tab_Timings];
 			tab_snippets.Text = MMain.Lang[Languages.Element.tab_Snippets];
+			tab_autoswitch.Text = MMain.Lang[Languages.Element.tab_AutoSwitch];
 			tab_hotkeys.Text = MMain.Lang[Languages.Element.tab_Hotkeys];
 			tab_updates.Text = MMain.Lang[Languages.Element.tab_Updates];
 			tab_LangPanel.Text =  MMain.Lang[Languages.Element.tab_LangPanel];
@@ -2292,8 +2350,17 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			#endregion
 			#region Snippets
 			chk_Snippets.Text = MMain.Lang[Languages.Element.SnippetsEnabled];
-			chk_SpinnetSpaceAfter.Text = MMain.Lang[Languages.Element.SnippetSpaceAfter];
+			chk_SnippetsSpaceAfter.Text = MMain.Lang[Languages.Element.SnippetSpaceAfter];
 			chk_SnippetsSwitchToGuessLayout.Text = MMain.Lang[Languages.Element.SnippetSwitchToGuessLayout];
+			lbl_SnippetsCount.Text = MMain.Lang[Languages.Element.SnippetsCount];
+			#endregion
+			#region AutoSwitch
+			chk_AutoSwitch.Text = MMain.Lang[Languages.Element.AutoSwitchEnabled];
+			chk_AutoSwitchSpaceAfter.Text = MMain.Lang[Languages.Element.AutoSwitchSpaceAfter];
+			chk_AutoSwitchSwitchToGuessLayout.Text = MMain.Lang[Languages.Element.AutoSwitchSwitchToGuessLayout];
+			btn_UpdateAutoSwitchDictionary.Text = MMain.Lang[Languages.Element.AutoSwitchUpdateDictionary];
+			lbl_AutoSwitchDependsOnSnippets.Text = MMain.Lang[Languages.Element.AutoSwitchDependsOnSnippets];
+			lbl_AutoSwitchWordsCount.Text = MMain.Lang[Languages.Element.AutoSwitchDictionaryWordsCount];
 			#endregion
 			#region Hotkeys
 			grb_Hotkey.Text = MMain.Lang[Languages.Element.Hotkey];
@@ -2399,6 +2466,8 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			HelpMeUnderstand.SetToolTip(chk_qwertz, MMain.Lang[Languages.Element.TT_QWERTZ]);
 			HelpMeUnderstand.SetToolTip(chk_Change1KeyL, MMain.Lang[Languages.Element.TT_Change1KeyLayoutInExcluded]);
 			HelpMeUnderstand.SetToolTip(chk_SnippetsSwitchToGuessLayout, MMain.Lang[Languages.Element.TT_SnippetsSwitchToGuessLayout]);
+			HelpMeUnderstand.SetToolTip(lbl_SnippetsCount, MMain.Lang[Languages.Element.TT_SnippetsCount]);
+			HelpMeUnderstand.SetToolTip(lbl_AutoSwitchWordsCount, MMain.Lang[Languages.Element.TT_SnippetsCount]);
 		}
 		void HelpMeUnderstandPopup(object sender, PopupEventArgs e) {
 			HelpMeUnderstand.ToolTipTitle = e.AssociatedControl.Text;
@@ -2599,7 +2668,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			if (!checking) {
 				checking = true;
 				var btChkTextWas = btn_CheckForUpdates.Text;
-				btn_CheckForUpdates.Text = MMain.Lang[Languages.Element.CheckingForUpdates];
+				btn_CheckForUpdates.Text = MMain.Lang[Languages.Element.Checking];
 				UpdInfo = null;
 				System.Threading.Tasks.Task.Factory.StartNew(GetUpdateInfo).Wait();
 				tmr.Tick += (_, __) => {;
@@ -2701,6 +2770,18 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			} else {
 				RegisterHotkeys();
 				ToggleTimers();
+			}
+			if (tabs.SelectedIndex == tabs.TabPages.IndexOf(tab_autoswitch)) {
+				if (!SnippetsEnabled) {
+					chk_AutoSwitchSpaceAfter.Visible = chk_AutoSwitch.Visible = chk_AutoSwitchSwitchToGuessLayout.Enabled = 
+						btn_UpdateAutoSwitchDictionary.Enabled = txt_AutoSwitchDictionary.Enabled = false;
+					lbl_AutoSwitchDependsOnSnippets.Visible = true;
+				} else {
+					chk_AutoSwitchSpaceAfter.Visible = chk_AutoSwitch.Visible = chk_AutoSwitchSwitchToGuessLayout.Enabled = 
+						btn_UpdateAutoSwitchDictionary.Enabled = txt_AutoSwitchDictionary.Enabled = true;
+					lbl_AutoSwitchDependsOnSnippets.Visible = false;
+					ToggleDependentControlsEnabledState();
+				}
 			}
 		}
 		void Cbb_UpdatesChannelSelectedIndexChanged(object sender, EventArgs e) {

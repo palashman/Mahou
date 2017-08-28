@@ -8,6 +8,7 @@ public class Languages
 		tab_Appearence,
 		tab_Timings,
 		tab_Snippets,
+		tab_AutoSwitch,
 		tab_Hotkeys,
 		tab_Updates,
 		tab_About,
@@ -84,6 +85,15 @@ public class Languages
 		SnippetsEnabled,
 		SnippetSpaceAfter,
 		SnippetSwitchToGuessLayout,
+		SnippetsCount,
+		#endregion
+		#region AutoSwitch
+		AutoSwitchEnabled,
+		AutoSwitchSpaceAfter,
+		AutoSwitchSwitchToGuessLayout,
+		AutoSwitchUpdateDictionary,
+		AutoSwitchDependsOnSnippets,
+		AutoSwitchDictionaryWordsCount,
 		#endregion
 		#region Hotkeys
 		ToggleMainWnd,
@@ -112,7 +122,7 @@ public class Languages
 		#endregion
 		#region Updates
 		CheckForUpdates,
-		CheckingForUpdates,
+		Checking,
 		YouHaveLatest,
 		TimeToUpdate,
 		UpdateMahou,
@@ -180,6 +190,7 @@ public class Languages
 		TT_QWERTZ,
 		TT_Change1KeyLayoutInExcluded,
 		TT_SnippetsSwitchToGuessLayout,
+		TT_SnippetsCount,
 		#endregion
 		#region Messages
 		MSG_SnippetsError
@@ -192,6 +203,7 @@ public class Languages
 		{ Element.tab_Appearence, "Appearence" }, 
 		{ Element.tab_Timings, "Timings" }, 
 		{ Element.tab_Snippets, "Snippets" }, 
+		{ Element.tab_AutoSwitch, "Auto switch" },
 		{ Element.tab_Hotkeys, "Hotkeys" }, 
 		{ Element.tab_LangPanel, "Language panel" }, 
 		{ Element.tab_Updates, "Updates" }, 
@@ -268,6 +280,15 @@ public class Languages
 		{ Element.SnippetsEnabled, "Enable snippets." }, 
 		{ Element.SnippetSpaceAfter, "Add 1 space after snippets." }, 
 		{ Element.SnippetSwitchToGuessLayout, "Switch to guess layout after snippet." }, 
+		{ Element.SnippetsCount, "Snippets: " }, 
+		#endregion
+		#region AutoSwitch
+		{ Element.AutoSwitchEnabled, "Enable auto-switch." }, 
+		{ Element.AutoSwitchSpaceAfter, "Add 1 space after auto-switch." }, 
+		{ Element.AutoSwitchSwitchToGuessLayout, "Switch to guess layout after auto-switch." }, 
+		{ Element.AutoSwitchUpdateDictionary, "Update auto-switch dictionary." }, 
+		{ Element.AutoSwitchDependsOnSnippets, "To use this feature enable Snippets feature!" },
+		{ Element.AutoSwitchDictionaryWordsCount, "Words: " }, 
 		#endregion
 		#region Hotkeys
 		{ Element.ToggleMainWnd, "Toggle settings window" }, 
@@ -296,7 +317,6 @@ public class Languages
 		#endregion
 		#region Updates
 		{ Element.CheckForUpdates, "Check for updates:" }, 
-		{ Element.CheckingForUpdates, "Checking..." }, 
 		{ Element.YouHaveLatest, "You have latest version." }, 
 		{ Element.TimeToUpdate, "I think it is time to update." }, 
 		{ Element.UpdateMahou, "Update Mahou to <version>" }, 
@@ -328,6 +348,7 @@ public class Languages
 			"\r\n\r\nRegards." },
 		#endregion
 		#region Misc
+		{ Element.Checking, "Checking..." }, 
 		{ Element.Keys, "Keys" }, 
 		{ Element.Key_Left, "Left" }, 
 		{ Element.Key_Right, "Right" }, 
@@ -386,6 +407,7 @@ public class Languages
 		{ Element.TT_QWERTZ, "Makes right substitutes in QWERTZ keyboards for chars: ß, ä, ö, ü, Ä, Ö, Ü, Y, Z in Convert Selection\r\n(!! but convert selection layout switching(or +) not supported)." },
 		{ Element.TT_Change1KeyLayoutInExcluded, "Function is in Layouts tab -> [Change to specific layout by keys]." },
 		{ Element.TT_SnippetsSwitchToGuessLayout, "Switches to *guessed* layout after snippet expanded.\r\nGuess works like in whole \"One Layout for whole word in Convert Selection\" function."},
+		{ Element.TT_SnippetsCount,	"If ORANGE snippets are OK.\r\nIf RED snippets has errors, maybe its unfinished etc." },
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Snippets contains error in syntax, check if there are errors, details on snippets syntax you can find on Wiki." }
@@ -401,6 +423,7 @@ public class Languages
 		{ Element.tab_Appearence, "Вид" }, 
 		{ Element.tab_Timings, "Тайминги" }, 
 		{ Element.tab_Snippets, "Сниппеты" }, 
+		{ Element.tab_AutoSwitch, "Автозамена" }, 
 		{ Element.tab_Hotkeys, "Горячие клавиши" }, 
 		{ Element.tab_LangPanel, "Языковая панель" }, 
 		{ Element.tab_Updates, "Обновления" }, 
@@ -477,6 +500,15 @@ public class Languages
 		{ Element.SnippetsEnabled, "Включить сниппеты." }, 
 		{ Element.SnippetSpaceAfter, "Добавлять 1 пробел после сниппетов." },
 		{ Element.SnippetSwitchToGuessLayout, "Переключать на предполагаемую раскладку сниппетов." }, 
+		{ Element.SnippetsCount, "Сниппетов: " }, 
+		#region AutoSwitch
+		{ Element.AutoSwitchEnabled, "Включить автозамену." }, 
+		{ Element.AutoSwitchSpaceAfter, "Добавлять 1 пробел после автозамены." }, 
+		{ Element.AutoSwitchSwitchToGuessLayout, "Переключать на предполагаемую раскладку автозамены." }, 
+		{ Element.AutoSwitchUpdateDictionary, "Обновить словарь автозамены." }, 
+		{ Element.AutoSwitchDependsOnSnippets, "Чтобы использовать эту функцию включите функцию Сниппетов!" },
+		{ Element.AutoSwitchDictionaryWordsCount, "Слов: " }, 
+		#endregion
 		#endregion
 		#region Hotkeys
 		{ Element.ToggleMainWnd, "Переключить видимость главного окна" }, 
@@ -505,7 +537,7 @@ public class Languages
 		#endregion
 		#region Updates
 		{ Element.CheckForUpdates, "Проверить обновления:" }, 
-		{ Element.CheckingForUpdates, "Проверяю..." }, 
+		{ Element.Checking, "Проверяю..." }, 
 		{ Element.YouHaveLatest, "У Вас последняя версия." }, 
 		{ Element.TimeToUpdate, "Думаю пора обновиться." }, 
 		{ Element.UpdateMahou, "Обновить Mahou к <версии>" }, 
@@ -593,6 +625,7 @@ public class Languages
 		{ Element.TT_QWERTZ, "Делает правильные замены в клавиатурах QWERTZ для букв: ß, ä, ö, ü, Ä, Ö, Ü, Y, Z в Конверт выделения\r\n(!! но не совместимо со сменой раскладки в конверт выделения (или +))." },
 		{ Element.TT_Change1KeyLayoutInExcluded, "Функция находится во вкладке раскладки -> [Переключать раскладки по клавишам]." },
 		{ Element.TT_SnippetsSwitchToGuessLayout, "Меняет раскладку в *угаданную* после того как сниипет конвертировался.\r\nУгадывание работает так же как в функции \"Одна раскладка для целого слова в Конверт Выделения\"."},
+		{ Element.TT_SnippetsCount,	"Если ОРАНЖЕВЫЙ то со сниппетами все OK.\r\nЕсли КРАСНЫЙ то в сниппетах есть ошибка, может незавершен сниппет и т.д." },
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Сниппеты содержат ошибки в синтаксисе, проверьте ваши сниппеты, детали синтаксиса можете найти на Wiki." }
