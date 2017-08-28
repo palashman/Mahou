@@ -146,7 +146,7 @@ namespace Mahou
 					MMain.mahou._langPanel.DisplayUpper(upper);
 			if (MMain.mahou.MouseLangTooltipEnabled)
 				if (MahouUI.mouseLTUpperArrow)
-					MMain.mahou.museLangDisplay.DisplayUpper(upper);
+					MMain.mahou.mouseLangDisplay.DisplayUpper(upper);
 			if (MMain.mahou.CaretLangTooltipEnabled)
 				if (MahouUI.caretLTUpperArrow)
 					MMain.mahou.caretLangDisplay.DisplayUpper(upper);
