@@ -30,7 +30,7 @@ namespace Mahou {
 		public static bool LoggingEnabled, dummy, CapsLockDisablerTimer, LangPanelUpperArrow, mouseLTUpperArrow, caretLTUpperArrow,
 						   ShiftInHotkey, AltInHotkey, CtrlInHotkey, WinInHotkey, AutoStartAsAdmin;
 		static string[] UpdInfo;
-		static bool updating, was, isold = true, checking;
+		static bool updating, was, isold = true, checking, snip_checking, as_checking;
 		static Timer tmr = new Timer();
 		static Timer old = new Timer();
 		public static Bitmap FLAG;
@@ -761,9 +761,7 @@ namespace Mahou {
 			AutoSwitchSwitchToGuessLayout = chk_AutoSwitchSwitchToGuessLayout.Checked = MMain.MyConfs.ReadBool("AutoSwitch", "SwitchToGuessLayout");
 			if (File.Exists(AS_dictfile)) {
 				txt_AutoSwitchDictionary.Text = File.ReadAllText(AS_dictfile);
-				var snipc = GetSnippetsCount(txt_AutoSwitchDictionary.Text);
-				lbl_AutoSwitchWordsCount.Text = lbl_AutoSwitchWordsCount.Text.Split(' ')[0] + " "  + snipc.Item1 + ((snipc.Item2 == Color.Red) ? "?" : "");
-				lbl_AutoSwitchWordsCount.ForeColor = snipc.Item2;
+				Txt_AutoSwitchDictionaryTextChanged(new object(), new EventArgs());
 			}
 			#endregion
 			#region Snippets
@@ -772,9 +770,7 @@ namespace Mahou {
 			SnippetsSwitchToGuessLayout = chk_SnippetsSwitchToGuessLayout.Checked = MMain.MyConfs.ReadBool("Snippets", "SwitchToGuessLayout");
 			if (File.Exists(snipfile)) {
 				txt_Snippets.Text = File.ReadAllText(snipfile);
-				var snipc = GetSnippetsCount(txt_Snippets.Text);
-				lbl_SnippetsCount.Text = lbl_SnippetsCount.Text.Split(' ')[0] + " " + snipc.Item1 + ((snipc.Item2 == Color.Red) ? "?" : "");
-				lbl_SnippetsCount.ForeColor = snipc.Item2;
+				Txt_SnippetsTextChanged(new object(), new EventArgs());
 				KMHook.DoLater.Tick += (_, __) => { KMHook.ReInitSnippets(); KMHook.DoLater.Stop(); };
 				KMHook.DoLater.Interval = 250;
 				KMHook.DoLater.Start();
@@ -2786,6 +2782,34 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 		}
 		void Cbb_UpdatesChannelSelectedIndexChanged(object sender, EventArgs e) {
 			MMain.MyConfs.Write("Updates", "Channel", (sender as ComboBox).SelectedItem.ToString());
+		}
+		void Txt_AutoSwitchDictionaryTextChanged(object sender, EventArgs e) {
+			if(!as_checking) {
+				as_checking = true;
+				tmr.Tick += (_, __) => {
+					var snipc = GetSnippetsCount(txt_AutoSwitchDictionary.Text);
+					lbl_AutoSwitchWordsCount.Text = lbl_AutoSwitchWordsCount.Text.Split(' ')[0] + " "  + snipc.Item1 + ((snipc.Item2 == Color.Red) ? "?" : "");
+					lbl_AutoSwitchWordsCount.ForeColor = snipc.Item2;
+					tmr.Stop();
+						as_checking = false;
+				};
+				tmr.Interval = 3000;
+				tmr.Start();
+			}
+		}
+		void Txt_SnippetsTextChanged(object sender, EventArgs e) {
+			if(!snip_checking) {
+				snip_checking = true;
+				tmr.Tick += (_, __) => {
+					var snipc = GetSnippetsCount(txt_Snippets.Text);
+					lbl_SnippetsCount.Text = lbl_SnippetsCount.Text.Split(' ')[0] + " " + snipc.Item1 + ((snipc.Item2 == Color.Red) ? "?" : "");
+					lbl_SnippetsCount.ForeColor = snipc.Item2;
+					tmr.Stop();
+					snip_checking = false;
+				};
+				tmr.Interval = 1000;
+				tmr.Start();
+			}
 		}
 		#endregion
 	}

@@ -1752,6 +1752,7 @@ namespace Mahou
 			this.txt_Snippets.TabIndex = 1;
 			this.txt_Snippets.Text = "->mahou\r\n====>Mahou (魔法) - Magical layout switcher.<====\r\n->eml\r\n====>BladeMight@" +
 	"gmail.com<====";
+			this.txt_Snippets.TextChanged += new System.EventHandler(this.Txt_SnippetsTextChanged);
 			// 
 			// chk_Snippets
 			// 
@@ -1830,6 +1831,7 @@ namespace Mahou
 			this.txt_AutoSwitchDictionary.Size = new System.Drawing.Size(541, 206);
 			this.txt_AutoSwitchDictionary.TabIndex = 6;
 			this.txt_AutoSwitchDictionary.Text = "EMPTY, need to update.";
+			this.txt_AutoSwitchDictionary.TextChanged += new System.EventHandler(this.Txt_AutoSwitchDictionaryTextChanged);
 			// 
 			// chk_AutoSwitch
 			// 
