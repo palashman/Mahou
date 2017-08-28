@@ -1,3 +1,4 @@
+# This is merged dictionary from Dictionaries-origin folder.
 # 10000 most popular English words provided by Google. Credit [https://github.com/first20hours/google-10000-english/]
 ->еру
 ====>the<====
@@ -41252,3 +41253,31 @@
 ====>Здравствуй<====
 ->Plhfdcndeqnt
 ====>Здравствуйте<====
+# Dictionary that BladeMight write on its own.
+->tcnm
+====>есть<====
+->скщц
+====>crow<====
+->htfkbcnbxysq
+====>реалистичный<====
+->lei
+====>душ<====
+->ыщккщц
+=====>sorrow<====
+->афтефын
+=====>fantasy<====
+->fybvt
+=====>аниме<====
+->идшыы
+=====>bliss<====
+->идуыыштп
+=====>blessing<====
+->ищккщц
+=====>borrow<====
+->зфкеув
+=====>parted<====
+->k.,st
+=====>любые<====
+->vfrcbv
+=====>максим<====
+# to be continued...
