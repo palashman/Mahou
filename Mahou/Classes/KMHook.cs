@@ -13,6 +13,7 @@ namespace Mahou
 	{
 		#region Variables
 		public static bool win, alt, ctrl, shift,
+			win_r, alt_r, ctrl_r, shift_r,
 			shiftRP, ctrlRP, altRP, winRP, //RP = Re-Press
 			awas, swas, cwas, wwas, afterEOS, //*was = alt/shift/ctrl was
 			keyAfterCTRL, keyAfterALT, keyAfterSHIFT,
@@ -62,23 +63,28 @@ namespace Mahou
 			#region Checks modifiers that are down
 			switch (Key) {
 				case Keys.LShiftKey:
-				case Keys.RShiftKey:
-				case Keys.ShiftKey:
 					shift = ((MSG == WinAPI.WM_SYSKEYDOWN) ? true : false) || ((MSG == WinAPI.WM_KEYDOWN) ? true : false);
 					break;
-				case Keys.RControlKey:
 				case Keys.LControlKey:
-				case Keys.ControlKey:
 					ctrl = ((MSG == WinAPI.WM_SYSKEYDOWN) ? true : false) || ((MSG == WinAPI.WM_KEYDOWN) ? true : false);
 					break;
-				case Keys.RMenu:
 				case Keys.LMenu:
-				case Keys.Menu:
 					alt = ((MSG == WinAPI.WM_SYSKEYDOWN) ? true : false) || ((MSG == WinAPI.WM_KEYDOWN) ? true : false);
 					break;
-				case Keys.RWin:
 				case Keys.LWin:
 					win = ((MSG == WinAPI.WM_SYSKEYDOWN) ? true : false) || ((MSG == WinAPI.WM_KEYDOWN) ? true : false);
+					break;
+				case Keys.RShiftKey:
+					shift_r = ((MSG == WinAPI.WM_SYSKEYDOWN) ? true : false) || ((MSG == WinAPI.WM_KEYDOWN) ? true : false);
+					break;
+				case Keys.RControlKey:
+					ctrl_r = ((MSG == WinAPI.WM_SYSKEYDOWN) ? true : false) || ((MSG == WinAPI.WM_KEYDOWN) ? true : false);
+					break;
+				case Keys.RMenu:
+					alt_r = ((MSG == WinAPI.WM_SYSKEYDOWN) ? true : false) || ((MSG == WinAPI.WM_KEYDOWN) ? true : false);
+					break;
+				case Keys.RWin:
+					win_r = ((MSG == WinAPI.WM_SYSKEYDOWN) ? true : false) || ((MSG == WinAPI.WM_KEYDOWN) ? true : false);
 					break;
 			}
 			// Additional fix for scroll tip.
@@ -90,13 +96,13 @@ namespace Mahou
 	              });
 			}
 			uint mods = 0;
-			if (alt)
+			if (alt || alt_r)
 				mods += WinAPI.MOD_ALT;
-			if (ctrl)
+			if (ctrl || ctrl_r)
 				mods += WinAPI.MOD_CONTROL;
-			if (shift)
+			if (shift || shift_r)
 				mods += WinAPI.MOD_SHIFT;
-			if (win)
+			if (win || win_r)
 				mods += WinAPI.MOD_WIN;
 			if (MMain.mahou.HasHotkey(new Hotkey(false, (uint)Key, mods, 77))) {
 				Logging.Log("Pressed Mahou, hotkey words would not be cleared.");
@@ -106,20 +112,28 @@ namespace Mahou
 			if ((Key >= Keys.D0 || Key <= Keys.D9) && waitfornum)
 				IsHotkey = true;
 			//Key log
-			Logging.Log("Catched Key=[" + Key + "] with VKCode=[" + vkCode + "] and message=[" + (int)MSG + "], modifiers=[" + (shift ? "Shift" : "") + (alt ? "Alt" : "") + (ctrl ? "Ctrl" : "") + (win ? "Win" : "") + "].");
+			Logging.Log("Catched Key=[" + Key + "] with VKCode=[" + vkCode + "] and message=[" + (int)MSG + "], modifiers=[" + 
+			            (shift ? "L-Shift" : "") + (shift_r ? "R-Shift" : "") + 
+			            (alt ? "L-Alt" : "") + (alt_r ? "R-Alt" : "") + 
+			            (ctrl ? "L-Ctrl" : "") + (ctrl_r ? "R-Ctrl" : "") + 
+			            (win ? "L-Win" : "") + (win_r ? "R-Win" : "") + "].");
 			// Anti win-stuck rule
-			if (win && Key == Keys.L)
-				win = false;
+			if (Key == Keys.L) {
+				if (win)
+					win = false;
+				if (win_r)
+					win_r = false;
+			}
 			// Clear currentLayout in MMain.mahou rule
-			if (((win || alt || ctrl) && Key == Keys.Tab) ||
+			if (((win || alt || ctrl || win_r || alt_r || ctrl_r) && Key == Keys.Tab) ||
 			    win && (Key != Keys.None && 
 			            Key != Keys.LWin && 
 			            Key != Keys.RWin)) // On any Win+[AnyKey] hotkey
 				MahouUI.currentLayout = 0;
 			if ((MSG == WinAPI.WM_KEYUP || MSG == WinAPI.WM_SYSKEYUP) && (
-			    ((alt || ctrl) && (Key == Keys.Shift || Key == Keys.LShiftKey || Key == Keys.RShiftKey)) ||
+			    ((alt || ctrl || alt_r || ctrl_r) && (Key == Keys.Shift || Key == Keys.LShiftKey || Key == Keys.RShiftKey)) ||
 			     shift && (Key == Keys.Menu || Key == Keys.LMenu || Key == Keys.RMenu) ||
-			     (Environment.OSVersion.Version.Major == 10 && win && Key == Keys.Space))) {
+			     (Environment.OSVersion.Version.Major == 10 && (win || win_r) && Key == Keys.Space))) {
 				CheckLayoutLater.Start();
 			}
 			#endregion
@@ -141,7 +155,7 @@ namespace Mahou
 			if (MMain.mahou.SnippetsEnabled) {
 				if (((Key >= Keys.D0 && Key <= Keys.Z) || // This is 0-9 & A-Z
 				   Key >= Keys.Oem1 && Key <= Keys.OemBackslash // All other printable
-				   ) && !win && !alt && !ctrl && MSG == WinAPI.WM_KEYUP) {
+				  ) && !win && !win_r && !alt && !alt_r && !ctrl && ctrl_r && MSG == WinAPI.WM_KEYUP) {
 					var stb = new StringBuilder(10);
 					var byt = new byte[256];
 					if (shift) {
@@ -198,7 +212,8 @@ namespace Mahou
 			#region Release Re-Pressed keys
 			if (hotkeywithmodsfired &&
 			    (MSG == WinAPI.WM_KEYUP || MSG == WinAPI.WM_SYSKEYUP) &&
-			   (Key == Keys.LShiftKey || Key == Keys.LMenu || Key == Keys.LControlKey || Key == Keys.LWin)) {
+			   ((Key == Keys.LShiftKey || Key == Keys.LMenu || Key == Keys.LControlKey || Key == Keys.LWin) ||
+			     (Key == Keys.RShiftKey || Key == Keys.RMenu || Key == Keys.RControlKey || Key == Keys.RWin))) {
 				DoSelf(() => {
 					hotkeywithmodsfired = false;
 					mods = 0;
@@ -224,11 +239,11 @@ namespace Mahou
 			#endregion
 			#region One key layout switch
 			if (MSG == WinAPI.WM_KEYUP)
-				if (Key == Keys.LControlKey || Key == Keys.RControlKey || Key == Keys.ControlKey)
+				if (Key == Keys.LControlKey || Key == Keys.RControlKey)
 					clickAfterCTRL = false;
-				if (Key != Keys.LMenu && Key != Keys.RMenu && Key != Keys.Menu)
+				if (Key != Keys.LMenu && Key != Keys.RMenu)
 					clickAfterALT = false;
-				if (Key != Keys.LShiftKey && Key != Keys.RShiftKey && Key != Keys.Shift)
+				if (Key != Keys.LShiftKey && Key != Keys.RShiftKey)
 					clickAfterSHIFT = false;
 			if (MMain.mahou.ChangeLayouByKey) {
 					if (((Key == Keys.LControlKey || Key == Keys.RControlKey) && !MahouUI.CtrlInHotkey) ||
@@ -241,21 +256,21 @@ namespace Mahou
 					SpecificKey(Key, MSG, MMain.mahou.Key3, 3);
 					SpecificKey(Key, MSG, MMain.mahou.Key4, 4);
 				}
-				if (ctrl && (Key != Keys.LControlKey && Key != Keys.RControlKey && Key != Keys.ControlKey || clickAfterCTRL))
+				if ((ctrl || ctrl_r) && (Key != Keys.LControlKey && Key != Keys.RControlKey && Key != Keys.ControlKey || clickAfterCTRL))
 					keyAfterCTRL = true;
 				else 
 					keyAfterCTRL = false;
-				if (alt && (Key != Keys.LMenu && Key != Keys.RMenu && Key != Keys.Menu || clickAfterALT))
+				if ((alt || alt_r) && (Key != Keys.LMenu && Key != Keys.RMenu && Key != Keys.Menu || clickAfterALT))
 					keyAfterALT = true;
 				else 
 					keyAfterALT = false;
-				if (shift && (Key != Keys.LShiftKey && Key != Keys.RShiftKey && Key != Keys.Shift || clickAfterSHIFT))
+				if ((shift || shift_r) && (Key != Keys.LShiftKey && Key != Keys.RShiftKey && Key != Keys.Shift || clickAfterSHIFT))
 					keyAfterSHIFT = true;
 				else 
 					keyAfterSHIFT = false;
 			}
 			#endregion
-			if ((ctrl||win||alt) && Key == Keys.Tab) {
+			if ((ctrl||win||alt||ctrl_r||win_r||alt_r) && Key == Keys.Tab) {
 					Logging.Log("Last word cleared.");
 					MMain.c_word.Clear();
 					MMain.c_words.Clear();
@@ -292,7 +307,7 @@ namespace Mahou
 				   Key == Keys.Tab || Key == Keys.PageDown || Key == Keys.PageUp ||
 				   Key == Keys.Left || Key == Keys.Right || Key == Keys.Down || Key == Keys.Up ||
 				   Key == Keys.BrowserSearch || 
-				   ((ctrl || win || alt) && (Key != Keys.Menu  && //Ctrl modifier and key which is not modifier
+				   ((ctrl||win||alt||ctrl_r||win_r||alt_r) && (Key != Keys.Menu  && //Ctrl modifier and key which is not modifier
 							Key != Keys.LMenu &&
 							Key != Keys.RMenu &&
 							Key != Keys.LWin &&
@@ -333,12 +348,12 @@ namespace Mahou
 				   Key >= Keys.NumPad0 && Key <= Keys.NumPad9)) || // Numpad numbers 
 				   Key == Keys.Decimal || Key == Keys.Subtract || Key == Keys.Multiply ||
 				   Key == Keys.Divide || Key == Keys.Add // Numpad symbols
-				  ) && !win && !alt && !ctrl) {
+				  ) && !win && !win_r && !alt && !alt_r && !ctrl && !ctrl_r) {
 					if (afterEOS) { //Clears word after Eat ONE space
 						MMain.c_word.Clear();
 						afterEOS = false;
 					}
-					if (!shift) {
+					if (!shift && !shift_r) {
 						MMain.c_word.Add(new YuKey() {
 							key = Key,
 							upper = false
@@ -378,11 +393,11 @@ namespace Mahou
 				tempNumpads.Clear();
 				incapt = false;
 			}
-			if (!incapt && alt && MSG == WinAPI.WM_SYSKEYDOWN) {
+			if (!incapt && (alt || alt_r) && MSG == WinAPI.WM_SYSKEYDOWN) {
 				Logging.Log("Alt is down, starting capture of Numpads...");
 				incapt = true;
 			}
-			if (alt && incapt) {
+			if ((alt || alt_r) && incapt) {
 				if (Key >= Keys.NumPad0 && Key <= Keys.NumPad9 && MSG == WinAPI.WM_SYSKEYUP) {
 					tempNumpads.Add(Key);
 				}
@@ -401,11 +416,11 @@ namespace Mahou
 					ff_wheeled = true;
 			}
 			if (MSG == WinAPI.RawMouseButtons.LeftDown || MSG == WinAPI.RawMouseButtons.RightDown) {
-				if (ctrl)
+				if (ctrl || ctrl_r)
 					clickAfterCTRL = true;
-				if (shift)
+				if (shift || shift_r)
 					clickAfterSHIFT = true;
-				if (alt)
+				if (alt || alt_r)
 					clickAfterALT = true;
 				MahouUI.currentLayout = 0;
 				MMain.c_word.Clear();
@@ -439,9 +454,9 @@ namespace Mahou
 			bool caps = Control.IsKeyLocked(Keys.CapsLock);
 			if (MahouUI.CapsLockDisablerTimer)
 				caps = false;
-			if ((shift && !caps) || (!shift && caps))
+			if (((shift || shift_r) && !caps) || (!(shift || shift_r) && caps))
 				return true;
-			if ((shift && caps) || (!shift && !caps))
+			if (((shift || shift_r) && caps) || (!(shift || shift_r) && !caps))
 				return false;
 			return false;
 		}
@@ -459,7 +474,7 @@ namespace Mahou
 //			Logging.Log("A->" + alt + " Sh->" + shift + " Ct->" + ctrl);
 //			Debug.WriteLine("Speekky->" + (Key == Keys.CapsLock));
 			DoSelf(() => {
-				if (!shift && !alt && !ctrl && specificKey == 1 && Key == Keys.CapsLock &&
+				if (!shift && !shift_r && !alt  && !alt_r && !ctrl && !ctrl_r && specificKey == 1 && Key == Keys.CapsLock &&
 				    MSG == WinAPI.WM_KEYDOWN) {
 					//Code below removes CapsLock original action, but if hold will not work and will stuck, press again to off.
 					KeybdEvent(Keys.CapsLock, 0);
@@ -469,61 +484,91 @@ namespace Mahou
 					if (MMain.mahou.ChangeLayoutInExcluded || !ExcludedProgram()) {
 						#region Switch between layouts with one key
 						var speclayout = (string)typeof(MahouUI).GetField("Layout"+specKeyId).GetValue(MMain.mahou);
+						bool catched = false;
 						if (speclayout == MMain.Lang[Languages.Element.SwitchBetween] ||
 						     speclayout == MMain.Lang[Languages.Element.SwitchBetween]) {
-							if (specificKey == 8 && Key == Keys.CapsLock && shift && !alt && !ctrl) {
+							if (specificKey == 10 && (
+								(Key == Keys.LShiftKey && alt) || (Key == Keys.RShiftKey && alt_r) ||
+								(Key == Keys.LMenu && shift) || (Key == Keys.RMenu && shift_r)) && !win && !win_r && !ctrl && !ctrl_r) {
+								Logging.Log("Changing layout by Alt+Shift key.");
+								ChangeLayout();
+								catched = true;
+							}
+							if (specificKey == 8 && Key == Keys.CapsLock && (shift || shift_r) && !alt && !alt_r && !ctrl && !ctrl_r) {
 								Logging.Log("Changing layout by Shift+CapsLock key.");
 								ChangeLayout();
-								Thread.Sleep(5);
+//								Thread.Sleep(5);
 								if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
 									KeybdEvent(Keys.CapsLock, 0);
 									KeybdEvent(Keys.CapsLock, 2);
 								}
+								catched = true;
 							} else 
-							if (!shift && !alt && !ctrl && specificKey == 1 && Key == Keys.CapsLock) {
+							if (!shift && !shift_r && !alt && !alt_r && !ctrl && ctrl_r && specificKey == 1 && Key == Keys.CapsLock) {
 								ChangeLayout();
 								if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
 									KeybdEvent(Keys.CapsLock, 0);
 									KeybdEvent(Keys.CapsLock, 2);
 								}
+								catched = true;
 								Logging.Log("Changing layout by CapsLock key.");
 							}
 							if (specificKey == 2 && Key == Keys.LControlKey && !keyAfterCTRL) {
-								Logging.Log("Changing layout by LCtrl key.");
+								Logging.Log("Changing layout by L-Ctrl key.");
 								ChangeLayout();
+								catched = true;
 							}
 							if (specificKey == 3 && Key == Keys.RControlKey && !keyAfterCTRL) {
-								Logging.Log("Changing layout by RCtrl key.");
+								Logging.Log("Changing layout by R-Ctrl key.");
 								ChangeLayout();
+								catched = true;
 							}
 							if (specificKey == 4 && Key == Keys.LShiftKey && !keyAfterSHIFT) {
-								Logging.Log("Changing layout by LShift key.");
+								Logging.Log("Changing layout by L-Shift key.");
 								ChangeLayout();
+								catched = true;
 							}
 							if (specificKey == 5 && Key == Keys.RShiftKey && !keyAfterSHIFT) {
-								Logging.Log("Changing layout by RShift key.");
+								Logging.Log("Changing layout by R-Shift key.");
 								ChangeLayout();
+								catched = true;
 							}
 							if (specificKey == 6 && Key == Keys.LMenu && !keyAfterALT) {
-								Logging.Log("Changing layout by LAlt key.");
+								Logging.Log("Changing layout by L-Alt key.");
 								ChangeLayout();
+								catched = true;
 							}
 							if (specificKey == 7 && Key == Keys.RMenu && !keyAfterALT) {
-								Logging.Log("Changing layout by RAlt key.");
+								Logging.Log("Changing layout by R-Alt key.");
 								ChangeLayout();
+								catched = true;
 							}
 							if (specificKey == 9 && Key == Keys.RMenu) {
 								Logging.Log("Changing layout by AltGr key.");
 								ChangeLayout();
+								catched = true;
 							}
+//							if (catched) {
+//			       			    if (Key == Keys.LMenu)
+//									DoSelf(()=>{ Thread.Sleep(150); KeybdEvent(Keys.LMenu, 0); KeybdEvent(Keys.LMenu, 2); });
+//			       			    if (Key == Keys.RMenu)
+//									DoSelf(()=>{ Thread.Sleep(150); KeybdEvent(Keys.RMenu, 0); KeybdEvent(Keys.RMenu, 2); });
+//							}
 							#endregion
 						} else {
 							#region By layout switch
 							var matched = false;
-							if (specificKey == 8 && Key == Keys.CapsLock && shift && !alt && !ctrl) {
+							if (specificKey == 10 && (
+								(Key == Keys.LShiftKey && alt) || (Key == Keys.RShiftKey && alt_r) ||
+								(Key == Keys.LMenu && shift) || (Key == Keys.RMenu && shift_r)) && !win && !win_r && !ctrl && !ctrl_r) {
+								Logging.Log("Switching to specific layout by Alt+Shift key.");
+								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
+								matched = true;
+							}
+							if (specificKey == 8 && Key == Keys.CapsLock && (shift || shift_r) && !alt && !alt_r && !ctrl && !ctrl_r) {
 								Logging.Log("Switching to specific layout by Shift+CapsLock key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
-								Thread.Sleep(5);
+//								Thread.Sleep(5);
 								if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
 									KeybdEvent(Keys.CapsLock, 0);
 									KeybdEvent(Keys.CapsLock, 2);
@@ -536,43 +581,52 @@ namespace Mahou
 								matched = true;
 							}
 							if (specificKey == 2 && Key == Keys.LControlKey && !keyAfterCTRL) {
-								Logging.Log("Switching to specific layout by  LCtrl key.");
+								Logging.Log("Switching to specific layout by  LC-trl key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
 							}
 							if (specificKey == 3 && Key == Keys.RControlKey && !keyAfterCTRL) {
-								Logging.Log("Switching to specific layout by RCtrl key.");
+								Logging.Log("Switching to specific layout by R-Ctrl key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
 							}
 							if (specificKey == 4 && Key == Keys.LShiftKey && !keyAfterSHIFT) {
-								Logging.Log("Switching to specific layout by LShift key.");
+								Logging.Log("Switching to specific layout by L-Shift key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
 							}
 							if (specificKey == 5 && Key == Keys.RShiftKey && !keyAfterSHIFT) {
-								Logging.Log("Switching to specific layout by RShift key.");
+								Logging.Log("Switching to specific layout by R-Shift key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
 							}
 							if (specificKey == 6 && Key == Keys.LMenu && !keyAfterALT) {
-								Logging.Log("Switching to specific layout by LAlt key.");
+								Logging.Log("Switching to specific layout by L-Alt key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);	
 								matched = true;
+								DoSelf(()=>{ KeybdEvent(Keys.LMenu, 0); KeybdEvent(Keys.LMenu, 2); });
 							}
 							if (specificKey == 7 && Key == Keys.RMenu && !keyAfterALT) {
-								Logging.Log("Switching to specific layout by RAlt key.");
+								Logging.Log("Switching to specific layout by R-Alt key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
+								DoSelf(()=>{ KeybdEvent(Keys.RMenu, 0); KeybdEvent(Keys.RMenu, 2); });
 							}
 							if (specificKey == 9 && Key == Keys.RMenu) {
 								Logging.Log("Switching to specific layout by AltGr key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
+								DoSelf(()=>{ KeybdEvent(Keys.RMenu, 0); KeybdEvent(Keys.RMenu, 2); });
 							}
 							try {
-								if (matched) 
+								if (matched) {
 									Logging.Log("Available layout from string ["+speclayout+"] & id ["+specKeyId+"].");
+									//Fix for alt-show-menu in programs
+//				       			    if (Key == Keys.LMenu)
+//										DoSelf(()=>{ KeybdEvent(Keys.LMenu, 0); KeybdEvent(Keys.LMenu, 2); });
+//				       			    if (Key == Keys.RMenu)
+//										DoSelf(()=>{ KeybdEvent(Keys.RMenu, 0); KeybdEvent(Keys.RMenu, 2); });
+								}
 							} catch { 
 								Logging.Log("No layout available from string ["+speclayout+"] & id ["+specKeyId+"]."); 
 							}
@@ -1345,17 +1399,14 @@ namespace Mahou
 		{
 			uint mods = 0;
 			switch (key) {
-				case Keys.ControlKey:
 				case Keys.LControlKey:
 				case Keys.RControlKey:
 					mods += WinAPI.MOD_CONTROL;
 					break;
-				case Keys.ShiftKey:
 				case Keys.LShiftKey:
 				case Keys.RShiftKey:
 					mods += WinAPI.MOD_SHIFT;
 					break;
-				case Keys.Menu:
 				case Keys.LMenu:
 				case Keys.RMenu:
 				case Keys.Alt:
