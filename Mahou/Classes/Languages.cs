@@ -334,18 +334,14 @@ public class Languages
 		{ Element.DbgInf_Copied, "Copied!" }, 
 		{ Element.Site, "Site" }, 
 		{ Element.Releases, "Releases" }, 
-		{ Element.About, "Hotkeys:\r\n"+"Press Pause (by Default) to convert last inputted word.\r\n" + 
-			"Press Scroll Lock (by Default) while selected text is focused to convert it.\r\n"+
-			"Press Shift+Pause (by Default) to convert last inputted line.\r\n"+
-            "Press Ctrl+Alt+Win+Shift+Insert to show Mahou main window.\r\n"+
-			"Press Ctrl+Alt+Win+Shift+F12 to shutdown Mahou.\r\n\r\n"+
+		{ Element.About, "Hotkeys: you can see them in Hotkeys tab.\r\n\r\n"+
             "*Note that if your typing layout is not selected in settings,"+
 			" conversion will switch typed text to Language 1 (Ignored if Switch between layouts is OFF).\r\n\r\n"+
             "**If you have problems with symbols conversion (selection) try enabling function \"Use layout for whole word in CS\", "+
 			" or \"switching languages (1=>2 & 2=>1)\""+
 			" or \"Convert selection layout switching\" or Plus option." +
 			"***If you have problems with selection conversion try inreasing tries to get selected text in Timings tab." +
-			"\r\n\r\nRegards." },
+			"\r\nRead the wiki, or ask me if you have any questions about Mahou(email and links are below)!\r\n\r\nRegards." },
 		#endregion
 		#region Misc
 		{ Element.Checking, "Checking..." }, 
@@ -556,15 +552,11 @@ public class Languages
 		{ Element.DbgInf_Copied, "Скопировано!" }, 
 		{ Element.Site, "Сайт" }, 
 		{ Element.Releases, "Релизы" }, 
-		{ Element.About, "Горячие клавиши:\r\nНажмите Pause (по умолчанию) для конвертации последнего введённого слова.\r\n" +
-			"Нажмите Scroll (по умолчанию) пока выделенный текст в фокусе чтобы конвертировать его.\r\n"+
-			"Нажмите Shift+Pause (по умолчанию) для конвертации последней введённой линии.\r\n"+
-            "Нажмите Ctrl+Alt+Win+Shift+Insert чтобы показать/скрыть главное окно.\r\n"+
-			"Нажмите Ctrl+Alt+Win+Shift+F12 чтобы завершить Mahou.\r\n"+
+		{ Element.About, "Горячие клавиши: Вы можете посмотреть их во вкладке горячие клавиши.\r\n"+
 			"\r\n*Заметьте что если you вводите текст не из выбранных раскладок в настройках, то конвертация конвертирует текст в Язык 1 (Не актуально если включён Циклич. режим).\r\n\r\n"+
             "**Если у Вас проблемы с символами при Конвертации выделения, включите функцию(рекомендуется) \"Считать раскладку для всего слова в КВ\", еще можете попробовать \"переключить языки местами (1=>2 & 2=>1)\" или включите \"Смена раскладки в конверт выделенния\" или плюс.\r\n"+
 			"***Если у Вас проблемы при Конвертации выделения попробуйте увеличить количество попыток взятия текста во вкладке Тайминги." +
-			"\r\nУдачи."}, 
+			"\r\nПочитайте wiki, или спросите меня если у Вас есть вопросы по поводу Mahou(эл. почта и ссылка на wiki ниже).\r\nУдачи."}, 
 		#endregion
 		#region Misc
 		{ Element.Keys, "Клавиши" }, 
