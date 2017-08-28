@@ -1481,6 +1481,9 @@ namespace Mahou
 		{
 			if (System.IO.File.Exists(MahouUI.snipfile)) {
 				var snippets = System.IO.File.ReadAllText(MahouUI.snipfile);
+				if (MMain.mahou.AutoSwitchEnabled && System.IO.File.Exists(MahouUI.AS_dictfile)) {
+					snippets += Environment.NewLine + System.IO.File.ReadAllText(MahouUI.AS_dictfile);
+				}
 				var snili = new List<string>();
 				var expli = new List<string>();
 				// One Regex is faster than two, because it makes it to process again snippets file. Benchmarks says that it in ~2 times faster.

@@ -48,7 +48,8 @@ namespace Mahou {
 					RePress, BlockHKWithCtrl, blueIcon, SwitchBetweenLayouts, SelectedTextGetMoreTries, ReSelect,
 					ConvertSelectionLS, ConvertSelectionLSPlus, MCDSSupport, OneLayoutWholeWord,
 					MouseTTAlways, OneLayout, MouseLangTooltipEnabled, CaretLangTooltipEnabled, QWERTZ_fix, 
-					ChangeLayoutInExcluded, SnippetSpaceAfter, SnippetsSwitchToGuessLayout;
+					ChangeLayoutInExcluded, SnippetSpaceAfter, SnippetsSwitchToGuessLayout, AutoSwitchEnabled,
+					AutoSwitchSpaceAfter, AutoSwitchSwitchToGuessLayout;
 		/// <summary> Temporary modifiers of hotkeys. </summary>
 		string Mainhk_tempMods, ExitHk_tempMods, HKCLast_tempMods, HKCSelection_tempMods, 
 			    HKCLine_tempMods, HKSymIgn_tempMods, HKConMorWor_tempMods, HKTitleCase_tempMods,
@@ -132,6 +133,7 @@ namespace Mahou {
 		FontDialog fntd = new FontDialog();
 		public static FontConverter fcv = new FontConverter();
 		public static string snipfile = Path.Combine(MahouUI.nPath, "snippets.txt");
+		public static string AS_dictfile = Path.Combine(MahouUI.nPath, "AS_dict.txt");
 		#endregion
 		public MahouUI() {
 			InitializeComponent();
@@ -616,6 +618,13 @@ namespace Mahou {
 			if (chk_Snippets.Checked)
 				File.WriteAllText(snipfile, txt_Snippets.Text);
 			#endregion
+			#region AutoSwitch
+			MMain.MyConfs.Write("AutoSwitch", "Enabled", chk_AutoSwitchEnabled.Checked.ToString());
+			MMain.MyConfs.Write("AutoSwitch", "SpaceAfter", chk_AutoSwitchSpaceAfter.Checked.ToString());
+			MMain.MyConfs.Write("AutoSwitch", "SwitchToGuessLayout", chk_AutoSwitchSwitchToGuessLayout.Checked.ToString());
+			if (chk_AutoSwitchEnabled.Checked)
+				File.WriteAllText(AS_dictfile, txt_AutoSwitchDictionary.Text);
+			#endregion
 			#region Appearence & Hotkeys
 			SaveFromTemps();
 			#endregion
@@ -746,13 +755,22 @@ namespace Mahou {
 				} catch { WrongFontLog(MMain.MyConfs.Read("LangPanel", "Font")); }
 			LangPanelUpperArrow = chk_LPUpperArrow.Checked = MMain.MyConfs.ReadBool("LangPanel", "UpperArrow");
 			#endregion
+			#region AutoSwitch
+			AutoSwitchEnabled = chk_AutoSwitchEnabled.Checked = MMain.MyConfs.ReadBool("AutoSwitch", "Enabled");
+			AutoSwitchSpaceAfter = chk_AutoSwitchSpaceAfter.Checked = MMain.MyConfs.ReadBool("AutoSwitch", "SpaceAfter");
+			AutoSwitchSwitchToGuessLayout = chk_AutoSwitchSwitchToGuessLayout.Checked = MMain.MyConfs.ReadBool("AutoSwitch", "SwitchToGuessLayout");
+			if (File.Exists(AS_dictfile))
+				txt_AutoSwitchDictionary.Text = File.ReadAllText(AS_dictfile);
+			#endregion
 			#region Snippets
 			SnippetsEnabled = chk_Snippets.Checked = MMain.MyConfs.ReadBool("Snippets", "SnippetsEnabled");
 			SnippetSpaceAfter = chk_SpinnetSpaceAfter.Checked = MMain.MyConfs.ReadBool("Snippets", "SpaceAfter");
 			SnippetsSwitchToGuessLayout = chk_SnippetsSwitchToGuessLayout.Checked = MMain.MyConfs.ReadBool("Snippets", "SwitchToGuessLayout");
 			if (File.Exists(snipfile)) {
 				txt_Snippets.Text = File.ReadAllText(snipfile);
-				KMHook.ReInitSnippets();
+				KMHook.DoLater.Tick += (_, __) => { KMHook.ReInitSnippets(); KMHook.DoLater.Stop(); };
+				KMHook.DoLater.Interval = 250;
+				KMHook.DoLater.Start();
 			}
 			#endregion
 			#region Appearence & Hotkeys

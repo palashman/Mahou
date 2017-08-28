@@ -173,6 +173,12 @@ namespace Mahou
 		private System.Windows.Forms.ComboBox cbb_AutostartType;
 		private System.Windows.Forms.Label lbl_TaskExist;
 		private System.Windows.Forms.Label lbl_LinkExist;
+		private System.Windows.Forms.TabPage tab_autoswitch;
+		private System.Windows.Forms.Button btn_UpdateAutoSwitchDictionary;
+		private System.Windows.Forms.CheckBox chk_AutoSwitchSwitchToGuessLayout;
+		private System.Windows.Forms.CheckBox chk_AutoSwitchSpaceAfter;
+		private Mahou.MahouUI.TextBoxCA txt_AutoSwitchDictionary;
+		private System.Windows.Forms.CheckBox chk_AutoSwitchEnabled;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -307,6 +313,12 @@ namespace Mahou
 			this.chk_SpinnetSpaceAfter = new System.Windows.Forms.CheckBox();
 			this.txt_Snippets = new Mahou.MahouUI.TextBoxCA();
 			this.chk_Snippets = new System.Windows.Forms.CheckBox();
+			this.tab_autoswitch = new System.Windows.Forms.TabPage();
+			this.btn_UpdateAutoSwitchDictionary = new System.Windows.Forms.Button();
+			this.chk_AutoSwitchSwitchToGuessLayout = new System.Windows.Forms.CheckBox();
+			this.chk_AutoSwitchSpaceAfter = new System.Windows.Forms.CheckBox();
+			this.txt_AutoSwitchDictionary = new Mahou.MahouUI.TextBoxCA();
+			this.chk_AutoSwitchEnabled = new System.Windows.Forms.CheckBox();
 			this.tab_hotkeys = new System.Windows.Forms.TabPage();
 			this.grb_Hotkey = new System.Windows.Forms.GroupBox();
 			this.lbl_HotkeyHelp = new System.Windows.Forms.Label();
@@ -387,6 +399,7 @@ namespace Mahou
 			((System.ComponentModel.ISupportInitialize)(this.nud_LangTTCaretRefreshRate)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nud_LangTTMouseRefreshRate)).BeginInit();
 			this.tab_snippets.SuspendLayout();
+			this.tab_autoswitch.SuspendLayout();
 			this.tab_hotkeys.SuspendLayout();
 			this.grb_Hotkey.SuspendLayout();
 			this.tab_LangPanel.SuspendLayout();
@@ -408,6 +421,7 @@ namespace Mahou
 			this.tabs.Controls.Add(this.tab_appearence);
 			this.tabs.Controls.Add(this.tab_timings);
 			this.tabs.Controls.Add(this.tab_snippets);
+			this.tabs.Controls.Add(this.tab_autoswitch);
 			this.tabs.Controls.Add(this.tab_hotkeys);
 			this.tabs.Controls.Add(this.tab_LangPanel);
 			this.tabs.Controls.Add(this.tab_updates);
@@ -1733,6 +1747,70 @@ namespace Mahou
 			this.chk_Snippets.UseVisualStyleBackColor = true;
 			this.chk_Snippets.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
 			// 
+			// tab_autoswitch
+			// 
+			this.tab_autoswitch.Controls.Add(this.btn_UpdateAutoSwitchDictionary);
+			this.tab_autoswitch.Controls.Add(this.chk_AutoSwitchSwitchToGuessLayout);
+			this.tab_autoswitch.Controls.Add(this.chk_AutoSwitchSpaceAfter);
+			this.tab_autoswitch.Controls.Add(this.txt_AutoSwitchDictionary);
+			this.tab_autoswitch.Controls.Add(this.chk_AutoSwitchEnabled);
+			this.tab_autoswitch.Location = new System.Drawing.Point(4, 44);
+			this.tab_autoswitch.Name = "tab_autoswitch";
+			this.tab_autoswitch.Size = new System.Drawing.Size(559, 268);
+			this.tab_autoswitch.TabIndex = 10;
+			this.tab_autoswitch.Text = "Auto Switch";
+			this.tab_autoswitch.UseVisualStyleBackColor = true;
+			// 
+			// btn_UpdateAutoSwitchDictionary
+			// 
+			this.btn_UpdateAutoSwitchDictionary.Location = new System.Drawing.Point(276, 27);
+			this.btn_UpdateAutoSwitchDictionary.Name = "btn_UpdateAutoSwitchDictionary";
+			this.btn_UpdateAutoSwitchDictionary.Size = new System.Drawing.Size(186, 23);
+			this.btn_UpdateAutoSwitchDictionary.TabIndex = 9;
+			this.btn_UpdateAutoSwitchDictionary.Text = "Update auto-switch dictionary";
+			this.btn_UpdateAutoSwitchDictionary.UseVisualStyleBackColor = true;
+			// 
+			// chk_AutoSwitchSwitchToGuessLayout
+			// 
+			this.chk_AutoSwitchSwitchToGuessLayout.AutoSize = true;
+			this.chk_AutoSwitchSwitchToGuessLayout.Location = new System.Drawing.Point(9, 31);
+			this.chk_AutoSwitchSwitchToGuessLayout.Name = "chk_AutoSwitchSwitchToGuessLayout";
+			this.chk_AutoSwitchSwitchToGuessLayout.Size = new System.Drawing.Size(240, 19);
+			this.chk_AutoSwitchSwitchToGuessLayout.TabIndex = 8;
+			this.chk_AutoSwitchSwitchToGuessLayout.Text = "Switch to guess layout after auto-switch.";
+			this.chk_AutoSwitchSwitchToGuessLayout.UseVisualStyleBackColor = true;
+			// 
+			// chk_AutoSwitchSpaceAfter
+			// 
+			this.chk_AutoSwitchSpaceAfter.AutoSize = true;
+			this.chk_AutoSwitchSpaceAfter.Location = new System.Drawing.Point(276, 6);
+			this.chk_AutoSwitchSpaceAfter.Name = "chk_AutoSwitchSpaceAfter";
+			this.chk_AutoSwitchSpaceAfter.Size = new System.Drawing.Size(186, 19);
+			this.chk_AutoSwitchSpaceAfter.TabIndex = 7;
+			this.chk_AutoSwitchSpaceAfter.Text = "Add 1 space after auto-switch.";
+			this.chk_AutoSwitchSpaceAfter.UseVisualStyleBackColor = true;
+			// 
+			// txt_AutoSwitchDictionary
+			// 
+			this.txt_AutoSwitchDictionary.Location = new System.Drawing.Point(9, 56);
+			this.txt_AutoSwitchDictionary.MaxLength = 0;
+			this.txt_AutoSwitchDictionary.Multiline = true;
+			this.txt_AutoSwitchDictionary.Name = "txt_AutoSwitchDictionary";
+			this.txt_AutoSwitchDictionary.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.txt_AutoSwitchDictionary.Size = new System.Drawing.Size(541, 206);
+			this.txt_AutoSwitchDictionary.TabIndex = 6;
+			this.txt_AutoSwitchDictionary.Text = "EMPTY, need to update.";
+			// 
+			// chk_AutoSwitchEnabled
+			// 
+			this.chk_AutoSwitchEnabled.AutoSize = true;
+			this.chk_AutoSwitchEnabled.Location = new System.Drawing.Point(9, 6);
+			this.chk_AutoSwitchEnabled.Name = "chk_AutoSwitchEnabled";
+			this.chk_AutoSwitchEnabled.Size = new System.Drawing.Size(130, 19);
+			this.chk_AutoSwitchEnabled.TabIndex = 5;
+			this.chk_AutoSwitchEnabled.Text = "Enable auto-switch.";
+			this.chk_AutoSwitchEnabled.UseVisualStyleBackColor = true;
+			// 
 			// tab_hotkeys
 			// 
 			this.tab_hotkeys.Controls.Add(this.grb_Hotkey);
@@ -2395,6 +2473,8 @@ namespace Mahou
 			((System.ComponentModel.ISupportInitialize)(this.nud_LangTTMouseRefreshRate)).EndInit();
 			this.tab_snippets.ResumeLayout(false);
 			this.tab_snippets.PerformLayout();
+			this.tab_autoswitch.ResumeLayout(false);
+			this.tab_autoswitch.PerformLayout();
 			this.tab_hotkeys.ResumeLayout(false);
 			this.grb_Hotkey.ResumeLayout(false);
 			this.grb_Hotkey.PerformLayout();

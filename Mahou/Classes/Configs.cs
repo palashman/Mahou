@@ -142,6 +142,11 @@ namespace Mahou
 			CheckBool("Snippets", "SpaceAfter", "false");
 			CheckBool("Snippets", "SwitchToGuessLayout", "false");
 			#endregion
+			#region AutoSwitch section
+			CheckBool("AutoSwitch", "Enabled", "false");
+			CheckBool("AutoSwitch", "SpaceAfter", "true");
+			CheckBool("AutoSwitch", "SwitchToGuessLayout", "true");
+			#endregion
 			#region Hotkeys section
 			// Toggle main window hotkey
 			CheckBool("Hotkeys", "ToggleMainWindow_Enabled", "true");
