@@ -146,7 +146,7 @@ namespace Mahou
 					MMain.mahou._langPanel.DisplayUpper(upper);
 			if (MMain.mahou.MouseLangTooltipEnabled)
 				if (MahouUI.mouseLTUpperArrow)
-					MMain.mahou.mouseLangDisplay.DisplayUpper(upper);
+					MMain.mahou.museLangDisplay.DisplayUpper(upper);
 			if (MMain.mahou.CaretLangTooltipEnabled)
 				if (MahouUI.caretLTUpperArrow)
 					MMain.mahou.caretLangDisplay.DisplayUpper(upper);
@@ -155,14 +155,15 @@ namespace Mahou
 			if (MMain.mahou.SnippetsEnabled) {
 				if (((Key >= Keys.D0 && Key <= Keys.Z) || // This is 0-9 & A-Z
 				   Key >= Keys.Oem1 && Key <= Keys.OemBackslash // All other printable
-				  ) && !win && !win_r && !alt && !alt_r && !ctrl && ctrl_r && MSG == WinAPI.WM_KEYUP) {
+				  ) && !win && !win_r && !alt && !alt_r && !ctrl && !ctrl_r && MSG == WinAPI.WM_KEYUP) {
 					var stb = new StringBuilder(10);
 					var byt = new byte[256];
-					if (shift) {
+					if (shift || shift_r) {
 						byt[(int)Keys.ShiftKey] = 0xFF;
 					}
 					WinAPI.ToUnicodeEx((uint)vkCode, (uint)vkCode, byt, stb, stb.Capacity, 0, (IntPtr)(Locales.GetCurrentLocale() & 0xffff));
 					c_snip.Add(stb.ToString()[0]);
+					Logging.Log("Added ["+ stb.ToString()[0] + "] to current snippet.");
 				}
 				if (MSG == WinAPI.WM_KEYUP && Key == Keys.Space) {
 					var snip = "";
