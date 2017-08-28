@@ -26,11 +26,14 @@ namespace Mahou
 		public static System.Windows.Forms.Timer CheckLayoutLater = new System.Windows.Forms.Timer() { Interval = 100 };
 		public static System.Windows.Forms.Timer DoLater = new System.Windows.Forms.Timer() { Interval = 100 };
 		public static System.Windows.Forms.Timer doublekey = new System.Windows.Forms.Timer();
+		public static List<YuKey> c_word_backup = new List<YuKey>();
 		public static string[] snipps = new []{ "mahou", "eml" };
 		public static string[] exps = new [] {
 			"Mahou (魔法) - Magical layout switcher.",
 			"BladeMight@gmail.com"
 		};
+		public static string[] as_wrongs;
+		public static string[] as_corrects;
 		static Dictionary<string, string> transliterationDict = new Dictionary<string, string>() { 
 				{"Ч", "CH"}, {"Ш", "SH"}, {"Щ", "SCH"}, {"Ё", "JO"}, {"ВВ", "W"},
 				{"Є", "EH"}, {"ю", "yu"}, {"я", "ya"}, {"є", "eh"}, {"Ж", "ZH"},
@@ -174,36 +177,25 @@ namespace Mahou
 					for (int i = 0; i < snipps.Length; i++) {
 						if (snip == snipps[i]) {
 							Logging.Log("Current snippet [" + snip + "] matched existing snippet [" + snipps[i] + "].");
-							DoSelf(() => {
-								for (int e = -1; e < c_snip.Count; e++) {
-									KInputs.MakeInput(new [] { KInputs.AddKey(Keys.Back, true),
-										KInputs.AddKey(Keys.Back, false) 
-									});
-								}
-								Logging.Log("Last word, words cleared due to snippet expansion.");
-								Logging.Log("Expanding snippet [" + snip + "] to [" + snipps[i] + "].");
-								MMain.c_words.Clear();
-								MMain.c_word.Clear();
-								try {
-									KInputs.MakeInput(KInputs.AddString(exps[i]));
-									if (MMain.mahou.SnippetSpaceAfter)
-										KInputs.MakeInput(KInputs.AddString(" "));
-									if (MMain.mahou.SnippetsSwitchToGuessLayout) {
-										var guess = WordGuessLayout(exps[i]);
-										Logging.Log("Changing to guess layout [" + guess.Item2 + "] after snippet ["+ guess.Item1 + "].");
-										ChangeToLayout(Locales.ActiveWindow(), guess.Item2);
+							ExpandSnippet(snip, exps[i], MMain.mahou.SnippetSpaceAfter, MMain.mahou.SnippetsSwitchToGuessLayout);
+						}
+					}
+					if (MMain.mahou.AutoSwitchEnabled) {
+						for (int i = 0; i < as_wrongs.Length; i++) {
+							if (snip == as_wrongs[i]) {
+								ExpandSnippet(snip, as_corrects[i], MMain.mahou.AutoSwitchSpaceAfter, MMain.mahou.AutoSwitchSwitchToGuessLayout);
+							} else {
+								if (snip.Length == as_wrongs[i].Length) {
+									if (snip.ToLowerInvariant() == as_wrongs[i].ToLowerInvariant()) {
+										DoSelf(() => {
+									       	KInputs.MakeInput(new [] { KInputs.AddKey(Keys.Back, true), KInputs.AddKey(Keys.Back, false)});
+											ConvertLast(c_word_backup);
+										       });
+										ExpandSnippet(snip, as_corrects[i], MMain.mahou.AutoSwitchSpaceAfter, MMain.mahou.AutoSwitchSwitchToGuessLayout, true);
+										c_snip.Clear();
 									}
-								} catch {
-									Logging.Log("Some snippets configured wrong, check them.", 1);
-									// If not use TASK, form(MessageBox) won't accept the keys(Enter/Escape/Alt+F4).
-									var msg = new [] {"", ""};
-									msg[0] = MMain.Lang[Languages.Element.MSG_SnippetsError];
-									msg[1] = MMain.Lang[Languages.Element.Error];
-									var tsk = new System.Threading.Tasks.Task(() => MessageBox.Show(msg[0], msg[1], MessageBoxButtons.OK, MessageBoxIcon.Error));
-									tsk.Start();
-									KInputs.MakeInput(KInputs.AddString(snip));
 								}
-				              });
+							}
 						}
 					}
 					c_snip.Clear();
@@ -273,6 +265,7 @@ namespace Mahou
 			#endregion
 			if ((ctrl||win||alt||ctrl_r||win_r||alt_r) && Key == Keys.Tab) {
 					Logging.Log("Last word cleared.");
+					c_word_backup = new List<YuKey>(MMain.c_word);
 					MMain.c_word.Clear();
 					MMain.c_words.Clear();
 					Logging.Log("Words cleared.");
@@ -320,6 +313,7 @@ namespace Mahou
 							Key != Keys.LControlKey &&
 							Key != Keys.RControlKey ))) { 
 					Logging.Log("Last word cleared.");
+					c_word_backup = new List<YuKey>(MMain.c_word);
 					MMain.c_word.Clear();
 					MMain.c_words.Clear();
 					Logging.Log("Words cleared.");
@@ -338,6 +332,7 @@ namespace Mahou
 						MMain.c_word.Add(new YuKey() { key = Keys.Space });
 						afterEOS = true;
 					} else {
+						c_word_backup = new List<YuKey>(MMain.c_word);
 						MMain.c_word.Clear();
 						Logging.Log("Last word cleared.");
 						afterEOS = false;
@@ -351,6 +346,7 @@ namespace Mahou
 				   Key == Keys.Divide || Key == Keys.Add // Numpad symbols
 				  ) && !win && !win_r && !alt && !alt_r && !ctrl && !ctrl_r) {
 					if (afterEOS) { //Clears word after Eat ONE space
+						c_word_backup = new List<YuKey>(MMain.c_word);
 						MMain.c_word.Clear();
 						afterEOS = false;
 					}
@@ -424,6 +420,7 @@ namespace Mahou
 				if (alt || alt_r)
 					clickAfterALT = true;
 				MahouUI.currentLayout = 0;
+				c_word_backup = new List<YuKey>(MMain.c_word);
 				MMain.c_word.Clear();
 				MMain.c_words.Clear();
 				Logging.Log("Last word & words cleared [with mouse click].");
@@ -451,6 +448,41 @@ namespace Mahou
 		}
 		#endregion
 		#region Functions/Struct
+		static void ExpandSnippet(string snip, string expand, bool spaceAft, bool switchLayout, bool ignoreExpand = false) {
+			DoSelf(() => {
+				try {
+					if (!ignoreExpand) {
+						for (int e = -1; e < c_snip.Count; e++) {
+							KInputs.MakeInput(new [] { KInputs.AddKey(Keys.Back, true),
+								KInputs.AddKey(Keys.Back, false) 
+							});
+						}
+						Logging.Log("Last word, words cleared due to snippet expansion.");
+						Logging.Log("Expanding snippet [" + snip + "] to [" + expand + "].");
+						MMain.c_words.Clear();
+						c_word_backup = new List<YuKey>(MMain.c_word);
+						MMain.c_word.Clear();
+						KInputs.MakeInput(KInputs.AddString(expand));
+					}
+					if (spaceAft)
+						KInputs.MakeInput(KInputs.AddString(" "));
+					if (switchLayout) {
+						var guess = WordGuessLayout(expand);
+						Logging.Log("Changing to guess layout [" + guess.Item2 + "] after snippet ["+ guess.Item1 + "].");
+						ChangeToLayout(Locales.ActiveWindow(), guess.Item2);
+					}
+				} catch {
+					Logging.Log("Some snippets configured wrong, check them.", 1);
+					// If not use TASK, form(MessageBox) won't accept the keys(Enter/Escape/Alt+F4).
+					var msg = new [] {"", ""};
+					msg[0] = MMain.Lang[Languages.Element.MSG_SnippetsError];
+					msg[1] = MMain.Lang[Languages.Element.Error];
+					var tsk = new System.Threading.Tasks.Task(() => MessageBox.Show(msg[0], msg[1], MessageBoxButtons.OK, MessageBoxIcon.Error));
+					tsk.Start();
+					KInputs.MakeInput(KInputs.AddString(snip));
+				}
+              });
+		}
 		static bool IsUpperInput() {
 			bool caps = Control.IsKeyLocked(Keys.CapsLock);
 			if (MahouUI.CapsLockDisablerTimer)
@@ -471,8 +503,8 @@ namespace Mahou
 		}
 		static void SpecificKey(Keys Key, uint MSG, int specificKey, int specKeyId)
 		{
-//			Logging.Log("Spekky->" + specificKey + " Ky->" + Key + " skId->" + specKeyId);
-//			Logging.Log("A->" + alt + " Sh->" + shift + " Ct->" + ctrl);
+//			Debug.WriteLine("Spekky->" + specificKey + " Ky->" + Key + " skId->" + specKeyId);
+//			Debug.WriteLine("A->" + alt + " Sh->" + shift + " Ct->" + ctrl);
 //			Debug.WriteLine("Speekky->" + (Key == Keys.CapsLock));
 			DoSelf(() => {
 				if (!shift && !shift_r && !alt  && !alt_r && !ctrl && !ctrl_r && specificKey == 1 && Key == Keys.CapsLock &&
@@ -505,7 +537,7 @@ namespace Mahou
 								}
 								catched = true;
 							} else 
-							if (!shift && !shift_r && !alt && !alt_r && !ctrl && ctrl_r && specificKey == 1 && Key == Keys.CapsLock) {
+							if (!shift && !shift_r && !alt && !alt_r && !ctrl && !ctrl_r && specificKey == 1 && Key == Keys.CapsLock) {
 								ChangeLayout();
 								if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
 									KeybdEvent(Keys.CapsLock, 0);
@@ -1481,13 +1513,15 @@ namespace Mahou
 		{
 			if (System.IO.File.Exists(MahouUI.snipfile)) {
 				var snippets = System.IO.File.ReadAllText(MahouUI.snipfile);
-				if (MMain.mahou.AutoSwitchEnabled && System.IO.File.Exists(MahouUI.AS_dictfile)) {
-					snippets += Environment.NewLine + System.IO.File.ReadAllText(MahouUI.AS_dictfile);
-				}
-				var snili = new List<string>();
-				var expli = new List<string>();
 				// One Regex is faster than two, because it makes it to process again snippets file. Benchmarks says that it in ~2 times faster.
 				var RX = new Regex("(?<=====>)(.*?)(?=<====)|->(.*?)(\r|\n|\r\n)", RegexOptions.Singleline);
+				string auto_switches = "";
+				if (MMain.mahou.AutoSwitchEnabled && System.IO.File.Exists(MahouUI.AS_dictfile))
+					auto_switches = System.IO.File.ReadAllText(MahouUI.AS_dictfile);
+				var snili = new List<string>();
+				var expli = new List<string>();
+				var wrongli = new List<string>();
+				var rightli = new List<string>();
 				Stopwatch watch = null;
 				if (MahouUI.LoggingEnabled) {
 					watch = new Stopwatch();
@@ -1499,12 +1533,22 @@ namespace Mahou
 					if (!String.IsNullOrEmpty(snip.Groups[1].Value))
 						expli.Add(Regex.Replace(snip.Groups[1].Value,"\r",""));
 				}
+				if (MMain.mahou.AutoSwitchEnabled) { 
+					foreach (Match wrcor in RX.Matches(auto_switches)) {
+						if (!String.IsNullOrEmpty(wrcor.Groups[2].Value))
+						    wrongli.Add(wrcor.Groups[2].Value);
+						if (!String.IsNullOrEmpty(wrcor.Groups[1].Value))
+							rightli.Add(Regex.Replace(wrcor.Groups[1].Value,"\r",""));
+					}
+				}
 				if (MahouUI.LoggingEnabled) {
 					watch.Stop();
-					Logging.Log("Snippet init finished, elapsed ["+watch.Elapsed.TotalMilliseconds+"] ms.");
+					Logging.Log("Snippet & AutoSwitch(if enabled) init finished, elapsed ["+watch.Elapsed.TotalMilliseconds+"] ms.");
 				}
 				snipps = snili.ToArray();
 				exps = expli.ToArray();
+				as_wrongs = wrongli.ToArray();
+				as_corrects = rightli.ToArray();
 			}
 			Memory.Flush();
 		}
