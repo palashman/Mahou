@@ -1,3 +1,4 @@
+
 # 10000+ Russian words. Credit [https://www.reddit.com/r/russian/comments/289wba/10000_most_common_russian_words_in_spreadsheet/].
 ->heccrbq
 ====>русский<====
@@ -1133,8 +1134,6 @@
 ====>равновесие<====
 ->hfdtycndj
 ====>равенство<====
-->c
-====>с<====
 ->chsdfnm
 ====>срывать<====
 ->chsdfnmcz
@@ -4039,8 +4038,6 @@
 ====>табачный<====
 ->nf,fr
 ====>табак<====
-->e
-====>у<====
 ->ehjr
 ====>урок<====
 ->ehjybnm
