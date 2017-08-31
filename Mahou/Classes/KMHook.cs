@@ -173,14 +173,16 @@ namespace Mahou
 					foreach (var ch in c_snip) {
 						snip += ch;
 					}
+					bool matched = false;
 					Logging.Log("Current snippet is [" + snip + "].");
 					for (int i = 0; i < snipps.Length; i++) {
 						if (snip == snipps[i]) {
 							Logging.Log("Current snippet [" + snip + "] matched existing snippet [" + snipps[i] + "].");
 							ExpandSnippet(snip, exps[i], MMain.mahou.SnippetSpaceAfter, MMain.mahou.SnippetsSwitchToGuessLayout);
+							matched = true;
 						}
 					}
-					if (MMain.mahou.AutoSwitchEnabled) {
+					if (MMain.mahou.AutoSwitchEnabled && !matched) {
 						for (int i = 0; i < as_wrongs.Length; i++) {
 							if (snip == as_wrongs[i]) {
 								ExpandSnippet(snip, as_corrects[i], MMain.mahou.AutoSwitchSpaceAfter, MMain.mahou.AutoSwitchSwitchToGuessLayout);
