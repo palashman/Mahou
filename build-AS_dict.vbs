@@ -5,5 +5,9 @@ dim AS_DICT
 for each dict in fso.GetFolder("Dictionaries-origin").Files
   AS_DICT = AS_DICT & dict.OpenAsTextStream(1,-2).ReadAll() & vbCcrLf
 next
-set asd = fso.CreateTextFile("AS_dict.txt", true)
-asd.Write(AS_DICT)
+Set ADODB = CreateObject("ADODB.Stream")
+ADODB.Type = 2
+ADODB.Charset = "utf-8"
+ADODB.Open
+ADODB.WriteText AS_DICT
+ADODB.SaveToFile "AS_dict.txt", 2
