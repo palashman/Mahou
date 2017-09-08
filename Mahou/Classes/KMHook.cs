@@ -705,12 +705,12 @@ namespace Mahou
 								var s = new StringBuilder(10);
 								var sb = new StringBuilder(10);
 								var yk = new YuKey();
-								var scan = WinAPI.VkKeyScanEx(c, (IntPtr)wasLocale);
+								var scan = WinAPI.VkKeyScanEx(c, wasLocale);
 								var state = ((scan >> 8) & 0xff);
 								var bytes = new byte[255];
 								if (state == 1)
 									bytes[(int)Keys.ShiftKey] = 0xFF;
-								var scan2 = WinAPI.VkKeyScanEx(c, (IntPtr)nowLocale);
+								var scan2 = WinAPI.VkKeyScanEx(c, nowLocale);
 								var state2 = ((scan2 >> 8) & 0xff);
 								var bytes2 = new byte[255];
 								if (state2 == 1)
@@ -1368,7 +1368,7 @@ namespace Mahou
 		static string InAnother(char c, uint uID1, uint uID2) //Remakes c from uID1  to uID2
 		{
 			var cc = c;
-			var chsc = WinAPI.VkKeyScanEx(cc, (IntPtr)uID1);
+			var chsc = WinAPI.VkKeyScanEx(cc, uID1);
 			var state = (chsc >> 8) & 0xff;
 			var byt = new byte[256];
 			//it needs just 1 but,anyway let it be 10, i think that's better

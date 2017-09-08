@@ -2,7 +2,6 @@
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-
 static class KInputs
 {
 	/// <summary>
@@ -58,6 +57,21 @@ static class KInputs
 			key == Keys.Snapshot || 
 			key == Keys.Divide;
     }
+    public static string GetWordByIndex(string words, int index) {
+	int left = 0, right = 0;
+	// Gets pointed min/max indexes
+	for (int i = 0; i != words.Length; i++) {
+		if (words[i] == ' ') {
+			if (i <= index) {
+				left = i+1;
+			} else {
+				right = i-1;
+				break;
+			}
+		}
+	}
+	return words.Substring(left, words.Length - right - left);
+    }
     /// <summary>
     /// Creates array of INPUT from string.
     /// </summary>
@@ -66,9 +80,26 @@ static class KInputs
     public static WinAPI.INPUT[] AddString(string str)
     {
         var result = new List<WinAPI.INPUT>();
-        char[] inputs = str.ToCharArray();
-        foreach (var s in inputs)
+        var index = 0;
+        foreach (var s in str)
         {
+        	bool uselt1_vk, uselt2_vk;
+        	ushort resultvk = 0;
+        	short lt1_vk = WinAPI.VkKeyScanEx(s, Mahou.Locales.GetLocaleFromString(Mahou.MMain.mahou.MainLayout1).uId);
+        	uselt1_vk = lt1_vk != -1;
+        	short lt2_vk = WinAPI.VkKeyScanEx(s, Mahou.Locales.GetLocaleFromString(Mahou.MMain.mahou.MainLayout2).uId);
+        	uselt2_vk = lt2_vk != -1;
+        	if (uselt1_vk && uselt2_vk) {
+        		var lt_guess = Mahou.KMHook.WordGuessLayout(GetWordByIndex(str, index)).Item2;
+        		resultvk = (ushort)WinAPI.VkKeyScanEx(s, lt_guess);
+        	} else if (uselt1_vk)
+        		resultvk = (ushort)lt1_vk;
+        	else if (uselt2_vk) 
+        		resultvk = (ushort)lt2_vk;
+        	bool resultvk_state = ((resultvk >> 8) & 0xff) == 1;
+//	        	System.Diagnostics.Debug.WriteLine("s = " + s + ", lt1_vk = " + lt1_vk + ", lt2_vk = " + lt2_vk);
+        	if (resultvk_state)
+        		result.Add(KInputs.AddKey(Keys.RShiftKey, true));
             var down = new WinAPI.INPUT
             {
                 Type = WinAPI.INPUT_KEYBOARD,
@@ -76,9 +107,9 @@ static class KInputs
                 {
                     Keyboard = new WinAPI.KEYBDINPUT
                     {
-                        Vk = 0,
-                        Flags = WinAPI.KEYEVENTF_UNICODE,
-                        Scan = (UInt16)s,
+                        Vk = resultvk,
+                        Flags = (UInt32)(WinAPI.KEYEVENTF_UNICODE),
+                        Scan = (resultvk == 0) ? (UInt16)0 : (UInt16)s,
                         ExtraInfo = IntPtr.Zero,
                         Time = 0
                     }
@@ -91,9 +122,9 @@ static class KInputs
                 {
                     Keyboard = new WinAPI.KEYBDINPUT
                     {
-                        Vk = 0,
-                        Flags = WinAPI.KEYEVENTF_UNICODE | WinAPI.KEYEVENTF_KEYUP,
-                        Scan = s,
+                        Vk = resultvk,
+                        Flags = (UInt32)(WinAPI.KEYEVENTF_UNICODE | WinAPI.KEYEVENTF_KEYUP),
+                        Scan = (resultvk == 0) ? (UInt16)0 : (UInt16)s,
                         ExtraInfo = IntPtr.Zero,
                         Time = 0
                     }
@@ -106,6 +137,9 @@ static class KInputs
             }
             result.Add(down);
             result.Add(up);
+        	if (resultvk_state)
+        		result.Add(KInputs.AddKey(Keys.RShiftKey, false));
+            index++;
         }
         return result.ToArray();
     }

@@ -283,7 +283,7 @@ public static class WinAPI {
 	public static extern int ToUnicodeEx(uint wVirtKey, uint wScanCode, byte[] lpKeyState,
 		StringBuilder pwszBuff, int cchBuff, uint wFlags, IntPtr dwhkl);
 	[DllImport("user32.dll", CharSet = CharSet.Unicode)]
-	public static extern short VkKeyScanEx(char ch, IntPtr dwhkl);
+	public static extern short VkKeyScanEx(char ch, uint dwhkl);
     #endregion
 	#region Locales/CaretPos requires
 	[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
