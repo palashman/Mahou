@@ -183,6 +183,7 @@ namespace Mahou
 		private System.Windows.Forms.Label lbl_AutoSwitchWordsCount;
 		private System.Windows.Forms.Label lbl_SnippetsCount;
 		private System.Windows.Forms.CheckBox chk_GuessKeyCodeFix;
+		private System.Windows.Forms.CheckBox chk_AppDataConfigs;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -206,6 +207,7 @@ namespace Mahou
 			this.components = new System.ComponentModel.Container();
 			this.tabs = new System.Windows.Forms.TabControl();
 			this.tab_functions = new System.Windows.Forms.TabPage();
+			this.chk_GuessKeyCodeFix = new System.Windows.Forms.CheckBox();
 			this.lbl_TaskExist = new System.Windows.Forms.Label();
 			this.lbl_LinkExist = new System.Windows.Forms.Label();
 			this.lbl_AutoStartArrow = new System.Windows.Forms.Label();
@@ -379,7 +381,7 @@ namespace Mahou
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
 			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
-			this.chk_GuessKeyCodeFix = new System.Windows.Forms.CheckBox();
+			this.chk_AppDataConfigs = new System.Windows.Forms.CheckBox();
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -444,6 +446,7 @@ namespace Mahou
 			// 
 			// tab_functions
 			// 
+			this.tab_functions.Controls.Add(this.chk_AppDataConfigs);
 			this.tab_functions.Controls.Add(this.chk_GuessKeyCodeFix);
 			this.tab_functions.Controls.Add(this.lbl_TaskExist);
 			this.tab_functions.Controls.Add(this.lbl_LinkExist);
@@ -472,6 +475,16 @@ namespace Mahou
 			this.tab_functions.TabIndex = 0;
 			this.tab_functions.Text = "Functions";
 			this.tab_functions.UseVisualStyleBackColor = true;
+			// 
+			// chk_GuessKeyCodeFix
+			// 
+			this.chk_GuessKeyCodeFix.AutoSize = true;
+			this.chk_GuessKeyCodeFix.Location = new System.Drawing.Point(302, 166);
+			this.chk_GuessKeyCodeFix.Name = "chk_GuessKeyCodeFix";
+			this.chk_GuessKeyCodeFix.Size = new System.Drawing.Size(146, 19);
+			this.chk_GuessKeyCodeFix.TabIndex = 20;
+			this.chk_GuessKeyCodeFix.Text = "Use guess key code fix.";
+			this.chk_GuessKeyCodeFix.UseVisualStyleBackColor = true;
 			// 
 			// lbl_TaskExist
 			// 
@@ -2465,15 +2478,15 @@ namespace Mahou
 			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.HelpMeUnderstand.Popup += new System.Windows.Forms.PopupEventHandler(this.HelpMeUnderstandPopup);
 			// 
-			// chk_GuessKeyCodeFix
+			// chk_AppDataConfigs
 			// 
-			this.chk_GuessKeyCodeFix.AutoSize = true;
-			this.chk_GuessKeyCodeFix.Location = new System.Drawing.Point(302, 166);
-			this.chk_GuessKeyCodeFix.Name = "chk_GuessKeyCodeFix";
-			this.chk_GuessKeyCodeFix.Size = new System.Drawing.Size(143, 19);
-			this.chk_GuessKeyCodeFix.TabIndex = 20;
-			this.chk_GuessKeyCodeFix.Text = "Use guess key code fix";
-			this.chk_GuessKeyCodeFix.UseVisualStyleBackColor = true;
+			this.chk_AppDataConfigs.AutoSize = true;
+			this.chk_AppDataConfigs.Location = new System.Drawing.Point(302, 191);
+			this.chk_AppDataConfigs.Name = "chk_AppDataConfigs";
+			this.chk_AppDataConfigs.Size = new System.Drawing.Size(132, 19);
+			this.chk_AppDataConfigs.TabIndex = 21;
+			this.chk_AppDataConfigs.Text = "Configs in AppData.";
+			this.chk_AppDataConfigs.UseVisualStyleBackColor = true;
 			// 
 			// MahouUI
 			// 

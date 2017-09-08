@@ -134,6 +134,8 @@ namespace Mahou {
 		public static FontConverter fcv = new FontConverter();
 		public static string snipfile = Path.Combine(MahouUI.nPath, "snippets.txt");
 		public static string AS_dictfile = Path.Combine(MahouUI.nPath, "AS_dict.txt");
+		public static string mahou_folder_appd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Mahou");
+		public static string latest_conf_path = "";
 		#endregion
 		public MahouUI() {
 			InitializeComponent();
@@ -523,7 +525,15 @@ namespace Mahou {
 		/// Saves current settings to INI.
 		/// </summary>
 		void SaveConfigs() {
-			MMain.MyConfs.Write("Functions", "AutoStartAsAdmin", (cbb_AutostartType.SelectedIndex != 0).ToString());
+			bool only_load = false;
+			if (chk_AppDataConfigs.Checked) {
+				if (!Directory.Exists(mahou_folder_appd))
+					Directory.CreateDirectory(mahou_folder_appd);
+				Configs.filePath = Path.Combine(mahou_folder_appd, "Mahou.ini");
+				MMain.MyConfs = new Configs();
+			}
+			else 
+				Configs.filePath = Path.Combine(MahouUI.nPath, "Mahou.ini");
 			AutoStartAsAdmin = (cbb_AutostartType.SelectedIndex != 0);
 			if (chk_AutoStart.Checked) {
 				if (!AutoStartExist(AutoStartAsAdmin))
@@ -533,122 +543,138 @@ namespace Mahou {
 				if(AutoStartExist(AutoStartAsAdmin))
 					AutoStartRemove(AutoStartAsAdmin);
 			}
-			var tmpLangTTAppearenceIndex = lsb_LangTTAppearenceForList.SelectedIndex;
-			var tmpHotkeysIndex = lsb_Hotkeys.SelectedIndex;
-			#region Functions
-			MMain.MyConfs.Write("Functions", "TrayIconVisible", chk_TrayIcon.Checked.ToString());
-			MMain.MyConfs.Write("Functions", "ConvertSelectionLayoutSwitching", chk_CSLayoutSwitching.Checked.ToString());
-			MMain.MyConfs.Write("Functions", "ReSelect", chk_ReSelect.Checked.ToString());
-			MMain.MyConfs.Write("Functions", "RePress", chk_RePress.Checked.ToString());
-			MMain.MyConfs.Write("Functions", "AddOneSpaceToLastWord", chk_AddOneSpace.Checked.ToString());
-			MMain.MyConfs.Write("Functions", "ConvertSelectionLayoutSwitchingPlus", chk_CSLayoutSwitchingPlus.Checked.ToString());
-			MMain.MyConfs.Write("Functions", "ScrollTip", chk_HighlightScroll.Checked.ToString());
-			MMain.MyConfs.Write("Functions", "StartupUpdatesCheck", chk_StartupUpdatesCheck.Checked.ToString());
-			MMain.MyConfs.Write("Functions", "Logging", chk_Logging.Checked.ToString());
-			MMain.MyConfs.Write("Functions", "TrayFlags", chk_FlagsInTray.Checked.ToString());
-			MMain.MyConfs.Write("Functions", "CapsLockTimer", chk_CapsLockDTimer.Checked.ToString());
-			MMain.MyConfs.Write("Functions", "BlockMahouHotkeysWithCtrl", chk_BlockHKWithCtrl.Checked.ToString());
-			MMain.MyConfs.Write("Functions", "MCDServerSupport", chk_MCDS_support.Checked.ToString());
-			MMain.MyConfs.Write("Functions", "OneLayoutWholeWord", chk_OneLayoutWholeWord.Checked.ToString());
-			MMain.MyConfs.Write("Appearence", "MouseLTAlways", chk_MouseTTAlways.Checked.ToString());
-			MMain.MyConfs.Write("Functions", "GuessKeyCodeFix", chk_GuessKeyCodeFix.Checked.ToString());
-			#endregion
-			#region Layouts
-			MMain.MyConfs.Write("Layouts", "SwitchBetweenLayouts", chk_SwitchBetweenLayouts.Checked.ToString());
-			MMain.MyConfs.Write("Layouts", "EmulateLayoutSwitch", chk_EmulateLS.Checked.ToString());
-			MMain.MyConfs.Write("Layouts", "ChangeToSpecificLayoutByKey", chk_SpecificLS.Checked.ToString());
-			// Keys
-			MMain.MyConfs.Write("Layouts", "SpecificKey1", cbb_Key1.SelectedIndex.ToString());
-			MMain.MyConfs.Write("Layouts", "SpecificKey2", cbb_Key2.SelectedIndex.ToString());
-			MMain.MyConfs.Write("Layouts", "SpecificKey3", cbb_Key3.SelectedIndex.ToString());
-			MMain.MyConfs.Write("Layouts", "SpecificKey4", cbb_Key4.SelectedIndex.ToString());
-			try {
-				try { MMain.MyConfs.Write("Layouts", "EmulateLayoutSwitchType", cbb_EmulateType.SelectedItem.ToString()); } catch { }
-				// Main Layouts
-				try { MMain.MyConfs.Write("Layouts", "MainLayout1", cbb_MainLayout1.SelectedItem.ToString()); } catch {  }
-				try { MMain.MyConfs.Write("Layouts", "MainLayout2", cbb_MainLayout2.SelectedItem.ToString()); } catch { }
-				// Layouts
-				try { MMain.MyConfs.Write("Layouts", "SpecificLayout1", cbb_Layout1.SelectedItem.ToString()); } catch { }
-				try { MMain.MyConfs.Write("Layouts", "SpecificLayout2", cbb_Layout2.SelectedItem.ToString()); } catch { }
-				try { MMain.MyConfs.Write("Layouts", "SpecificLayout3", cbb_Layout3.SelectedItem.ToString()); } catch { }
-				try { MMain.MyConfs.Write("Layouts", "SpecificLayout4", cbb_Layout4.SelectedItem.ToString()); } catch { }
-			} catch { Logging.Log("Some settings in layouts tab failed to save, they are skipped."); }
-			MMain.MyConfs.Write("Layouts", "OneLayout", chk_OneLayout.Checked.ToString());
-			MMain.MyConfs.Write("Layouts", "QWERTZfix", chk_qwertz.Checked.ToString());
-			#endregion
-			#region Persistent Layout
-			MMain.MyConfs.Write("PersistentLayout", "ActivateForLayout1", chk_PersistentLayout1Active.Checked.ToString());
-			MMain.MyConfs.Write("PersistentLayout", "ActivateForLayout2", chk_PersistentLayout2Active.Checked.ToString());
-			MMain.MyConfs.Write("PersistentLayout", "Layout1CheckInterval", nud_PersistentLayout1Interval.Value.ToString());
-			MMain.MyConfs.Write("PersistentLayout", "Layout2CheckInterval", nud_PersistentLayout2Interval.Value.ToString());
-			MMain.MyConfs.Write("PersistentLayout", "Layout1Processes", txt_PersistentLayout1Processes.Text.Replace(Environment.NewLine, "^cr^lf"));
-			MMain.MyConfs.Write("PersistentLayout", "Layout2Processes", txt_PersistentLayout2Processes.Text.Replace(Environment.NewLine, "^cr^lf"));
-			#endregion
-			#region Appearence
-			MMain.MyConfs.Write("Appearence", "DisplayLangTooltipForMouse", chk_LangTooltipMouse.Checked.ToString());
-			MMain.MyConfs.Write("Appearence", "DisplayLangTooltipForCaret", chk_LangTooltipCaret.Checked.ToString());
-			MMain.MyConfs.Write("Appearence", "DisplayLangTooltipForMouseOnChange", chk_LangTTMouseOnChange.Checked.ToString());
-			MMain.MyConfs.Write("Appearence", "DisplayLangTooltipForCaretOnChange", chk_LangTTCaretOnChange.Checked.ToString());
-			MMain.MyConfs.Write("Appearence", "DifferentColorsForLayouts", chk_LangTTDiffLayoutColors.Checked.ToString());
-			try {
-			MMain.MyConfs.Write("Appearence", "Language", cbb_Language.SelectedItem.ToString());
-			} catch { 
-				Logging.Log("Language saving failed, restored to English.");
-				MMain.MyConfs.Write("Appearence", "Language", "English");
+			if (latest_conf_path != Configs.filePath) only_load = true;
+			latest_conf_path = Configs.filePath;
+			DoInMainConfigs(() => { MMain.MyConfs.Write("Functions", "AppDataConfigs", chk_AppDataConfigs.Checked.ToString()); return (object)0; });
+			if (!only_load) {
+				var tmpLangTTAppearenceIndex = lsb_LangTTAppearenceForList.SelectedIndex;
+				var tmpHotkeysIndex = lsb_Hotkeys.SelectedIndex;
+				#region Functions
+				MMain.MyConfs.Write("Functions", "TrayIconVisible", chk_TrayIcon.Checked.ToString());
+				MMain.MyConfs.Write("Functions", "ConvertSelectionLayoutSwitching", chk_CSLayoutSwitching.Checked.ToString());
+				MMain.MyConfs.Write("Functions", "ReSelect", chk_ReSelect.Checked.ToString());
+				MMain.MyConfs.Write("Functions", "RePress", chk_RePress.Checked.ToString());
+				MMain.MyConfs.Write("Functions", "AddOneSpaceToLastWord", chk_AddOneSpace.Checked.ToString());
+				MMain.MyConfs.Write("Functions", "ConvertSelectionLayoutSwitchingPlus", chk_CSLayoutSwitchingPlus.Checked.ToString());
+				MMain.MyConfs.Write("Functions", "ScrollTip", chk_HighlightScroll.Checked.ToString());
+				MMain.MyConfs.Write("Functions", "StartupUpdatesCheck", chk_StartupUpdatesCheck.Checked.ToString());
+				MMain.MyConfs.Write("Functions", "Logging", chk_Logging.Checked.ToString());
+				MMain.MyConfs.Write("Functions", "TrayFlags", chk_FlagsInTray.Checked.ToString());
+				MMain.MyConfs.Write("Functions", "CapsLockTimer", chk_CapsLockDTimer.Checked.ToString());
+				MMain.MyConfs.Write("Functions", "BlockMahouHotkeysWithCtrl", chk_BlockHKWithCtrl.Checked.ToString());
+				MMain.MyConfs.Write("Functions", "MCDServerSupport", chk_MCDS_support.Checked.ToString());
+				MMain.MyConfs.Write("Functions", "OneLayoutWholeWord", chk_OneLayoutWholeWord.Checked.ToString());
+				MMain.MyConfs.Write("Appearence", "MouseLTAlways", chk_MouseTTAlways.Checked.ToString());
+				MMain.MyConfs.Write("Functions", "GuessKeyCodeFix", chk_GuessKeyCodeFix.Checked.ToString());
+				#endregion
+				#region Layouts
+				MMain.MyConfs.Write("Layouts", "SwitchBetweenLayouts", chk_SwitchBetweenLayouts.Checked.ToString());
+				MMain.MyConfs.Write("Layouts", "EmulateLayoutSwitch", chk_EmulateLS.Checked.ToString());
+				MMain.MyConfs.Write("Layouts", "ChangeToSpecificLayoutByKey", chk_SpecificLS.Checked.ToString());
+				// Keys
+				MMain.MyConfs.Write("Layouts", "SpecificKey1", cbb_Key1.SelectedIndex.ToString());
+				MMain.MyConfs.Write("Layouts", "SpecificKey2", cbb_Key2.SelectedIndex.ToString());
+				MMain.MyConfs.Write("Layouts", "SpecificKey3", cbb_Key3.SelectedIndex.ToString());
+				MMain.MyConfs.Write("Layouts", "SpecificKey4", cbb_Key4.SelectedIndex.ToString());
+				try {
+					try { MMain.MyConfs.Write("Layouts", "EmulateLayoutSwitchType", cbb_EmulateType.SelectedItem.ToString()); } catch { }
+					// Main Layouts
+					try { MMain.MyConfs.Write("Layouts", "MainLayout1", cbb_MainLayout1.SelectedItem.ToString()); } catch {  }
+					try { MMain.MyConfs.Write("Layouts", "MainLayout2", cbb_MainLayout2.SelectedItem.ToString()); } catch { }
+					// Layouts
+					try { MMain.MyConfs.Write("Layouts", "SpecificLayout1", cbb_Layout1.SelectedItem.ToString()); } catch { }
+					try { MMain.MyConfs.Write("Layouts", "SpecificLayout2", cbb_Layout2.SelectedItem.ToString()); } catch { }
+					try { MMain.MyConfs.Write("Layouts", "SpecificLayout3", cbb_Layout3.SelectedItem.ToString()); } catch { }
+					try { MMain.MyConfs.Write("Layouts", "SpecificLayout4", cbb_Layout4.SelectedItem.ToString()); } catch { }
+				} catch { Logging.Log("Some settings in layouts tab failed to save, they are skipped."); }
+				MMain.MyConfs.Write("Layouts", "OneLayout", chk_OneLayout.Checked.ToString());
+				MMain.MyConfs.Write("Layouts", "QWERTZfix", chk_qwertz.Checked.ToString());
+				#endregion
+				#region Persistent Layout
+				MMain.MyConfs.Write("PersistentLayout", "ActivateForLayout1", chk_PersistentLayout1Active.Checked.ToString());
+				MMain.MyConfs.Write("PersistentLayout", "ActivateForLayout2", chk_PersistentLayout2Active.Checked.ToString());
+				MMain.MyConfs.Write("PersistentLayout", "Layout1CheckInterval", nud_PersistentLayout1Interval.Value.ToString());
+				MMain.MyConfs.Write("PersistentLayout", "Layout2CheckInterval", nud_PersistentLayout2Interval.Value.ToString());
+				MMain.MyConfs.Write("PersistentLayout", "Layout1Processes", txt_PersistentLayout1Processes.Text.Replace(Environment.NewLine, "^cr^lf"));
+				MMain.MyConfs.Write("PersistentLayout", "Layout2Processes", txt_PersistentLayout2Processes.Text.Replace(Environment.NewLine, "^cr^lf"));
+				#endregion
+				#region Appearence
+				MMain.MyConfs.Write("Appearence", "DisplayLangTooltipForMouse", chk_LangTooltipMouse.Checked.ToString());
+				MMain.MyConfs.Write("Appearence", "DisplayLangTooltipForCaret", chk_LangTooltipCaret.Checked.ToString());
+				MMain.MyConfs.Write("Appearence", "DisplayLangTooltipForMouseOnChange", chk_LangTTMouseOnChange.Checked.ToString());
+				MMain.MyConfs.Write("Appearence", "DisplayLangTooltipForCaretOnChange", chk_LangTTCaretOnChange.Checked.ToString());
+				MMain.MyConfs.Write("Appearence", "DifferentColorsForLayouts", chk_LangTTDiffLayoutColors.Checked.ToString());
+				try {
+				MMain.MyConfs.Write("Appearence", "Language", cbb_Language.SelectedItem.ToString());
+				} catch { 
+					Logging.Log("Language saving failed, restored to English.");
+					MMain.MyConfs.Write("Appearence", "Language", "English");
+				}
+				MMain.MyConfs.Write("Appearence", "MouseLTUpperArrow", mouseLTUpperArrow.ToString());
+				MMain.MyConfs.Write("Appearence", "CaretLTUpperArrow", caretLTUpperArrow.ToString());
+				#endregion
+				#region Timings
+				MMain.MyConfs.Write("Timings", "LangTooltipForMouseRefreshRate", nud_LangTTMouseRefreshRate.Value.ToString());
+				MMain.MyConfs.Write("Timings", "LangTooltipForCaretRefreshRate", nud_LangTTCaretRefreshRate.Value.ToString());
+				MMain.MyConfs.Write("Timings", "DoubleHotkey2ndPressWait", nud_DoubleHK2ndPressWaitTime.Value.ToString());
+				MMain.MyConfs.Write("Timings", "FlagsInTrayRefreshRate", nud_TrayFlagRefreshRate.Value.ToString());
+				MMain.MyConfs.Write("Timings", "ScrollLockStateRefreshRate", nud_ScrollLockRefreshRate.Value.ToString());
+				MMain.MyConfs.Write("Timings", "CapsLockDisableRefreshRate", nud_CapsLockRefreshRate.Value.ToString());
+				MMain.MyConfs.Write("Timings", "ScrollLockStateRefreshRate", nud_ScrollLockRefreshRate.Value.ToString());
+				MMain.MyConfs.Write("Timings", "SelectedTextGetMoreTries", chk_SelectedTextGetMoreTries.Checked.ToString());
+				MMain.MyConfs.Write("Timings", "SelectedTextGetMoreTriesCount", nud_SelectedTextGetTriesCount.Value.ToString());
+				MMain.MyConfs.Write("Timings", "ExcludedPrograms", txt_ExcludedPrograms.Text.Replace(Environment.NewLine, "^cr^lf"));
+				MMain.MyConfs.Write("Timings", "ChangeLayoutInExcluded", chk_Change1KeyL.Checked.ToString());
+				#endregion
+				#region Snippets
+				MMain.MyConfs.Write("Snippets", "SnippetsEnabled", chk_Snippets.Checked.ToString());
+				MMain.MyConfs.Write("Snippets", "SpaceAfter", chk_SnippetsSpaceAfter.Checked.ToString());
+				MMain.MyConfs.Write("Snippets", "SwitchToGuessLayout", chk_SnippetsSwitchToGuessLayout.Checked.ToString());
+				if (chk_Snippets.Checked)
+					File.WriteAllText(snipfile, txt_Snippets.Text);
+				#endregion
+				#region AutoSwitch
+				MMain.MyConfs.Write("AutoSwitch", "Enabled", chk_AutoSwitch.Checked.ToString());
+				MMain.MyConfs.Write("AutoSwitch", "SpaceAfter", chk_AutoSwitchSpaceAfter.Checked.ToString());
+				MMain.MyConfs.Write("AutoSwitch", "SwitchToGuessLayout", chk_AutoSwitchSwitchToGuessLayout.Checked.ToString());
+				if (chk_AutoSwitch.Checked)
+					File.WriteAllText(AS_dictfile, txt_AutoSwitchDictionary.Text);
+				#endregion
+				#region Appearence & Hotkeys
+				SaveFromTemps();
+				#endregion
+				#region LangPanel
+				MMain.MyConfs.Write("LangPanel", "Display", chk_DisplayLangPanel.Checked.ToString());
+				MMain.MyConfs.Write("LangPanel", "RefreshRate", nud_LPRefreshRate.Value.ToString());
+				MMain.MyConfs.Write("LangPanel", "Transparency", nud_LPTransparency.Value.ToString());
+				MMain.MyConfs.Write("LangPanel", "ForeColor", ColorTranslator.ToHtml(btn_LPFore.BackColor));
+				MMain.MyConfs.Write("LangPanel", "BackColor", ColorTranslator.ToHtml(btn_LPBack.BackColor));
+				MMain.MyConfs.Write("LangPanel", "BorderColor", ColorTranslator.ToHtml(btn_LPBorderColor.BackColor));
+				MMain.MyConfs.Write("LangPanel", "BorderAeroColor", chk_LPAeroColor.Checked.ToString());
+				MMain.MyConfs.Write("LangPanel", "Font", fcv.ConvertToString(btn_LPFont.Font));
+				MMain.MyConfs.Write("LangPanel", "UpperArrow", chk_LPUpperArrow.Checked.ToString());
+				#endregion
+				#region Proxy
+				MMain.MyConfs.Write("Proxy", "ServerPort", txt_ProxyServerPort.Text);
+				MMain.MyConfs.Write("Proxy", "UserName", txt_ProxyLogin.Text);
+				MMain.MyConfs.Write("Proxy", "Password", Convert.ToBase64String(Encoding.Unicode.GetBytes(txt_ProxyPassword.Text)));
+				#endregion
+				lsb_LangTTAppearenceForList.SelectedIndex = tmpLangTTAppearenceIndex;
+				lsb_Hotkeys.SelectedIndex = tmpHotkeysIndex;
+				Logging.Log("All configurations saved.");
 			}
-			MMain.MyConfs.Write("Appearence", "MouseLTUpperArrow", mouseLTUpperArrow.ToString());
-			MMain.MyConfs.Write("Appearence", "CaretLTUpperArrow", caretLTUpperArrow.ToString());
-			#endregion
-			#region Timings
-			MMain.MyConfs.Write("Timings", "LangTooltipForMouseRefreshRate", nud_LangTTMouseRefreshRate.Value.ToString());
-			MMain.MyConfs.Write("Timings", "LangTooltipForCaretRefreshRate", nud_LangTTCaretRefreshRate.Value.ToString());
-			MMain.MyConfs.Write("Timings", "DoubleHotkey2ndPressWait", nud_DoubleHK2ndPressWaitTime.Value.ToString());
-			MMain.MyConfs.Write("Timings", "FlagsInTrayRefreshRate", nud_TrayFlagRefreshRate.Value.ToString());
-			MMain.MyConfs.Write("Timings", "ScrollLockStateRefreshRate", nud_ScrollLockRefreshRate.Value.ToString());
-			MMain.MyConfs.Write("Timings", "CapsLockDisableRefreshRate", nud_CapsLockRefreshRate.Value.ToString());
-			MMain.MyConfs.Write("Timings", "ScrollLockStateRefreshRate", nud_ScrollLockRefreshRate.Value.ToString());
-			MMain.MyConfs.Write("Timings", "SelectedTextGetMoreTries", chk_SelectedTextGetMoreTries.Checked.ToString());
-			MMain.MyConfs.Write("Timings", "SelectedTextGetMoreTriesCount", nud_SelectedTextGetTriesCount.Value.ToString());
-			MMain.MyConfs.Write("Timings", "ExcludedPrograms", txt_ExcludedPrograms.Text.Replace(Environment.NewLine, "^cr^lf"));
-			MMain.MyConfs.Write("Timings", "ChangeLayoutInExcluded", chk_Change1KeyL.Checked.ToString());
-			#endregion
-			#region Snippets
-			MMain.MyConfs.Write("Snippets", "SnippetsEnabled", chk_Snippets.Checked.ToString());
-			MMain.MyConfs.Write("Snippets", "SpaceAfter", chk_SnippetsSpaceAfter.Checked.ToString());
-			MMain.MyConfs.Write("Snippets", "SwitchToGuessLayout", chk_SnippetsSwitchToGuessLayout.Checked.ToString());
-			if (chk_Snippets.Checked)
-				File.WriteAllText(snipfile, txt_Snippets.Text);
-			#endregion
-			#region AutoSwitch
-			MMain.MyConfs.Write("AutoSwitch", "Enabled", chk_AutoSwitch.Checked.ToString());
-			MMain.MyConfs.Write("AutoSwitch", "SpaceAfter", chk_AutoSwitchSpaceAfter.Checked.ToString());
-			MMain.MyConfs.Write("AutoSwitch", "SwitchToGuessLayout", chk_AutoSwitchSwitchToGuessLayout.Checked.ToString());
-			if (chk_AutoSwitch.Checked)
-				File.WriteAllText(AS_dictfile, txt_AutoSwitchDictionary.Text);
-			#endregion
-			#region Appearence & Hotkeys
-			SaveFromTemps();
-			#endregion
-			#region LangPanel
-			MMain.MyConfs.Write("LangPanel", "Display", chk_DisplayLangPanel.Checked.ToString());
-			MMain.MyConfs.Write("LangPanel", "RefreshRate", nud_LPRefreshRate.Value.ToString());
-			MMain.MyConfs.Write("LangPanel", "Transparency", nud_LPTransparency.Value.ToString());
-			MMain.MyConfs.Write("LangPanel", "ForeColor", ColorTranslator.ToHtml(btn_LPFore.BackColor));
-			MMain.MyConfs.Write("LangPanel", "BackColor", ColorTranslator.ToHtml(btn_LPBack.BackColor));
-			MMain.MyConfs.Write("LangPanel", "BorderColor", ColorTranslator.ToHtml(btn_LPBorderColor.BackColor));
-			MMain.MyConfs.Write("LangPanel", "BorderAeroColor", chk_LPAeroColor.Checked.ToString());
-			MMain.MyConfs.Write("LangPanel", "Font", fcv.ConvertToString(btn_LPFont.Font));
-			MMain.MyConfs.Write("LangPanel", "UpperArrow", chk_LPUpperArrow.Checked.ToString());
-			#endregion
-			#region Proxy
-			MMain.MyConfs.Write("Proxy", "ServerPort", txt_ProxyServerPort.Text);
-			MMain.MyConfs.Write("Proxy", "UserName", txt_ProxyLogin.Text);
-			MMain.MyConfs.Write("Proxy", "Password", Convert.ToBase64String(Encoding.Unicode.GetBytes(txt_ProxyPassword.Text)));
-			#endregion
-			Logging.Log("All configurations saved.");
 			LoadConfigs();
-			lsb_LangTTAppearenceForList.SelectedIndex = tmpLangTTAppearenceIndex;
-			lsb_Hotkeys.SelectedIndex = tmpHotkeysIndex;
+		}
+		object DoInMainConfigs(Func<object> act) {
+			Configs.filePath = Path.Combine(MahouUI.nPath, "Mahou.ini");
+			object rsl = act();
+			if (chk_AppDataConfigs.Checked) {;
+				if (!Directory.Exists(mahou_folder_appd))
+					Directory.CreateDirectory(mahou_folder_appd);
+				Configs.filePath = Path.Combine(mahou_folder_appd, "Mahou.ini");
+				MMain.MyConfs = new Configs();
+			}
+			return rsl;
 		}
 		/// <summary>
 		/// Refresh all controls state from configs.
@@ -670,6 +696,7 @@ namespace Mahou {
 			ScrollTip = chk_HighlightScroll.Checked = MMain.MyConfs.ReadBool("Functions", "ScrollTip");
 			chk_StartupUpdatesCheck.Checked = MMain.MyConfs.ReadBool("Functions", "StartupUpdatesCheck");
 			LoggingEnabled = chk_Logging.Checked = MMain.MyConfs.ReadBool("Functions", "Logging");
+			chk_AppDataConfigs.Checked = (bool)DoInMainConfigs(() => MMain.MyConfs.ReadBool("Functions", "AppDataConfigs"));
 			if (LoggingEnabled) 
 				MMain._logTimer.Change(300, 0);
 			else 
@@ -810,7 +837,7 @@ namespace Mahou {
 			var minlt = Regex.Matches(snippets, "->").Count;
 			var eq4lt = Regex.Matches(snippets, "====>").Count;
 			var rteq4 = Regex.Matches(snippets, "<====").Count;
-			Debug.WriteLine(minlt + " " + eq4lt + " " + rteq4);
+//			Debug.WriteLine(minlt + " " + eq4lt + " " + rteq4);
 			if (minlt == eq4lt && minlt == rteq4)
 				return new Tuple<int, Color>(minlt, Color.Orange);
 			return new Tuple<int, Color>(minlt, Color.Red);
@@ -2290,6 +2317,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			chk_BlockHKWithCtrl.Text = MMain.Lang[Languages.Element.BlockCtrlHKs];
 			chk_MCDS_support.Text = MMain.Lang[Languages.Element.MCDSSupport];
 			chk_GuessKeyCodeFix.Text = MMain.Lang[Languages.Element.GuessKeyCodeFix];
+			chk_AppDataConfigs.Text = MMain.Lang[Languages.Element.ConfigsInAppData];
 			#endregion
 			#region Layouts
 			chk_SwitchBetweenLayouts.Text = MMain.Lang[Languages.Element.SwitchBetween]+":";
@@ -2468,6 +2496,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			HelpMeUnderstand.SetToolTip(lbl_SnippetsCount, MMain.Lang[Languages.Element.TT_SnippetsCount]);
 			HelpMeUnderstand.SetToolTip(lbl_AutoSwitchWordsCount, MMain.Lang[Languages.Element.TT_SnippetsCount]);
 			HelpMeUnderstand.SetToolTip(chk_GuessKeyCodeFix, MMain.Lang[Languages.Element.TT_GuessKeyCodeFix]);
+			HelpMeUnderstand.SetToolTip(chk_AppDataConfigs, MMain.Lang[Languages.Element.TT_ConfigsInAppData]);
 		}
 		void HelpMeUnderstandPopup(object sender, PopupEventArgs e) {
 			HelpMeUnderstand.ToolTipTitle = e.AssociatedControl.Text;

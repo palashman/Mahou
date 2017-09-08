@@ -9,7 +9,7 @@ namespace Mahou
         /// <summary>
         /// Mahou.ini file path.
         /// </summary>
-        public static readonly string filePath = Path.Combine(MahouUI.nPath, "Mahou.ini");
+        public static string filePath = Path.Combine(MahouUI.nPath, "Mahou.ini");
         /// <summary>
         /// Initializes settings, if some of values or settings file, not exists it creates them with default value.
         /// </summary>
@@ -39,6 +39,7 @@ namespace Mahou
             CheckBool("Functions", "MCDServerSupport", "false");
             CheckBool("Functions", "OneLayoutWholeWord", "true");
             CheckBool("Functions", "GuessKeyCodeFix", "false");
+            CheckBool("Functions", "AppDataConfigs", "false");
             #endregion
 			#region Layouts section
 			CheckBool("Layouts", "SwitchBetweenLayouts", "true");

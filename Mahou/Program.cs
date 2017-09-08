@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.IO;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 namespace Mahou
@@ -45,6 +46,15 @@ namespace Mahou
 					WinAPI.PostMessage((IntPtr)0xffff, ao, 0, 0);
 					return;
 				}
+				if (MMain.MyConfs.ReadBool("Functions", "AppDataConfigs")) {
+					var mahou_folder_appd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Mahou");
+					if (!Directory.Exists(mahou_folder_appd))
+						Directory.CreateDirectory(mahou_folder_appd);
+					Configs.filePath = Path.Combine(mahou_folder_appd, "Mahou.ini");
+					MyConfs = new Configs();
+				} else 
+					Configs.filePath = Path.Combine(MahouUI.nPath, "Mahou.ini");
+				MahouUI.latest_conf_path = Configs.filePath;
 				if (MyConfs.ReadBool("FirstStart", "First")) {
 					if (System.Globalization.CultureInfo.InstalledUICulture.TwoLetterISOLanguageName == "ru") {
 						MyConfs.Write("Appearence", "Language", "Русский");
