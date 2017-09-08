@@ -530,7 +530,6 @@ namespace Mahou {
 				if (!Directory.Exists(mahou_folder_appd))
 					Directory.CreateDirectory(mahou_folder_appd);
 				Configs.filePath = Path.Combine(mahou_folder_appd, "Mahou.ini");
-				MMain.MyConfs = new Configs();
 			}
 			else 
 				Configs.filePath = Path.Combine(MahouUI.nPath, "Mahou.ini");
@@ -543,7 +542,12 @@ namespace Mahou {
 				if(AutoStartExist(AutoStartAsAdmin))
 					AutoStartRemove(AutoStartAsAdmin);
 			}
-			if (latest_conf_path != Configs.filePath) only_load = true;
+			var exist = File.Exists(Configs.filePath);
+			if (latest_conf_path != Configs.filePath && exist) only_load = true;
+			if (!exist) {
+				Logging.Log("Creating new configs file ["+ Configs.filePath + "].");
+				Configs.CreateConfigsFile();
+			}
 			latest_conf_path = Configs.filePath;
 			DoInMainConfigs(() => { MMain.MyConfs.Write("Functions", "AppDataConfigs", chk_AppDataConfigs.Checked.ToString()); return (object)0; });
 			if (!only_load) {

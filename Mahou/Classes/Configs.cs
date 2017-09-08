@@ -11,13 +11,19 @@ namespace Mahou
         /// </summary>
         public static string filePath = Path.Combine(MahouUI.nPath, "Mahou.ini");
         /// <summary>
+        /// Creates configs file Mahou.ini if it is not exist.
+        /// </summary>
+        public static void CreateConfigsFile() {
+        	if (!File.Exists(filePath)) { //Create an UTF-16 configuration file
+                File.WriteAllText(filePath, "!Unicode(✔), Mahou settings file", Encoding.Unicode);
+            }
+        }
+        /// <summary>
         /// Initializes settings, if some of values or settings file, not exists it creates them with default value.
         /// </summary>
         public Configs()
         {
-        	if (!File.Exists(filePath)) { //Create an UTF-16 configuration file
-                File.WriteAllText(filePath, "!Unicode(✔), Mahou settings file", Encoding.Unicode);
-            }
+        	CreateConfigsFile();
         	#region FirstStart section
             CheckBool("FirstStart", "First", "true");
         	#endregion
