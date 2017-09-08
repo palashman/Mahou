@@ -453,6 +453,10 @@ namespace Mahou
 		static void ExpandSnippet(string snip, string expand, bool spaceAft, bool switchLayout, bool ignoreExpand = false) {
 			DoSelf(() => {
 				try {
+					if (switchLayout) {
+						var guess = WordGuessLayout(expand);
+						Logging.Log("Changing to guess layout [" + guess.Item2 + "] after snippet ["+ guess.Item1 + "].");
+						ChangeToLayout(Locales.ActiveWindow(), guess.Item2);
 					if (!ignoreExpand) {
 						for (int e = -1; e < c_snip.Count; e++) {
 							KInputs.MakeInput(new [] { KInputs.AddKey(Keys.Back, true),
@@ -468,10 +472,6 @@ namespace Mahou
 					}
 					if (spaceAft)
 						KInputs.MakeInput(KInputs.AddString(" "));
-					if (switchLayout) {
-						var guess = WordGuessLayout(expand);
-						Logging.Log("Changing to guess layout [" + guess.Item2 + "] after snippet ["+ guess.Item1 + "].");
-						ChangeToLayout(Locales.ActiveWindow(), guess.Item2);
 					}
 				} catch {
 					Logging.Log("Some snippets configured wrong, check them.", 1);
