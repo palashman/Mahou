@@ -54,7 +54,7 @@ namespace Mahou
 					MyConfs = new Configs();
 				} else 
 					Configs.filePath = Path.Combine(MahouUI.nPath, "Mahou.ini");
-				MahouUI.latest_conf_path = Configs.filePath;
+				MahouUI.latest_save_dir = Configs.filePath;
 				if (MyConfs.ReadBool("FirstStart", "First")) {
 					if (System.Globalization.CultureInfo.InstalledUICulture.TwoLetterISOLanguageName == "ru") {
 						MyConfs.Write("Appearence", "Language", "Русский");

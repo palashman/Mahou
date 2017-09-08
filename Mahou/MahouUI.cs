@@ -135,7 +135,7 @@ namespace Mahou {
 		public static string snipfile = Path.Combine(MahouUI.nPath, "snippets.txt");
 		public static string AS_dictfile = Path.Combine(MahouUI.nPath, "AS_dict.txt");
 		public static string mahou_folder_appd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Mahou");
-		public static string latest_conf_path = "";
+		public static string latest_save_dir = "";
 		#endregion
 		public MahouUI() {
 			InitializeComponent();
@@ -522,6 +522,16 @@ namespace Mahou {
 			Logging.Log("Saved from temps.");
 		}
 		/// <summary>
+		/// Update save paths for logs, snippets, autoswitch dictionary, configs.
+		/// </summary>
+		void UpdateSavePaths() {
+			snipfile = Path.Combine(nPath, "snippets.txt");
+			AS_dictfile = Path.Combine(nPath, "AS_dict.txt");
+			Logging.logdir = Path.Combine(nPath, "Logs");
+			Logging.log = Path.Combine(Logging.logdir, DateTime.Today.ToString("yyyy.MM.dd") + ".txt");
+			Configs.filePath = Path.Combine(nPath, "Mahou.ini");
+		}
+		/// <summary>
 		/// Saves current settings to INI.
 		/// </summary>
 		void SaveConfigs() {
@@ -529,10 +539,12 @@ namespace Mahou {
 			if (chk_AppDataConfigs.Checked) {
 				if (!Directory.Exists(mahou_folder_appd))
 					Directory.CreateDirectory(mahou_folder_appd);
-				Configs.filePath = Path.Combine(mahou_folder_appd, "Mahou.ini");
+				nPath = mahou_folder_appd;
 			}
-			else 
-				Configs.filePath = Path.Combine(MahouUI.nPath, "Mahou.ini");
+			else {
+				nPath = AppDomain.CurrentDomain.BaseDirectory;
+			}
+			UpdateSavePaths();
 			AutoStartAsAdmin = (cbb_AutostartType.SelectedIndex != 0);
 			if (chk_AutoStart.Checked) {
 				if (!AutoStartExist(AutoStartAsAdmin))
@@ -543,12 +555,12 @@ namespace Mahou {
 					AutoStartRemove(AutoStartAsAdmin);
 			}
 			var exist = File.Exists(Configs.filePath);
-			if (latest_conf_path != Configs.filePath && exist) only_load = true;
+			if (latest_save_dir != nPath && exist) only_load = true;
 			if (!exist) {
 				Logging.Log("Creating new configs file ["+ Configs.filePath + "].");
 				Configs.CreateConfigsFile();
 			}
-			latest_conf_path = Configs.filePath;
+			latest_save_dir = nPath;
 			DoInMainConfigs(() => { MMain.MyConfs.Write("Functions", "AppDataConfigs", chk_AppDataConfigs.Checked.ToString()); return (object)0; });
 			if (!only_load) {
 				var tmpLangTTAppearenceIndex = lsb_LangTTAppearenceForList.SelectedIndex;
@@ -670,7 +682,7 @@ namespace Mahou {
 			LoadConfigs();
 		}
 		object DoInMainConfigs(Func<object> act) {
-			Configs.filePath = Path.Combine(MahouUI.nPath, "Mahou.ini");
+			Configs.filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Mahou.ini");
 			object rsl = act();
 			if (chk_AppDataConfigs.Checked) {;
 				if (!Directory.Exists(mahou_folder_appd))
