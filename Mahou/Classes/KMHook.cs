@@ -177,7 +177,7 @@ namespace Mahou
 					Logging.Log("Current snippet is [" + snip + "].");
 					for (int i = 0; i < snipps.Length; i++) {
 						if (snip == snipps[i]) {
-							Logging.Log("Current snippet [" + snip + "] matched existing snippet [" + snipps[i] + "].");
+							Logging.Log("Current snippet [" + snip + "] matched existing snippet [" + exps[i] + "].");
 							ExpandSnippet(snip, exps[i], MMain.mahou.SnippetSpaceAfter, MMain.mahou.SnippetsSwitchToGuessLayout);
 							matched = true;
 						}
@@ -457,6 +457,7 @@ namespace Mahou
 						var guess = WordGuessLayout(expand);
 						Logging.Log("Changing to guess layout [" + guess.Item2 + "] after snippet ["+ guess.Item1 + "].");
 						ChangeToLayout(Locales.ActiveWindow(), guess.Item2);
+					}
 					if (!ignoreExpand) {
 						for (int e = -1; e < c_snip.Count; e++) {
 							KInputs.MakeInput(new [] { KInputs.AddKey(Keys.Back, true),
@@ -472,7 +473,6 @@ namespace Mahou
 					}
 					if (spaceAft)
 						KInputs.MakeInput(KInputs.AddString(" "));
-					}
 				} catch {
 					Logging.Log("Some snippets configured wrong, check them.", 1);
 					// If not use TASK, form(MessageBox) won't accept the keys(Enter/Escape/Alt+F4).
