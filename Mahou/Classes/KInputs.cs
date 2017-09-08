@@ -58,19 +58,23 @@ static class KInputs
 			key == Keys.Divide;
     }
     public static string GetWordByIndex(string words, int index) {
-	int left = 0, right = 0;
-	// Gets pointed min/max indexes
-	for (int i = 0; i != words.Length; i++) {
-		if (words[i] == ' ') {
-			if (i <= index) {
-				left = i+1;
-			} else {
-				right = i-1;
-				break;
+		int left = 0, right = 0;
+		// Gets pointed min/max indexes
+		for (int i = 0; i != words.Length; i++) {
+			if (words[i] == ' ') {
+				if (i <= index) {
+					left = i+1;
+				} else {
+					right = i-1;
+					break;
+				}
 			}
 		}
-	}
-	return words.Substring(left, words.Length - right - left);
+		if (right == 0)
+			right = words.Length;
+//		System.Diagnostics.Debug.WriteLine("IN:"+index+"\nWDS:"+words+"\nWD:"+(right - left)+"\nLT:"+left+"\nRT:"+right);
+		var word = words.Substring(left, right - left);
+		return word;
     }
     /// <summary>
     /// Creates array of INPUT from string.
@@ -90,14 +94,15 @@ static class KInputs
         	short lt2_vk = WinAPI.VkKeyScanEx(s, Mahou.Locales.GetLocaleFromString(Mahou.MMain.mahou.MainLayout2).uId);
         	uselt2_vk = lt2_vk != -1;
         	if (uselt1_vk && uselt2_vk) {
-        		var lt_guess = Mahou.KMHook.WordGuessLayout(GetWordByIndex(str, index)).Item2;
+        		var guess = Mahou.KMHook.WordGuessLayout(GetWordByIndex(str, index));
+//        		System.Diagnostics.Debug.WriteLine("ST:"+guess.Item2);
+        		var lt_guess = guess.Item2;
         		resultvk = (ushort)WinAPI.VkKeyScanEx(s, lt_guess);
         	} else if (uselt1_vk)
         		resultvk = (ushort)lt1_vk;
         	else if (uselt2_vk) 
         		resultvk = (ushort)lt2_vk;
         	bool resultvk_state = ((resultvk >> 8) & 0xff) == 1;
-//	        	System.Diagnostics.Debug.WriteLine("s = " + s + ", lt1_vk = " + lt1_vk + ", lt2_vk = " + lt2_vk);
         	if (resultvk_state)
         		result.Add(KInputs.AddKey(Keys.RShiftKey, true));
             var down = new WinAPI.INPUT
@@ -109,7 +114,7 @@ static class KInputs
                     {
                         Vk = resultvk,
                         Flags = (UInt32)(WinAPI.KEYEVENTF_UNICODE),
-                        Scan = (resultvk == 0) ? (UInt16)0 : (UInt16)s,
+                        Scan = (UInt16)s,
                         ExtraInfo = IntPtr.Zero,
                         Time = 0
                     }
@@ -124,7 +129,7 @@ static class KInputs
                     {
                         Vk = resultvk,
                         Flags = (UInt32)(WinAPI.KEYEVENTF_UNICODE | WinAPI.KEYEVENTF_KEYUP),
-                        Scan = (resultvk == 0) ? (UInt16)0 : (UInt16)s,
+                        Scan = (UInt16)s,
                         ExtraInfo = IntPtr.Zero,
                         Time = 0
                     }
