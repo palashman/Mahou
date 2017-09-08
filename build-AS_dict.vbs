@@ -3,7 +3,7 @@
 set fso = CreateObject("Scripting.FileSystemObject")
 dim AS_DICT
 for each dict in fso.GetFolder("Dictionaries-origin").Files
-  AS_DICT = AS_DICT & dict.OpenAsTextStream(1,-2).ReadAll() & vbCcrLf
+  AS_DICT = AS_DICT & dict.OpenAsTextStream(1,-2).ReadAll() & vbCrLf
 next
 Set ADODB = CreateObject("ADODB.Stream")
 ADODB.Type = 2

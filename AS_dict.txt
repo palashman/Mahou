@@ -19269,7 +19269,8 @@
 ->сщташпгкфешщты
 ====>configurations<====
 ->зщшыщт
-====>poison<====# 10000+ Russian words. Credit [https://www.reddit.com/r/russian/comments/289wba/10000_most_common_russian_words_in_spreadsheet/].
+====>poison<====
+# 10000+ Russian words. Credit [https://www.reddit.com/r/russian/comments/289wba/10000_most_common_russian_words_in_spreadsheet/].
 ->heccrbq
 ====>русский<====
 ->hecsq
@@ -40495,7 +40496,8 @@
 ->Plhfdcndeq
 ====>Здравствуй<====
 ->Plhfdcndeqnt
-====>Здравствуйте<====# Dictionary that BladeMight write on its own.
+====>Здравствуйте<====
+# Dictionary that BladeMight write on its own.
 ->tcnm
 ====>есть<====
 ->скщц
@@ -40524,3 +40526,4 @@
 ====>максим<====
 # to be continued...
  
+
