@@ -773,7 +773,7 @@ namespace Mahou {
 			if (File.Exists(snipfile)) {
 				txt_Snippets.Text = File.ReadAllText(snipfile);
 				Txt_SnippetsTextChanged(new object(), new EventArgs());
-				KMHook.DoLater.Tick += (_, __) => { KMHook.ReInitSnippets(); KMHook.DoLater.Stop(); };
+				KMHook.DoLater.Tick += (_, __) => { System.Threading.Tasks.Task.Factory.StartNew(KMHook.ReInitSnippets); KMHook.DoLater.Stop(); };
 				KMHook.DoLater.Interval = 250;
 				KMHook.DoLater.Start();
 			}
@@ -2116,7 +2116,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			btn_UpdateAutoSwitchDictionary.Text = MMain.Lang[Languages.Element.Checking];
 			var dict = Regex.Replace(getResponce("https://raw.githubusercontent.com/BladeMight/Mahou/master/AS_dict.txt"),
 			                         "\r?\n", Environment.NewLine);
-			tmr.Interval = 1200;
+			tmr.Interval = 300;
 			if (dict != null) {
 				btn_UpdateAutoSwitchDictionary.ForeColor = Color.BlueViolet;
 				btn_UpdateAutoSwitchDictionary.Text = "OK";
@@ -2125,7 +2125,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 					btn_UpdateAutoSwitchDictionary.ForeColor = Color.FromKnownColor(KnownColor.ControlText);
 					tmr.Stop();
 				};
-				tmr.Interval = 750;
+				tmr.Interval = 350;
 				tmr.Start();
 				this.txt_AutoSwitchDictionary.Invoke((MethodInvoker)delegate {
 	         		this.txt_AutoSwitchDictionary.Text = dict;
@@ -2139,7 +2139,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 					btn_UpdateAutoSwitchDictionary.ForeColor = Color.FromKnownColor(KnownColor.ControlText);
 					tmr.Stop(); 
 				};
-				tmr.Interval = 750;
+				tmr.Interval = 350;
 				tmr.Start();
 			}
 		}
@@ -2797,7 +2797,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 					tmr.Stop();
 						as_checking = false;
 				};
-				tmr.Interval = 3000;
+				tmr.Interval = 1500;
 				tmr.Start();
 			}
 		}

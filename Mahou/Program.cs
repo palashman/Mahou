@@ -71,7 +71,6 @@ namespace Mahou
 					mahou.cbb_MainLayout1.SelectedIndex = 0;
 					mahou.cbb_MainLayout2.SelectedIndex = 1;
 				}
-				KMHook.ReInitSnippets();
 				Application.EnableVisualStyles(); // Huh i did not noticed that it was missing... '~'
 				_evt_hookID = WinAPI.SetWinEventHook(WinAPI.EVENT_SYSTEM_FOREGROUND, WinAPI.EVENT_SYSTEM_FOREGROUND,
 				                                     IntPtr.Zero, _evt_proc, 0, 0, WinAPI.WINEVENT_OUTOFCONTEXT);
