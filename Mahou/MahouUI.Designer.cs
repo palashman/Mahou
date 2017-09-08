@@ -182,6 +182,7 @@ namespace Mahou
 		private System.Windows.Forms.Label lbl_AutoSwitchDependsOnSnippets;
 		private System.Windows.Forms.Label lbl_AutoSwitchWordsCount;
 		private System.Windows.Forms.Label lbl_SnippetsCount;
+		private System.Windows.Forms.CheckBox chk_GuessKeyCodeFix;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -378,6 +379,7 @@ namespace Mahou
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
 			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
+			this.chk_GuessKeyCodeFix = new System.Windows.Forms.CheckBox();
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -442,6 +444,7 @@ namespace Mahou
 			// 
 			// tab_functions
 			// 
+			this.tab_functions.Controls.Add(this.chk_GuessKeyCodeFix);
 			this.tab_functions.Controls.Add(this.lbl_TaskExist);
 			this.tab_functions.Controls.Add(this.lbl_LinkExist);
 			this.tab_functions.Controls.Add(this.lbl_AutoStartArrow);
@@ -608,9 +611,9 @@ namespace Mahou
 			this.chk_CSLayoutSwitchingPlus.AutoSize = true;
 			this.chk_CSLayoutSwitchingPlus.Location = new System.Drawing.Point(8, 166);
 			this.chk_CSLayoutSwitchingPlus.Name = "chk_CSLayoutSwitchingPlus";
-			this.chk_CSLayoutSwitchingPlus.Size = new System.Drawing.Size(298, 19);
+			this.chk_CSLayoutSwitchingPlus.Size = new System.Drawing.Size(216, 19);
 			this.chk_CSLayoutSwitchingPlus.TabIndex = 6;
-			this.chk_CSLayoutSwitchingPlus.Text = "Convert selection layout switching+ (experimental).";
+			this.chk_CSLayoutSwitchingPlus.Text = "Convert selection layout switching+";
 			this.chk_CSLayoutSwitchingPlus.UseVisualStyleBackColor = true;
 			// 
 			// chk_AddOneSpace
@@ -2461,6 +2464,16 @@ namespace Mahou
 			this.HelpMeUnderstand.ShowAlways = true;
 			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.HelpMeUnderstand.Popup += new System.Windows.Forms.PopupEventHandler(this.HelpMeUnderstandPopup);
+			// 
+			// chk_GuessKeyCodeFix
+			// 
+			this.chk_GuessKeyCodeFix.AutoSize = true;
+			this.chk_GuessKeyCodeFix.Location = new System.Drawing.Point(302, 166);
+			this.chk_GuessKeyCodeFix.Name = "chk_GuessKeyCodeFix";
+			this.chk_GuessKeyCodeFix.Size = new System.Drawing.Size(143, 19);
+			this.chk_GuessKeyCodeFix.TabIndex = 20;
+			this.chk_GuessKeyCodeFix.Text = "Use guess key code fix";
+			this.chk_GuessKeyCodeFix.UseVisualStyleBackColor = true;
 			// 
 			// MahouUI
 			// 

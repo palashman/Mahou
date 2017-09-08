@@ -32,6 +32,7 @@ public class Languages
 		BlockCtrlHKs,
 		MCDSSupport,
 		OneLayoutWholeWord,
+		GuessKeyCodeFix,
 		#endregion
 		#region Layouts
 		SwitchBetween,
@@ -191,6 +192,7 @@ public class Languages
 		TT_Change1KeyLayoutInExcluded,
 		TT_SnippetsSwitchToGuessLayout,
 		TT_SnippetsCount,
+		TT_GuessKeyCodeFix,
 		#endregion
 		#region Messages
 		MSG_SnippetsError
@@ -218,7 +220,7 @@ public class Languages
 		{ Element.ReSelect, "Re-select text after conversion." }, 
 		{ Element.RePress, "Re-press modifiers after hotkey action." }, 
 		{ Element.Add1Space, "Consider 1 space as part of last word." }, 
-		{ Element.ConvertSelectionLSPlus, "Convert selection layout switching+ (experimental)." }, 
+		{ Element.ConvertSelectionLSPlus, "Convert selection layout switching+." }, 
 		{ Element.HighlightScroll, "Highlight Scroll-Lock when layout 1 is active." }, 
 		{ Element.UpdatesCheck, "Check for updates at startup." }, 
 		{ Element.Logging, "Enable logging for debugging." }, 
@@ -227,6 +229,7 @@ public class Languages
 		{ Element.BlockCtrlHKs, "Block Mahou hotkeys with Ctrl." }, 
 		{ Element.MCDSSupport, "Enable MCDS support." }, 
 		{ Element.OneLayoutWholeWord, "Use layout for whole word in CS." }, 
+		{ Element.GuessKeyCodeFix, "Use guess key code fix." }, 
 		#endregion
 		#region Layouts
 		{ Element.SwitchBetween, "Switch between layouts" }, 
@@ -404,6 +407,7 @@ public class Languages
 		{ Element.TT_Change1KeyLayoutInExcluded, "Function is in Layouts tab -> [Change to specific layout by keys]." },
 		{ Element.TT_SnippetsSwitchToGuessLayout, "Switches to *guessed* layout after snippet expanded.\r\nGuess works like in whole \"One Layout for whole word in Convert Selection\" function."},
 		{ Element.TT_SnippetsCount,	"If ORANGE snippets are OK.\r\nIf RED snippets has errors, maybe its unfinished etc." },
+		{ Element.TT_GuessKeyCodeFix, "Enabling this will make snippets, convert selection, auto-switch to send real virtual key codes instead of unicode chars,\r\nbut that will cause that all characters will be in your current layout.\r\nUseful in programs virtual machines.(BlueStacks, VirtualBox etc.)" }, 
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Snippets contains error in syntax, check if there are errors, details on snippets syntax you can find on Wiki." }
@@ -434,7 +438,7 @@ public class Languages
 		{ Element.ReSelect, "Выделять заново текст после конвертации." }, 
 		{ Element.RePress, "Нажимать снова модификаторы горячих клавиш." }, 
 		{ Element.Add1Space, "Считать пробел частью последнего слова." }, 
-		{ Element.ConvertSelectionLSPlus, "Смена раскладки в Конверт выделения+ (экспереметнально)." }, 
+		{ Element.ConvertSelectionLSPlus, "Смена раскладки в Конверт выделения+." }, 
 		{ Element.HighlightScroll, "Подсвечивать Scroll-Lock когда раскладка 1 активна." }, 
 		{ Element.UpdatesCheck, "Проверять обновления при запуске." }, 
 		{ Element.Logging, "Включить журналирование действий для поиска ошибок." }, 
@@ -443,6 +447,7 @@ public class Languages
 		{ Element.BlockCtrlHKs, "Блокировать горячие клавиши Mahou содержащие Ctrl." }, 
 		{ Element.MCDSSupport, "Включить поддержку MCDS." }, 
 		{ Element.OneLayoutWholeWord, "Считать раскладку для всего слова в КВ." }, 
+		{ Element.GuessKeyCodeFix, "Исправление кодов клавиш." }, 
 		#endregion
 		#region Layouts
 		{ Element.SwitchBetween, "Переключать между раскладками" }, 
@@ -618,6 +623,7 @@ public class Languages
 		{ Element.TT_Change1KeyLayoutInExcluded, "Функция находится во вкладке раскладки -> [Переключать раскладки по клавишам]." },
 		{ Element.TT_SnippetsSwitchToGuessLayout, "Меняет раскладку в *угаданную* после того как сниипет конвертировался.\r\nУгадывание работает так же как в функции \"Одна раскладка для целого слова в Конверт Выделения\"."},
 		{ Element.TT_SnippetsCount,	"Если ОРАНЖЕВЫЙ то со сниппетами все OK.\r\nЕсли КРАСНЫЙ то в сниппетах есть ошибка, может незавершен сниппет и т.д." },
+		{ Element.TT_GuessKeyCodeFix, "Включая это сниппеты, конвертация выделения, автозамена будут отправлять рельные коды клавиш вместо юникод символов,\r\nно это сделает так что все символы будут в вашей текущей раскладке.\r\nПолезно в приложениях виртуальных машинах(BlueStacks, VirtualBox, etc)." },
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Сниппеты содержат ошибки в синтаксисе, проверьте ваши сниппеты, детали синтаксиса можете найти на Wiki." }
