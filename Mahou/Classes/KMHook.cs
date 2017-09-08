@@ -1267,23 +1267,32 @@ namespace Mahou
 		/// </summary>
 		static void ChangeLayout()
 		{
-			var nowLocale = Locales.GetCurrentLocale();
-			uint notnowLocale = nowLocale == Locales.GetLocaleFromString(MMain.mahou.MainLayout1).uId
-                ? Locales.GetLocaleFromString(MMain.mahou.MainLayout2).uId
-                : Locales.GetLocaleFromString(MMain.mahou.MainLayout1).uId;
-			if (MMain.mahou.SwitchBetweenLayouts) {
-				Logging.Log("Changing layout using normal mode, WinAPI.PostMessage [WinAPI.WM_INPUTLANGCHANGEREQUEST] with LParam ["+notnowLocale+"].");
-				int tries = 0;
-				//Cycles while layout not changed
-				while (Locales.GetCurrentLocale() == nowLocale) {
-					ChangeToLayout(Locales.ActiveWindow(), notnowLocale);
-//					Thread.Sleep(10);//Give some time to switch layout
-					tries++;
-					if (tries == 3)
-						break;
-				}
-			} else
-				CycleSwitch();
+			if (Locales.ActiveWindowProcess().ProcessName.ToLower() == "HD-Frontend".ToLower()) {
+				KInputs.MakeInput(new [] { 
+				                  	KInputs.AddKey(Keys.LControlKey, true),
+				                  	KInputs.AddKey(Keys.Space, true),
+				                  	KInputs.AddKey(Keys.Space, false),
+				                  	KInputs.AddKey(Keys.LControlKey, false)});
+				Thread.Sleep(13);
+			} else {
+				var nowLocale = Locales.GetCurrentLocale();
+				uint notnowLocale = nowLocale == Locales.GetLocaleFromString(MMain.mahou.MainLayout1).uId
+	                ? Locales.GetLocaleFromString(MMain.mahou.MainLayout2).uId
+	                : Locales.GetLocaleFromString(MMain.mahou.MainLayout1).uId;
+				if (MMain.mahou.SwitchBetweenLayouts) {
+					Logging.Log("Changing layout using normal mode, WinAPI.PostMessage [WinAPI.WM_INPUTLANGCHANGEREQUEST] with LParam ["+notnowLocale+"].");
+					int tries = 0;
+					//Cycles while layout not changed
+					while (Locales.GetCurrentLocale() == nowLocale) {
+						ChangeToLayout(Locales.ActiveWindow(), notnowLocale);
+	//					Thread.Sleep(10);//Give some time to switch layout
+						tries++;
+						if (tries == 3)
+							break;
+					}
+				} else
+					CycleSwitch();
+			}
 		}
 		public static void ChangeToLayout(IntPtr hwnd, uint LayoutId, bool lc_fix = false) {
 			WinAPI.PostMessage(hwnd, WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, LayoutId);
