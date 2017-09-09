@@ -180,9 +180,10 @@ namespace Mahou
 							Logging.Log("Current snippet [" + snip + "] matched existing snippet [" + exps[i] + "].");
 							ExpandSnippet(snip, exps[i], MMain.mahou.SnippetSpaceAfter, MMain.mahou.SnippetsSwitchToGuessLayout);
 							matched = true;
+							break;
 						}
 					}
-					if (MMain.mahou.AutoSwitchEnabled && !matched) {
+					if (MMain.mahou.AutoSwitchEnabled && !matched && as_wrongs != null) {
 						for (int i = 0; i < as_wrongs.Length; i++) {
 							if (snip == as_wrongs[i]) {
 								ExpandSnippet(snip, as_corrects[i], MMain.mahou.AutoSwitchSpaceAfter, MMain.mahou.AutoSwitchSwitchToGuessLayout);
