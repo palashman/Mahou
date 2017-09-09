@@ -1520,6 +1520,45 @@ namespace Mahou
 			                ", Layout 2 minuses: " + wordL2Minuses + "wordL2: " + wordL2);
 			return Tuple.Create(result, layout);
 		}
+		public static void GetSnippetsData(string snippets, out string[] sni, out string[] exp) {
+			List<string> smalls = new List<string>();
+			List<string> bigs = new List<string>();
+			sni = null;
+			exp = null;
+			if (String.IsNullOrEmpty(snippets)) return;
+			for (int k = 0; k != snippets.Length-5; k++) {
+			if (snippets[k].Equals('-') && snippets[k+1].Equals('>')) {
+				var len = -1;
+				var endl = snippets.IndexOf('\n', k+2);
+				if (endl==-1)
+					endl=snippets.Length;
+				string cool = snippets.Substring(k+2, endl - k+2+2);
+				for (int i = 0; i != cool.Length-5; i ++) {
+					if (cool[i].Equals('=') && cool[i+1].Equals('=') && cool[i+2].Equals('=') && cool[i+3].Equals('=') && cool[i+4].Equals('>')) {
+						len = i;
+					}
+				}
+				if (len == -1)
+					len = endl-(k+2);
+				smalls.Add(snippets.Substring(k+2, len).Replace("\r", ""));
+			} else
+				if (snippets[k].Equals('=') && snippets[k+1].Equals('=') && snippets[k+2].Equals('=') && snippets[k+3].Equals('=') && snippets[k+4].Equals('>')) {
+					var endl = snippets.IndexOf('\n', k+2);
+					if (endl==-1)
+						endl=snippets.Length;
+					var pool = snippets.Substring(k+5,  endl - (k+5));
+					StringBuilder pyust = new StringBuilder(); // Should be faster than string +=
+					for (int g = 0; g != pool.Length-5; g++) {
+						if (pool[g].Equals('<') && pool[g+1].Equals('=') && pool[g+2].Equals('=') && pool[g+3].Equals('=') && pool[g+4].Equals('='))
+							break;
+						pyust.Append(pool[g]);
+					}
+					bigs.Add(pyust.ToString());
+				}
+			}
+			sni = smalls.ToArray();
+			exp = bigs.ToArray();
+		}
 		/// <summary>
 		/// Re-Initializes snippets.
 		/// </summary>
@@ -1527,42 +1566,16 @@ namespace Mahou
 		{
 			if (System.IO.File.Exists(MahouUI.snipfile)) {
 				var snippets = System.IO.File.ReadAllText(MahouUI.snipfile);
-				// One Regex is faster than two, because it makes it to process again snippets file. Benchmarks says that it in ~2 times faster.
-				var RX = new Regex("(?<=====>)(.*?)(?=<====)|->(.*?)(\r|\n|\r\n)", RegexOptions.Singleline | RegexOptions.Compiled);
-				string auto_switches = "";
-				if (MMain.mahou.AutoSwitchEnabled && System.IO.File.Exists(MahouUI.AS_dictfile))
-					auto_switches = MahouUI.AutoSwitchDictionaryRaw;
-				var snili = new List<string>();
-				var expli = new List<string>();
-				var wrongli = new List<string>();
-				var rightli = new List<string>();
 				Stopwatch watch = null;
 				if (MahouUI.LoggingEnabled) {
 					watch = new Stopwatch();
 					watch.Start();
 				}
-				if (onlySpecific == 1 || onlySpecific == 0) {
-					foreach (Match snip in RX.Matches(snippets)) {
-						if (!String.IsNullOrEmpty(snip.Groups[2].Value))
-						    snili.Add(snip.Groups[2].Value);
-						if (!String.IsNullOrEmpty(snip.Groups[1].Value))
-							expli.Add(Regex.Replace(snip.Groups[1].Value,"\r",""));
-					}
-					snipps = snili.ToArray();
-					exps = expli.ToArray();
-				}
-				if (onlySpecific == 2 || onlySpecific == 0) {
-					if (MMain.mahou.AutoSwitchEnabled) { 
-						foreach (Match wrcor in RX.Matches(auto_switches)) {
-							if (!String.IsNullOrEmpty(wrcor.Groups[2].Value))
-							    wrongli.Add(wrcor.Groups[2].Value);
-							if (!String.IsNullOrEmpty(wrcor.Groups[1].Value))
-								rightli.Add(Regex.Replace(wrcor.Groups[1].Value,"\r",""));
-						}
-					}
-					as_wrongs = wrongli.ToArray();
-					as_corrects = rightli.ToArray();
-				}
+				if (onlySpecific == 1 || onlySpecific == 0)
+					GetSnippetsData(snippets, out snipps, out exps);
+				if (onlySpecific == 2 || onlySpecific == 0)
+					if (MMain.mahou.AutoSwitchEnabled)
+						GetSnippetsData(MahouUI.AutoSwitchDictionaryRaw, out as_wrongs, out as_corrects);
 				if (MahouUI.LoggingEnabled) {
 					watch.Stop();
 					Logging.Log("Snippet & AutoSwitch(if enabled) init finished, elapsed ["+watch.Elapsed.TotalMilliseconds+"] ms.");
