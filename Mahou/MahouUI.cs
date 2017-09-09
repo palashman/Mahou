@@ -893,14 +893,31 @@ namespace Mahou {
 				watch = new Stopwatch();
 				watch.Start();
 			}
-			var matches = Regex.Matches(snippets, "(->)|(====>)|(<====)", RegexOptions.Compiled);
+			// This regex is ~x8 slower than the way above. 
+//			var matches = Regex.Matches(snippets, "(->)|(====>)|(<====)", RegexOptions.Compiled);
+			var ci = 0;
+			for (int k = 0; k != snippets.Length-5; k++) {
+				// Do not try to store snippets[k] & snippets[k+n] to string variable, that will be significally slower.
+				// with string.Concat() ~x15 slower, with string.Format() ~x45 slower.			
+				if(snippets[k].Equals('-') && snippets[k+1].Equals('>'))
+					ci++;
+				if(snippets[k].Equals('=') && snippets[k+1].Equals('=') &&
+				   snippets[k+2].Equals('=') && snippets[k+3].Equals('=') &&
+				   snippets[k+4].Equals('>'))
+					ci++;
+				if(snippets[k].Equals('<') && snippets[k+1].Equals('=') &&
+				   snippets[k+2].Equals('=') && snippets[k+3].Equals('=') &&
+				   snippets[k+4].Equals('='))
+					ci++;
+			}
+			var result = ci;
 			if (MahouUI.LoggingEnabled) {
 				watch.Stop();
-				Logging.Log("Snippets with length ["+snippets.Length+"], snippets count ["+matches.Count/3+"], errors ["+!(matches.Count % 3 == 0)+"], elapsed ["+watch.Elapsed.TotalMilliseconds+"] ms.");
+				Logging.Log("Snippets with length ["+snippets.Length+"], snippets count ["+result/3+"], errors ["+(result % 3 != 0)+"], elapsed ["+watch.Elapsed.TotalMilliseconds+"] ms.");
 			}
-			if (matches.Count %3 == 0)
-				return new Tuple<int, Color>(matches.Count/3, Color.Orange);
-			return new Tuple<int, Color>((matches.Count - matches.Count % 3) / 3, Color.Red);
+			if (result %3 == 0)
+				return new Tuple<int, Color>(result/3, Color.Orange);
+			return new Tuple<int, Color>((result - result % 3) / 3, Color.Red);
 		}
 		void TestLayout(string layout, int id) {
 			if ((layout == Languages.English[Languages.Element.SwitchBetween] && MMain.Lang == Languages.Russian) ||
