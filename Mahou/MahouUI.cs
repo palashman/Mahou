@@ -828,14 +828,14 @@ namespace Mahou {
 			if (File.Exists(snipfile)) {
 				txt_Snippets.Text = File.ReadAllText(snipfile);
 				UpdateSnippetCountLabel(txt_Snippets.Text, lbl_SnippetsCount);
-				bool REinitSn, REinitAS;
+				bool REinitSn = false, REinitAS = false;
 				if (KMHook.snipps != null)
 					REinitSn = KMHook.snipps.Length < lastSnippetsCount;
 				else 
 					REinitSn = true;
-				if (KMHook.as_wrongs != null)
+				if (KMHook.as_wrongs != null && AutoSwitchEnabled)
 					REinitAS = KMHook.as_wrongs.Length < lastAutoSwitchCount;
-				else 
+				else if (AutoSwitchEnabled)
 					REinitAS = true;
 				Logging.Log("Reinit for AutoSwitch = [" + REinitAS + "], for Snippets = [" + REinitSn + "].");
 				if (REinitAS || REinitSn) {
@@ -896,7 +896,9 @@ namespace Mahou {
 			// This regex is ~x8 slower than the way above. 
 //			var matches = Regex.Matches(snippets, "(->)|(====>)|(<====)", RegexOptions.Compiled);
 			var ci = 0;
-			for (int k = 0; k != snippets.Length-5; k++) {
+			var cia = 0;
+			var cic = 0;
+			for (int k = 0; k != snippets.Length-4; k++) {
 				// Do not try to store snippets[k] & snippets[k+n] to string variable, that will be significally slower.
 				// with string.Concat() ~x15 slower, with string.Format() ~x45 slower.			
 				if(snippets[k].Equals('-') && snippets[k+1].Equals('>'))
@@ -904,20 +906,23 @@ namespace Mahou {
 				if(snippets[k].Equals('=') && snippets[k+1].Equals('=') &&
 				   snippets[k+2].Equals('=') && snippets[k+3].Equals('=') &&
 				   snippets[k+4].Equals('>'))
-					ci++;
+					cia++;
 				if(snippets[k].Equals('<') && snippets[k+1].Equals('=') &&
 				   snippets[k+2].Equals('=') && snippets[k+3].Equals('=') &&
-				   snippets[k+4].Equals('='))
-					ci++;
+				   snippets[k+4].Equals('=')){
+					cic++;
+				}
 			}
-			var result = ci;
+//			Debug.WriteLine(cic + ", " + cia + ", " + ci);
+			var result = ci+cia+cic;
 			if (MahouUI.LoggingEnabled) {
 				watch.Stop();
 				Logging.Log("Snippets with length ["+snippets.Length+"], snippets count ["+result/3+"], errors ["+(result % 3 != 0)+"], elapsed ["+watch.Elapsed.TotalMilliseconds+"] ms.");
 			}
+			Memory.Flush();
 			if (result %3 == 0)
 				return new Tuple<int, Color>(result/3, Color.Orange);
-			return new Tuple<int, Color>((result - result % 3) / 3, Color.Red);
+			return new Tuple<int, Color>((result - result % 3) / 3 + (result % 3) , Color.Red);
 		}
 		void TestLayout(string layout, int id) {
 			if ((layout == Languages.English[Languages.Element.SwitchBetween] && MMain.Lang == Languages.Russian) ||
@@ -2236,7 +2241,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 					ChangeAutoSwitchDictionaryTextBox();
 					UpdateSnippetCountLabel(AutoSwitchDictionaryRaw, lbl_AutoSwitchWordsCount);
 				});
-				File.WriteAllText(AS_dictfile, dict);
+				File.WriteAllText(AS_dictfile, dict, Encoding.Default);
 			} else {
 				btn_UpdateAutoSwitchDictionary.ForeColor = Color.OrangeRed;
 				btn_UpdateAutoSwitchDictionary.Text = MMain.Lang[Languages.Element.Error];

@@ -521,7 +521,6 @@ namespace Mahou
 					if (MMain.mahou.ChangeLayoutInExcluded || !ExcludedProgram()) {
 						#region Switch between layouts with one key
 						var speclayout = (string)typeof(MahouUI).GetField("Layout"+specKeyId).GetValue(MMain.mahou);
-						bool catched = false;
 						if (speclayout == MMain.Lang[Languages.Element.SwitchBetween] ||
 						     speclayout == MMain.Lang[Languages.Element.SwitchBetween]) {
 							if (specificKey == 10 && (
@@ -529,7 +528,6 @@ namespace Mahou
 								(Key == Keys.LMenu && shift) || (Key == Keys.RMenu && shift_r)) && !win && !win_r && !ctrl && !ctrl_r) {
 								Logging.Log("Changing layout by Alt+Shift key.");
 								ChangeLayout();
-								catched = true;
 							}
 							if (specificKey == 8 && Key == Keys.CapsLock && (shift || shift_r) && !alt && !alt_r && !ctrl && !ctrl_r) {
 								Logging.Log("Changing layout by Shift+CapsLock key.");
@@ -539,7 +537,6 @@ namespace Mahou
 									KeybdEvent(Keys.CapsLock, 0);
 									KeybdEvent(Keys.CapsLock, 2);
 								}
-								catched = true;
 							} else 
 							if (!shift && !shift_r && !alt && !alt_r && !ctrl && !ctrl_r && specificKey == 1 && Key == Keys.CapsLock) {
 								ChangeLayout();
@@ -547,43 +544,35 @@ namespace Mahou
 									KeybdEvent(Keys.CapsLock, 0);
 									KeybdEvent(Keys.CapsLock, 2);
 								}
-								catched = true;
 								Logging.Log("Changing layout by CapsLock key.");
 							}
 							if (specificKey == 2 && Key == Keys.LControlKey && !keyAfterCTRL) {
 								Logging.Log("Changing layout by L-Ctrl key.");
 								ChangeLayout();
-								catched = true;
 							}
 							if (specificKey == 3 && Key == Keys.RControlKey && !keyAfterCTRL) {
 								Logging.Log("Changing layout by R-Ctrl key.");
 								ChangeLayout();
-								catched = true;
 							}
 							if (specificKey == 4 && Key == Keys.LShiftKey && !keyAfterSHIFT) {
 								Logging.Log("Changing layout by L-Shift key.");
 								ChangeLayout();
-								catched = true;
 							}
 							if (specificKey == 5 && Key == Keys.RShiftKey && !keyAfterSHIFT) {
 								Logging.Log("Changing layout by R-Shift key.");
 								ChangeLayout();
-								catched = true;
 							}
 							if (specificKey == 6 && Key == Keys.LMenu && !keyAfterALT) {
 								Logging.Log("Changing layout by L-Alt key.");
 								ChangeLayout();
-								catched = true;
 							}
 							if (specificKey == 7 && Key == Keys.RMenu && !keyAfterALT) {
 								Logging.Log("Changing layout by R-Alt key.");
 								ChangeLayout();
-								catched = true;
 							}
 							if (specificKey == 9 && Key == Keys.RMenu) {
 								Logging.Log("Changing layout by AltGr key.");
 								ChangeLayout();
-								catched = true;
 							}
 //							if (catched) {
 //			       			    if (Key == Keys.LMenu)
@@ -1526,6 +1515,7 @@ namespace Mahou
 			sni = null;
 			exp = null;
 			if (String.IsNullOrEmpty(snippets)) return;
+			snippets = snippets.Replace("\r", "");
 			for (int k = 0; k != snippets.Length-5; k++) {
 			if (snippets[k].Equals('-') && snippets[k+1].Equals('>')) {
 				var len = -1;
@@ -1546,7 +1536,9 @@ namespace Mahou
 					var endl = snippets.IndexOf('\n', k+2);
 					if (endl==-1)
 						endl=snippets.Length;
-					var pool = snippets.Substring(k+5,  endl - (k+5));
+					var pool = snippets.Substring(k+5, endl - (k+5));
+					if(sni == snipps)
+						pool = snippets.Substring(k+5);
 					StringBuilder pyust = new StringBuilder(); // Should be faster than string +=
 					for (int g = 0; g != pool.Length-5; g++) {
 						if (pool[g].Equals('<') && pool[g+1].Equals('=') && pool[g+2].Equals('=') && pool[g+3].Equals('=') && pool[g+4].Equals('='))
