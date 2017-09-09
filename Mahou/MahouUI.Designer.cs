@@ -207,6 +207,7 @@ namespace Mahou
 			this.components = new System.ComponentModel.Container();
 			this.tabs = new System.Windows.Forms.TabControl();
 			this.tab_functions = new System.Windows.Forms.TabPage();
+			this.chk_AppDataConfigs = new System.Windows.Forms.CheckBox();
 			this.chk_GuessKeyCodeFix = new System.Windows.Forms.CheckBox();
 			this.lbl_TaskExist = new System.Windows.Forms.Label();
 			this.lbl_LinkExist = new System.Windows.Forms.Label();
@@ -381,7 +382,6 @@ namespace Mahou
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
 			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
-			this.chk_AppDataConfigs = new System.Windows.Forms.CheckBox();
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -475,6 +475,16 @@ namespace Mahou
 			this.tab_functions.TabIndex = 0;
 			this.tab_functions.Text = "Functions";
 			this.tab_functions.UseVisualStyleBackColor = true;
+			// 
+			// chk_AppDataConfigs
+			// 
+			this.chk_AppDataConfigs.AutoSize = true;
+			this.chk_AppDataConfigs.Location = new System.Drawing.Point(302, 191);
+			this.chk_AppDataConfigs.Name = "chk_AppDataConfigs";
+			this.chk_AppDataConfigs.Size = new System.Drawing.Size(132, 19);
+			this.chk_AppDataConfigs.TabIndex = 21;
+			this.chk_AppDataConfigs.Text = "Configs in AppData.";
+			this.chk_AppDataConfigs.UseVisualStyleBackColor = true;
 			// 
 			// chk_GuessKeyCodeFix
 			// 
@@ -1840,7 +1850,7 @@ namespace Mahou
 			// txt_AutoSwitchDictionary
 			// 
 			this.txt_AutoSwitchDictionary.Location = new System.Drawing.Point(9, 56);
-			this.txt_AutoSwitchDictionary.MaxLength = 0;
+			this.txt_AutoSwitchDictionary.MaxLength = 214;
 			this.txt_AutoSwitchDictionary.Multiline = true;
 			this.txt_AutoSwitchDictionary.Name = "txt_AutoSwitchDictionary";
 			this.txt_AutoSwitchDictionary.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -2477,16 +2487,6 @@ namespace Mahou
 			this.HelpMeUnderstand.ShowAlways = true;
 			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.HelpMeUnderstand.Popup += new System.Windows.Forms.PopupEventHandler(this.HelpMeUnderstandPopup);
-			// 
-			// chk_AppDataConfigs
-			// 
-			this.chk_AppDataConfigs.AutoSize = true;
-			this.chk_AppDataConfigs.Location = new System.Drawing.Point(302, 191);
-			this.chk_AppDataConfigs.Name = "chk_AppDataConfigs";
-			this.chk_AppDataConfigs.Size = new System.Drawing.Size(132, 19);
-			this.chk_AppDataConfigs.TabIndex = 21;
-			this.chk_AppDataConfigs.Text = "Configs in AppData.";
-			this.chk_AppDataConfigs.UseVisualStyleBackColor = true;
 			// 
 			// MahouUI
 			// 

@@ -136,6 +136,7 @@ namespace Mahou {
 		public static string AS_dictfile = Path.Combine(MahouUI.nPath, "AS_dict.txt");
 		public static string mahou_folder_appd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Mahou");
 		public static string latest_save_dir = "";
+		public static string AutoSwitchDictionaryRaw = "";
 		#endregion
 		public MahouUI() {
 			InitializeComponent();
@@ -654,7 +655,7 @@ namespace Mahou {
 				MMain.MyConfs.Write("AutoSwitch", "SpaceAfter", chk_AutoSwitchSpaceAfter.Checked.ToString());
 				MMain.MyConfs.Write("AutoSwitch", "SwitchToGuessLayout", chk_AutoSwitchSwitchToGuessLayout.Checked.ToString());
 				if (chk_AutoSwitch.Checked)
-					File.WriteAllText(AS_dictfile, txt_AutoSwitchDictionary.Text);
+					File.WriteAllText(AS_dictfile, AutoSwitchDictionaryRaw);
 				#endregion
 				#region Appearence & Hotkeys
 				SaveFromTemps();
@@ -691,6 +692,15 @@ namespace Mahou {
 				MMain.MyConfs = new Configs();
 			}
 			return rsl;
+		}
+		void ChangeAutoSwitchDictionaryTextBox() {
+			if (AutoSwitchDictionaryRaw.Length > 710000) {
+				txt_AutoSwitchDictionary.Text = "Too big dictionary, it will take a lot time to display.";
+				txt_AutoSwitchDictionary.ReadOnly = true;
+			} else {
+				txt_AutoSwitchDictionary.Text = AutoSwitchDictionaryRaw;
+				txt_AutoSwitchDictionary.ReadOnly = false;
+			}
 		}
 		/// <summary>
 		/// Refresh all controls state from configs.
@@ -805,7 +815,8 @@ namespace Mahou {
 			AutoSwitchSpaceAfter = chk_AutoSwitchSpaceAfter.Checked = MMain.MyConfs.ReadBool("AutoSwitch", "SpaceAfter");
 			AutoSwitchSwitchToGuessLayout = chk_AutoSwitchSwitchToGuessLayout.Checked = MMain.MyConfs.ReadBool("AutoSwitch", "SwitchToGuessLayout");
 			if (File.Exists(AS_dictfile)) {
-				txt_AutoSwitchDictionary.Text = File.ReadAllText(AS_dictfile);
+				AutoSwitchDictionaryRaw = File.ReadAllText(AS_dictfile);
+				ChangeAutoSwitchDictionaryTextBox();
 				Txt_AutoSwitchDictionaryTextChanged(new object(), new EventArgs());
 			}
 			#endregion
@@ -818,11 +829,11 @@ namespace Mahou {
 				Txt_SnippetsTextChanged(new object(), new EventArgs());
 				bool REinitSn, REinitAS;
 				if (KMHook.snipps != null)
-					REinitSn = KMHook.snipps.Length-1 < lastSnippetsCount;
+					REinitSn = KMHook.snipps.Length < lastSnippetsCount;
 				else 
 					REinitSn = true;
 				if (KMHook.as_wrongs != null)
-					REinitAS = KMHook.as_wrongs.Length-1 < lastAutoSwitchCount;
+					REinitAS = KMHook.as_wrongs.Length < lastAutoSwitchCount;
 				else 
 					REinitAS = true;
 				Logging.Log("Reinit for AutoSwitch = [" + REinitAS + "], for Snippets = [" + REinitSn + "].");
@@ -834,6 +845,7 @@ namespace Mahou {
 						if (REinitAS)
 							only = 2;
 					}
+//					if 
 					KMHook.DoLater.Tick += (_, __) => { 
 						var initSnippetsThread = new System.Threading.Thread(() =>KMHook.ReInitSnippets(only));
 						initSnippetsThread.Name = "Snippets initialization thread.";
@@ -874,13 +886,12 @@ namespace Mahou {
 			Logging.Log("All configurations loaded.");
 		}
 		Tuple<int, Color> GetSnippetsCount(string snippets) {
-			var minlt = Regex.Matches(snippets, "->").Count;
-			var eq4lt = Regex.Matches(snippets, "====>").Count;
-			var rteq4 = Regex.Matches(snippets, "<====").Count;
-//			Debug.WriteLine(minlt + " " + eq4lt + " " + rteq4);
-			if (minlt == eq4lt && minlt == rteq4)
-				return new Tuple<int, Color>(minlt, Color.Orange);
-			return new Tuple<int, Color>(minlt, Color.Red);
+			var matches = Regex.Matches(snippets, "(->)|(====>)|(<====)", RegexOptions.Compiled);
+			Debug.WriteLine(matches.Count+ " ");
+			                //+ eq4lt + " " + rteq4);
+			if (matches.Count %3 == 0)
+				return new Tuple<int, Color>(matches.Count/3, Color.Orange);
+			return new Tuple<int, Color>((matches.Count - matches.Count % 3) / 3, Color.Red);
 		}
 		void TestLayout(string layout, int id) {
 			if ((layout == Languages.English[Languages.Element.SwitchBetween] && MMain.Lang == Languages.Russian) ||
@@ -2194,8 +2205,9 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				};
 				tmr.Interval = 350;
 				tmr.Start();
+				AutoSwitchDictionaryRaw = dict;
 				this.txt_AutoSwitchDictionary.Invoke((MethodInvoker)delegate {
-	         		this.txt_AutoSwitchDictionary.Text = dict;
+					ChangeAutoSwitchDictionaryTextBox();
 				});
 				File.WriteAllText(AS_dictfile, dict);
 			} else {
@@ -2860,7 +2872,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			if(!as_checking) {
 				as_checking = true;
 				tmr.Tick += (_, __) => {
-					var snipc = GetSnippetsCount(txt_AutoSwitchDictionary.Text);
+					var snipc = GetSnippetsCount(AutoSwitchDictionaryRaw);
 					lastAutoSwitchCount = snipc.Item1;
 					lbl_AutoSwitchWordsCount.Text = lbl_AutoSwitchWordsCount.Text.Split(' ')[0] + " "  + snipc.Item1 + ((snipc.Item2 == Color.Red) ? "?" : "");
 					lbl_AutoSwitchWordsCount.ForeColor = snipc.Item2;

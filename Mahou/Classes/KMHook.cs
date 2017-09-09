@@ -1529,7 +1529,7 @@ namespace Mahou
 				var RX = new Regex("(?<=====>)(.*?)(?=<====)|->(.*?)(\r|\n|\r\n)", RegexOptions.Singleline | RegexOptions.Compiled);
 				string auto_switches = "";
 				if (MMain.mahou.AutoSwitchEnabled && System.IO.File.Exists(MahouUI.AS_dictfile))
-					auto_switches = System.IO.File.ReadAllText(MahouUI.AS_dictfile);
+					auto_switches = MahouUI.AutoSwitchDictionaryRaw;
 				var snili = new List<string>();
 				var expli = new List<string>();
 				var wrongli = new List<string>();
