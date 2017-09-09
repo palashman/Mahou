@@ -1521,12 +1521,12 @@ namespace Mahou
 		/// <summary>
 		/// Re-Initializes snippets.
 		/// </summary>
-		public static void ReInitSnippets()
+		public static void ReInitSnippets(int onlySpecific = 0)
 		{
 			if (System.IO.File.Exists(MahouUI.snipfile)) {
 				var snippets = System.IO.File.ReadAllText(MahouUI.snipfile);
 				// One Regex is faster than two, because it makes it to process again snippets file. Benchmarks says that it in ~2 times faster.
-				var RX = new Regex("(?<=====>)(.*?)(?=<====)|->(.*?)(\r|\n|\r\n)", RegexOptions.Singleline);
+				var RX = new Regex("(?<=====>)(.*?)(?=<====)|->(.*?)(\r|\n|\r\n)", RegexOptions.Singleline | RegexOptions.Compiled);
 				string auto_switches = "";
 				if (MMain.mahou.AutoSwitchEnabled && System.IO.File.Exists(MahouUI.AS_dictfile))
 					auto_switches = System.IO.File.ReadAllText(MahouUI.AS_dictfile);
@@ -1539,28 +1539,32 @@ namespace Mahou
 					watch = new Stopwatch();
 					watch.Start();
 				}
-				foreach (Match snip in RX.Matches(snippets)) {
-					if (!String.IsNullOrEmpty(snip.Groups[2].Value))
-					    snili.Add(snip.Groups[2].Value);
-					if (!String.IsNullOrEmpty(snip.Groups[1].Value))
-						expli.Add(Regex.Replace(snip.Groups[1].Value,"\r",""));
-				}
-				if (MMain.mahou.AutoSwitchEnabled) { 
-					foreach (Match wrcor in RX.Matches(auto_switches)) {
-						if (!String.IsNullOrEmpty(wrcor.Groups[2].Value))
-						    wrongli.Add(wrcor.Groups[2].Value);
-						if (!String.IsNullOrEmpty(wrcor.Groups[1].Value))
-							rightli.Add(Regex.Replace(wrcor.Groups[1].Value,"\r",""));
+				if (onlySpecific == 1 || onlySpecific == 0) {
+					foreach (Match snip in RX.Matches(snippets)) {
+						if (!String.IsNullOrEmpty(snip.Groups[2].Value))
+						    snili.Add(snip.Groups[2].Value);
+						if (!String.IsNullOrEmpty(snip.Groups[1].Value))
+							expli.Add(Regex.Replace(snip.Groups[1].Value,"\r",""));
 					}
+					snipps = snili.ToArray();
+					exps = expli.ToArray();
+				}
+				if (onlySpecific == 2 || onlySpecific == 0) {
+					if (MMain.mahou.AutoSwitchEnabled) { 
+						foreach (Match wrcor in RX.Matches(auto_switches)) {
+							if (!String.IsNullOrEmpty(wrcor.Groups[2].Value))
+							    wrongli.Add(wrcor.Groups[2].Value);
+							if (!String.IsNullOrEmpty(wrcor.Groups[1].Value))
+								rightli.Add(Regex.Replace(wrcor.Groups[1].Value,"\r",""));
+						}
+					}
+					as_wrongs = wrongli.ToArray();
+					as_corrects = rightli.ToArray();
 				}
 				if (MahouUI.LoggingEnabled) {
 					watch.Stop();
 					Logging.Log("Snippet & AutoSwitch(if enabled) init finished, elapsed ["+watch.Elapsed.TotalMilliseconds+"] ms.");
 				}
-				snipps = snili.ToArray();
-				exps = expli.ToArray();
-				as_wrongs = wrongli.ToArray();
-				as_corrects = rightli.ToArray();
 			}
 			Memory.Flush();
 		}

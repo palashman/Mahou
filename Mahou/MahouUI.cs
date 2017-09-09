@@ -37,7 +37,7 @@ namespace Mahou {
 		static uint lastTrayFlagLayout = 0;
 		static Timer animate = new Timer();
 		static Timer showUpdWnd = new Timer();
-		static int progress = 0, _progress = 0;
+		static int progress = 0, _progress = 0, lastSnippetsCount = 0, lastAutoSwitchCount = 0;
 		int titlebar = 12;
 		public static int AtUpdateShow;
 		public int DoubleHKInterval = 200, SelectedTextGetMoreTriesCount;
@@ -816,9 +816,33 @@ namespace Mahou {
 			if (File.Exists(snipfile)) {
 				txt_Snippets.Text = File.ReadAllText(snipfile);
 				Txt_SnippetsTextChanged(new object(), new EventArgs());
-				KMHook.DoLater.Tick += (_, __) => { System.Threading.Tasks.Task.Factory.StartNew(KMHook.ReInitSnippets); KMHook.DoLater.Stop(); };
-				KMHook.DoLater.Interval = 250;
-				KMHook.DoLater.Start();
+				bool REinitSn, REinitAS;
+				if (KMHook.snipps != null)
+					REinitSn = KMHook.snipps.Length-1 < lastSnippetsCount;
+				else 
+					REinitSn = true;
+				if (KMHook.as_wrongs != null)
+					REinitAS = KMHook.as_wrongs.Length-1 < lastAutoSwitchCount;
+				else 
+					REinitAS = true;
+				Logging.Log("Reinit for AutoSwitch = [" + REinitAS + "], for Snippets = [" + REinitSn + "].");
+				if (REinitAS || REinitSn) {
+					var only = 0;
+					if (!REinitAS || !REinitSn) {
+						if (REinitSn)
+							only = 1;
+						if (REinitAS)
+							only = 2;
+					}
+					KMHook.DoLater.Tick += (_, __) => { 
+						var initSnippetsThread = new System.Threading.Thread(() =>KMHook.ReInitSnippets(only));
+						initSnippetsThread.Name = "Snippets initialization thread.";
+						initSnippetsThread.Start();
+						KMHook.DoLater.Stop(); 
+					};
+					KMHook.DoLater.Interval = 250;
+					KMHook.DoLater.Start();
+				}
 			}
 			#endregion
 			#region Appearence & Hotkeys
@@ -2837,6 +2861,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				as_checking = true;
 				tmr.Tick += (_, __) => {
 					var snipc = GetSnippetsCount(txt_AutoSwitchDictionary.Text);
+					lastAutoSwitchCount = snipc.Item1;
 					lbl_AutoSwitchWordsCount.Text = lbl_AutoSwitchWordsCount.Text.Split(' ')[0] + " "  + snipc.Item1 + ((snipc.Item2 == Color.Red) ? "?" : "");
 					lbl_AutoSwitchWordsCount.ForeColor = snipc.Item2;
 					tmr.Stop();
@@ -2851,6 +2876,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				snip_checking = true;
 				tmr.Tick += (_, __) => {
 					var snipc = GetSnippetsCount(txt_Snippets.Text);
+					lastSnippetsCount = snipc.Item1;
 					lbl_SnippetsCount.Text = lbl_SnippetsCount.Text.Split(' ')[0] + " " + snipc.Item1 + ((snipc.Item2 == Color.Red) ? "?" : "");
 					lbl_SnippetsCount.ForeColor = snipc.Item2;
 					tmr.Stop();
