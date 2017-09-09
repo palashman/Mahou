@@ -186,15 +186,16 @@ namespace Mahou
 						for (int i = 0; i < as_wrongs.Length; i++) {
 							if (snip == as_wrongs[i]) {
 								ExpandSnippet(snip, as_corrects[i], MMain.mahou.AutoSwitchSpaceAfter, MMain.mahou.AutoSwitchSwitchToGuessLayout);
+								break;
 							} else {
 								if (snip.Length == as_wrongs[i].Length) {
 									if (snip.ToLowerInvariant() == as_wrongs[i].ToLowerInvariant()) {
 										DoSelf(() => {
-									       	KInputs.MakeInput(new [] { KInputs.AddKey(Keys.Back, true), KInputs.AddKey(Keys.Back, false)});
+								       		KInputs.MakeInput(new [] { KInputs.AddKey(Keys.Back, true), KInputs.AddKey(Keys.Back, false)});
 											ConvertLast(c_word_backup);
 										       });
 										ExpandSnippet(snip, as_corrects[i], MMain.mahou.AutoSwitchSpaceAfter, MMain.mahou.AutoSwitchSwitchToGuessLayout, true);
-										c_snip.Clear();
+										break;
 									}
 								}
 							}
@@ -459,7 +460,7 @@ namespace Mahou
 						ChangeToLayout(Locales.ActiveWindow(), guess.Item2);
 					}
 					if (!ignoreExpand) {
-						for (int e = -1; e < c_snip.Count; e++) {
+			       			for (int e = -1; e < c_snip.Count; e++) {
 							KInputs.MakeInput(new [] { KInputs.AddKey(Keys.Back, true),
 								KInputs.AddKey(Keys.Back, false) 
 							});

@@ -545,6 +545,7 @@ namespace Mahou {
 			else {
 				nPath = AppDomain.CurrentDomain.BaseDirectory;
 			}
+			Debug.WriteLine(nPath);
 			UpdateSavePaths();
 			AutoStartAsAdmin = (cbb_AutostartType.SelectedIndex != 0);
 			if (chk_AutoStart.Checked) {
@@ -561,7 +562,6 @@ namespace Mahou {
 				Logging.Log("Creating new configs file ["+ Configs.filePath + "].");
 				Configs.CreateConfigsFile();
 			}
-			latest_save_dir = nPath;
 			DoInMainConfigs(() => { MMain.MyConfs.Write("Functions", "AppDataConfigs", chk_AppDataConfigs.Checked.ToString()); return (object)0; });
 			if (!only_load) {
 				var tmpLangTTAppearenceIndex = lsb_LangTTAppearenceForList.SelectedIndex;
@@ -695,11 +695,11 @@ namespace Mahou {
 		}
 		void ChangeAutoSwitchDictionaryTextBox() {
 			if (AutoSwitchDictionaryRaw.Length > 710000) {
-				txt_AutoSwitchDictionary.Text = "Too big dictionary, it will take a lot time to display.";
 				txt_AutoSwitchDictionary.ReadOnly = true;
+				txt_AutoSwitchDictionary.Text = "Too big dictionary, it will take a lot time to display.";
 			} else {
-				txt_AutoSwitchDictionary.Text = AutoSwitchDictionaryRaw;
 				txt_AutoSwitchDictionary.ReadOnly = false;
+				txt_AutoSwitchDictionary.Text = AutoSwitchDictionaryRaw;
 			}
 		}
 		/// <summary>
@@ -723,6 +723,7 @@ namespace Mahou {
 			chk_StartupUpdatesCheck.Checked = MMain.MyConfs.ReadBool("Functions", "StartupUpdatesCheck");
 			LoggingEnabled = chk_Logging.Checked = MMain.MyConfs.ReadBool("Functions", "Logging");
 			chk_AppDataConfigs.Checked = (bool)DoInMainConfigs(() => MMain.MyConfs.ReadBool("Functions", "AppDataConfigs"));
+			latest_save_dir = nPath;
 			if (LoggingEnabled) 
 				MMain._logTimer.Change(300, 0);
 			else 
@@ -817,7 +818,7 @@ namespace Mahou {
 			if (File.Exists(AS_dictfile)) {
 				AutoSwitchDictionaryRaw = File.ReadAllText(AS_dictfile);
 				ChangeAutoSwitchDictionaryTextBox();
-				Txt_AutoSwitchDictionaryTextChanged(new object(), new EventArgs());
+				UpdateSnippetCountLabel(AutoSwitchDictionaryRaw, lbl_AutoSwitchWordsCount);
 			}
 			#endregion
 			#region Snippets
@@ -826,7 +827,7 @@ namespace Mahou {
 			SnippetsSwitchToGuessLayout = chk_SnippetsSwitchToGuessLayout.Checked = MMain.MyConfs.ReadBool("Snippets", "SwitchToGuessLayout");
 			if (File.Exists(snipfile)) {
 				txt_Snippets.Text = File.ReadAllText(snipfile);
-				Txt_SnippetsTextChanged(new object(), new EventArgs());
+				UpdateSnippetCountLabel(txt_Snippets.Text, lbl_SnippetsCount);
 				bool REinitSn, REinitAS;
 				if (KMHook.snipps != null)
 					REinitSn = KMHook.snipps.Length < lastSnippetsCount;
@@ -851,6 +852,7 @@ namespace Mahou {
 						initSnippetsThread.Name = "Snippets initialization thread.";
 						initSnippetsThread.Start();
 						KMHook.DoLater.Stop(); 
+						KMHook.DoLater = new Timer();
 					};
 					KMHook.DoLater.Interval = 250;
 					KMHook.DoLater.Start();
@@ -886,9 +888,16 @@ namespace Mahou {
 			Logging.Log("All configurations loaded.");
 		}
 		Tuple<int, Color> GetSnippetsCount(string snippets) {
+			Stopwatch watch = null;
+			if (MahouUI.LoggingEnabled) {
+				watch = new Stopwatch();
+				watch.Start();
+			}
 			var matches = Regex.Matches(snippets, "(->)|(====>)|(<====)", RegexOptions.Compiled);
-			Debug.WriteLine(matches.Count+ " ");
-			                //+ eq4lt + " " + rteq4);
+			if (MahouUI.LoggingEnabled) {
+				watch.Stop();
+				Logging.Log("Snippets with length ["+snippets.Length+"], snippets count ["+matches.Count/3+"], errors ["+!(matches.Count % 3 == 0)+"], elapsed ["+watch.Elapsed.TotalMilliseconds+"] ms.");
+			}
 			if (matches.Count %3 == 0)
 				return new Tuple<int, Color>(matches.Count/3, Color.Orange);
 			return new Tuple<int, Color>((matches.Count - matches.Count % 3) / 3, Color.Red);
@@ -2208,6 +2217,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				AutoSwitchDictionaryRaw = dict;
 				this.txt_AutoSwitchDictionary.Invoke((MethodInvoker)delegate {
 					ChangeAutoSwitchDictionaryTextBox();
+					UpdateSnippetCountLabel(AutoSwitchDictionaryRaw, lbl_AutoSwitchWordsCount);
 				});
 				File.WriteAllText(AS_dictfile, dict);
 			} else {
@@ -2328,6 +2338,15 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
                	btn_DownloadUpdate.Text = MMain.Lang[Languages.Element.DownloadUpdate]; // Resotre download button text
 			    btn_DownloadUpdate.Text = Regex.Replace(btn_DownloadUpdate.Text, @"\<.+?\>", UpdInfo[2]);
 			});
+		}
+		void UpdateSnippetCountLabel(string snippets, Label target) {
+			var snipc = GetSnippetsCount(snippets);
+			if (target == lbl_AutoSwitchWordsCount)
+				lastAutoSwitchCount = snipc.Item1;
+			else if (target == lbl_SnippetsCount) 
+				lastSnippetsCount = snipc.Item1;
+			target.Text = target.Text.Split(' ')[0] + " "  + snipc.Item1 + ((snipc.Item2 == Color.Red) ? "?" : "");
+			target.ForeColor = snipc.Item2;
 		}
 		#endregion
 		/// <summary>
@@ -2639,7 +2658,6 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				Clipboard.SetText(debuginfo);
 				var btDgtTxtWas = btn_DebugInfo.Text;
 				btn_DebugInfo.Text = MMain.Lang[Languages.Element.DbgInf_Copied];
-				var tmr = new Timer();
 				tmr.Tick += (_,__) => { 
 					btn_DebugInfo.Text = btDgtTxtWas;
 					tmr.Stop();
@@ -2869,15 +2887,14 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			MMain.MyConfs.Write("Updates", "Channel", (sender as ComboBox).SelectedItem.ToString());
 		}
 		void Txt_AutoSwitchDictionaryTextChanged(object sender, EventArgs e) {
+			if (txt_AutoSwitchDictionary.Text.Length < 710000 && !txt_AutoSwitchDictionary.ReadOnly)
+				AutoSwitchDictionaryRaw = txt_AutoSwitchDictionary.Text;
 			if(!as_checking) {
 				as_checking = true;
 				tmr.Tick += (_, __) => {
-					var snipc = GetSnippetsCount(AutoSwitchDictionaryRaw);
-					lastAutoSwitchCount = snipc.Item1;
-					lbl_AutoSwitchWordsCount.Text = lbl_AutoSwitchWordsCount.Text.Split(' ')[0] + " "  + snipc.Item1 + ((snipc.Item2 == Color.Red) ? "?" : "");
-					lbl_AutoSwitchWordsCount.ForeColor = snipc.Item2;
-					tmr.Stop();
-						as_checking = false;
+					UpdateSnippetCountLabel(AutoSwitchDictionaryRaw, lbl_AutoSwitchWordsCount);
+					as_checking = false;
+					tmr.Dispose(); tmr = new Timer();
 				};
 				tmr.Interval = 1500;
 				tmr.Start();
@@ -2887,12 +2904,9 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			if(!snip_checking) {
 				snip_checking = true;
 				tmr.Tick += (_, __) => {
-					var snipc = GetSnippetsCount(txt_Snippets.Text);
-					lastSnippetsCount = snipc.Item1;
-					lbl_SnippetsCount.Text = lbl_SnippetsCount.Text.Split(' ')[0] + " " + snipc.Item1 + ((snipc.Item2 == Color.Red) ? "?" : "");
-					lbl_SnippetsCount.ForeColor = snipc.Item2;
-					tmr.Stop();
+					UpdateSnippetCountLabel(txt_Snippets.Text, lbl_SnippetsCount);
 					snip_checking = false;
+					tmr.Dispose(); tmr = new Timer();
 				};
 				tmr.Interval = 1000;
 				tmr.Start();

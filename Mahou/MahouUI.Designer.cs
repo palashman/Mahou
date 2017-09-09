@@ -1850,7 +1850,7 @@ namespace Mahou
 			// txt_AutoSwitchDictionary
 			// 
 			this.txt_AutoSwitchDictionary.Location = new System.Drawing.Point(9, 56);
-			this.txt_AutoSwitchDictionary.MaxLength = 214;
+			this.txt_AutoSwitchDictionary.MaxLength = 0;
 			this.txt_AutoSwitchDictionary.Multiline = true;
 			this.txt_AutoSwitchDictionary.Name = "txt_AutoSwitchDictionary";
 			this.txt_AutoSwitchDictionary.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
