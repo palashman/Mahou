@@ -184,6 +184,7 @@ namespace Mahou
 		private System.Windows.Forms.Label lbl_SnippetsCount;
 		private System.Windows.Forms.CheckBox chk_GuessKeyCodeFix;
 		private System.Windows.Forms.CheckBox chk_AppDataConfigs;
+		private System.Windows.Forms.CheckBox chk_DownloadASD_InZip;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -322,6 +323,7 @@ namespace Mahou
 			this.txt_Snippets = new Mahou.MahouUI.TextBoxCA();
 			this.chk_Snippets = new System.Windows.Forms.CheckBox();
 			this.tab_autoswitch = new System.Windows.Forms.TabPage();
+			this.chk_DownloadASD_InZip = new System.Windows.Forms.CheckBox();
 			this.lbl_AutoSwitchWordsCount = new System.Windows.Forms.Label();
 			this.chk_AutoSwitchSpaceAfter = new System.Windows.Forms.CheckBox();
 			this.btn_UpdateAutoSwitchDictionary = new System.Windows.Forms.Button();
@@ -1793,6 +1795,7 @@ namespace Mahou
 			// 
 			// tab_autoswitch
 			// 
+			this.tab_autoswitch.Controls.Add(this.chk_DownloadASD_InZip);
 			this.tab_autoswitch.Controls.Add(this.lbl_AutoSwitchWordsCount);
 			this.tab_autoswitch.Controls.Add(this.chk_AutoSwitchSpaceAfter);
 			this.tab_autoswitch.Controls.Add(this.btn_UpdateAutoSwitchDictionary);
@@ -1806,6 +1809,17 @@ namespace Mahou
 			this.tab_autoswitch.TabIndex = 10;
 			this.tab_autoswitch.Text = "Auto Switch";
 			this.tab_autoswitch.UseVisualStyleBackColor = true;
+			// 
+			// chk_DownloadASD_InZip
+			// 
+			this.chk_DownloadASD_InZip.AutoSize = true;
+			this.chk_DownloadASD_InZip.Location = new System.Drawing.Point(201, 58);
+			this.chk_DownloadASD_InZip.Name = "chk_DownloadASD_InZip";
+			this.chk_DownloadASD_InZip.Size = new System.Drawing.Size(211, 19);
+			this.chk_DownloadASD_InZip.TabIndex = 12;
+			this.chk_DownloadASD_InZip.Text = "Download dictionary in zip archive.";
+			this.chk_DownloadASD_InZip.UseVisualStyleBackColor = true;
+			this.chk_DownloadASD_InZip.CheckedChanged += new System.EventHandler(this.Chk_DownloadASD_InZipCheckedChanged);
 			// 
 			// lbl_AutoSwitchWordsCount
 			// 
@@ -1829,7 +1843,7 @@ namespace Mahou
 			// 
 			// btn_UpdateAutoSwitchDictionary
 			// 
-			this.btn_UpdateAutoSwitchDictionary.Location = new System.Drawing.Point(276, 27);
+			this.btn_UpdateAutoSwitchDictionary.Location = new System.Drawing.Point(9, 55);
 			this.btn_UpdateAutoSwitchDictionary.Name = "btn_UpdateAutoSwitchDictionary";
 			this.btn_UpdateAutoSwitchDictionary.Size = new System.Drawing.Size(186, 23);
 			this.btn_UpdateAutoSwitchDictionary.TabIndex = 9;
@@ -1849,12 +1863,12 @@ namespace Mahou
 			// 
 			// txt_AutoSwitchDictionary
 			// 
-			this.txt_AutoSwitchDictionary.Location = new System.Drawing.Point(9, 56);
+			this.txt_AutoSwitchDictionary.Location = new System.Drawing.Point(9, 85);
 			this.txt_AutoSwitchDictionary.MaxLength = 0;
 			this.txt_AutoSwitchDictionary.Multiline = true;
 			this.txt_AutoSwitchDictionary.Name = "txt_AutoSwitchDictionary";
 			this.txt_AutoSwitchDictionary.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.txt_AutoSwitchDictionary.Size = new System.Drawing.Size(541, 206);
+			this.txt_AutoSwitchDictionary.Size = new System.Drawing.Size(541, 177);
 			this.txt_AutoSwitchDictionary.TabIndex = 6;
 			this.txt_AutoSwitchDictionary.Text = "EMPTY, need to update.";
 			this.txt_AutoSwitchDictionary.TextChanged += new System.EventHandler(this.Txt_AutoSwitchDictionaryTextChanged);

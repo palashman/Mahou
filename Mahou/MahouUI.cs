@@ -10,8 +10,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Windows.Forms.VisualStyles;
-
+	
 namespace Mahou {
 	public partial class MahouUI : Form {
 		#region Variables
@@ -30,7 +29,7 @@ namespace Mahou {
 		public static bool LoggingEnabled, dummy, CapsLockDisablerTimer, LangPanelUpperArrow, mouseLTUpperArrow, caretLTUpperArrow,
 						   ShiftInHotkey, AltInHotkey, CtrlInHotkey, WinInHotkey, AutoStartAsAdmin;
 		static string[] UpdInfo;
-		static bool updating, was, isold = true, checking, snip_checking, as_checking;
+		static bool updating, was, isold = true, checking, snip_checking, as_checking, check_ASD_size = true;
 		static Timer tmr = new Timer();
 		static Timer old = new Timer();
 		public static Bitmap FLAG;
@@ -49,7 +48,7 @@ namespace Mahou {
 					ConvertSelectionLS, ConvertSelectionLSPlus, MCDSSupport, OneLayoutWholeWord,
 					MouseTTAlways, OneLayout, MouseLangTooltipEnabled, CaretLangTooltipEnabled, QWERTZ_fix, 
 					ChangeLayoutInExcluded, SnippetSpaceAfter, SnippetsSwitchToGuessLayout, AutoSwitchEnabled,
-					AutoSwitchSpaceAfter, AutoSwitchSwitchToGuessLayout, GuessKeyCodeFix;
+					AutoSwitchSpaceAfter, AutoSwitchSwitchToGuessLayout, GuessKeyCodeFix, Dowload_ASD_InZip;
 		/// <summary> Temporary modifiers of hotkeys. </summary>
 		string Mainhk_tempMods, ExitHk_tempMods, HKCLast_tempMods, HKCSelection_tempMods, 
 			    HKCLine_tempMods, HKSymIgn_tempMods, HKConMorWor_tempMods, HKTitleCase_tempMods,
@@ -654,6 +653,7 @@ namespace Mahou {
 				MMain.MyConfs.Write("AutoSwitch", "Enabled", chk_AutoSwitch.Checked.ToString());
 				MMain.MyConfs.Write("AutoSwitch", "SpaceAfter", chk_AutoSwitchSpaceAfter.Checked.ToString());
 				MMain.MyConfs.Write("AutoSwitch", "SwitchToGuessLayout", chk_AutoSwitchSwitchToGuessLayout.Checked.ToString());
+				MMain.MyConfs.Write("AutoSwitch", "DownloadInZip", chk_DownloadASD_InZip.Checked.ToString());
 				if (chk_AutoSwitch.Checked)
 					File.WriteAllText(AS_dictfile, AutoSwitchDictionaryRaw);
 				#endregion
@@ -696,7 +696,7 @@ namespace Mahou {
 		void ChangeAutoSwitchDictionaryTextBox() {
 			if (AutoSwitchDictionaryRaw.Length > 710000) {
 				txt_AutoSwitchDictionary.ReadOnly = true;
-				txt_AutoSwitchDictionary.Text = "Too big dictionary, it will take a lot time to display.";
+				txt_AutoSwitchDictionary.Text = MMain.Lang[Languages.Element.AutoSwitchDictionaryTooBigToDisplay];
 			} else {
 				txt_AutoSwitchDictionary.ReadOnly = false;
 				txt_AutoSwitchDictionary.Text = AutoSwitchDictionaryRaw;
@@ -815,6 +815,8 @@ namespace Mahou {
 			AutoSwitchEnabled = chk_AutoSwitch.Checked = MMain.MyConfs.ReadBool("AutoSwitch", "Enabled");
 			AutoSwitchSpaceAfter = chk_AutoSwitchSpaceAfter.Checked = MMain.MyConfs.ReadBool("AutoSwitch", "SpaceAfter");
 			AutoSwitchSwitchToGuessLayout = chk_AutoSwitchSwitchToGuessLayout.Checked = MMain.MyConfs.ReadBool("AutoSwitch", "SwitchToGuessLayout");
+			Dowload_ASD_InZip = chk_DownloadASD_InZip.Checked = MMain.MyConfs.ReadBool("AutoSwitch", "DownloadInZip");
+			check_ASD_size = true;
 			if (File.Exists(AS_dictfile)) {
 				AutoSwitchDictionaryRaw = File.ReadAllText(AS_dictfile);
 				ChangeAutoSwitchDictionaryTextBox();
@@ -888,6 +890,7 @@ namespace Mahou {
 			Logging.Log("All configurations loaded.");
 		}
 		Tuple<int, Color> GetSnippetsCount(string snippets) {
+			if (String.IsNullOrEmpty(snippets)) return new Tuple<int, Color>(0, Color.Black);
 			Stopwatch watch = null;
 			if (MahouUI.LoggingEnabled) {
 				watch = new Stopwatch();
@@ -1012,7 +1015,7 @@ namespace Mahou {
 			// Snippets tab
 			txt_Snippets.Enabled = chk_SnippetsSwitchToGuessLayout.Enabled = chk_SnippetsSpaceAfter.Enabled = chk_Snippets.Checked;
 			// Auto Switch tab
-			txt_AutoSwitchDictionary.Enabled = chk_AutoSwitchSwitchToGuessLayout.Enabled = chk_AutoSwitchSpaceAfter.Enabled = chk_AutoSwitch.Checked;
+			btn_UpdateAutoSwitchDictionary.Enabled = txt_AutoSwitchDictionary.Enabled = chk_AutoSwitchSwitchToGuessLayout.Enabled = chk_AutoSwitchSpaceAfter.Enabled = chk_DownloadASD_InZip.Enabled = chk_AutoSwitch.Checked;
 			// Persistent Layout tab
 			txt_PersistentLayout1Processes.Enabled = lbl_PersistentLayout1Interval.Enabled = nud_PersistentLayout1Interval.Enabled =
 				chk_PersistentLayout1Active.Checked;
@@ -2198,6 +2201,40 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				was = true;
 			}
 		}
+		string getASD_RemoteSize(bool InZip = false) {
+			try {
+				if (InZip) {
+					var data = getResponce("https://github.com/BladeMight/Mahou/releases/latest-commit"); 
+					if (!String.IsNullOrEmpty(data)) {
+						var siz = Regex.Match(data, "<ul class=\"release-downloads\">.*\\n\\s+<li>.*\\n\\s+<a.*\\n\\s+<small.+>(.+)</small>").Groups[1].Value;
+						Debug.WriteLine(siz);
+						return siz;
+					} else throw new Exception(MMain.Lang[Languages.Element.NetError]);
+				} 
+				var request = (HttpWebRequest)WebRequest.Create("https://raw.githubusercontent.com/BladeMight/Mahou/master/AS_dict.txt");
+				if (!String.IsNullOrEmpty(txt_ProxyServerPort.Text)) {
+					request.Proxy = MakeProxy();
+				}
+				request.Method = "HEAD";
+				request.AllowAutoRedirect = false;
+				using (var r = (HttpWebResponse)request.GetResponse()) {
+					var type = " B";
+					var D = Convert.ToDouble(r.ContentLength);
+					if(D /1024 != 0 && D / 1024 >= 1) {
+				        D /= 1024;
+				        type = " KB";
+				        if(D /1024 != 0 && D / 1024 >= 1) {
+			                D /= 1024;
+			                type = " MB";
+				        }
+					}
+					return D.ToString("0.00") + type;
+				}
+			} catch (Exception e) {
+				Logging.Log("Getting remote size of AS_dict failed, details: " + e.Message, 1);
+				return MMain.Lang[Languages.Element.Error]; 
+			}
+		}
 		string getResponce(string url) {
 			try {
 				var request = (HttpWebRequest)WebRequest.Create(url);
@@ -2216,15 +2253,61 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				}
 			    response.Close();
 			} catch(Exception e) {
-				Logging.Log("Responce of url [" + url + "] done with error, message:\r\n" + e.Message, 1);
+				Logging.Log("Responce of url [" + url + "] done with error, message:\r\n" + e.Message + e.StackTrace, 1);
 			}
 		    return null;
 			
 		}
 		void btn_UpdateAutoSwitchDictionary_Click(object sender, EventArgs e) {
+			var resp = "";
+			if (check_ASD_size) {
+				var size = getASD_RemoteSize(Dowload_ASD_InZip);
+				if (size == MMain.Lang[Languages.Element.Error]) {
+					btn_UpdateAutoSwitchDictionary.ForeColor = Color.OrangeRed;
+					btn_UpdateAutoSwitchDictionary.Text = MMain.Lang[Languages.Element.Error];
+					tmr.Tick += (o, oo) => { 
+						btn_UpdateAutoSwitchDictionary.Text = MMain.Lang[Languages.Element.AutoSwitchUpdateDictionary];
+						btn_UpdateAutoSwitchDictionary.ForeColor = Color.FromKnownColor(KnownColor.ControlText);
+						tmr.Stop(); 
+					};
+					tmr.Interval = 350;
+					tmr.Start();
+					return;
+				}
+				check_ASD_size = false;
+				var name = "AS_dict.txt";
+				if (Dowload_ASD_InZip)
+					name = "AS_dict.zip";
+				btn_UpdateAutoSwitchDictionary.Text = name + " " + size + " " + MMain.Lang[Languages.Element.Download]+ "?";
+				return;
+			}
+			check_ASD_size = true;
+			if (Dowload_ASD_InZip) {
+				var zip = Path.Combine(Path.GetTempPath(), "AS_dict.zip");
+					using (var wc = new WebClient()) {
+						wc.DownloadFile(new Uri("https://github.com/BladeMight/Mahou/releases/download/latest-commit/AS_dict.zip"), zip);
+						var ExtractASD = @"@ECHO OFF
+chcp 65001
+ECHO With CreateObject(""Shell.Application"") > ""unzip.vbs""
+ECHO    .NameSpace(WScript.Arguments(1)).CopyHere .NameSpace(WScript.Arguments(0)).items, 16 >> ""unzip.vbs""
+ECHO End With >> ""unzip.vbs""
+
+CSCRIPT ""unzip.vbs"" """ + zip + @""" """ + Path.GetTempPath() + @"""
+DEL """ + zip + @"""
+DEL ""unzip.vbs""
+DEL ""ExtractASD.cmd""";
+						Logging.Log("Writing extract script.");
+						File.WriteAllText(Path.Combine(Path.GetTempPath(), "ExtractASD.cmd"), ExtractASD);
+						var piExtractASD = new ProcessStartInfo() { FileName = "ExtractASD.cmd", WorkingDirectory = Path.GetTempPath(), WindowStyle = ProcessWindowStyle.Hidden};
+						Logging.Log("Starting extract script.");
+						Process.Start(piExtractASD).WaitForExit();
+						resp = File.ReadAllText(Path.Combine(Path.GetTempPath(), "AS_dict.txt"));
+						File.Delete(Path.Combine(Path.GetTempPath(), "AS_dict.txt"));
+                 	}
+			} else
+				resp = getResponce("https://raw.githubusercontent.com/BladeMight/Mahou/master/AS_dict.txt");
 			btn_UpdateAutoSwitchDictionary.Text = MMain.Lang[Languages.Element.Checking];
-			var dict = Regex.Replace(getResponce("https://raw.githubusercontent.com/BladeMight/Mahou/master/AS_dict.txt"),
-			                         "\r?\n", Environment.NewLine);
+			var dict = Regex.Replace(resp, "\r?\n", Environment.NewLine);
 			tmr.Interval = 300;
 			if (dict != null) {
 				btn_UpdateAutoSwitchDictionary.ForeColor = Color.BlueViolet;
@@ -2237,10 +2320,10 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				tmr.Interval = 350;
 				tmr.Start();
 				AutoSwitchDictionaryRaw = dict;
-				this.txt_AutoSwitchDictionary.Invoke((MethodInvoker)delegate {
-					ChangeAutoSwitchDictionaryTextBox();
-					UpdateSnippetCountLabel(AutoSwitchDictionaryRaw, lbl_AutoSwitchWordsCount);
-				});
+//				this.txt_AutoSwitchDictionary.Invoke((MethodInvoker)delegate {
+//					ChangeAutoSwitchDictionaryTextBox();
+//					UpdateSnippetCountLabel(AutoSwitchDictionaryRaw, lbl_AutoSwitchWordsCount);
+//				});
 				File.WriteAllText(AS_dictfile, dict, Encoding.Default);
 			} else {
 				btn_UpdateAutoSwitchDictionary.ForeColor = Color.OrangeRed;
@@ -2481,6 +2564,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			btn_UpdateAutoSwitchDictionary.Text = MMain.Lang[Languages.Element.AutoSwitchUpdateDictionary];
 			lbl_AutoSwitchDependsOnSnippets.Text = MMain.Lang[Languages.Element.AutoSwitchDependsOnSnippets];
 			lbl_AutoSwitchWordsCount.Text = MMain.Lang[Languages.Element.AutoSwitchDictionaryWordsCount];
+			chk_DownloadASD_InZip.Text = MMain.Lang[Languages.Element.DownloadAutoSwitchDictionaryInZip];
 			#endregion
 			#region Hotkeys
 			grb_Hotkey.Text = MMain.Lang[Languages.Element.Hotkey];
@@ -2895,11 +2979,11 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 			if (tabs.SelectedIndex == tabs.TabPages.IndexOf(tab_autoswitch)) {
 				if (!SnippetsEnabled) {
 					chk_AutoSwitchSpaceAfter.Visible = chk_AutoSwitch.Visible = chk_AutoSwitchSwitchToGuessLayout.Enabled = 
-						btn_UpdateAutoSwitchDictionary.Enabled = txt_AutoSwitchDictionary.Enabled = false;
+						btn_UpdateAutoSwitchDictionary.Enabled = txt_AutoSwitchDictionary.Enabled = chk_DownloadASD_InZip.Enabled = false;
 					lbl_AutoSwitchDependsOnSnippets.Visible = true;
 				} else {
 					chk_AutoSwitchSpaceAfter.Visible = chk_AutoSwitch.Visible = chk_AutoSwitchSwitchToGuessLayout.Enabled = 
-						btn_UpdateAutoSwitchDictionary.Enabled = txt_AutoSwitchDictionary.Enabled = true;
+						btn_UpdateAutoSwitchDictionary.Enabled = txt_AutoSwitchDictionary.Enabled = chk_DownloadASD_InZip.Enabled = true;
 					lbl_AutoSwitchDependsOnSnippets.Visible = false;
 					ToggleDependentControlsEnabledState();
 				}
@@ -2933,6 +3017,10 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				tmr.Interval = 1000;
 				tmr.Start();
 			}
+		}
+		void Chk_DownloadASD_InZipCheckedChanged(object sender, EventArgs e) {
+			Dowload_ASD_InZip = chk_DownloadASD_InZip.Checked;
+			check_ASD_size = true;
 		}
 		#endregion
 	}

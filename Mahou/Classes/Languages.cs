@@ -96,6 +96,8 @@ public class Languages
 		AutoSwitchUpdateDictionary,
 		AutoSwitchDependsOnSnippets,
 		AutoSwitchDictionaryWordsCount,
+		DownloadAutoSwitchDictionaryInZip,
+		AutoSwitchDictionaryTooBigToDisplay,
 		#endregion
 		#region Hotkeys
 		ToggleMainWnd,
@@ -156,6 +158,7 @@ public class Languages
 		UpdateComplete,
 		ShowHide,
 		Mahou,
+		Download,
 		#endregion
 		#region Buttons
 		ButtonOK,
@@ -295,6 +298,8 @@ public class Languages
 		{ Element.AutoSwitchUpdateDictionary, "Update auto-switch dictionary." }, 
 		{ Element.AutoSwitchDependsOnSnippets, "To use this feature enable Snippets feature!" },
 		{ Element.AutoSwitchDictionaryWordsCount, "Words: " }, 
+		{ Element.DownloadAutoSwitchDictionaryInZip, "Download auto-switch dictionary in zip." }, 
+		{ Element.AutoSwitchDictionaryTooBigToDisplay, "Too big dictionary, it will take a lot time to display, dictionary display disabled." }, 
 		#endregion
 		#region Hotkeys
 		{ Element.ToggleMainWnd, "Toggle settings window" }, 
@@ -362,6 +367,7 @@ public class Languages
 		{ Element.UpdateComplete, "Mahou succesfully updated!" }, 
 		{ Element.ShowHide, "Show/Hide" }, 
 		{ Element.Mahou, "Mahou(魔法) - magic layout switcher." }, 
+		{ Element.Download, "Download" }, 
 		#endregion
 		#region Buttons
 		{ Element.ButtonOK, "OK" }, 
@@ -514,6 +520,8 @@ public class Languages
 		{ Element.AutoSwitchUpdateDictionary, "Обновить словарь автозамены." }, 
 		{ Element.AutoSwitchDependsOnSnippets, "Чтобы использовать эту функцию включите функцию Сниппетов!" },
 		{ Element.AutoSwitchDictionaryWordsCount, "Слов: " }, 
+		{ Element.DownloadAutoSwitchDictionaryInZip, "Скачивать словарь автозамены в zip архиве." }, 
+		{ Element.AutoSwitchDictionaryTooBigToDisplay, "Слишком большой словарь, займет много времени чтобы отобразить, отображение словаря отключено." }, 
 		#endregion
 		#endregion
 		#region Hotkeys
@@ -580,6 +588,7 @@ public class Languages
 		{ Element.UpdateComplete, "Mahou успешно обновлен!" }, 
 		{ Element.ShowHide, "Показать/Скрыть" }, 
 		{ Element.Mahou, "Mahou(魔法) - волшебный переключатель раскладок." }, 
+		{ Element.Download, "Скачать" }, 
 		#endregion
 		#region Buttons
 		{ Element.ButtonOK, "ОК" }, 
