@@ -21,6 +21,7 @@ for f in *.txt; do
 			echo "-->Adding $f to AS_dict.txt..."
 			changed=1
 			cat $f >> ../AS_dict.txt
+			printf "\r\n" >> ../AS_dict.txt
 		elif [[ "$1" == "" ]]; then
 			echo BIG: $f
 		fi
@@ -29,6 +30,7 @@ for f in *.txt; do
 			echo "-->Adding $f to AS_dict.txt..."
 			changed=1
 			cat $f >> ../AS_dict.txt
+			printf "\r\n" >> ../AS_dict.txt
 		elif [[ "$1" == "" ]]; then
 			echo tiny: $f
 		fi
@@ -37,6 +39,7 @@ for f in *.txt; do
 			echo "-->Adding $f to AS_dict.txt..."
 			changed=1
 			cat $f >> ../AS_dict.txt
+			printf "\r\n" >> ../AS_dict.txt
 		elif [[ "$1" == "" ]]; then
 			echo Custom: $f
 		fi
