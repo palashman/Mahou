@@ -2320,10 +2320,10 @@ DEL ""ExtractASD.cmd""";
 				tmr.Interval = 350;
 				tmr.Start();
 				AutoSwitchDictionaryRaw = dict;
-//				this.txt_AutoSwitchDictionary.Invoke((MethodInvoker)delegate {
-//					ChangeAutoSwitchDictionaryTextBox();
-//					UpdateSnippetCountLabel(AutoSwitchDictionaryRaw, lbl_AutoSwitchWordsCount);
-//				});
+				this.txt_AutoSwitchDictionary.Invoke((MethodInvoker)delegate {
+					ChangeAutoSwitchDictionaryTextBox();
+					UpdateSnippetCountLabel(AutoSwitchDictionaryRaw, lbl_AutoSwitchWordsCount);
+				});
 				File.WriteAllText(AS_dictfile, dict, Encoding.Default);
 			} else {
 				btn_UpdateAutoSwitchDictionary.ForeColor = Color.OrangeRed;
