@@ -1522,12 +1522,16 @@ namespace Mahou
 				var endl = snippets.IndexOf('\n', k+2);
 				if (endl==-1)
 					endl=snippets.Length;
-				string cool = snippets.Substring(k+2, endl - k+2+2);
-				for (int i = 0; i != cool.Length-5; i ++) {
-					if (cool[i].Equals('=') && cool[i+1].Equals('=') && cool[i+2].Equals('=') && cool[i+3].Equals('=') && cool[i+4].Equals('>')) {
-						len = i;
+				Debug.WriteLine((k+2) + " X " +endl);
+				string cool = snippets.Substring(k+2, endl - (k+2));
+				if (cool.Length > 4)
+					for (int i = 0; i != cool.Length-5; i ++) {
+						if (cool[i].Equals('=') && cool[i+1].Equals('=') && cool[i+2].Equals('=') && cool[i+3].Equals('=') && cool[i+4].Equals('>')) {
+							len = i;
+						}
 					}
-				}
+				else 
+					len = cool.Length;
 				if (len == -1)
 					len = endl-(k+2);
 				smalls.Add(snippets.Substring(k+2, len).Replace("\r", ""));
