@@ -647,7 +647,7 @@ namespace Mahou {
 				MMain.MyConfs.Write("Snippets", "SpaceAfter", chk_SnippetsSpaceAfter.Checked.ToString());
 				MMain.MyConfs.Write("Snippets", "SwitchToGuessLayout", chk_SnippetsSwitchToGuessLayout.Checked.ToString());
 				if (chk_Snippets.Checked)
-					File.WriteAllText(snipfile, txt_Snippets.Text);
+					File.WriteAllText(snipfile, txt_Snippets.Text, Encoding.UTF8);
 				#endregion
 				#region AutoSwitch
 				MMain.MyConfs.Write("AutoSwitch", "Enabled", chk_AutoSwitch.Checked.ToString());
@@ -655,7 +655,7 @@ namespace Mahou {
 				MMain.MyConfs.Write("AutoSwitch", "SwitchToGuessLayout", chk_AutoSwitchSwitchToGuessLayout.Checked.ToString());
 				MMain.MyConfs.Write("AutoSwitch", "DownloadInZip", chk_DownloadASD_InZip.Checked.ToString());
 				if (chk_AutoSwitch.Checked)
-					File.WriteAllText(AS_dictfile, AutoSwitchDictionaryRaw);
+					File.WriteAllText(AS_dictfile, AutoSwitchDictionaryRaw, Encoding.UTF8);
 				#endregion
 				#region Appearence & Hotkeys
 				SaveFromTemps();
@@ -2324,7 +2324,7 @@ DEL ""ExtractASD.cmd""";
 					ChangeAutoSwitchDictionaryTextBox();
 					UpdateSnippetCountLabel(AutoSwitchDictionaryRaw, lbl_AutoSwitchWordsCount);
 				});
-				File.WriteAllText(AS_dictfile, dict, Encoding.Default);
+				File.WriteAllText(AS_dictfile, dict, Encoding.UTF8);
 			} else {
 				btn_UpdateAutoSwitchDictionary.ForeColor = Color.OrangeRed;
 				btn_UpdateAutoSwitchDictionary.Text = MMain.Lang[Languages.Element.Error];
