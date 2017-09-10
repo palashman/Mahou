@@ -889,8 +889,8 @@ namespace Mahou {
 			Memory.Flush();
 			Logging.Log("All configurations loaded.");
 		}
-		Tuple<int, Color> GetSnippetsCount(string snippets) {
-			if (String.IsNullOrEmpty(snippets)) return new Tuple<int, Color>(0, Color.Black);
+		Tuple<int, Color, int> GetSnippetsCount(string snippets) {
+			if (String.IsNullOrEmpty(snippets)) return new Tuple<int, Color, int>(0, Color.Black, 0);
 			Stopwatch watch = null;
 			if (MahouUI.LoggingEnabled) {
 				watch = new Stopwatch();
@@ -898,25 +898,33 @@ namespace Mahou {
 			}
 			// This regex is ~x8 slower than the way above. 
 //			var matches = Regex.Matches(snippets, "(->)|(====>)|(<====)", RegexOptions.Compiled);
+			var com = 0;
 			var ci = 0;
 			var cia = 0;
 			var cic = 0;
-			for (int k = 0; k != snippets.Length-4; k++) {
+			for (int k = 0; k < snippets.Length-1; k++) {
 				// Do not try to store snippets[k] & snippets[k+n] to string variable, that will be significally slower.
 				// with string.Concat() ~x15 slower, with string.Format() ~x45 slower.			
+				var cml = KMHook.SnippetsLineCommented(snippets, k);
+				if(cml.Item1) { 
+					com++;
+					k+= cml.Item2;
+					continue;
+				}
 				if(snippets[k].Equals('-') && snippets[k+1].Equals('>'))
 					ci++;
-				if(snippets[k].Equals('=') && snippets[k+1].Equals('=') &&
-				   snippets[k+2].Equals('=') && snippets[k+3].Equals('=') &&
-				   snippets[k+4].Equals('>'))
-					cia++;
-				if(snippets[k].Equals('<') && snippets[k+1].Equals('=') &&
-				   snippets[k+2].Equals('=') && snippets[k+3].Equals('=') &&
-				   snippets[k+4].Equals('=')){
-					cic++;
+				if (k+4 < snippets.Length) {
+					if(snippets[k].Equals('=') && snippets[k+1].Equals('=') &&
+					   snippets[k+2].Equals('=') && snippets[k+3].Equals('=') &&
+					   snippets[k+4].Equals('>'))
+						cia++;
+					if(snippets[k].Equals('<') && snippets[k+1].Equals('=') &&
+					   snippets[k+2].Equals('=') && snippets[k+3].Equals('=') &&
+					   snippets[k+4].Equals('='))
+						cic++;
 				}
 			}
-//			Debug.WriteLine(cic + ", " + cia + ", " + ci);
+			Debug.WriteLine(cic + ", " + cia + ", " + ci + "<com> " + com);
 			var result = ci+cia+cic;
 			if (MahouUI.LoggingEnabled) {
 				watch.Stop();
@@ -924,8 +932,8 @@ namespace Mahou {
 			}
 			Memory.Flush();
 			if (result %3 == 0)
-				return new Tuple<int, Color>(result/3, Color.Orange);
-			return new Tuple<int, Color>((result - result % 3) / 3 + (result % 3) , Color.Red);
+				return new Tuple<int, Color, int>(result/3, Color.Orange, com);
+			return new Tuple<int, Color, int>(ci , Color.Red, com);
 		}
 		void TestLayout(string layout, int id) {
 			if ((layout == Languages.English[Languages.Element.SwitchBetween] && MMain.Lang == Languages.Russian) ||
@@ -2450,8 +2458,8 @@ DEL ""ExtractASD.cmd""";
 				lastAutoSwitchCount = snipc.Item1;
 			else if (target == lbl_SnippetsCount) 
 				lastSnippetsCount = snipc.Item1;
-			target.Text = target.Text.Split(' ')[0] + " "  + snipc.Item1 + ((snipc.Item2 == Color.Red) ? "?" : "");
-			target.ForeColor = snipc.Item2;
+			target.Text = target.Text.Split(' ')[0] + " "  + snipc.Item1 + ((snipc.Item2 == Color.Red) ? "?" : "") + "(#" + snipc.Item3 +")";
+			target.ForeColor = snipc.Item2; 
 		}
 		#endregion
 		/// <summary>

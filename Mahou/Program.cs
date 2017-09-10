@@ -28,7 +28,7 @@ namespace Mahou
 		public static Configs MyConfs = new Configs();
 		public static MahouUI mahou;
 		public static RawInputForm rif;
-		public static System.Threading.Timer _logTimer = new System.Threading.Timer((_) => Logging.UpdateLog(), null, 20, 300);
+		public static System.Threading.Timer _logTimer = new System.Threading.Timer((_) => { try { Logging.UpdateLog(); } catch (Exception e) { Logging.Log("Error updating log, details:\r\n" + e.Message);}}, null, 20, 300);
 		public static List<string> lcnmid = new List<string>();
 		#endregion
 		[STAThread] //DO NOT REMOVE THIS

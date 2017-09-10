@@ -1743,7 +1743,7 @@ namespace Mahou
 			// 
 			this.lbl_SnippetsCount.AutoSize = true;
 			this.lbl_SnippetsCount.ForeColor = System.Drawing.Color.Orange;
-			this.lbl_SnippetsCount.Location = new System.Drawing.Point(465, 32);
+			this.lbl_SnippetsCount.Location = new System.Drawing.Point(427, 32);
 			this.lbl_SnippetsCount.Name = "lbl_SnippetsCount";
 			this.lbl_SnippetsCount.Size = new System.Drawing.Size(64, 15);
 			this.lbl_SnippetsCount.TabIndex = 5;
@@ -1813,7 +1813,7 @@ namespace Mahou
 			// chk_DownloadASD_InZip
 			// 
 			this.chk_DownloadASD_InZip.AutoSize = true;
-			this.chk_DownloadASD_InZip.Location = new System.Drawing.Point(201, 58);
+			this.chk_DownloadASD_InZip.Location = new System.Drawing.Point(200, 58);
 			this.chk_DownloadASD_InZip.Name = "chk_DownloadASD_InZip";
 			this.chk_DownloadASD_InZip.Size = new System.Drawing.Size(211, 19);
 			this.chk_DownloadASD_InZip.TabIndex = 12;
@@ -1825,7 +1825,7 @@ namespace Mahou
 			// 
 			this.lbl_AutoSwitchWordsCount.AutoSize = true;
 			this.lbl_AutoSwitchWordsCount.ForeColor = System.Drawing.Color.Orange;
-			this.lbl_AutoSwitchWordsCount.Location = new System.Drawing.Point(465, 32);
+			this.lbl_AutoSwitchWordsCount.Location = new System.Drawing.Point(427, 32);
 			this.lbl_AutoSwitchWordsCount.Name = "lbl_AutoSwitchWordsCount";
 			this.lbl_AutoSwitchWordsCount.Size = new System.Drawing.Size(53, 15);
 			this.lbl_AutoSwitchWordsCount.TabIndex = 11;
@@ -1834,7 +1834,7 @@ namespace Mahou
 			// chk_AutoSwitchSpaceAfter
 			// 
 			this.chk_AutoSwitchSpaceAfter.AutoSize = true;
-			this.chk_AutoSwitchSpaceAfter.Location = new System.Drawing.Point(276, 6);
+			this.chk_AutoSwitchSpaceAfter.Location = new System.Drawing.Point(275, 6);
 			this.chk_AutoSwitchSpaceAfter.Name = "chk_AutoSwitchSpaceAfter";
 			this.chk_AutoSwitchSpaceAfter.Size = new System.Drawing.Size(186, 19);
 			this.chk_AutoSwitchSpaceAfter.TabIndex = 7;
@@ -1843,7 +1843,7 @@ namespace Mahou
 			// 
 			// btn_UpdateAutoSwitchDictionary
 			// 
-			this.btn_UpdateAutoSwitchDictionary.Location = new System.Drawing.Point(9, 55);
+			this.btn_UpdateAutoSwitchDictionary.Location = new System.Drawing.Point(8, 55);
 			this.btn_UpdateAutoSwitchDictionary.Name = "btn_UpdateAutoSwitchDictionary";
 			this.btn_UpdateAutoSwitchDictionary.Size = new System.Drawing.Size(186, 23);
 			this.btn_UpdateAutoSwitchDictionary.TabIndex = 9;
@@ -1854,7 +1854,7 @@ namespace Mahou
 			// chk_AutoSwitchSwitchToGuessLayout
 			// 
 			this.chk_AutoSwitchSwitchToGuessLayout.AutoSize = true;
-			this.chk_AutoSwitchSwitchToGuessLayout.Location = new System.Drawing.Point(9, 31);
+			this.chk_AutoSwitchSwitchToGuessLayout.Location = new System.Drawing.Point(8, 31);
 			this.chk_AutoSwitchSwitchToGuessLayout.Name = "chk_AutoSwitchSwitchToGuessLayout";
 			this.chk_AutoSwitchSwitchToGuessLayout.Size = new System.Drawing.Size(240, 19);
 			this.chk_AutoSwitchSwitchToGuessLayout.TabIndex = 8;
@@ -1863,7 +1863,7 @@ namespace Mahou
 			// 
 			// txt_AutoSwitchDictionary
 			// 
-			this.txt_AutoSwitchDictionary.Location = new System.Drawing.Point(9, 85);
+			this.txt_AutoSwitchDictionary.Location = new System.Drawing.Point(8, 85);
 			this.txt_AutoSwitchDictionary.MaxLength = 0;
 			this.txt_AutoSwitchDictionary.Multiline = true;
 			this.txt_AutoSwitchDictionary.Name = "txt_AutoSwitchDictionary";
@@ -1876,7 +1876,7 @@ namespace Mahou
 			// chk_AutoSwitch
 			// 
 			this.chk_AutoSwitch.AutoSize = true;
-			this.chk_AutoSwitch.Location = new System.Drawing.Point(9, 6);
+			this.chk_AutoSwitch.Location = new System.Drawing.Point(8, 6);
 			this.chk_AutoSwitch.Name = "chk_AutoSwitch";
 			this.chk_AutoSwitch.Size = new System.Drawing.Size(130, 19);
 			this.chk_AutoSwitch.TabIndex = 5;

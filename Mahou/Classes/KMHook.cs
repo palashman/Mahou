@@ -1509,6 +1509,19 @@ namespace Mahou
 			                ", Layout 2 minuses: " + wordL2Minuses + "wordL2: " + wordL2);
 			return Tuple.Create(result, layout);
 		}
+		public static Tuple<bool, int> SnippetsLineCommented(string snippets, int k) {
+			if (k == 0 || (k-1 >= 0 && snippets[k-1].Equals('\n'))) { // only at every new line
+				var end = snippets.IndexOf('\n', k);
+				if (end==-1)
+					end=snippets.Length;
+				var line = snippets.Substring(k, end - k);
+				if (line[0] == '#' || (line[0] == '/' && line[1] == '/')) {
+					Logging.Log("Ignored commented line in snippets:\r\n" + line);
+					return new Tuple<bool, int>(true, line.Length-1);
+				}
+			}
+			return new Tuple<bool, int>(false, 0);
+		}
 		public static void GetSnippetsData(string snippets, out string[] sni, out string[] exp) {
 			List<string> smalls = new List<string>();
 			List<string> bigs = new List<string>();
@@ -1516,13 +1529,18 @@ namespace Mahou
 			exp = null;
 			if (String.IsNullOrEmpty(snippets)) return;
 			snippets = snippets.Replace("\r", "");
-			for (int k = 0; k != snippets.Length-5; k++) {
-			if (snippets[k].Equals('-') && snippets[k+1].Equals('>')) {
+			for (int k = 0; k < snippets.Length-6; k++) {
+				if (snippets[k].Equals('-') && snippets[k+1].Equals('>')) {
+				var com = SnippetsLineCommented(snippets, k);
+				if (com.Item1) {
+					k+=com.Item2; // skip commented line, speedup!
+					continue;
+				}
 				var len = -1;
 				var endl = snippets.IndexOf('\n', k+2);
 				if (endl==-1)
 					endl=snippets.Length;
-				Debug.WriteLine((k+2) + " X " +endl);
+//				Debug.WriteLine((k+2) + " X " +endl);
 				string cool = snippets.Substring(k+2, endl - (k+2));
 				if (cool.Length > 4)
 					for (int i = 0; i != cool.Length-5; i ++) {
@@ -1569,12 +1587,18 @@ namespace Mahou
 				}
 				if (onlySpecific == 1 || onlySpecific == 0)
 					GetSnippetsData(snippets, out snipps, out exps);
+				if (MahouUI.LoggingEnabled) {
+					watch.Stop();
+					Logging.Log("Snippet init finished, elapsed ["+watch.Elapsed.TotalMilliseconds+"] ms.");
+					watch.Reset();
+					watch.Start();
+				}
 				if (onlySpecific == 2 || onlySpecific == 0)
 					if (MMain.mahou.AutoSwitchEnabled)
 						GetSnippetsData(MahouUI.AutoSwitchDictionaryRaw, out as_wrongs, out as_corrects);
 				if (MahouUI.LoggingEnabled) {
 					watch.Stop();
-					Logging.Log("Snippet & AutoSwitch(if enabled) init finished, elapsed ["+watch.Elapsed.TotalMilliseconds+"] ms.");
+					Logging.Log("AutoSwitch dictionary init finished, elapsed ["+watch.Elapsed.TotalMilliseconds+"] ms.");
 				}
 			}
 			Memory.Flush();
