@@ -177,28 +177,36 @@ namespace Mahou
 					Logging.Log("Current snippet is [" + snip + "].");
 					for (int i = 0; i < snipps.Length; i++) {
 						if (snip == snipps[i]) {
-							Logging.Log("Current snippet [" + snip + "] matched existing snippet [" + exps[i] + "].");
-							ExpandSnippet(snip, exps[i], MMain.mahou.SnippetSpaceAfter, MMain.mahou.SnippetsSwitchToGuessLayout);
-							matched = true;
+							if (exps.Length > i) {
+								Logging.Log("Current snippet [" + snip + "] matched existing snippet [" + exps[i] + "].");
+								ExpandSnippet(snip, exps[i], MMain.mahou.SnippetSpaceAfter, MMain.mahou.SnippetsSwitchToGuessLayout);
+								matched = true;
+							} else {
+								Logging.Log("Snippet ["+snip+"] has no expansion, snippet is not finished or its expansion commented.", 1);
+							}
 							break;
 						}
 					}
 					if (MMain.mahou.AutoSwitchEnabled && !matched && as_wrongs != null) {
 						for (int i = 0; i < as_wrongs.Length; i++) {
-							if (snip == as_wrongs[i]) {
-								ExpandSnippet(snip, as_corrects[i], MMain.mahou.AutoSwitchSpaceAfter, MMain.mahou.AutoSwitchSwitchToGuessLayout);
-								break;
-							} else {
-								if (snip.Length == as_wrongs[i].Length) {
-									if (snip.ToLowerInvariant() == as_wrongs[i].ToLowerInvariant()) {
-										DoSelf(() => {
-								       		KInputs.MakeInput(new [] { KInputs.AddKey(Keys.Back, true), KInputs.AddKey(Keys.Back, false)});
-											ConvertLast(c_word_backup);
-										       });
-										ExpandSnippet(snip, as_corrects[i], MMain.mahou.AutoSwitchSpaceAfter, MMain.mahou.AutoSwitchSwitchToGuessLayout, true);
-										break;
+							if (as_corrects.Length > i) {
+								if (snip == as_wrongs[i]) {
+									ExpandSnippet(snip, as_corrects[i], MMain.mahou.AutoSwitchSpaceAfter, MMain.mahou.AutoSwitchSwitchToGuessLayout);
+									break;
+								} else {
+									if (snip.Length == as_wrongs[i].Length) {
+										if (snip.ToLowerInvariant() == as_wrongs[i].ToLowerInvariant()) {
+											DoSelf(() => {
+									       		KInputs.MakeInput(new [] { KInputs.AddKey(Keys.Back, true), KInputs.AddKey(Keys.Back, false)});
+												ConvertLast(c_word_backup);
+											       });
+											ExpandSnippet(snip, as_corrects[i], MMain.mahou.AutoSwitchSpaceAfter, MMain.mahou.AutoSwitchSwitchToGuessLayout, true);
+											break;
+										}
 									}
 								}
+							} else {
+								Logging.Log("Auto-switch word ["+snip+"] has no expansion, snippet is not finished or its expansion commented.", 1);
 							}
 						}
 					}
