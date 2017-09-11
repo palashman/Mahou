@@ -532,7 +532,7 @@ namespace Mahou
 							if (specificKey == 8 && Key == Keys.CapsLock && (shift || shift_r) && !alt && !alt_r && !ctrl && !ctrl_r) {
 								Logging.Log("Changing layout by Shift+CapsLock key.");
 								ChangeLayout();
-//								Thread.Sleep(5);
+								Thread.Sleep(5);
 								if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
 									KeybdEvent(Keys.CapsLock, 0);
 									KeybdEvent(Keys.CapsLock, 2);
@@ -594,7 +594,7 @@ namespace Mahou
 							if (specificKey == 8 && Key == Keys.CapsLock && (shift || shift_r) && !alt && !alt_r && !ctrl && !ctrl_r) {
 								Logging.Log("Switching to specific layout by Shift+CapsLock key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
-//								Thread.Sleep(5);
+								Thread.Sleep(5);
 								if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
 									KeybdEvent(Keys.CapsLock, 0);
 									KeybdEvent(Keys.CapsLock, 2);
@@ -1053,7 +1053,7 @@ namespace Mahou
 				KInputs.AddKey(Keys.Insert, false),
 				KInputs.AddKey(Keys.RControlKey, false)
 			});
-//			Thread.Sleep(30);
+			Thread.Sleep(30);
 			return NativeClipboard.GetText();
 		}
 		static string GetClipStr() {
@@ -1276,7 +1276,7 @@ namespace Mahou
 					//Cycles while layout not changed
 					while (Locales.GetCurrentLocale() == nowLocale) {
 						ChangeToLayout(Locales.ActiveWindow(), notnowLocale);
-	//					Thread.Sleep(10);//Give some time to switch layout
+						Thread.Sleep(10);//Give some time to switch layout
 						tries++;
 						if (tries == 3)
 							break;
@@ -1331,14 +1331,14 @@ namespace Mahou
 						KInputs.AddKey(Keys.Space, false),
 						KInputs.AddKey(Keys.LWin, false)
 					});
-//					Thread.Sleep(70); //Important!
+					Thread.Sleep(70); //Important!
 				}
 				MahouUI.currentLayout = MahouUI.GlobalLayout = Locales.GetCurrentLocale();
 			} else {
 				Logging.Log("Changing layout using cycle mode by sending Message [WinAPI.WM_INPUTLANGCHANGEREQUEST] with LParam [HKL_NEXT] using WinAPI.PostMessage to ActiveWindow");
 				//Use WinAPI.PostMessage to switch to next layout
 				var cur = Locales.GetCurrentLocale(); 
-//				Thread.Sleep(5);
+				Thread.Sleep(5);
 				var curind = MMain.locales.ToList().FindIndex(lid => lid.uId == cur);
 				int lidc = 0;
 				foreach (var l in MMain.locales) {
@@ -1389,7 +1389,7 @@ namespace Mahou
 		public static void KeybdEvent(Keys key, int flags) // 
 		{
 			//Do not remove this line, it needed for "Left Control Switch Layout" to work properly
-//			Thread.Sleep(15);
+			Thread.Sleep(15);
 			WinAPI.keybd_event((byte)key, 0, flags | (KInputs.IsExtended(key) ? 1 : 0), 0);
 		}
 		public static void RePressAfter(int mods)
