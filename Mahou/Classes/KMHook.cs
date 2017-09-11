@@ -1523,10 +1523,11 @@ namespace Mahou
 				if (end==-1)
 					end=snippets.Length;
 				var line = snippets.Substring(k, end - k);
-				if (line[0] == '#' || (line[0] == '/' && line[1] == '/')) {
-					Logging.Log("Ignored commented line in snippets:\r\n" + line);
-					return new Tuple<bool, int>(true, line.Length-1);
-				}
+				if (line.Length > 0) // Ingore empty lines
+					if (line[0] == '#' || (line[0] == '/' && (line.Length > 1 && line[1] == '/'))) {
+						Logging.Log("Ignored commented line in snippets:\r\n" + line);
+						return new Tuple<bool, int>(true, line.Length-1);
+					}
 			}
 			return new Tuple<bool, int>(false, 0);
 		}
