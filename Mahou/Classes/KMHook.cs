@@ -1576,7 +1576,7 @@ namespace Mahou
 		/// <summary>
 		/// Re-Initializes snippets.
 		/// </summary>
-		public static void ReInitSnippets(int onlySpecific = 0)
+		public static void ReInitSnippets()
 		{
 			if (System.IO.File.Exists(MahouUI.snipfile)) {
 				var snippets = System.IO.File.ReadAllText(MahouUI.snipfile);
@@ -1585,17 +1585,15 @@ namespace Mahou
 					watch = new Stopwatch();
 					watch.Start();
 				}
-				if (onlySpecific == 1 || onlySpecific == 0)
-					GetSnippetsData(snippets, out snipps, out exps);
+				GetSnippetsData(snippets, out snipps, out exps);
 				if (MahouUI.LoggingEnabled) {
 					watch.Stop();
 					Logging.Log("Snippet init finished, elapsed ["+watch.Elapsed.TotalMilliseconds+"] ms.");
 					watch.Reset();
 					watch.Start();
 				}
-				if (onlySpecific == 2 || onlySpecific == 0)
-					if (MMain.mahou.AutoSwitchEnabled)
-						GetSnippetsData(MahouUI.AutoSwitchDictionaryRaw, out as_wrongs, out as_corrects);
+				if (MMain.mahou.AutoSwitchEnabled)
+					GetSnippetsData(MahouUI.AutoSwitchDictionaryRaw, out as_wrongs, out as_corrects);
 				if (MahouUI.LoggingEnabled) {
 					watch.Stop();
 					Logging.Log("AutoSwitch dictionary init finished, elapsed ["+watch.Elapsed.TotalMilliseconds+"] ms.");

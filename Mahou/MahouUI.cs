@@ -36,7 +36,7 @@ namespace Mahou {
 		static uint lastTrayFlagLayout = 0;
 		static Timer animate = new Timer();
 		static Timer showUpdWnd = new Timer();
-		static int progress = 0, _progress = 0, lastSnippetsCount = 0, lastAutoSwitchCount = 0;
+		static int progress = 0, _progress = 0;
 		int titlebar = 12;
 		public static int AtUpdateShow;
 		public int DoubleHKInterval = 200, SelectedTextGetMoreTriesCount;
@@ -827,38 +827,18 @@ namespace Mahou {
 			SnippetsEnabled = chk_Snippets.Checked = MMain.MyConfs.ReadBool("Snippets", "SnippetsEnabled");
 			SnippetSpaceAfter = chk_SnippetsSpaceAfter.Checked = MMain.MyConfs.ReadBool("Snippets", "SpaceAfter");
 			SnippetsSwitchToGuessLayout = chk_SnippetsSwitchToGuessLayout.Checked = MMain.MyConfs.ReadBool("Snippets", "SwitchToGuessLayout");
-			if (File.Exists(snipfile)) {
+			if (File.Exists(snipfile) && SnippetsEnabled) {
 				txt_Snippets.Text = File.ReadAllText(snipfile);
 				UpdateSnippetCountLabel(txt_Snippets.Text, lbl_SnippetsCount);
-				bool REinitSn = false, REinitAS = false;
-				if (KMHook.snipps != null)
-					REinitSn = KMHook.snipps.Length < lastSnippetsCount;
-				else 
-					REinitSn = true;
-				if (KMHook.as_wrongs != null && AutoSwitchEnabled)
-					REinitAS = KMHook.as_wrongs.Length < lastAutoSwitchCount;
-				else if (AutoSwitchEnabled)
-					REinitAS = true;
-				Logging.Log("Reinit for AutoSwitch = [" + REinitAS + "], for Snippets = [" + REinitSn + "].");
-				if (REinitAS || REinitSn) {
-					var only = 0;
-					if (!REinitAS || !REinitSn) {
-						if (REinitSn)
-							only = 1;
-						if (REinitAS)
-							only = 2;
-					}
-//					if 
-					KMHook.DoLater.Tick += (_, __) => { 
-						var initSnippetsThread = new System.Threading.Thread(() =>KMHook.ReInitSnippets(only));
-						initSnippetsThread.Name = "Snippets initialization thread.";
-						initSnippetsThread.Start();
-						KMHook.DoLater.Stop(); 
-						KMHook.DoLater = new Timer();
-					};
-					KMHook.DoLater.Interval = 250;
-					KMHook.DoLater.Start();
-				}
+				KMHook.DoLater.Tick += (_, __) => { 
+					var initSnippetsThread = new System.Threading.Thread(() =>KMHook.ReInitSnippets());
+					initSnippetsThread.Name = "Snippets initialization thread.";
+					initSnippetsThread.Start();
+					KMHook.DoLater.Stop(); 
+					KMHook.DoLater = new Timer();
+				};
+				KMHook.DoLater.Interval = 250;
+				KMHook.DoLater.Start();
 			}
 			#endregion
 			#region Appearence & Hotkeys
@@ -2454,10 +2434,6 @@ DEL ""ExtractASD.cmd""";
 		}
 		void UpdateSnippetCountLabel(string snippets, Label target) {
 			var snipc = GetSnippetsCount(snippets);
-			if (target == lbl_AutoSwitchWordsCount)
-				lastAutoSwitchCount = snipc.Item1;
-			else if (target == lbl_SnippetsCount) 
-				lastSnippetsCount = snipc.Item1;
 			target.Text = target.Text.Split(' ')[0] + " "  + snipc.Item1 + ((snipc.Item2 == Color.Red) ? "?" : "") + "(#" + snipc.Item3 +")";
 			target.ForeColor = snipc.Item2; 
 		}
