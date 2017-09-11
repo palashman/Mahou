@@ -1530,12 +1530,12 @@ namespace Mahou
 			if (String.IsNullOrEmpty(snippets)) return;
 			snippets = snippets.Replace("\r", "");
 			for (int k = 0; k < snippets.Length-6; k++) {
-				if (snippets[k].Equals('-') && snippets[k+1].Equals('>')) {
 				var com = SnippetsLineCommented(snippets, k);
 				if (com.Item1) {
 					k+=com.Item2; // skip commented line, speedup!
 					continue;
 				}
+				if (snippets[k].Equals('-') && snippets[k+1].Equals('>')) {
 				var len = -1;
 				var endl = snippets.IndexOf('\n', k+2);
 				if (endl==-1)
