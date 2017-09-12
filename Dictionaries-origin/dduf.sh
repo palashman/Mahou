@@ -4,7 +4,7 @@ wobtw="words between ====> & <===="
 if [[ "$1" == "" ]]; then
 	echo Duplicates finder in Mahou dictionaries.
 	echo Usage:
-	echo dduf.sh [dictionary1] [dictionary2] [scantype] [threads]
+	echo dduf.sh [dictionary1] [dictionary2] [scantype] [threads] [no-out]
 	echo scantype by default is:
 	echo "0(or any) - [from dictionary1's {$wobtw} in dictionary2's $woaft]"
 	echo other scantypes:
@@ -12,10 +12,13 @@ if [[ "$1" == "" ]]; then
 	echo "2 - [from dictionary1's {$woaft} in dictionary2's {$woaft}]"
 	echo "3 - [from dictionary1's {$wobtw} in dictionary2's {$wobtw}]"
 	echo threads is number of lines processed by script at time, default 4.
+	echo no-out if not null, script won\'t print \"Scanning...\" messages.
 else 
 	scan() {
 		if [[ "$1" != "" ]]; then 
-			echo Scanning: "$1"
+			if [[ "$noout" == "0" ]]; then 
+				echo Scanning: "$1 on thread $2"
+			fi
 			vas=$(grep -x "$1" "$tmp2")
 			if [[ $? -eq 0 ]]; then
 				echo -e "Duplicate: [$1]:\n\tfrom [$dict1]{$info1}\n\tin [$dict2]{$info2}:\n$vas" >> .duplicate
@@ -26,8 +29,13 @@ else
 	}
 	> .duplicate
 	> .exclusive
+	STARTTIME=$(date +%s)
 	dict1="$1"
 	dict2="$2"
+	noout=0
+	if [[ "$5" != "" ]]; then
+		noout="$5"
+	fi
 	threads=4
 	if [[ "$4" != "" ]]; then
 		threads="$4"
@@ -41,20 +49,20 @@ else
 	info1="$wobtw"
 	info2="$woaft"
 	mode=0
-	if [[ "$3" != "" ]]; then
+	if [[ "$3" == "" ]]; then
 		mode="$3"
 	fi
-	if [[ "$mode" -eq 1 ]]; then
+	if [[ "$mode" == 1 ]]; then
 		info1="$woaft"
 		info2="$wobtw"
 		tmp1=".tmp1short"
 		tmp2=".tmp2big"
-	elif [[ $mode -eq 2 ]]; then
+	elif [[ $mode == 2 ]]; then
 		info1="$woaft"
 		info2="$woaft"
 		tmp1=".tmp1short"
 		tmp2=".tmp2short"
-	elif [[ $mode -eq 3 ]]; then
+	elif [[ $mode == 3 ]]; then
 		info1="$wobtw"
 		info2="$wobtw"
 		tmp1=".tmp1big"
@@ -62,14 +70,18 @@ else
 	fi
 	exec 5<"$tmp1"
 	while read l1 <&5; do
-		scan "$l1" &
-		for p in $(seq 2 $threads); do
-			l="l$p"
-			read "$l" <&5
-			scan "${!l}" &
-		done
+		scan "$l1" 1 &
+		if [[ $threads != 1 ]]; then
+			for p in $(seq 2 $threads); do
+				l="l$p"
+				read "$l" <&5
+				scan "${!l}" "$p" &
+			done
+		fi
 	done
 	wait
 	exec 5<&-
 	rm .tmp1* .tmp2*
+	ENDTIME=$(date +%s)
+	echo "Done in $(($ENDTIME - $STARTTIME)) seconds..."
 fi
