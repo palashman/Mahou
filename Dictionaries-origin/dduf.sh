@@ -49,7 +49,7 @@ else
 	info1="$wobtw"
 	info2="$woaft"
 	mode=0
-	if [[ "$3" == "" ]]; then
+	if [[ "$3" != "" ]]; then
 		mode="$3"
 	fi
 	if [[ "$mode" == 1 ]]; then
@@ -68,6 +68,7 @@ else
 		tmp1=".tmp1big"
 		tmp2=".tmp2big"
 	fi
+	echo -e "MODE: $mode\nfrom $dict1-[$info1]\nin $dict2-[$info2]"
 	exec 5<"$tmp1"
 	while read l1 <&5; do
 		scan "$l1" 1 &
