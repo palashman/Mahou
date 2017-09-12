@@ -21,7 +21,7 @@ else
 				echo Scanning: "$1 on thread $2"
 			fi
 			fix=`echo "$1" | sed -r 's/-/\\\\-/g'` # fix for -, it by any way(even in quotes) determined as grep's switch...
-			vas=$(grep -x "$fix" "$tmp2")
+			vas=$(grep "$fix" "$tmp2")
 			if [[ $? -eq 0 ]]; then
 				echo -e "Duplicate: [$1]:\n\tfrom [$dict1]{$info1}\n\tin [$dict2]{$info2}:\n$vas" >> .duplicate
 			elif [[ "$nexcl" == 1 ]]; then
