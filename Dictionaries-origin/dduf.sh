@@ -17,18 +17,20 @@ if [[ "$1" == "" ]]; then
 else 
 	scan() {
 		if [[ "$1" != "" ]]; then 
-			if [[ "$6" != "" ]]; then
+			if [[ "$necho" == "" ]]; then
 				echo Scanning: "$1 on thread $2"
 			fi
 			fix=`echo "$1" | sed -r 's/-/\\\\-/g'` # fix for -, it by any way(even in quotes) determined as grep's switch...
 			vas=$(grep -x \"$ix\" "$tmp2")
 			if [[ $? -eq 0 ]]; then
 				echo -e "Duplicate: [$1]:\n\tfrom [$dict1]{$info1}\n\tin [$dict2]{$info2}:\n$vas" >> .duplicate
-			elif [[ "$5" == 1 ]]; then
+			elif [[ "$nexcl" == 1 ]]; then
 				echo -e "Exclusive: [$1]:\n\tfrom [$dict1]{$info1}\n\tin [$dict2]{$info2}:\n$vas" >> .exclusive
 			fi
 		fi
 	}
+	nexcl="$5"
+	necho="$6"
 	> .duplicate
 	if [[ "$5" == 1 ]]; then > .exclusive ; fi
 	STARTTIME=$(date +%s)
