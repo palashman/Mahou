@@ -17,11 +17,11 @@ if [[ "$1" == "" ]]; then
 else 
 	scan() {
 		if [[ "$1" != "" ]]; then 
-			fix=`echo "$1" | cut -d' ' -f1 | sed -r 's/-/\\\\-/g'` # fix for -, it by any way(even in quotes) determined as grep's switch...
 			if [[ "$necho" == "" ]]; then
-				echo Scanning: "$fix on thread $2"
+				echo Scanning: "$1 on thread $2"
 			fi
-			vas=$(grep "$fix" "$tmp2")
+			fix=`echo "$1" | cut -d' ' -f1 | sed -r 's/-/\\\\-/g'` # fix for -, it by any way(even in quotes) determined as grep's switch...
+			vas=$(grep "^$fix\s" "$tmp2")
 			if [[ $? -eq 0 ]]; then
 				echo -e "Duplicate: [$fix]:\n\tfrom [$dict1]{$info1}\n\tin [$dict2]{$info2}:\n$vas" >> .duplicate
 			elif [[ "$nexcl" == 1 ]]; then
