@@ -71,13 +71,15 @@ else
 	echo -e "MODE: $mode\nfrom $dict1-[$info1]\nin $dict2-[$info2]"
 	exec 5<"$tmp1"
 	while read l1 <&5; do
-		scan "$l1" 1 &
 		if [[ $threads != 1 ]]; then
+			scan "$l1" 1 &
 			for p in $(seq 2 $threads); do
 				l="l$p"
 				read "$l" <&5
 				scan "${!l}" "$p" &
 			done
+		else 
+			scan "$l1" 1
 		fi
 		wait
 	done
