@@ -32,6 +32,7 @@ namespace Mahou {
 		static bool updating, was, isold = true, checking, snip_checking, as_checking, check_ASD_size = true;
 		static Timer tmr = new Timer();
 		static Timer old = new Timer();
+		static Timer stimer = new Timer();
 		public static Bitmap FLAG;
 		static uint lastTrayFlagLayout = 0;
 		static Timer animate = new Timer();
@@ -247,7 +248,34 @@ namespace Mahou {
 					Hotkey.CallHotkey(HKRandomCase, id, ref hksTRCOK, KMHook.ToRandomSelection);
 					Hotkey.CallHotkey(HKConMorWor, id, ref hkcwdsOK, PrepareConvertMoreWords);
 					Hotkey.CallHotkey(HKTransliteration, id, ref hksTrslOK, KMHook.TransliterateSelection);
-					Hotkey.CallHotkey(HKCLast, id, ref hklOK, () => KMHook.ConvertLast(MMain.c_word));
+					var clcl = false; // Convert Line + Convert Last
+					var conv = false;
+					if (Hotkey.GetMods(HKCLine_tempMods) == Hotkey.GetMods(HKCLast_tempMods) &&
+					    HKCLine_tempKey == HKCLast_tempKey && HKCLine_tempDouble != HKCLast_tempDouble) {
+						clcl = true;
+						var lastcl = hklineOK;
+						Hotkey.CallHotkey(HKCLine, Hotkey.HKID.ConvertLastLine, ref hklineOK, () => {
+						    var line = new List<KMHook.YuKey>();
+							foreach (var word in MMain.c_words) {
+								line.AddRange(word);
+							}
+							KMHook.ConvertLast(line);
+							stimer.Dispose();
+							conv = true;
+						});
+						if (!lastcl && !conv) {
+							stimer = new Timer();
+							stimer.Interval = DoubleHKInterval + 50;
+							stimer.Tick += (_, __) => {
+								if (!hklineOK && !conv) // Even here !conv because of time delay!
+									Hotkey.CallHotkey(HKCLast, id, ref hklOK, () => KMHook.ConvertLast(MMain.c_word));
+								stimer.Dispose();
+							};
+							stimer.Start();
+						}
+					}
+					if (!clcl)
+						Hotkey.CallHotkey(HKCLast, id, ref hklOK, () => KMHook.ConvertLast(MMain.c_word));
 					Hotkey.CallHotkey(HKCLine, id, ref hklineOK, () => { 
 						var line = new List<KMHook.YuKey>();
 						foreach (var word in MMain.c_words) {
