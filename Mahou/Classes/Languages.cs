@@ -381,7 +381,7 @@ public class Languages
 		{ Element.TT_ConvertSelectionSwitch, "If enabled, Convert selection will use layout switching.\nAll symbols will be written as the must(if layout before switching was the one where they are written it).\nThere also a plus version of that function." }, 
 		{ Element.TT_BlockCtrl, "Blocks hotkeys that use Control,\nwhen \"Switch layout by key\" is set to Left/Right Control." }, 
 		{ Element.TT_CapsDis, "If enabled, timer which disables CapsLock(led) will work." }, 
-		{ Element.TT_EmulateLS, "If enabled, layout switching will emulate press of keys selected on right." }, 
+		{ Element.TT_EmulateLS, "If enabled, layout switching will emulate press of keys selected on right.\nNow it is possible to enable this functin with [Switch between layouts] function." }, 
 		{ Element.TT_RePress, "If enabled, modifiers(Ctrl/Alt/Shift/Win) will be pressed again conversion(NOT recommended),\r\n"+
 				"although if you release modifiers before conversion action finishes - modifiers may stuck...))." },
 		{ Element.TT_Add1Space, "If enabled, ONE space will be adding to last word." }, 
@@ -602,7 +602,7 @@ public class Languages
 		{ Element.TT_ConvertSelectionSwitch, "Если включена, Конверт выделения Будет использовать переключение раскладки.\nВсе символы будут напечатаны правильно(если перед переключением стояла раскладка в которой они были написаны).\nТакже есть улучшение функции, \"плюс\"." }, 
 		{ Element.TT_BlockCtrl, "Блокирует горячие клавиши содержащие Control,\nможет быть полезно если \"Переключать язык клавишей\" установлен на Left/Right Control." }, 
 		{ Element.TT_CapsDis, "Если включено, то будет работать таймер который будет выключать CapsLock(лампочку)." }, 
-		{ Element.TT_EmulateLS, "Если включено, переключение раскладку будет эмулировать нажатие клавиш выбранный правее для переключения раскладки." }, 
+		{ Element.TT_EmulateLS, "Если включено, переключение раскладку будет эмулировать нажатие клавиш выбранный правее для переключения раскладки.\nЭту функцию теперь можно включать вместе с функцией [Переключать между раскладками]." }, 
 		{ Element.TT_RePress, "Если включено, то модификаторы(Ctrl/Alt/Shift/Win) будут нажаты заново после действия горячей клавиши.(НЕ рекомендуется),\r\n"+
 							  "хотя если вы отпустите модификаторы до того как завершиться действие конвертации - могут залипнуть модификаторы...)." },
 		{ Element.TT_Add1Space, "Если включено, то ОДИН пробел будет добавлятся в последнее слово." }, 
