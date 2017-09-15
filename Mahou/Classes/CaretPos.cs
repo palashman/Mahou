@@ -50,11 +50,11 @@ namespace Mahou
 			string _clsNMfw = "";
 			Logging.Log("_c HWND: [" +MMain.mahou.Handle+ "], _c ThrId: ["+_cThr_id+"], "+"_fw HWND: ["+_fw+"]"+", _fw ThrId: "+_fwThr_id+".");
 			if (_fwThr_id != _cThr_id) {
-				if (lastAttachedThread != _fwThr_id && lastAttachedThread != 0) {
-					WinAPI.AttachThreadInput(lastAttachedThread, _cThr_id, false);
-					Logging.Log("Detaching from thread: ["+lastAttachedThread+"].");
-					Logging.Log("Attaching to thread: ["+_cThr_id+"].");
-				}
+				// Bad thing that threads still leaves attached, after leaving window.
+//				if (lastAttachedThread != _fwThr_id && lastAttachedThread != 0) {
+//					WinAPI.AttachThreadInput(lastAttachedThread, _cThr_id, false) ;
+//				}
+				Logging.Log("Attaching to thread: ["+_fwThr_id+"].");
 				if (!WinAPI.AttachThreadInput(_fwThr_id, _cThr_id, true))
 					return LuckyNone;
 				_fwFCS = WinAPI.GetFocus();
@@ -71,6 +71,8 @@ namespace Mahou
 					WinAPI.GetWindowRect(_fw, out _fwFCS_Re);
 				}
 				lastAttachedThread = _fwThr_id;
+				Logging.Log("Detaching from thread: ["+lastAttachedThread+"].");
+				WinAPI.AttachThreadInput(lastAttachedThread, _cThr_id, false);
 				if (_clsNMfw == "PX_WINDOW_CLASS" && MMain.mahou.MCDSSupport) {
 					System.Threading.Tasks.Task.Factory.StartNew(GetDataFromMCDS);
 					var CaretToScreen = new Point(_fwFCS_Re.Left, _fwFCS_Re.Top);

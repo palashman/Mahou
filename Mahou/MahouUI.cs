@@ -260,6 +260,7 @@ namespace Mahou {
 								line.AddRange(word);
 							}
 							KMHook.ConvertLast(line);
+							Debug.WriteLine("DISPOSING STIMER");
 							stimer.Dispose();
 							conv = true;
 						});
@@ -269,8 +270,12 @@ namespace Mahou {
 							stimer.Tick += (_, __) => {
 								if (!hklineOK && !conv) // Even here !conv because of time delay!
 									Hotkey.CallHotkey(HKCLast, id, ref hklOK, () => KMHook.ConvertLast(MMain.c_word));
+								Debug.WriteLine("STOPING STIMER");
+								stimer.Stop();
+								Debug.WriteLine("DISPOSING STIMER");
 								stimer.Dispose();
 							};
+							Debug.WriteLine("STARTIN STIMER");
 							stimer.Start();
 						}
 					}
