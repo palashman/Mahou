@@ -335,8 +335,6 @@ public static class WinAPI {
 	#endregion
 	#region CaretPos requires
 	[DllImport("user32.dll", SetLastError=true)]
-	public static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
-	[DllImport("user32.dll", SetLastError=true)]
 	public static extern bool GetCaretPos(out Point lpPoint);
 	[DllImport("user32.dll", SetLastError=true)]
 	public static extern IntPtr GetFocus();

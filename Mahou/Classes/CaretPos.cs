@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 namespace Mahou
@@ -9,7 +10,6 @@ namespace Mahou
 	{
 		public static Point _CaretST3 = new Point(0,0);
 		public static int SidebarWidth = 0, viewID = 0;
-		public static uint lastAttachedThread = 0;
 		
 		public static int GetMCDSValue(string type, string input) {
 			return Int32.Parse(Regex.Match(input, type + @"->(\d+)").Groups[1].Value);
@@ -31,6 +31,13 @@ namespace Mahou
 				Logging.Log("Error during GetDataFromMCDS, details\r\b:" + e.Message + "\r\n" + e.StackTrace + "\r\n");
 			}
 		}
+		public static bool GetGuiInfo(uint thread_id, ref WinAPI.GUITHREADINFO gui_info) {
+			if (!WinAPI.GetGUIThreadInfo(thread_id, ref gui_info)) {
+				Logging.Log("Error getting GUI info for thread id: [" + thread_id +"], L-W32Err: [" + Marshal.GetLastWin32Error() + "].", 2);
+				return false;
+			}
+			return true;
+		}
 		/// <summary>
 		/// Gets caret position from focused window or from focused control in window.
 		/// </summary>
@@ -50,29 +57,28 @@ namespace Mahou
 			string _clsNMfw = "";
 			Logging.Log("_c HWND: [" +MMain.mahou.Handle+ "], _c ThrId: ["+_cThr_id+"], "+"_fw HWND: ["+_fw+"]"+", _fw ThrId: "+_fwThr_id+".");
 			if (_fwThr_id != _cThr_id) {
-				// Bad thing that threads still leaves attached, after leaving window.
-//				if (lastAttachedThread != _fwThr_id && lastAttachedThread != 0) {
-//					WinAPI.AttachThreadInput(lastAttachedThread, _cThr_id, false) ;
-//				}
-				Logging.Log("Attaching to thread: ["+_fwThr_id+"].");
-				if (!WinAPI.AttachThreadInput(_fwThr_id, _cThr_id, true))
-					return LuckyNone;
-				_fwFCS = WinAPI.GetFocus();
+				var gti = new WinAPI.GUITHREADINFO();
+				gti.cbSize = Marshal.SizeOf(gti);
+				if (!GetGuiInfo(_fwThr_id, ref gti))
+				    return LuckyNone;
+				_fwFCS = gti.hwndFocus;
 				WinAPI.GetClassName(_fw, _clsNMb, _clsNMb.Capacity);
 				_clsNMfw = _clsNMb.ToString();
-				if (_fwFCS != IntPtr.Zero && _fwFCS != _fw) {
-					Logging.Log("_fcs: ["+_fwFCS+"]."+"_fw classname = ["+_clsNMb+"].");
+					if (_fwFCS != IntPtr.Zero && _fwFCS != _fw) {
+					var _fwFCSThr_id = WinAPI.GetWindowThreadProcessId(_fwFCS, out dummy);
+					var gtiFCS = new WinAPI.GUITHREADINFO();
+					gtiFCS.cbSize = Marshal.SizeOf(gtiFCS);
+					if (!GetGuiInfo(_fwFCSThr_id, ref gtiFCS))
+					    return LuckyNone;
+					Logging.Log("_fcs: ["+_fwFCS+"]."+"_fw classname = ["+_clsNMb+"], " +"_fcs thread_id = ["+_fwFCSThr_id+"].");
 					WinAPI.GetClassName(_fwFCS, _clsNMb, _clsNMb.Capacity);
 					Logging.Log("_fcs classname = ["+_clsNMb+"].");
 					WinAPI.GetWindowRect(_fwFCS, out _fwFCS_Re);
-					WinAPI.GetCaretPos(out _pntCR);
+					_pntCR = new Point(gtiFCS.rectCaret.Left, gtiFCS.rectCaret.Top);
 				} else {
-					WinAPI.GetCaretPos(out _pntCR);
+					_pntCR = new Point(gti.rectCaret.Left, gti.rectCaret.Top);
 					WinAPI.GetWindowRect(_fw, out _fwFCS_Re);
 				}
-				lastAttachedThread = _fwThr_id;
-				Logging.Log("Detaching from thread: ["+lastAttachedThread+"].");
-				WinAPI.AttachThreadInput(lastAttachedThread, _cThr_id, false);
 				if (_clsNMfw == "PX_WINDOW_CLASS" && MMain.mahou.MCDSSupport) {
 					System.Threading.Tasks.Task.Factory.StartNew(GetDataFromMCDS);
 					var CaretToScreen = new Point(_fwFCS_Re.Left, _fwFCS_Re.Top);
