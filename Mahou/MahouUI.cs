@@ -1016,10 +1016,10 @@ namespace Mahou {
 			grb_Keys.Enabled = grb_Layouts.Enabled = chk_SpecificLS.Checked;
 			cbb_MainLayout1.Enabled = cbb_MainLayout2.Enabled = 
 				lbl_LayoutNum1.Enabled = lbl_LayoutNum2.Enabled = chk_SwitchBetweenLayouts.Checked;
-			lbl_EmuType.Enabled = cbb_EmulateType.Enabled = chk_SwitchBetweenLayouts.Enabled = chk_EmulateLS.Checked;
-			if (chk_EmulateLS.Checked) {
-				chk_SwitchBetweenLayouts.Enabled = chk_SwitchBetweenLayouts.Checked = false;
-			} else { chk_SwitchBetweenLayouts.Enabled = true; }
+			lbl_EmuType.Enabled = cbb_EmulateType.Enabled = chk_EmulateLS.Checked;
+//			if (chk_EmulateLS.Checked) {
+//				chk_SwitchBetweenLayouts.Enabled = chk_SwitchBetweenLayouts.Checked = false;
+//			} else { chk_SwitchBetweenLayouts.Enabled = true; }
 			// Appearence tab
 			chk_LangTTCaretOnChange.Enabled = chk_LangTooltipCaret.Checked;
 			lbl_LangTTBackgroundColor.Enabled = btn_LangTTBackgroundColor.Enabled = 

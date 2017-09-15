@@ -1279,91 +1279,127 @@ namespace Mahou
 	                ? Locales.GetLocaleFromString(MMain.mahou.MainLayout2).uId
 	                : Locales.GetLocaleFromString(MMain.mahou.MainLayout1).uId;
 				if (MMain.mahou.SwitchBetweenLayouts) {
-					Logging.Log("Changing layout using normal mode, WinAPI.PostMessage [WinAPI.WM_INPUTLANGCHANGEREQUEST] with LParam ["+notnowLocale+"].");
-					int tries = 0;
-					//Cycles while layout not changed
-					while (Locales.GetCurrentLocale() == nowLocale) {
-						ChangeToLayout(Locales.ActiveWindow(), notnowLocale);
-						Thread.Sleep(10);//Give some time to switch layout
-						tries++;
-						if (tries == 3)
-							break;
+					ChangeToLayout(Locales.ActiveWindow(), notnowLocale);
+				} else {
+					if (MMain.mahou.EmulateLS) {
+						CycleEmulateLayoutSwitch();
+					} else {
+						CycleLayoutSwitch();
 					}
-				} else
-					CycleSwitch();
+				}
 			}
 		}
-		public static void ChangeToLayout(IntPtr hwnd, uint LayoutId, bool lc_fix = false) {
-			WinAPI.PostMessage(hwnd, WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, LayoutId);
-			MahouUI.currentLayout = MahouUI.GlobalLayout = LayoutId;
-//			if (lc_fix) {
-//				var latest_self = self;
-//				if (!latest_self) // If it is not change by another rule.
-//					self = true;
-//				KeybdEvent(Keys.LControlKey, 2); // fix for WinAPI.PostMessage, it SOMEHOW o_0 sends LEFT ctrl after layout change to specific...
-												 // I'd be really happy if someone could tell me why it SEND THAT ****** Left Control after postmessage???
-//				if (!latest_self)
-//					self = false;
-//			}
+		/// <summary>
+		/// Calls functions to change layout based on EmulateLS variable.
+		/// </summary>
+		/// <param name="hwnd">Target window to change its layout.</param>
+		/// <param name="LayoutId">Desired layout to switch to.</param>
+		public static void ChangeToLayout(IntPtr hwnd, uint LayoutId) {
+			if (MMain.mahou.EmulateLS) 
+				EmulateChangeToLayout(LayoutId);
+			 else
+			 	NormalChangeToLayout(hwnd, LayoutId);
 		}
 		/// <summary>
-		/// Changes current layout by cycling between all installed in system.
+		/// Changing layout to LayoutId in hwnd with PostMessage and WM_INPUTLANGCHANGEREQUEST.
 		/// </summary>
-		static void CycleSwitch()
-		{
-			if (MMain.mahou.EmulateLS) {
-				if (MMain.mahou.EmulateLSType == "Alt+Shift") {
-					Logging.Log("Changing layout using cycle mode by simulating key press [Alt+Shift].");
-					//Emulate Alt+Shift
-					KInputs.MakeInput(new [] {
-						KInputs.AddKey(Keys.LMenu, true),
-						KInputs.AddKey(Keys.LShiftKey, true),
-						KInputs.AddKey(Keys.LShiftKey, false),
-						KInputs.AddKey(Keys.LMenu, false)
-					});
-				} else if (MMain.mahou.EmulateLSType == "Ctrl+Shift") {
-					Logging.Log("Changing layout using cycle mode by simulating key press [Ctrl+Shift].");
-					//Emulate Ctrl+Shift
-					KInputs.MakeInput(new [] {
-						KInputs.AddKey(Keys.LControlKey, true),
-						KInputs.AddKey(Keys.LShiftKey, true),
-						KInputs.AddKey(Keys.LShiftKey, false),
-						KInputs.AddKey(Keys.LControlKey, false)
-					});
-				} else {
-					Logging.Log("Changing layout using cycle mode by simulating key press [Win+Space].");
-					//Emulate Win+Space
-					KInputs.MakeInput(new [] {
-						KInputs.AddKey(Keys.LWin, true),
-						KInputs.AddKey(Keys.Space, true),
-						KInputs.AddKey(Keys.Space, false),
-						KInputs.AddKey(Keys.LWin, false)
-					});
-					Thread.Sleep(70); //Important!
+		/// <param name="hwnd">Target window to change its layout.</param>
+		/// <param name="LayoutId">Desired layout to switch to.</param>
+		static void NormalChangeToLayout(IntPtr hwnd, uint LayoutId) {
+			Logging.Log("Changing layout using normal mode, WinAPI.PostMessage [WinAPI.WM_INPUTLANGCHANGEREQUEST] with LParam ["+LayoutId+"].");
+			int tries = 0;
+			//Cycles while layout not changed
+			while (Locales.GetCurrentLocale() != LayoutId) {
+				WinAPI.PostMessage(hwnd, WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, LayoutId);
+				Thread.Sleep(10);//Give some time to switch layout
+				tries++;
+				if (tries == 3)
+					break;
+			}
+			MahouUI.currentLayout = MahouUI.GlobalLayout = LayoutId;
+		}
+		/// <summary>
+		/// Changing layout to LayoutId by emulating windows layout switch hotkey. 
+		/// </summary>
+		/// <param name="LayoutId">Desired layout to switch to.</param>
+		static void EmulateChangeToLayout(uint LayoutId) {
+			var failed = false;
+			var tries = 0;
+			Logging.Log("Changing to specific layout ["+LayoutId+"] by emulating layout switch.");
+			while (Locales.GetCurrentLocale() != LayoutId) {
+				CycleEmulateLayoutSwitch();
+				Thread.Sleep(10);//Give some time to switch layout
+				tries++;
+				if (tries == 16) { // Give up after 16 tries.
+					failed = true;
+					break;
 				}
-				MahouUI.currentLayout = MahouUI.GlobalLayout = Locales.GetCurrentLocale();
+			}
+			if (!failed) {
+				MahouUI.currentLayout = MahouUI.GlobalLayout = LayoutId;
+				
+			} else
+				Logging.Log("Changing to layout [" + LayoutId + "] using emulation failed after 16 tries,\r\nmaybe you have more that 16 layouts, disabled change layout hotkey in windows, or working in console window(use getconkbl.dll)?", 1);
+		}
+		/// <summary>
+		/// Changing layout by emulating windows layout switch hotkey
+		/// </summary>
+		static void CycleEmulateLayoutSwitch() {
+			if (MMain.mahou.EmulateLSType == "Alt+Shift") {
+				Logging.Log("Changing layout using cycle mode by simulating key press [Alt+Shift].");
+				//Emulate Alt+Shift
+				KInputs.MakeInput(new [] {
+					KInputs.AddKey(Keys.LMenu, true),
+					KInputs.AddKey(Keys.LShiftKey, true),
+					KInputs.AddKey(Keys.LShiftKey, false),
+					KInputs.AddKey(Keys.LMenu, false)
+				});
+			} else if (MMain.mahou.EmulateLSType == "Ctrl+Shift") {
+				Logging.Log("Changing layout using cycle mode by simulating key press [Ctrl+Shift].");
+				//Emulate Ctrl+Shift
+				KInputs.MakeInput(new [] {
+					KInputs.AddKey(Keys.LControlKey, true),
+					KInputs.AddKey(Keys.LShiftKey, true),
+					KInputs.AddKey(Keys.LShiftKey, false),
+					KInputs.AddKey(Keys.LControlKey, false)
+				});
 			} else {
-				Logging.Log("Changing layout using cycle mode by sending Message [WinAPI.WM_INPUTLANGCHANGEREQUEST] with LParam [HKL_NEXT] using WinAPI.PostMessage to ActiveWindow");
-				//Use WinAPI.PostMessage to switch to next layout
-				var cur = Locales.GetCurrentLocale(); 
-				Thread.Sleep(5);
-				var curind = MMain.locales.ToList().FindIndex(lid => lid.uId == cur);
-				int lidc = 0;
-				foreach (var l in MMain.locales) {
-					if (curind == MMain.locales.Length - 1) {
-						Logging.Log("Locales BREAK!");
-						ChangeToLayout(Locales.ActiveWindow(), MMain.locales[0].uId);
-						break;
-					}
-					Logging.Log("LIDC = "+lidc +" curid = "+curind + " Lidle = " +(MMain.locales.Length - 1));
-					if (lidc > curind)
-						if (l.uId != cur) {
-							Logging.Log("Locales +1 Next BREAK!");
-							ChangeToLayout(Locales.ActiveWindow(), l.uId);
-							break;
-					}
-					lidc++;
+				Logging.Log("Changing layout using cycle mode by simulating key press [Win+Space].");
+				//Emulate Win+Space
+				KInputs.MakeInput(new [] {
+					KInputs.AddKey(Keys.LWin, true),
+					KInputs.AddKey(Keys.Space, true),
+					KInputs.AddKey(Keys.Space, false),
+					KInputs.AddKey(Keys.LWin, false)
+				});
+				Thread.Sleep(70); //Important!
+			}
+			MahouUI.currentLayout = MahouUI.GlobalLayout = Locales.GetCurrentLocale();
+		}
+		/// <summary>
+		/// Changing layout to next with PostMessage and WM_INPUTLANGCHANGEREQUEST and LParam HKL_NEXT.
+		/// </summary>
+		static void CycleLayoutSwitch() {
+			Logging.Log("Changing layout using cycle mode by sending Message [WinAPI.WM_INPUTLANGCHANGEREQUEST] with LParam [HKL_NEXT] using WinAPI.PostMessage to ActiveWindow");
+			//Use WinAPI.PostMessage to switch to next layout
+			var cur = Locales.GetCurrentLocale(); 
+			Thread.Sleep(5);
+			var curind = MMain.locales.ToList().FindIndex(lid => lid.uId == cur);
+			int lidc = 0;
+			foreach (var l in MMain.locales) {
+				if (curind == MMain.locales.Length - 1) {
+					Logging.Log("Locales BREAK!");
+					ChangeToLayout(Locales.ActiveWindow(), MMain.locales[0].uId);
+					break;
 				}
+				Logging.Log("LIDC = "+lidc +" curid = "+curind + " Lidle = " +(MMain.locales.Length - 1));
+				if (lidc > curind)
+					if (l.uId != cur) {
+						Logging.Log("Locales +1 Next BREAK!");
+						ChangeToLayout(Locales.ActiveWindow(), l.uId);
+						break;
+				}
+				lidc++;
 			}
 		}
 		/// <summary>
