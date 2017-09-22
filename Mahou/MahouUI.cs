@@ -87,6 +87,10 @@ namespace Mahou {
 		/// <summary> Temporary sizes of LangDisplays appearece. </summary>
 		public int LDMouseHeight_temp, LDCaretHeight_temp, LDMouseWidth_temp, LDCaretWidth_temp, 
 		 	  Layout1Height_temp, Layout2Height_temp, Layout1Width_temp, Layout2Width_temp;
+		/// <summary>
+		/// Temporary list boxes indexes before and after settings loaded.
+		/// </summary>
+		public int tmpHotkeysIndex, tmpLangTTAppearenceIndex;
 		/// <summary> Temporary hotkey key of hotkey in txt_Hotkey. </summary>
 		int txt_Hotkey_tempKey;
 		/// <summary> Temporary hotkey modifiers of hotkey in txt_Hotkey. </summary>
@@ -596,8 +600,8 @@ namespace Mahou {
 			}
 			DoInMainConfigs(() => { MMain.MyConfs.Write("Functions", "AppDataConfigs", chk_AppDataConfigs.Checked.ToString()); return (object)0; });
 			if (!only_load) {
-				var tmpLangTTAppearenceIndex = lsb_LangTTAppearenceForList.SelectedIndex;
-				var tmpHotkeysIndex = lsb_Hotkeys.SelectedIndex;
+				tmpLangTTAppearenceIndex = lsb_LangTTAppearenceForList.SelectedIndex;
+				tmpHotkeysIndex = lsb_Hotkeys.SelectedIndex;
 				#region Functions
 				MMain.MyConfs.Write("Functions", "AutoStartAsAdmin", AutoStartAsAdmin.ToString());
 				MMain.MyConfs.Write("Functions", "TrayIconVisible", chk_TrayIcon.Checked.ToString());
@@ -710,8 +714,6 @@ namespace Mahou {
 				MMain.MyConfs.Write("Proxy", "UserName", txt_ProxyLogin.Text);
 				MMain.MyConfs.Write("Proxy", "Password", Convert.ToBase64String(Encoding.Unicode.GetBytes(txt_ProxyPassword.Text)));
 				#endregion
-				lsb_LangTTAppearenceForList.SelectedIndex = tmpLangTTAppearenceIndex;
-				lsb_Hotkeys.SelectedIndex = tmpHotkeysIndex;
 				Logging.Log("All configurations saved.");
 			}
 			LoadConfigs();
@@ -900,6 +902,9 @@ namespace Mahou {
 				else 
 					_langPanel.HideWnd();
 			}
+			// Restore last positon
+			lsb_LangTTAppearenceForList.SelectedIndex = tmpLangTTAppearenceIndex;
+			lsb_Hotkeys.SelectedIndex = tmpHotkeysIndex;
 			Memory.Flush();
 			Logging.Log("All configurations loaded.");
 		}
