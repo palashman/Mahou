@@ -8,7 +8,7 @@ namespace Mahou
 		/// <summary>
 		/// Used to determine if lang display is used for caret display.
 		/// </summary>
-		public bool lastTransparentBG, transparentBG, caretDisplay, mouseDisplay, DisplayFlag, onInit = true;
+		public bool lastTransparentBG, transparentBG, caretDisplay, mouseDisplay, DisplayFlag, onInit = true, Empty;
 		public string lastText = "NO";
 		Size lastsize = new Size(0,0);
 		public LangDisplay()
@@ -68,8 +68,15 @@ namespace Mahou
 		/// </summary>
 		public void RefreshLang()
 		{
-			if (!Visible) return;
 			uint cLid = Locales.GetCurrentLocale();
+			if (DisplayFlag && MMain.mahou.DiffAppearenceForLayouts) {
+				if (cLid == Locales.GetLocaleFromString(MMain.mahou.MainLayout1).uId && MMain.mahou.Layout1TText.Length < 2)
+					lbLang.Text = MMain.mahou.Layout1TText;
+				else if (cLid == Locales.GetLocaleFromString(MMain.mahou.MainLayout2).uId && MMain.mahou.Layout2TText.Length < 2)
+					lbLang.Text = MMain.mahou.Layout2TText;
+				Empty = (MMain.mahou.DiffAppearenceForLayouts && lbLang.Text == " ");
+			}
+			if (!Visible || Empty) return;
 			if (cLid == 0)
 				cLid = MahouUI.currentLayout;
 			if (MMain.mahou.OneLayout)

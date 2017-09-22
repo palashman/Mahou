@@ -1405,7 +1405,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 						res.Start();
 					}
 				} else {
-				if (KMHook.ff_wheeled)
+				if (KMHook.ff_wheeled || caretLangDisplay.Empty)
 					caretLangDisplay.HideWnd();
 				else if (crtOnly.X != 77777 && crtOnly.Y != 77777) // 77777x77777 is null/none point
 					caretLangDisplay.ShowInactiveTopmost();
@@ -1425,7 +1425,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 						res.Start();
 					}
 				} else {
-					if (ICheckings.IsICursor() || MouseTTAlways)
+					if ((ICheckings.IsICursor() || MouseTTAlways) && !mouseLangDisplay.Empty)
 						mouseLangDisplay.ShowInactiveTopmost();
 					else
 						mouseLangDisplay.HideWnd();
