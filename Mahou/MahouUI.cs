@@ -599,6 +599,7 @@ namespace Mahou {
 				var tmpLangTTAppearenceIndex = lsb_LangTTAppearenceForList.SelectedIndex;
 				var tmpHotkeysIndex = lsb_Hotkeys.SelectedIndex;
 				#region Functions
+				MMain.MyConfs.Write("Functions", "AutoStartAsAdmin", AutoStartAsAdmin.ToString());
 				MMain.MyConfs.Write("Functions", "TrayIconVisible", chk_TrayIcon.Checked.ToString());
 				MMain.MyConfs.Write("Functions", "ConvertSelectionLayoutSwitching", chk_CSLayoutSwitching.Checked.ToString());
 				MMain.MyConfs.Write("Functions", "ReSelect", chk_ReSelect.Checked.ToString());
