@@ -35,9 +35,9 @@ namespace Mahou
 		public static string[] as_wrongs;
 		public static string[] as_corrects;
 		static Dictionary<string, string> transliterationDict = new Dictionary<string, string>() { 
-				{"Ч", "CH"}, {"Ш", "SH"}, {"Щ", "SCH"}, {"Ё", "JO"}, {"ВВ", "W"},
+				{"Щ", "SCH"}, {"щ", "sch"}, {"Ч", "CH"}, {"Ш", "SH"}, {"Ё", "JO"}, {"ВВ", "W"},
 				{"Є", "EH"}, {"ю", "yu"}, {"я", "ya"}, {"є", "eh"}, {"Ж", "ZH"},
-				{"ч", "ch"}, {"ш", "sh"}, {"щ", "sch"}, {"Й", "JJ"}, {"ж", "zh"},
+				{"ч", "ch"}, {"ш", "sh"}, {"Й", "JJ"}, {"ж", "zh"},
 				{"Э", "EH"}, {"Ю", "YU"}, {"Я", "YA"}, {"й", "jj"}, {"ё", "jo"}, 
 				{"э", "eh"}, {"вв", "w"}, {"кь", "q"}, {"КЬ", "Q"},
 				{"ь", "j"}, {"№", "#"}, {"А", "A"}, {"Б", "B"},
@@ -823,14 +823,17 @@ namespace Mahou
 					if (!String.IsNullOrEmpty(ClipStr)) {
 						string output = ClipStr;
 						foreach (KeyValuePair<string, string> key in transliterationDict) {
-			                output.Replace(key.Key, key.Value);
+							if (output.Contains(key.Key))
+			                	output.Replace(key.Key, key.Value);
 			            }
 						if (ClipStr == output) {
 							foreach (KeyValuePair<string, string> key in transliterationDict) {
+								if (ClipStr.Contains(key.Value))
 				                	ClipStr = ClipStr.Replace(key.Value, key.Key);
 		                	}
 							if (ClipStr == output)
 							foreach (KeyValuePair<string, string> key in transliterationDict) {
+								if (ClipStr.Contains(key.Key))
 				                	ClipStr = ClipStr.Replace(key.Key, key.Value);
 		                	}
 							KInputs.MakeInput(KInputs.AddString(ClipStr));
