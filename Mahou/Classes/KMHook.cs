@@ -1168,6 +1168,7 @@ namespace Mahou
 							KInputs.AddKey(Keys.Back, false) 
 						});
 					}
+					c_snip.Clear();
 					for (int i = 0; i < YuKeys.Length; i++) {
 						if (YuKeys[i].altnum) {
 							Logging.Log("An YuKey with [" + YuKeys[i].numpads.Count + "] numpad(s) passed.");
@@ -1188,6 +1189,14 @@ namespace Mahou
 							}
 							if (YuKeys[i].upper)
 								KInputs.MakeInput(new [] { KInputs.AddKey(Keys.LShiftKey, false) });
+							var c = new StringBuilder();
+							var byu = new byte[256];
+							if (YuKeys[i].upper) {
+								byu[(int)Keys.ShiftKey] = 0xFF;
+							}
+							WinAPI.ToUnicodeEx((uint)YuKeys[i].key, (uint)WinAPI.MapVirtualKey((uint)YuKeys[i].key, 0),
+							                   byu, c, (int)5, (uint)0, (IntPtr)(Locales.GetCurrentLocale()&0xffff));
+							c_snip.Add(c[0]);
 						}
 					}
 		       });
