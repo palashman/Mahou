@@ -159,6 +159,9 @@ public class Languages
 		ShowHide,
 		Mahou,
 		Download,
+		ConfigsCannot,
+		Created,
+		Readen,
 		#endregion
 		#region Buttons
 		ButtonOK,
@@ -368,6 +371,9 @@ public class Languages
 		{ Element.ShowHide, "Show/Hide" }, 
 		{ Element.Mahou, "Mahou(魔法) - magic layout switcher." }, 
 		{ Element.Download, "Download" }, 
+		{ Element.ConfigsCannot, "Configs file Mahou.ini cannot be " },
+		{ Element.Created, "created" },
+		{ Element.Readen, "readen" },
 		#endregion
 		#region Buttons
 		{ Element.ButtonOK, "OK" }, 
@@ -589,6 +595,9 @@ public class Languages
 		{ Element.ShowHide, "Показать/Скрыть" }, 
 		{ Element.Mahou, "Mahou(魔法) - волшебный переключатель раскладок." }, 
 		{ Element.Download, "Скачать" }, 
+		{ Element.ConfigsCannot, "Файл настроек Mahou.ini не может быть " },
+		{ Element.Created, "создан" },
+		{ Element.Readen, "прочитан" },
 		#endregion
 		#region Buttons
 		{ Element.ButtonOK, "ОК" }, 

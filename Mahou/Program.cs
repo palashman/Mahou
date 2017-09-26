@@ -25,7 +25,7 @@ namespace Mahou
 		public static Locales.Locale[] locales = Locales.AllList();
 		public static string _language = "";
 		public static Dictionary<Languages.Element, string> Lang = Languages.English;
-		public static Configs MyConfs = new Configs();
+		public static Configs MyConfs;
 		public static MahouUI mahou;
 		public static RawInputForm rif;
 		public static System.Threading.Timer _logTimer = new System.Threading.Timer((_) => { try { Logging.UpdateLog(); } catch (Exception e) { Logging.Log("Error updating log, details:\r\n" + e.Message);}}, null, 20, 300);
@@ -34,13 +34,16 @@ namespace Mahou
 		[STAThread] //DO NOT REMOVE THIS
         public static void Main(string[] args)
 		{
-			Logging.Log("Mahou started.");
 			//Catch any error during program runtime
 			AppDomain.CurrentDomain.UnhandledException += (obj, arg) => {
 				var e = (Exception)arg.ExceptionObject;
 				Logging.Log("Unexpected error occurred, Mahou exited, error details:\r\n" + e.Message+"\r\n" + e.StackTrace, 1);
 			};
 			Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+			if (System.Globalization.CultureInfo.InstalledUICulture.TwoLetterISOLanguageName == "ru")
+				Lang = Languages.Russian;
+			MyConfs = new Configs();
+			Logging.Log("Mahou started.");
 			using (var mutex = new Mutex(false, GGPU_Mutex)) {
 				if (!mutex.WaitOne(0, false)) {
 					WinAPI.PostMessage((IntPtr)0xffff, ao, 0, 0);

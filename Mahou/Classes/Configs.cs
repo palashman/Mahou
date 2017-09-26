@@ -14,9 +14,20 @@ namespace Mahou
         /// Creates configs file Mahou.ini if it is not exist.
         /// </summary>
         public static void CreateConfigsFile() {
-        	if (!File.Exists(filePath)) { //Create an UTF-16 configuration file
-                File.WriteAllText(filePath, "!Unicode(✔), Mahou settings file", Encoding.Unicode);
-            }
+        	bool create = true;
+        	try {
+	        	if (!File.Exists(filePath)) { //Create an UTF-16 configuration file
+	                File.WriteAllText(filePath, "!Unicode(✔), Mahou settings file", Encoding.Unicode);
+        		} else { 
+        			create = false;
+        			using (var sr = new StreamReader(filePath)) {
+        				sr.Read();
+	        		}
+        		}
+        	} catch(Exception e) {
+        		System.Windows.Forms.MessageBox.Show(MMain.Lang[Languages.Element.ConfigsCannot]+(create ? MMain.Lang[Languages.Element.Created] : MMain.Lang[Languages.Element.Readen])+", "+ MMain.Lang[Languages.Element.Error].ToLower() + ":\r\n" + e.Message, MMain.Lang[Languages.Element.Error]);
+        		System.Diagnostics.Process.GetCurrentProcess().Kill();
+        	}
         }
         /// <summary>
         /// Initializes settings, if some of values or settings file, not exists it creates them with default value.
