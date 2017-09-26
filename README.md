@@ -337,6 +337,7 @@ Mahou находится под GPL v2+.
 
 - Яндекс.Деньги: 410015057363201
 - Webmoney WMZ: Z407834572196
+- YaSoberu: http://yasobe.ru/na/mahou
 
 # English
 
@@ -687,3 +688,4 @@ Wallets:
 
 - Yandex.Money: 410015057363201
 - Webmoney WMZ: Z407834572196
+- YaSoberu: http://yasobe.ru/na/mahou
