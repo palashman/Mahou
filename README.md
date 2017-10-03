@@ -8,7 +8,7 @@
 
 ### Как работает
 Mahou работает так как **Вы** хотите, настраивайте как пожелаете, по умолчанию в отличии от других переключателей раскладок, он переключает *не по следующей раскладке*, а по **указанным в настройках** раскладкам.<br/>
-Даже выделенный текст переключается между **выбранными** раскладками, но если Вам нравилось цикличное переключение, то, начиная с версии `v1.0.2.9`, есть **Циклич. режим**, в `v2.0.0.0` и выше чтобы его включить нужно выключить функцию `Переключать между раскладками`.
+Даже выделенный текст переключается между **выбранными** раскладками, но если Вам нравилось цикличное переключение, то, начиная с версии `v1.0.2.9`, есть **Циклич. режим**, в `v2.0.0.0` и выше чтобы его включить нужно выключить функцию `Переключать между раскладками`. По умолчанию Mahou - хранит настройки в папке где лежит Mahou.exe, но также может хранить настройки в %AppData%.
 
 ### Для работы необходим [.Net 4.0 или выше](https://www.microsoft.com/ru-ru/download/details.aspx?id=53345). Начиная с v1.4.3.9, исправлены ошибки при работе в .Net 4.0.
 
@@ -23,6 +23,17 @@ Mahou работает так как **Вы** хотите, настраивай
 6. Почитайте [wiki](https://github.com/BladeMight/Mahou/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA-%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B9) или [спросите меня](#%D0%9B%D0%B8%D1%86%D0%B5%D0%BD%D0%B7%D0%B8%D1%8F).
 
 ###### Возможности по версиям:
+
+**v2.5.1.4**<br/>
+- 🐛 Исправлено сохранение типа авто-запуска.
+- 📝 Добавлена возможность скрытия флагой для функции разного вида раскладок подсказок языка.
+- 📝 Исправлено сбрасывание позиции списков.
+- 📝 Исправлена конвертация "щ" в словаре транслитерации.
+- 🚀 Улучшена скорость транслитерации.
+- 💎 Добавлена возможность переписи сниппетов функциями конвертации слова/линии.
+- 🐛 Добавлена проверка на возможность создания/чтения настроек Mahou.ini при запуске.
+- 💎 Улучшена функция проверки настроек при запуске, теперь Mahou будет предлагать переключиться на настройки в %AppData%, когда не может создать/прочитать Mahou.ini который находиться там где Mahou.exe.
+- 🐛 Исправлена функция проверки настроек при запуске, теперь сохраняется после перезапуска.
 
 **v2.5.1.0**<br/>
 - 🐛 Добавлена возможность назначить 1 клавишу на Конверт последнего слова/выделения/линии(двойная гор. клавиша).
@@ -347,7 +358,7 @@ Mahou находится под GPL v2+.
 
 ### How it works
 Mahou works like **You** want, configure it as you wish, by default it switches *not by next layout*, but by **specified in settings** layouts. <br/>
-Even selected text switches just between **selected** layouts, though if you liked cycling through, starting from `v1.0.2.9` there is **Cycle Mode**, in `v2.0.0.0` and above to activate it you just need to disable function `Switch between layouts`.
+Even selected text switches just between **selected** layouts, though if you liked cycling through, starting from `v1.0.2.9` there is **Cycle Mode**, in `v2.0.0.0` and above to activate it you just need to disable function `Switch between layouts`. By default Mahou stores configurations in folder where Mahou.exe is, but there is a function that makes Mahou store them in %AppData%.
 
 ### Mahou requires [.Net 4.0 or greater](https://www.microsoft.com/en-us/download/details.aspx?id=53345) to work properly. Beginning from v1.4.3.9 error when running on .Net 4.0 were fixed.
 
@@ -362,6 +373,17 @@ Even selected text switches just between **selected** layouts, though if you lik
 6. Read the [wiki](https://github.com/BladeMight/Mahou/wiki/Functions-list) or [ask me](#license).
 
 ###### By version features:
+
+**v2.5.1.4**<br/>
+- 🐛 Fixed autostart type wasn't saving.
+- 📝 Added feature to disable display of certain layout when display flags feature active for language tooltips.
+- 📝 Fixed listboxes was resetting its position after apply.
+- 📝 Fixed transliteration dictionary "щ" conversion.
+- 🚀 Improved transliteration speed.
+- 💎 Added ability to re-write snippets by convert last/line.
+- 🐛 Added error check and message box for creating/reading Mahou.ini at startup.
+- 💎 Added force configs in %AppData%, when Mahou can't read/write Mahou.ini where Mahou.exe is.
+- 🐛 Fixed .force file was deleting by applying configs.
 
 **v2.5.1.0**<br/>
 - 🐛 Fixed conversions for same hotkeys but double for convert line and single for convert last.
