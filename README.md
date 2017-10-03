@@ -26,13 +26,13 @@ Mahou работает так как **Вы** хотите, настраивай
 
 **v2.5.1.4**<br/>
 - 🐛 Исправлено сохранение типа авто-запуска.
-- 📝 Добавлена возможность скрытия флагов для функции разного вида раскладок подсказок языка.
+- 📝 Добавлена возможность скрытия флагов для функции разного вида раскладок подсказок языка. [#135](https://github.com/BladeMight/Mahou/issues/135)
 - 📝 Исправлено сбрасывание позиции списков.
 - 📝 Исправлена конвертация "щ" в словаре транслитерации.
 - 🚀 Улучшена скорость транслитерации.
 - 💎 Добавлена возможность переписи сниппетов функциями конвертации слова/линии.
-- 🐛 Добавлена проверка на возможность создания/чтения настроек Mahou.ini при запуске.
-- 💎 Улучшена функция проверки настроек при запуске, теперь Mahou будет предлагать переключиться на настройки в %AppData%, когда не может создать/прочитать Mahou.ini который находиться там где Mahou.exe.
+- 🐛 Добавлена проверка на возможность создания/чтения настроек Mahou.ini при запуске. [#134](https://github.com/BladeMight/Mahou/issues/134)
+- 💎 Улучшена функция проверки настроек при запуске, теперь Mahou будет предлагать переключиться на настройки в %AppData%, когда не может создать/прочитать Mahou.ini который находиться там где Mahou.exe. [#138](https://github.com/BladeMight/Mahou/issues/138)
 - 🐛 Исправлена функция проверки настроек при запуске, теперь сохраняется после перезапуска.
 
 **v2.5.1.0**<br/>
@@ -376,13 +376,13 @@ Even selected text switches just between **selected** layouts, though if you lik
 
 **v2.5.1.4**<br/>
 - 🐛 Fixed autostart type wasn't saving.
-- 📝 Added feature to disable display of certain layout when display flags feature active for language tooltips.
+- 📝 Added feature to disable display of certain layout when display flags feature active for language tooltips. [#135](https://github.com/BladeMight/Mahou/issues/135)
 - 📝 Fixed listboxes was resetting its position after apply.
 - 📝 Fixed transliteration dictionary "щ" conversion.
 - 🚀 Improved transliteration speed.
 - 💎 Added ability to re-write snippets by convert last/line.
-- 🐛 Added error check and message box for creating/reading Mahou.ini at startup.
-- 💎 Added force configs in %AppData%, when Mahou can't read/write Mahou.ini where Mahou.exe is.
+- 🐛 Added error check and message box for creating/reading Mahou.ini at startup. [#134](https://github.com/BladeMight/Mahou/issues/134)
+- 💎 Added force configs in %AppData%, when Mahou can't read/write Mahou.ini where Mahou.exe is. [#138](https://github.com/BladeMight/Mahou/issues/138)
 - 🐛 Fixed .force file was deleting by applying configs.
 
 **v2.5.1.0**<br/>
