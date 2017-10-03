@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Windows.Forms;
 
 namespace Mahou
 {
@@ -9,31 +10,56 @@ namespace Mahou
         /// <summary>
         /// Mahou.ini file path.
         /// </summary>
+    	public static bool forceAppData;
+    	public static bool fine = false;
         public static string filePath = Path.Combine(MahouUI.nPath, "Mahou.ini");
         /// <summary>
-        /// Creates configs file Mahou.ini if it is not exist.
+        /// Creates if it is not exist and test that configs file Mahou.ini its readable, on startup can create dialog about forced AppData configs if configs file failed to be created/readen.
         /// </summary>
         public static void CreateConfigsFile() {
+        	if (File.Exists(Path.Combine(MahouUI.mahou_folder_appd,".force"))) {
+        		filePath = Path.Combine(MahouUI.mahou_folder_appd, "Mahou.ini");
+        		forceAppData = true;
+        	}
         	bool create = true;
         	try {
 	        	if (!File.Exists(filePath)) { //Create an UTF-16 configuration file
 	                File.WriteAllText(filePath, "!Unicode(✔), Mahou settings file", Encoding.Unicode);
         		} else { 
-        			create = false;
-        			using (var sr = new StreamReader(filePath)) {
-        				sr.Read();
-	        		}
+			    	using (var sr = new StreamReader(filePath)) {
+			    				sr.Read();
+		        		}
         		}
+        		fine = true;
         	} catch(Exception e) {
-        		System.Windows.Forms.MessageBox.Show(MMain.Lang[Languages.Element.ConfigsCannot]+(create ? MMain.Lang[Languages.Element.Created] : MMain.Lang[Languages.Element.Readen])+", "+ MMain.Lang[Languages.Element.Error].ToLower() + ":\r\n" + e.Message, MMain.Lang[Languages.Element.Error]);
+        		fine = false;
+        		if (MessageBox.Show(MMain.Lang[Languages.Element.ConfigsCannot]+(create ? MMain.Lang[Languages.Element.Created] : MMain.Lang[Languages.Element.Readen])+", "+ MMain.Lang[Languages.Element.Error].ToLower() + ":\r\n" + e.Message + "\r\n" + MMain.Lang[Languages.Element.RetryInAppData],
+        		                    MMain.Lang[Languages.Element.Error], MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes) {
+        			if (!Directory.Exists(MahouUI.mahou_folder_appd))
+        				Directory.CreateDirectory(MahouUI.mahou_folder_appd);
+        			filePath = Path.Combine(MahouUI.mahou_folder_appd, "Mahou.ini");
+        			File.Create(Path.Combine(MahouUI.mahou_folder_appd,".force"));
+        			MMain.MyConfs = new Configs();
+        		} else 
         		System.Diagnostics.Process.GetCurrentProcess().Kill();
         	}
         }
         /// <summary>
+        /// Check if configs file readable.
+        /// </summary>
+        /// <returns>Read access.</returns>
+	        public static bool Readable() {
+        	try {
+		    	using (var sr = new StreamReader(filePath)) {
+	    				sr.Read();
+        		}
+        	} catch(Exception e) { Logging.Log("Configs file ["+filePath+"] cannot be readen, error:\r\n" + e.Message); return false; }
+        	return true;
+        }
+        /// <summary>
         /// Initializes settings, if some of values or settings file, not exists it creates them with default value.
         /// </summary>
-        public Configs()
-        {
+        public Configs() {
         	CreateConfigsFile();
         	#region FirstStart section
             CheckBool("FirstStart", "First", "true");
@@ -56,7 +82,7 @@ namespace Mahou
             CheckBool("Functions", "MCDServerSupport", "false");
             CheckBool("Functions", "OneLayoutWholeWord", "true");
             CheckBool("Functions", "GuessKeyCodeFix", "false");
-            CheckBool("Functions", "AppDataConfigs", "false");
+            CheckBool("Functions", "AppDataConfigs", forceAppData.ToString());
             #endregion
 			#region Layouts section
 			CheckBool("Layouts", "SwitchBetweenLayouts", "true");
@@ -254,6 +280,7 @@ namespace Mahou
             CheckString("Proxy", "UserName", "");
             CheckString("Proxy", "Password", "");
             #endregion
+            fine = true;
         }
         void CheckBool(string section, string key, string default_value) {
             bool bt = false; //bool temp

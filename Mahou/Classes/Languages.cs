@@ -162,6 +162,7 @@ public class Languages
 		ConfigsCannot,
 		Created,
 		Readen,
+		RetryInAppData,
 		#endregion
 		#region Buttons
 		ButtonOK,
@@ -374,6 +375,7 @@ public class Languages
 		{ Element.ConfigsCannot, "Configs file Mahou.ini cannot be " },
 		{ Element.Created, "created" },
 		{ Element.Readen, "readen" },
+		{ Element.RetryInAppData, "Retry creating/switching to configs in %AppData%?" },
 		#endregion
 		#region Buttons
 		{ Element.ButtonOK, "OK" }, 
@@ -598,6 +600,7 @@ public class Languages
 		{ Element.ConfigsCannot, "Файл настроек Mahou.ini не может быть " },
 		{ Element.Created, "создан" },
 		{ Element.Readen, "прочитан" },
+		{ Element.RetryInAppData, "Попробовать создать/переключится на настройки в %AppData%?" },
 		#endregion
 		#region Buttons
 		{ Element.ButtonOK, "ОК" }, 

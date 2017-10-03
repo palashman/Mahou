@@ -562,6 +562,8 @@ namespace Mahou {
 		/// Update save paths for logs, snippets, autoswitch dictionary, configs.
 		/// </summary>
 		void UpdateSavePaths() {
+			if (Configs.forceAppData)
+				nPath = mahou_folder_appd;
 			snipfile = Path.Combine(nPath, "snippets.txt");
 			AS_dictfile = Path.Combine(nPath, "AS_dict.txt");
 			Logging.logdir = Path.Combine(nPath, "Logs");
@@ -572,6 +574,12 @@ namespace Mahou {
 		/// Saves current settings to INI.
 		/// </summary>
 		void SaveConfigs() {
+			if (Configs.forceAppData) {
+				try { 
+					File.Delete(Path.Combine(mahou_folder_appd, ".force"));
+					Configs.forceAppData = false;
+				} catch { Logging.Log("Force AppData file was missing...", 2); }
+			}
 			bool only_load = false;
 			if (chk_AppDataConfigs.Checked) {
 				if (!Directory.Exists(mahou_folder_appd))
@@ -719,7 +727,13 @@ namespace Mahou {
 			LoadConfigs();
 		}
 		object DoInMainConfigs(Func<object> act) {
+			if (Configs.forceAppData) return (object)true;
+			var last = Configs.filePath; // Last configs file
 			Configs.filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Mahou.ini");
+			if (!Configs.Readable()) {
+				Configs.filePath = last;
+				return (object)true;
+			}
 			object rsl = act();
 			if (chk_AppDataConfigs.Checked) {;
 				if (!Directory.Exists(mahou_folder_appd))
@@ -745,6 +759,7 @@ namespace Mahou {
 			InitLanguage();
 			RefreshLanguage();
 			#region Functions
+			Configs.CreateConfigsFile();
 			AutoStartAsAdmin = MMain.MyConfs.ReadBool("Functions", "AutoStartAsAdmin");
 			chk_AutoStart.Checked = AutoStartExist(AutoStartAsAdmin);
 			lbl_TaskExist.Visible = AutoStartExist(true);
@@ -1546,6 +1561,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 		/// Toggles timers state.
 		/// </summary>
 		public void ToggleTimers() {
+			if (!Configs.fine) return;
 			if (MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForMouse"))
 				ICheck.Start();
 			if (MMain.MyConfs.ReadBool("Functions", "ScrollTip"))

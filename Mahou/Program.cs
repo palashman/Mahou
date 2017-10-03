@@ -43,6 +43,8 @@ namespace Mahou
 			if (System.Globalization.CultureInfo.InstalledUICulture.TwoLetterISOLanguageName == "ru")
 				Lang = Languages.Russian;
 			MyConfs = new Configs();
+			if (Configs.forceAppData && Configs.fine)
+				MyConfs.Write("Functions", "AppDataConfigs", "true");
 			Logging.Log("Mahou started.");
 			using (var mutex = new Mutex(false, GGPU_Mutex)) {
 				if (!mutex.WaitOne(0, false)) {
