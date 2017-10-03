@@ -574,7 +574,7 @@ namespace Mahou {
 		/// Saves current settings to INI.
 		/// </summary>
 		void SaveConfigs() {
-			if (Configs.forceAppData) {
+			if (Configs.forceAppData && !chk_AppDataConfigs.Checked) {
 				try { 
 					File.Delete(Path.Combine(mahou_folder_appd, ".force"));
 					Configs.forceAppData = false;
