@@ -42,6 +42,9 @@ public class Languages
 		ChangeLayoutBy1Key,
 		OneLayout,
 		QWERTZ,
+		KeysType,
+		SelectKeyType,
+		SetHotkeyType,
 		#endregion
 		#region Persistent Layout
 		PersistentLayout,
@@ -202,6 +205,7 @@ public class Languages
 		TT_SnippetsCount,
 		TT_GuessKeyCodeFix,
 		TT_ConfigsInAppData,
+		TT_KeysType,
 		#endregion
 		#region Messages
 		MSG_SnippetsError
@@ -248,6 +252,9 @@ public class Languages
 		{ Element.ChangeLayoutBy1Key, "Change to specific layout by keys:" }, 
 		{ Element.OneLayout, "One layout for all programs." }, 
 		{ Element.QWERTZ, "Fix for QWERTZ keyboard." }, 
+		{ Element.KeysType, "Keys type:" }, 
+		{ Element.SelectKeyType, "Select key." }, 
+		{ Element.SetHotkeyType, "Set hotkey." }, 
 		#endregion
 		#region Persistent Layout
 		{ Element.PersistentLayout, "Persistent layout" }, 
@@ -426,6 +433,7 @@ public class Languages
 		{ Element.TT_SnippetsCount,	"If ORANGE snippets are OK.\r\nIf RED snippets has errors, maybe its unfinished etc.\r\nIn brackets are displayed count of commented lines(they are ignored by Mahou),\r\nvalid comment characters: # and // and only at start of line." },
 		{ Element.TT_GuessKeyCodeFix, "Enabling this will make snippets, convert selection, auto-switch to send real virtual key codes instead of unicode chars,\r\nbut that will cause that all characters will be in your current layout.\r\nUseful in programs virtual machines.(BlueStacks, VirtualBox etc.)" },
 		{ Element.TT_ConfigsInAppData, "If enabled Mahou will copy current configs to AppData, and will use them.\r\nAlso logs and snippets will be stored in %AppData%\\Mahou.\r\nAfter this checkbox state changed other checkboxes/datas configurations from user interface will not be saved, because they will be loaded from another configs(if switched, from Mahou's directory or from %AppData%\\Mahou).\r\nUseful if you need to run Mahou from Program Files directory by multiple users, and while some of them have no write access to it,\r\nalso it makes possible to have different configurations for each user." },		
+		{ Element.TT_KeysType, "Select which keys type to display in Mahou user interface, they are both working at same time,\r\nso try not to set same keys/hotkeys to avoid double layout switching."},
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Snippets contains error in syntax, check if there are errors, details on snippets syntax you can find on Wiki." }
@@ -480,6 +488,9 @@ public class Languages
 		{ Element.CheckInterval, "Интервал проверки:" }, 
 		{ Element.OneLayout, "Единая раскладка для всех программ." }, 
 		{ Element.QWERTZ, "Исправление для QWERTZ клавиатур." }, 
+		{ Element.KeysType, "Тип клавиш:" }, 
+		{ Element.SelectKeyType, "Выбирать клавиши." }, 
+		{ Element.SetHotkeyType, "Назначить гор. клавишу." }, 
 		#endregion
 		#region Appearence
 		{ Element.LDMouseDisplay, "Отображать подсказку текущего языка рядом с мышью." }, 
@@ -651,6 +662,7 @@ public class Languages
 		{ Element.TT_SnippetsCount,	"Если ОРАНЖЕВЫЙ то со сниппетами все OK.\r\nЕсли КРАСНЫЙ то в сниппетах есть ошибка, может незавершен сниппет и т.д.\r\nВ скобках отображается количество закоментированых линий(они игнорируются Mahou),\r\nдоступные символы для комментирования линий: # или // и только вначале линии." },
 		{ Element.TT_GuessKeyCodeFix, "Включая это сниппеты, конвертация выделения, автозамена будут отправлять реальные коды клавиш вместо юникод символов,\r\nно это сделает так что все символы будут в вашей текущей раскладке.\r\nПолезно в приложениях виртуальных машинах(BlueStacks, VirtualBox, etc)." },
 		{ Element.TT_ConfigsInAppData, "Если включено Mahou скопирует текущую конфигурацию(Mahou.ini) в AppData, и будет использовать их.\r\nТакже логи и сниппеты будут храниться в %AppData%\\Mahou.\r\nКогда состояние этой галочки изменено все другие галочки/данные конфигурации измененные в пользовательском интерфейсе не будут сохранены,\r\nт.к. произойдет смена конфигурации и загрузка выбранной(из папки Mahou или из %AppData%\\Mahou).\r\nПолезно если нужно запускать Mahou в папке Program files а прав на запись у всех пользователей - нет,\r\nи еще даёт возможность иметь разные настройки для каждого пользователя." },		
+		{ Element.TT_KeysType, "Выбирите какой тип клавиш отображать в Mahou, оба типа работают ВМЕСТЕ,\r\nтак что лучше не назначайте одиннаковые клавиши/гор. клавиши во избежание двойного переключения раскладки."},
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Сниппеты содержат ошибки в синтаксисе, проверьте ваши сниппеты, детали синтаксиса можете найти на Wiki." }
