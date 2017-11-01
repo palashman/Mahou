@@ -314,8 +314,8 @@ namespace Mahou
         /// <param name="key">Key's name in which value will be read.</param>
         /// <returns>string</returns>
         public string Read(string section, string key) {
-            var SB = new StringBuilder(255);
-            int i = WinAPI.GetPrivateProfileString(section, key, "", SB, 255, filePath);
+            var SB = new StringBuilder(99*99);
+            int i = WinAPI.GetPrivateProfileString(section, key, "", SB, 99*99, filePath);
             return SB.ToString();
         }
         /// <summary>

@@ -985,6 +985,7 @@ namespace Mahou {
 			if (sets_raw == "set0") return;
 			var sets = sets_raw.Split('|');
 			var last_set = sets[sets.Length-1];
+			Debug.WriteLine(last_set);
 			var set_count = Int32.Parse(last_set.Split('/')[0].Replace("set_",""));
 			var NOSPEC = SpecKeySetCount == 0;
 			if (NOSPEC)
