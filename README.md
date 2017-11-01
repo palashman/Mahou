@@ -1,4 +1,4 @@
-[![AppVeyor build](https://ci.appveyor.com/api/projects/status/aw3qf8bevpqdidjh?svg=true)](https://ci.appveyor.com/project/BladeMight/mahou)
+[![AppVeyor build](https://ci.appveyor.com/api/projects/status/aw3qf8bevpqdidjh?svg=true)](https://ci.appveyor.com/project/BladeMight/mahou) [![HitCount](http://hits.dwyl.io/BladeMight/Mahou.svg)](http://hits.dwyl.io/BladeMight/Mahou)
 
 # Русский [read in English](#english)
 
