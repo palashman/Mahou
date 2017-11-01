@@ -2301,6 +2301,7 @@ namespace Mahou
 			// 
 			// cbb_UpdatesChannel
 			// 
+			this.cbb_UpdatesChannel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cbb_UpdatesChannel.FormattingEnabled = true;
 			this.cbb_UpdatesChannel.Items.AddRange(new object[] {
 			"Stable",
