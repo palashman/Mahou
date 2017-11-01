@@ -100,6 +100,7 @@ namespace Mahou
 			CheckString("Layouts", "SpecificLayout2", "");
 			CheckString("Layouts", "SpecificLayout3", "");
 			CheckString("Layouts", "SpecificLayout4", "");
+			CheckString("Layouts", "SpecificKeySets", "set_1/20//"+Languages.English[Languages.Element.SwitchBetween]+"|set_2///");
 			CheckBool("Layouts", "QWERTZfix", "false");
 			#endregion
 			#region Persistent Layout

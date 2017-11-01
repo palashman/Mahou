@@ -31,21 +31,7 @@ namespace Mahou
 		private System.Windows.Forms.Label lbl_EmuType;
 		private System.Windows.Forms.ComboBox cbb_EmulateType;
 		private System.Windows.Forms.TabPage tab_timings;
-		private System.Windows.Forms.Label lbl_Arrow4;
-		private System.Windows.Forms.Label lbl_Arrow3;
-		private System.Windows.Forms.Label lbl_Arrow2;
-		private System.Windows.Forms.Label lbl_Arrow1;
-		private System.Windows.Forms.GroupBox grb_Layouts;
-		public System.Windows.Forms.ComboBox cbb_Layout4;
-		public System.Windows.Forms.ComboBox cbb_Layout3;
-		public System.Windows.Forms.ComboBox cbb_Layout2;
-		public System.Windows.Forms.ComboBox cbb_Layout1;
 		private System.Windows.Forms.CheckBox chk_SpecificLS;
-		private System.Windows.Forms.GroupBox grb_Keys;
-		public System.Windows.Forms.ComboBox cbb_Key4;
-		public System.Windows.Forms.ComboBox cbb_Key3;
-		public System.Windows.Forms.ComboBox cbb_Key2;
-		public System.Windows.Forms.ComboBox cbb_Key1;
 		private System.Windows.Forms.CheckBox chk_EmulateLS;
 		private System.Windows.Forms.Label lbl_LayoutNum2;
 		public System.Windows.Forms.ComboBox cbb_MainLayout2;
@@ -185,6 +171,10 @@ namespace Mahou
 		private System.Windows.Forms.CheckBox chk_GuessKeyCodeFix;
 		private System.Windows.Forms.CheckBox chk_AppDataConfigs;
 		private System.Windows.Forms.CheckBox chk_DownloadASD_InZip;
+		private System.Windows.Forms.Button btn_SubSet;
+		private System.Windows.Forms.Button btn_AddSet;
+		private System.Windows.Forms.Panel pan_KeySets;
+		private System.Windows.Forms.Label lbl_SetsCount;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -231,23 +221,13 @@ namespace Mahou
 			this.chk_TrayIcon = new System.Windows.Forms.CheckBox();
 			this.chk_AutoStart = new System.Windows.Forms.CheckBox();
 			this.tab_layouts = new System.Windows.Forms.TabPage();
+			this.lbl_SetsCount = new System.Windows.Forms.Label();
+			this.btn_SubSet = new System.Windows.Forms.Button();
+			this.btn_AddSet = new System.Windows.Forms.Button();
+			this.pan_KeySets = new System.Windows.Forms.Panel();
 			this.chk_qwertz = new System.Windows.Forms.CheckBox();
 			this.chk_OneLayout = new System.Windows.Forms.CheckBox();
-			this.lbl_Arrow4 = new System.Windows.Forms.Label();
-			this.lbl_Arrow3 = new System.Windows.Forms.Label();
-			this.lbl_Arrow2 = new System.Windows.Forms.Label();
-			this.lbl_Arrow1 = new System.Windows.Forms.Label();
-			this.grb_Layouts = new System.Windows.Forms.GroupBox();
-			this.cbb_Layout4 = new System.Windows.Forms.ComboBox();
-			this.cbb_Layout3 = new System.Windows.Forms.ComboBox();
-			this.cbb_Layout2 = new System.Windows.Forms.ComboBox();
-			this.cbb_Layout1 = new System.Windows.Forms.ComboBox();
 			this.chk_SpecificLS = new System.Windows.Forms.CheckBox();
-			this.grb_Keys = new System.Windows.Forms.GroupBox();
-			this.cbb_Key4 = new System.Windows.Forms.ComboBox();
-			this.cbb_Key3 = new System.Windows.Forms.ComboBox();
-			this.cbb_Key2 = new System.Windows.Forms.ComboBox();
-			this.cbb_Key1 = new System.Windows.Forms.ComboBox();
 			this.lbl_EmuType = new System.Windows.Forms.Label();
 			this.cbb_EmulateType = new System.Windows.Forms.ComboBox();
 			this.chk_EmulateLS = new System.Windows.Forms.CheckBox();
@@ -387,8 +367,6 @@ namespace Mahou
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
-			this.grb_Layouts.SuspendLayout();
-			this.grb_Keys.SuspendLayout();
 			this.tab_persistent.SuspendLayout();
 			this.grb_PersistentLayout2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.nud_PersistentLayout2Interval)).BeginInit();
@@ -706,15 +684,13 @@ namespace Mahou
 			// 
 			// tab_layouts
 			// 
+			this.tab_layouts.Controls.Add(this.lbl_SetsCount);
+			this.tab_layouts.Controls.Add(this.btn_SubSet);
+			this.tab_layouts.Controls.Add(this.btn_AddSet);
+			this.tab_layouts.Controls.Add(this.pan_KeySets);
 			this.tab_layouts.Controls.Add(this.chk_qwertz);
 			this.tab_layouts.Controls.Add(this.chk_OneLayout);
-			this.tab_layouts.Controls.Add(this.lbl_Arrow4);
-			this.tab_layouts.Controls.Add(this.lbl_Arrow3);
-			this.tab_layouts.Controls.Add(this.lbl_Arrow2);
-			this.tab_layouts.Controls.Add(this.lbl_Arrow1);
-			this.tab_layouts.Controls.Add(this.grb_Layouts);
 			this.tab_layouts.Controls.Add(this.chk_SpecificLS);
-			this.tab_layouts.Controls.Add(this.grb_Keys);
 			this.tab_layouts.Controls.Add(this.lbl_EmuType);
 			this.tab_layouts.Controls.Add(this.cbb_EmulateType);
 			this.tab_layouts.Controls.Add(this.chk_EmulateLS);
@@ -730,6 +706,43 @@ namespace Mahou
 			this.tab_layouts.TabIndex = 1;
 			this.tab_layouts.Text = "Layouts";
 			this.tab_layouts.UseVisualStyleBackColor = true;
+			// 
+			// lbl_SetsCount
+			// 
+			this.lbl_SetsCount.Location = new System.Drawing.Point(6, 126);
+			this.lbl_SetsCount.Name = "lbl_SetsCount";
+			this.lbl_SetsCount.Size = new System.Drawing.Size(27, 22);
+			this.lbl_SetsCount.TabIndex = 22;
+			this.lbl_SetsCount.Text = "#";
+			this.lbl_SetsCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// btn_SubSet
+			// 
+			this.btn_SubSet.Location = new System.Drawing.Point(7, 188);
+			this.btn_SubSet.Name = "btn_SubSet";
+			this.btn_SubSet.Size = new System.Drawing.Size(23, 23);
+			this.btn_SubSet.TabIndex = 21;
+			this.btn_SubSet.Text = "-";
+			this.btn_SubSet.UseVisualStyleBackColor = true;
+			this.btn_SubSet.Click += new System.EventHandler(this.Btn_SubSetClick);
+			// 
+			// btn_AddSet
+			// 
+			this.btn_AddSet.Location = new System.Drawing.Point(7, 159);
+			this.btn_AddSet.Name = "btn_AddSet";
+			this.btn_AddSet.Size = new System.Drawing.Size(23, 23);
+			this.btn_AddSet.TabIndex = 20;
+			this.btn_AddSet.Text = "+";
+			this.btn_AddSet.UseVisualStyleBackColor = true;
+			this.btn_AddSet.Click += new System.EventHandler(this.Btn_AddSetClick);
+			// 
+			// pan_KeySets
+			// 
+			this.pan_KeySets.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.pan_KeySets.Location = new System.Drawing.Point(34, 113);
+			this.pan_KeySets.Name = "pan_KeySets";
+			this.pan_KeySets.Size = new System.Drawing.Size(515, 149);
+			this.pan_KeySets.TabIndex = 19;
 			// 
 			// chk_qwertz
 			// 
@@ -751,91 +764,6 @@ namespace Mahou
 			this.chk_OneLayout.Text = "One layout for all programs";
 			this.chk_OneLayout.UseVisualStyleBackColor = true;
 			// 
-			// lbl_Arrow4
-			// 
-			this.lbl_Arrow4.AutoSize = true;
-			this.lbl_Arrow4.Location = new System.Drawing.Point(272, 232);
-			this.lbl_Arrow4.Name = "lbl_Arrow4";
-			this.lbl_Arrow4.Size = new System.Drawing.Size(20, 15);
-			this.lbl_Arrow4.TabIndex = 16;
-			this.lbl_Arrow4.Text = "->";
-			// 
-			// lbl_Arrow3
-			// 
-			this.lbl_Arrow3.AutoSize = true;
-			this.lbl_Arrow3.Location = new System.Drawing.Point(272, 203);
-			this.lbl_Arrow3.Name = "lbl_Arrow3";
-			this.lbl_Arrow3.Size = new System.Drawing.Size(20, 15);
-			this.lbl_Arrow3.TabIndex = 15;
-			this.lbl_Arrow3.Text = "->";
-			// 
-			// lbl_Arrow2
-			// 
-			this.lbl_Arrow2.AutoSize = true;
-			this.lbl_Arrow2.Location = new System.Drawing.Point(272, 174);
-			this.lbl_Arrow2.Name = "lbl_Arrow2";
-			this.lbl_Arrow2.Size = new System.Drawing.Size(20, 15);
-			this.lbl_Arrow2.TabIndex = 14;
-			this.lbl_Arrow2.Text = "->";
-			// 
-			// lbl_Arrow1
-			// 
-			this.lbl_Arrow1.AutoSize = true;
-			this.lbl_Arrow1.Location = new System.Drawing.Point(272, 145);
-			this.lbl_Arrow1.Name = "lbl_Arrow1";
-			this.lbl_Arrow1.Size = new System.Drawing.Size(20, 15);
-			this.lbl_Arrow1.TabIndex = 1;
-			this.lbl_Arrow1.Text = "->";
-			// 
-			// grb_Layouts
-			// 
-			this.grb_Layouts.Controls.Add(this.cbb_Layout4);
-			this.grb_Layouts.Controls.Add(this.cbb_Layout3);
-			this.grb_Layouts.Controls.Add(this.cbb_Layout2);
-			this.grb_Layouts.Controls.Add(this.cbb_Layout1);
-			this.grb_Layouts.Location = new System.Drawing.Point(294, 113);
-			this.grb_Layouts.Name = "grb_Layouts";
-			this.grb_Layouts.Size = new System.Drawing.Size(262, 154);
-			this.grb_Layouts.TabIndex = 12;
-			this.grb_Layouts.TabStop = false;
-			this.grb_Layouts.Text = "Layouts";
-			// 
-			// cbb_Layout4
-			// 
-			this.cbb_Layout4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cbb_Layout4.FormattingEnabled = true;
-			this.cbb_Layout4.Location = new System.Drawing.Point(6, 115);
-			this.cbb_Layout4.Name = "cbb_Layout4";
-			this.cbb_Layout4.Size = new System.Drawing.Size(250, 23);
-			this.cbb_Layout4.TabIndex = 7;
-			// 
-			// cbb_Layout3
-			// 
-			this.cbb_Layout3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cbb_Layout3.FormattingEnabled = true;
-			this.cbb_Layout3.Location = new System.Drawing.Point(6, 86);
-			this.cbb_Layout3.Name = "cbb_Layout3";
-			this.cbb_Layout3.Size = new System.Drawing.Size(250, 23);
-			this.cbb_Layout3.TabIndex = 6;
-			// 
-			// cbb_Layout2
-			// 
-			this.cbb_Layout2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cbb_Layout2.FormattingEnabled = true;
-			this.cbb_Layout2.Location = new System.Drawing.Point(6, 57);
-			this.cbb_Layout2.Name = "cbb_Layout2";
-			this.cbb_Layout2.Size = new System.Drawing.Size(250, 23);
-			this.cbb_Layout2.TabIndex = 5;
-			// 
-			// cbb_Layout1
-			// 
-			this.cbb_Layout1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cbb_Layout1.FormattingEnabled = true;
-			this.cbb_Layout1.Location = new System.Drawing.Point(6, 28);
-			this.cbb_Layout1.Name = "cbb_Layout1";
-			this.cbb_Layout1.Size = new System.Drawing.Size(250, 23);
-			this.cbb_Layout1.TabIndex = 4;
-			// 
 			// chk_SpecificLS
 			// 
 			this.chk_SpecificLS.AutoSize = true;
@@ -846,107 +774,6 @@ namespace Mahou
 			this.chk_SpecificLS.Text = "Change to specific layout by keys:";
 			this.chk_SpecificLS.UseVisualStyleBackColor = true;
 			this.chk_SpecificLS.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
-			// 
-			// grb_Keys
-			// 
-			this.grb_Keys.Controls.Add(this.cbb_Key4);
-			this.grb_Keys.Controls.Add(this.cbb_Key3);
-			this.grb_Keys.Controls.Add(this.cbb_Key2);
-			this.grb_Keys.Controls.Add(this.cbb_Key1);
-			this.grb_Keys.Location = new System.Drawing.Point(6, 113);
-			this.grb_Keys.Name = "grb_Keys";
-			this.grb_Keys.Size = new System.Drawing.Size(262, 154);
-			this.grb_Keys.TabIndex = 11;
-			this.grb_Keys.TabStop = false;
-			this.grb_Keys.Text = "Keys";
-			// 
-			// cbb_Key4
-			// 
-			this.cbb_Key4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cbb_Key4.FormattingEnabled = true;
-			this.cbb_Key4.Items.AddRange(new object[] {
-			"None",
-			"Caps Lock",
-			"Left Control",
-			"Right Control",
-			"Left Shift",
-			"Right Shift",
-			"Left Alt",
-			"Right Alt",
-			"Shift + Caps Lock",
-			"AltGr",
-			"Alt + Shift"});
-			this.cbb_Key4.Location = new System.Drawing.Point(6, 115);
-			this.cbb_Key4.Name = "cbb_Key4";
-			this.cbb_Key4.Size = new System.Drawing.Size(250, 23);
-			this.cbb_Key4.TabIndex = 3;
-			this.cbb_Key4.SelectedIndexChanged += new System.EventHandler(this.Cbb_KeySelectedIndexChanged);
-			// 
-			// cbb_Key3
-			// 
-			this.cbb_Key3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cbb_Key3.FormattingEnabled = true;
-			this.cbb_Key3.Items.AddRange(new object[] {
-			"None",
-			"Caps Lock",
-			"Left Control",
-			"Right Control",
-			"Left Shift",
-			"Right Shift",
-			"Left Alt",
-			"Right Alt",
-			"Shift + Caps Lock",
-			"AltGr",
-			"Alt + Shift"});
-			this.cbb_Key3.Location = new System.Drawing.Point(6, 86);
-			this.cbb_Key3.Name = "cbb_Key3";
-			this.cbb_Key3.Size = new System.Drawing.Size(250, 23);
-			this.cbb_Key3.TabIndex = 2;
-			this.cbb_Key3.SelectedIndexChanged += new System.EventHandler(this.Cbb_KeySelectedIndexChanged);
-			// 
-			// cbb_Key2
-			// 
-			this.cbb_Key2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cbb_Key2.FormattingEnabled = true;
-			this.cbb_Key2.Items.AddRange(new object[] {
-			"None",
-			"Caps Lock",
-			"Left Control",
-			"Right Control",
-			"Left Shift",
-			"Right Shift",
-			"Left Alt",
-			"Right Alt",
-			"Shift + Caps Lock",
-			"AltGr",
-			"Alt + Shift"});
-			this.cbb_Key2.Location = new System.Drawing.Point(6, 57);
-			this.cbb_Key2.Name = "cbb_Key2";
-			this.cbb_Key2.Size = new System.Drawing.Size(250, 23);
-			this.cbb_Key2.TabIndex = 1;
-			this.cbb_Key2.SelectedIndexChanged += new System.EventHandler(this.Cbb_KeySelectedIndexChanged);
-			// 
-			// cbb_Key1
-			// 
-			this.cbb_Key1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cbb_Key1.FormattingEnabled = true;
-			this.cbb_Key1.Items.AddRange(new object[] {
-			"None",
-			"Caps Lock",
-			"Left Control",
-			"Right Control",
-			"Left Shift",
-			"Right Shift",
-			"Left Alt",
-			"Right Alt",
-			"Shift + Caps Lock",
-			"AltGr",
-			"Alt + Shift"});
-			this.cbb_Key1.Location = new System.Drawing.Point(6, 28);
-			this.cbb_Key1.Name = "cbb_Key1";
-			this.cbb_Key1.Size = new System.Drawing.Size(250, 23);
-			this.cbb_Key1.TabIndex = 0;
-			this.cbb_Key1.SelectedIndexChanged += new System.EventHandler(this.Cbb_KeySelectedIndexChanged);
 			// 
 			// lbl_EmuType
 			// 
@@ -2526,8 +2353,6 @@ namespace Mahou
 			this.tab_functions.PerformLayout();
 			this.tab_layouts.ResumeLayout(false);
 			this.tab_layouts.PerformLayout();
-			this.grb_Layouts.ResumeLayout(false);
-			this.grb_Keys.ResumeLayout(false);
 			this.tab_persistent.ResumeLayout(false);
 			this.grb_PersistentLayout2.ResumeLayout(false);
 			this.grb_PersistentLayout2.PerformLayout();

@@ -250,30 +250,30 @@ namespace Mahou
 					clickAfterALT = false;
 				if (Key != Keys.LShiftKey && Key != Keys.RShiftKey)
 					clickAfterSHIFT = false;
-			if (MMain.mahou.ChangeLayouByKey) {
-					if (((Key == Keys.LControlKey || Key == Keys.RControlKey) && !MahouUI.CtrlInHotkey) ||
-					    ((Key == Keys.LShiftKey || Key == Keys.RShiftKey) && !MahouUI.ShiftInHotkey) ||
-					    ((Key == Keys.LMenu || Key == Keys.RMenu) && !MahouUI.AltInHotkey) ||
-					    ((Key == Keys.LWin || Key == Keys.RWin) && !MahouUI.WinInHotkey) ||
-			    		Key == Keys.CapsLock) {
-					SpecificKey(Key, MSG, MMain.mahou.Key1, 1);
-					SpecificKey(Key, MSG, MMain.mahou.Key2, 2);
-					SpecificKey(Key, MSG, MMain.mahou.Key3, 3);
-					SpecificKey(Key, MSG, MMain.mahou.Key4, 4);
-				}
-				if ((ctrl || ctrl_r) && (Key != Keys.LControlKey && Key != Keys.RControlKey && Key != Keys.ControlKey || clickAfterCTRL))
-					keyAfterCTRL = true;
-				else 
-					keyAfterCTRL = false;
-				if ((alt || alt_r) && (Key != Keys.LMenu && Key != Keys.RMenu && Key != Keys.Menu || clickAfterALT))
-					keyAfterALT = true;
-				else 
-					keyAfterALT = false;
-				if ((shift || shift_r) && (Key != Keys.LShiftKey && Key != Keys.RShiftKey && Key != Keys.Shift || clickAfterSHIFT))
-					keyAfterSHIFT = true;
-				else 
-					keyAfterSHIFT = false;
-			}
+//			if (MMain.mahou.ChangeLayouByKey) {
+//					if (((Key == Keys.LControlKey || Key == Keys.RControlKey) && !MahouUI.CtrlInHotkey) ||
+//					    ((Key == Keys.LShiftKey || Key == Keys.RShiftKey) && !MahouUI.ShiftInHotkey) ||
+//					    ((Key == Keys.LMenu || Key == Keys.RMenu) && !MahouUI.AltInHotkey) ||
+//					    ((Key == Keys.LWin || Key == Keys.RWin) && !MahouUI.WinInHotkey) ||
+//			    		Key == Keys.CapsLock) {
+//					SpecificKey(Key, MSG, MMain.mahou.Key1, 1);
+//					SpecificKey(Key, MSG, MMain.mahou.Key2, 2);
+//					SpecificKey(Key, MSG, MMain.mahou.Key3, 3);
+//					SpecificKey(Key, MSG, MMain.mahou.Key4, 4);
+//				}
+//				if ((ctrl || ctrl_r) && (Key != Keys.LControlKey && Key != Keys.RControlKey && Key != Keys.ControlKey || clickAfterCTRL))
+//					keyAfterCTRL = true;
+//				else 
+//					keyAfterCTRL = false;
+//				if ((alt || alt_r) && (Key != Keys.LMenu && Key != Keys.RMenu && Key != Keys.Menu || clickAfterALT))
+//					keyAfterALT = true;
+//				else 
+//					keyAfterALT = false;
+//				if ((shift || shift_r) && (Key != Keys.LShiftKey && Key != Keys.RShiftKey && Key != Keys.Shift || clickAfterSHIFT))
+//					keyAfterSHIFT = true;
+//				else 
+//					keyAfterSHIFT = false;
+//			}
 			#endregion
 			if ((ctrl||win||alt||ctrl_r||win_r||alt_r) && Key == Keys.Tab) {
 					Logging.Log("Last word cleared.");
@@ -1276,7 +1276,7 @@ namespace Mahou
 		/// <summary>
 		/// Changes current layout.
 		/// </summary>
-		static void ChangeLayout()
+		public static void ChangeLayout()
 		{
 			if (Locales.ActiveWindowProcess().ProcessName.ToLower() == "HD-Frontend".ToLower()) {
 				KInputs.MakeInput(new [] { 

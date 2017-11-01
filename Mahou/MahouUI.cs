@@ -39,7 +39,7 @@ namespace Mahou {
 		static Timer showUpdWnd = new Timer();
 		static int progress = 0, _progress = 0;
 		int titlebar = 12;
-		public static int AtUpdateShow;
+		public static int AtUpdateShow, SpecKeySetCount;
 		public int DoubleHKInterval = 200, SelectedTextGetMoreTriesCount;
 		#region Temporary variables
 		/// <summary> In memory settings, for timers/hooks.</summary>
@@ -130,6 +130,15 @@ namespace Mahou {
 		uint latestL = 0, latestCL = 0;
 		public static uint currentLayout, GlobalLayout;
 		bool onepass = true, onepassC = true;
+		/// <summary>
+		/// Has a lot of values/keys taken from dynamic controls:<br/>
+		/// txt_keyN - HotkeyBox,<br/> 
+		/// ^---> ADDONS: _mods - to get modifiers, _key - to get keyCode.<br/>
+		/// chk_winN - Use Win modifier in hotkey, <br/>
+		/// lbl_arrN - Arrow label, [has no values]<br/>
+		/// cbb_typN - Switch type(To specific layout or switch between).
+		/// </summary>
+		public Dictionary<string, string> SpecKeySetsValues = new Dictionary<string, string>();
 		static string latestSwitch = "null";
 		public Timer res = new Timer();
 		// From more configs
@@ -153,6 +162,10 @@ namespace Mahou {
 				nud_ScrollLockRefreshRate.Minimum =	nud_TrayFlagRefreshRate.Minimum = 
 		    	nud_PersistentLayout1Interval.Minimum = nud_PersistentLayout2Interval.Minimum =	1;
 			nud_LangTTPositionX.Minimum = nud_LangTTPositionY.Minimum = -100;
+			// Disable horizontal scroll
+			pan_KeySets.AutoScroll = false;
+			pan_KeySets.HorizontalScroll.Maximum = 0;
+			pan_KeySets.AutoScroll = true;
 			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version;
 			Text += "-dev";
 			var commit = MMain.MyConfs.Read("Updates", "LatestCommit");
@@ -240,6 +253,23 @@ namespace Mahou {
 					FlushConvertMoreWords();
 					KMHook.ConvertLast(words);
 				} else if (KMHook.waitfornum) { FlushConvertMoreWords(); }
+				#endregion
+				#region SpecificKeys
+				if (m.WParam.ToInt32() >= 201 && m.WParam.ToInt32() <= 299) {
+					var si = m.WParam.ToInt32() - 200;
+					var type = SpecKeySetsValues["cbb_typ"+si];
+					if (type == MMain.Lang[Languages.Element.SwitchBetween]) {
+						KMHook.ChangeLayout();
+					} else KMHook.ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(type).uId);
+					if ((Keys)(((int)m.LParam >> 16) & 0xFFFF) == Keys.CapsLock) {
+						KMHook.DoSelf(() => {
+							if (Control.IsKeyLocked(Keys.CapsLock)) {
+								KMHook.KeybdEvent(Keys.CapsLock, 0);
+								KMHook.KeybdEvent(Keys.CapsLock, 2);
+						    }
+		                });
+					}
+				}
 				#endregion
 				if (!KMHook.ExcludedProgram()) {
 					if (Hotkey.GetMods(HKCSelection_tempMods) == Hotkey.GetMods(HKCLast_tempMods) &&
@@ -633,21 +663,18 @@ namespace Mahou {
 				MMain.MyConfs.Write("Layouts", "SwitchBetweenLayouts", chk_SwitchBetweenLayouts.Checked.ToString());
 				MMain.MyConfs.Write("Layouts", "EmulateLayoutSwitch", chk_EmulateLS.Checked.ToString());
 				MMain.MyConfs.Write("Layouts", "ChangeToSpecificLayoutByKey", chk_SpecificLS.Checked.ToString());
-				// Keys
-				MMain.MyConfs.Write("Layouts", "SpecificKey1", cbb_Key1.SelectedIndex.ToString());
-				MMain.MyConfs.Write("Layouts", "SpecificKey2", cbb_Key2.SelectedIndex.ToString());
-				MMain.MyConfs.Write("Layouts", "SpecificKey3", cbb_Key3.SelectedIndex.ToString());
-				MMain.MyConfs.Write("Layouts", "SpecificKey4", cbb_Key4.SelectedIndex.ToString());
+				// Specific keys sets
+				SaveSpecificKeySets();
 				try {
 					try { MMain.MyConfs.Write("Layouts", "EmulateLayoutSwitchType", cbb_EmulateType.SelectedItem.ToString()); } catch { }
 					// Main Layouts
 					try { MMain.MyConfs.Write("Layouts", "MainLayout1", cbb_MainLayout1.SelectedItem.ToString()); } catch {  }
 					try { MMain.MyConfs.Write("Layouts", "MainLayout2", cbb_MainLayout2.SelectedItem.ToString()); } catch { }
 					// Layouts
-					try { MMain.MyConfs.Write("Layouts", "SpecificLayout1", cbb_Layout1.SelectedItem.ToString()); } catch { }
-					try { MMain.MyConfs.Write("Layouts", "SpecificLayout2", cbb_Layout2.SelectedItem.ToString()); } catch { }
-					try { MMain.MyConfs.Write("Layouts", "SpecificLayout3", cbb_Layout3.SelectedItem.ToString()); } catch { }
-					try { MMain.MyConfs.Write("Layouts", "SpecificLayout4", cbb_Layout4.SelectedItem.ToString()); } catch { }
+//					try { MMain.MyConfs.Write("Layouts", "SpecificLayout1", cbb_Layout1.SelectedItem.ToString()); } catch { }
+//					try { MMain.MyConfs.Write("Layouts", "SpecificLayout2", cbb_Layout2.SelectedItem.ToString()); } catch { }
+//					try { MMain.MyConfs.Write("Layouts", "SpecificLayout3", cbb_Layout3.SelectedItem.ToString()); } catch { }
+//					try { MMain.MyConfs.Write("Layouts", "SpecificLayout4", cbb_Layout4.SelectedItem.ToString()); } catch { }
 				} catch { Logging.Log("Some settings in layouts tab failed to save, they are skipped."); }
 				MMain.MyConfs.Write("Layouts", "OneLayout", chk_OneLayout.Checked.ToString());
 				MMain.MyConfs.Write("Layouts", "QWERTZfix", chk_qwertz.Checked.ToString());
@@ -725,6 +752,18 @@ namespace Mahou {
 				Logging.Log("All configurations saved.");
 			}
 			LoadConfigs();
+		}
+		void SaveSpecificKeySets() {
+			var sets = "";
+			for (int i = 1; i <= SpecKeySetCount; i++) {
+				sets += "set_"+i+"/";
+				sets += SpecKeySetsValues["txt_key"+i+"_key"]+"/"+SpecKeySetsValues["txt_key"+i+"_mods"]+"/";
+				sets += SpecKeySetsValues["cbb_typ"+i];
+				if (i != SpecKeySetCount)
+					sets += "|";
+			}
+			Debug.WriteLine(sets);
+			MMain.MyConfs.Write("Layouts", "SpecificKeySets", sets);
 		}
 		object DoInMainConfigs(Func<object> act) {
 			if (Configs.forceAppData) return (object)true;
@@ -813,6 +852,7 @@ namespace Mahou {
 			Key4 = MMain.MyConfs.ReadInt("Layouts", "SpecificKey4");
 			OneLayout = chk_OneLayout.Checked = MMain.MyConfs.ReadBool("Layouts", "OneLayout");
 			QWERTZ_fix = chk_qwertz.Checked = MMain.MyConfs.ReadBool("Layouts", "QWERTZfix");
+			LoadSpecKeySetsValues();
 			RefreshComboboxes();
 			#endregion
 			#region Persistent Layout
@@ -923,6 +963,27 @@ namespace Mahou {
 			Memory.Flush();
 			Logging.Log("All configurations loaded.");
 		}
+		void LoadSpecKeySetsValues() {
+			var setts = MMain.MyConfs.Read("Layouts", "SpecificKeySets").Split('|');
+			var last_set = setts[setts.Length-1];
+			var set_count = Int32.Parse(last_set.Split('/')[0].Replace("set_",""));
+			var NOSPEC = SpecKeySetCount == 0;
+			if (NOSPEC)
+				pan_KeySets.Controls.Clear();
+			// Initilize sets
+			for(int i = 1; i != set_count+1; i++) {
+				if (NOSPEC)
+					Btn_AddSetClick((object)1, new EventArgs());
+				var values = setts[i-1].Split('/');
+				SpecKeySetsValues["txt_key"+i+"_key"] = values[1];
+				SpecKeySetsValues["txt_key"+i+"_mods"] = values[2];
+				SpecKeySetsValues["cbb_typ"+i] = values[3];
+				var key = 0;
+				if (!String.IsNullOrEmpty(values[1]))
+					key = Int32.Parse(values[1]);
+				UpdateSetControls(i, key, values[2]);
+			}
+		}
 		Tuple<int, Color, int> GetSnippetsCount(string snippets) {
 			if (String.IsNullOrEmpty(snippets)) return new Tuple<int, Color, int>(0, Color.Black, 0);
 			Stopwatch watch = null;
@@ -982,38 +1043,25 @@ namespace Mahou {
 			cbb_AutostartType.SelectedIndex = AutoStartAsAdmin ? 1 : 0;
 			cbb_UpdatesChannel.SelectedIndex = cbb_UpdatesChannel.Items.IndexOf(MMain.MyConfs.Read("Updates", "Channel"));
 			MMain.locales = Locales.AllList();
-			cbb_Layout1.Items.Clear();
-			cbb_Layout2.Items.Clear();
-			cbb_Layout3.Items.Clear();
-			cbb_Layout4.Items.Clear();
+			MMain.RefreshLCnMID();
+			for(int i = 1; i <= SpecKeySetCount; i++) {
+				if (SpecKeySetCount < 1)
+					break;
+				Debug.WriteLine("Initializing Set #"+i);
+				var cbb = (pan_KeySets.Controls["set_"+i].Controls["cbb_typ"+i] as ComboBox);
+				cbb.Items.Clear();
+				cbb.Items.Add(MMain.Lang[Languages.Element.SwitchBetween]);
+				cbb.Items.AddRange(MMain.lcnmid.ToArray());
+				cbb.SelectedIndex = cbb.Items.IndexOf(SpecKeySetsValues["cbb_typ"+i]);
+			}
 			cbb_MainLayout1.Items.Clear();
 			cbb_MainLayout2.Items.Clear();
-			MMain.lcnmid.Clear();
-			cbb_Layout1.Items.Add(MMain.Lang[Languages.Element.SwitchBetween]);
-			cbb_Layout2.Items.Add(MMain.Lang[Languages.Element.SwitchBetween]);
-			cbb_Layout3.Items.Add(MMain.Lang[Languages.Element.SwitchBetween]);
-			cbb_Layout4.Items.Add(MMain.Lang[Languages.Element.SwitchBetween]);
-			foreach (Locales.Locale lc in MMain.locales) {
-				cbb_Layout1.Items.Add(lc.Lang + "(" + lc.uId + ")");
-				cbb_Layout2.Items.Add(lc.Lang + "(" + lc.uId + ")");
-				cbb_Layout3.Items.Add(lc.Lang + "(" + lc.uId + ")");
-				cbb_Layout4.Items.Add(lc.Lang + "(" + lc.uId + ")");
-				cbb_MainLayout1.Items.Add(lc.Lang + "(" + lc.uId + ")");
-				cbb_MainLayout2.Items.Add(lc.Lang + "(" + lc.uId + ")");
-				MMain.lcnmid.Add(lc.Lang + "(" + lc.uId + ")");
-			}
+			cbb_MainLayout1.Items.AddRange(MMain.lcnmid.ToArray());
+			cbb_MainLayout2.Items.AddRange(MMain.lcnmid.ToArray());
 			try {
 				cbb_Language.SelectedIndex = cbb_Language.Items.IndexOf(MMain._language);
 				EmulateLSType = MMain.MyConfs.Read("Layouts", "EmulateLayoutSwitchType");
 				cbb_EmulateType.SelectedIndex = cbb_EmulateType.Items.IndexOf(EmulateLSType);
-				cbb_Layout1.SelectedIndex = cbb_Layout1.Items.IndexOf(Layout1);
-				cbb_Layout2.SelectedIndex = cbb_Layout2.Items.IndexOf(Layout2);
-				cbb_Layout3.SelectedIndex = cbb_Layout3.Items.IndexOf(Layout3);
-				cbb_Layout4.SelectedIndex = cbb_Layout4.Items.IndexOf(Layout4);
-				cbb_Key1.SelectedIndex = Key1;
-				cbb_Key2.SelectedIndex = Key2;
-				cbb_Key3.SelectedIndex = Key3;
-				cbb_Key4.SelectedIndex = Key4;
 				cbb_MainLayout1.SelectedIndex = MMain.lcnmid.IndexOf(MainLayout1);
 				cbb_MainLayout2.SelectedIndex = MMain.lcnmid.IndexOf(MainLayout2);
 			} catch (Exception e){
@@ -1034,7 +1082,7 @@ namespace Mahou {
 			chk_OneLayoutWholeWord.Enabled = !chk_CSLayoutSwitching.Checked;
 			chk_FlagsInTray.Enabled = chk_TrayIcon.Checked;
 			// Layouts tab
-			grb_Keys.Enabled = grb_Layouts.Enabled = chk_SpecificLS.Checked;
+			lbl_SetsCount.Enabled = pan_KeySets.Enabled = btn_AddSet.Enabled = btn_SubSet.Enabled = chk_SpecificLS.Checked;
 			cbb_MainLayout1.Enabled = cbb_MainLayout2.Enabled = 
 				lbl_LayoutNum1.Enabled = lbl_LayoutNum2.Enabled = chk_SwitchBetweenLayouts.Checked;
 			lbl_EmuType.Enabled = cbb_EmulateType.Enabled = chk_EmulateLS.Checked;
@@ -1756,6 +1804,9 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				if (noglobal && (id > (int)Hotkey.HKID.TransliterateSelection)) break;
 				WinAPI.UnregisterHotKey(Handle, id);
 			}
+			for (int id = 201; id <= 300; id++) {
+				WinAPI.UnregisterHotKey(Handle, id);
+			}
 		}
 		public void RegisterHotkeys() {
 			if (HKCLast_tempEnabled)
@@ -1797,6 +1848,13 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			if (HKToggleLangPanel_tempEnabled)
 				WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.ToggleLangPanel,
 				                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKToggleLangPanel_tempMods), HKToggleLangPanel_tempKey);
+			for(int i = 1; i != SpecKeySetCount+1; i++) {
+				var key = 0;
+				if (!String.IsNullOrEmpty(SpecKeySetsValues["txt_key"+i+"_key"])) {
+					key = Int32.Parse(SpecKeySetsValues["txt_key"+i+"_key"]);
+					WinAPI.RegisterHotKey(Handle, 200+i, Hotkey.GetMods(SpecKeySetsValues["txt_key"+i+"_mods"]), key);
+				}
+			}
 		}
 		/// <summary>
 		/// Converts some special keys to readable string.
@@ -2072,7 +2130,6 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			txt_Hotkey_tempModifiers = Regex.Replace(modifiers.Replace("Win",""), @"^[ +]+", "", RegexOptions.Multiline);
 			// Debug.WriteLine(txt_Hotkey_tempModifiers);
 		}
-		
 		/// <summary>
 		/// Updates Hotkey temporary variables based on selected [layout appearence]. 
 		/// </summary>
@@ -2188,6 +2245,13 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 					return false;
 			}
 			return false;
+		}
+		void UpdateSetControls(int setIndex, int keyCode, string modifiers) {
+			var _set = pan_KeySets.Controls["set_"+setIndex];
+			_set.Controls["txt_key"+setIndex].Text = Regex.Replace(OemReadable(modifiers.Replace(",", " +") +
+			                                            " + " + Remake((Keys)keyCode, true, false)), 
+			                                            @"Win\s?\+?\s?|\s?\+?\s?None\s?\+?\s?|^[ +]+|\s?\+\s?$", "", RegexOptions.Multiline);
+			(_set.Controls["chk_win"+setIndex] as CheckBox).Checked = modifiers.Contains("Win");
 		}
 		#region Updates functions
 		void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
@@ -2539,8 +2603,8 @@ DEL ""ExtractASD.cmd""";
 			chk_EmulateLS.Text = MMain.Lang[Languages.Element.EmulateLS];
 			lbl_EmuType.Text = MMain.Lang[Languages.Element.EmulateType];
 			chk_SpecificLS.Text = MMain.Lang[Languages.Element.ChangeLayoutBy1Key];
-			grb_Layouts.Text = MMain.Lang[Languages.Element.Layouts];
-			grb_Keys.Text = MMain.Lang[Languages.Element.Keys];
+//			grb_Layouts.Text = MMain.Lang[Languages.Element.Layouts];
+//			grb_Keys.Text = MMain.Lang[Languages.Element.Keys];
 			chk_OneLayout.Text = MMain.Lang[Languages.Element.OneLayout];
 			chk_qwertz.Text = MMain.Lang[Languages.Element.QWERTZ];
 			#endregion
@@ -2828,10 +2892,10 @@ DEL ""ExtractASD.cmd""";
 			LoadConfigs();
 		}
 		void Cbb_KeySelectedIndexChanged(object sender, EventArgs e) {
-			cbb_Layout1.Enabled = cbb_Key1.SelectedIndex != 0;
-			cbb_Layout2.Enabled = cbb_Key2.SelectedIndex != 0;
-			cbb_Layout3.Enabled = cbb_Key3.SelectedIndex != 0;
-			cbb_Layout4.Enabled = cbb_Key4.SelectedIndex != 0;
+//			cbb_Layout1.Enabled = cbb_Key1.SelectedIndex != 0;
+//			cbb_Layout2.Enabled = cbb_Key2.SelectedIndex != 0;
+//			cbb_Layout3.Enabled = cbb_Key3.SelectedIndex != 0;
+//			cbb_Layout4.Enabled = cbb_Key4.SelectedIndex != 0;
 		}
 		void MahouUIFormClosing(object sender, FormClosingEventArgs e) {
 			if (e.CloseReason == CloseReason.UserClosing) {
@@ -3060,6 +3124,76 @@ DEL ""ExtractASD.cmd""";
 		void Chk_DownloadASD_InZipCheckedChanged(object sender, EventArgs e) {
 			Dowload_ASD_InZip = chk_DownloadASD_InZip.Checked;
 			check_ASD_size = true;
+		}
+		void Btn_AddSetClick(object sender, EventArgs e) {
+			if (SpecKeySetCount>98) return;
+			var _set = new Panel();
+			_set.Width = (pan_KeySets.Width*98/100)-2;
+			SpecKeySetCount++;
+			_set.Name = "set_"+SpecKeySetCount;
+			var top = 1;
+			if (SpecKeySetCount>1)
+				top = pan_KeySets.Controls["set_"+(SpecKeySetCount-1)].Top+25;
+			_set.Height = 23;
+			_set.Top = top;
+			_set.Left = 1;
+			var _baseLeft = (int)(pan_KeySets.Width*2/100);
+			var txt_width = 190;
+			var chk_width = 45;
+			var lbl_width = 25;
+			var cbb_width = 190;
+			_set.Controls.Add(new Label(){Left = _baseLeft, Name="lbl_num"+SpecKeySetCount, Width=lbl_width, Text=SpecKeySetCount+":", Top=2});
+			var txt = new TextBox(){Left = _baseLeft+lbl_width, Name="txt_key"+SpecKeySetCount, Width=txt_width, BackColor=SystemColors.Window, ReadOnly=true};
+			txt.KeyDown += new KeyEventHandler(Txt_SpecHotkeyDown);
+			var chk = new CheckBox(){Left = _baseLeft+lbl_width+txt_width+3, Name="chk_win"+SpecKeySetCount, Width=chk_width, Text="Win"};
+			chk.CheckedChanged += new EventHandler(Chk_SpecWinCheckedChanged);
+			var cbb = new ComboBox(){Left = _baseLeft+lbl_width+txt_width+chk_width+lbl_width+9, Name="cbb_typ"+SpecKeySetCount, Width=cbb_width};
+			cbb.SelectedIndexChanged += new EventHandler(Cbb_SpecTypeSelectedIndexChanged);
+			cbb.Items.Add(MMain.Lang[Languages.Element.SwitchBetween]);
+			cbb.Items.AddRange(MMain.lcnmid.ToArray());
+			_set.Controls.Add(txt);
+			_set.Controls.Add(chk);
+			_set.Controls.Add(new Label(){Left = _baseLeft+lbl_width+txt_width+chk_width+6, Name="lbl_arr"+SpecKeySetCount, Width=lbl_width, Text="->", Top=2});
+			_set.Controls.Add(cbb);
+			SpecKeySetsValues["txt_key"+SpecKeySetCount+"_key"] = SpecKeySetsValues["txt_key"+SpecKeySetCount+"_mods"] = SpecKeySetsValues["cbb_typ"+SpecKeySetCount] = "";
+			pan_KeySets.Controls.Add(_set);
+			lbl_SetsCount.ForeColor = Color.Black;
+			lbl_SetsCount.Text = "#"+SpecKeySetCount;
+			if (SpecKeySetCount>98) lbl_SetsCount.ForeColor = Color.Red;
+		}
+		void Btn_SubSetClick(object sender, EventArgs e) {
+			if (SpecKeySetCount < 1) return;
+			pan_KeySets.Controls["set_"+SpecKeySetCount].Dispose();
+			SpecKeySetCount--;
+			lbl_SetsCount.ForeColor = Color.Black;
+			lbl_SetsCount.Text = "#"+SpecKeySetCount;
+			if (SpecKeySetCount < 1)
+				lbl_SetsCount.ForeColor = Color.LightGray;
+	
+		}
+		void Txt_SpecHotkeyDown(object sender, KeyEventArgs e) {
+			var t = sender as TextBox;
+			if (e.KeyCode == Keys.Back && e.Modifiers == Keys.None) {
+				SpecKeySetsValues[t.Name+"_key"] = SpecKeySetsValues[t.Name+"_mods"] = t.Text = "";
+				return;
+			}
+			t.Text = OemReadable((e.Modifiers.ToString().Replace(",", " +") + " + " +
+										  Remake(e.KeyCode)).Replace("None + ", ""));
+			SpecKeySetsValues[t.Name+"_key"] = ((int)e.KeyCode).ToString();
+			SpecKeySetsValues[t.Name+"_mods"] = e.Modifiers.ToString().Replace(",", " +");
+		}
+		void Chk_SpecWinCheckedChanged(object sender, EventArgs e) {
+			var c = sender as CheckBox;
+			var key = SpecKeySetsValues["txt_key"+c.Name.Replace("chk_win","")+"_mods"];
+			var hasWin = key.Contains("Win");
+			if (hasWin && !c.Checked)
+				SpecKeySetsValues["txt_key"+c.Name.Replace("chk_win","")+"_mods"] = key.Replace("Win", "");
+			if (!hasWin && c.Checked)
+				SpecKeySetsValues["txt_key"+c.Name.Replace("chk_win","")+"_mods"] = key + " + Win";
+		}
+		void Cbb_SpecTypeSelectedIndexChanged(object sender, EventArgs e) {
+			var cb = sender as ComboBox;
+			SpecKeySetsValues[cb.Name] = cb.SelectedItem.ToString();
 		}
 		#endregion
 	}

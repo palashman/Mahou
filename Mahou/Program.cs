@@ -64,15 +64,14 @@ namespace Mahou
 					if (System.Globalization.CultureInfo.InstalledUICulture.TwoLetterISOLanguageName == "ru") {
 						MyConfs.Write("Appearence", "Language", "Русский");
 						MahouUI.InitLanguage();
-						MyConfs.Write("Layouts", "SpecificLayout1", Lang[Languages.Element.SwitchBetween]);
+//						MyConfs.Write("Layouts", "SpecificLayout1", Lang[Languages.Element.SwitchBetween]);
+						MyConfs.Write("Layouts", "SpecificKeySets", "set_1/20//"+Lang[Languages.Element.SwitchBetween]+"|set_2///");
 						MyConfs.Write("FirstStart", "First", "False");
 					}
 				} else {
 					MahouUI.InitLanguage();
 				}
-				foreach (Locales.Locale lc in MMain.locales) {	
-					MMain.lcnmid.Add(lc.Lang + "(" + lc.uId + ")");
-				}
+				RefreshLCnMID();
 				//for first run, add your locale 1 & locale 2 to settings
 				if (MyConfs.Read("Layouts", "MainLayout1") == "" && MyConfs.Read("Layouts", "MainLayout2") == "") {
 					Logging.Log("Initializing locales.");
@@ -100,6 +99,13 @@ namespace Mahou
 				Application.Run();
 			}
 		}
+        public static void RefreshLCnMID() {
+        	MMain.locales = Locales.AllList();
+        	lcnmid.Clear();
+			foreach (var lc in locales) {	
+				lcnmid.Add(lc.Lang + "(" + lc.uId + ")");
+			}
+        }
 		public static bool MahouActive() {
 			var ActHandle = WinAPI.GetForegroundWindow();
 			if (ActHandle == IntPtr.Zero) {
