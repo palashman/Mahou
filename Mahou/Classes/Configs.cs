@@ -92,7 +92,7 @@ namespace Mahou
 			CheckBool("Layouts", "ChangeToSpecificLayoutByKey", "true");
 			CheckString("Layouts", "MainLayout1", "");
 			CheckString("Layouts", "MainLayout2", "");
-			CheckInt("Layouts", "SpecificKey1", "0");
+			CheckInt("Layouts", "SpecificKey1", "1");
 			CheckInt("Layouts", "SpecificKey2", "0");
 			CheckInt("Layouts", "SpecificKey3", "0");
 			CheckInt("Layouts", "SpecificKey4", "0");
@@ -101,7 +101,7 @@ namespace Mahou
 			CheckString("Layouts", "SpecificLayout3", "");
 			CheckString("Layouts", "SpecificLayout4", "");
 			CheckInt("Layouts", "SpecificKeysType", "0");
-			CheckString("Layouts", "SpecificKeySets", "set_1///");
+			CheckString("Layouts", "SpecificKeySets", "set_0");
 			CheckBool("Layouts", "QWERTZfix", "false");
 			#endregion
 			#region Persistent Layout

@@ -620,7 +620,7 @@ namespace Mahou {
 			else {
 				nPath = AppDomain.CurrentDomain.BaseDirectory;
 			}
-			Debug.WriteLine(nPath);
+			Logging.Log("Base path: " + nPath);
 			UpdateSavePaths();
 			AutoStartAsAdmin = (cbb_AutostartType.SelectedIndex != 0);
 			if (chk_AutoStart.Checked) {
@@ -778,7 +778,8 @@ namespace Mahou {
 				if (i != SpecKeySetCount)
 					sets += "|";
 			}
-			Debug.WriteLine(sets);
+			if (String.IsNullOrEmpty(sets))
+				sets = "set0";
 			MMain.MyConfs.Write("Layouts", "SpecificKeySets", sets);
 		}
 		object DoInMainConfigs(Func<object> act) {
@@ -980,8 +981,10 @@ namespace Mahou {
 			Logging.Log("All configurations loaded.");
 		}
 		void LoadSpecKeySetsValues() {
-			var setts = MMain.MyConfs.Read("Layouts", "SpecificKeySets").Split('|');
-			var last_set = setts[setts.Length-1];
+			var sets_raw = MMain.MyConfs.Read("Layouts", "SpecificKeySets");
+			if (sets_raw == "set0") return;
+			var sets = sets_raw.Split('|');
+			var last_set = sets[sets.Length-1];
 			var set_count = Int32.Parse(last_set.Split('/')[0].Replace("set_",""));
 			var NOSPEC = SpecKeySetCount == 0;
 			if (NOSPEC)
@@ -990,7 +993,7 @@ namespace Mahou {
 			for(int i = 1; i != set_count+1; i++) {
 				if (NOSPEC)
 					Btn_AddSetClick((object)1, new EventArgs());
-				var values = setts[i-1].Split('/');
+				var values = sets[i-1].Split('/');
 				SpecKeySetsValues["txt_key"+i+"_key"] = values[1];
 				SpecKeySetsValues["txt_key"+i+"_mods"] = values[2];
 				SpecKeySetsValues["cbb_typ"+i] = values[3];
@@ -1042,7 +1045,7 @@ namespace Mahou {
 						cic++;
 				}
 			}
-			Debug.WriteLine(cic + ", " + cia + ", " + ci + "<com> " + com);
+			Logging.Log("Snippets word count details: " + cic + ", " + cia + ", " + ci + "<com> " + com);
 			var result = ci+cia+cic;
 			if (MahouUI.LoggingEnabled) {
 				watch.Stop();
@@ -1067,10 +1070,9 @@ namespace Mahou {
 			cbb_UpdatesChannel.SelectedIndex = cbb_UpdatesChannel.Items.IndexOf(MMain.MyConfs.Read("Updates", "Channel"));
 			MMain.locales = Locales.AllList();
 			MMain.RefreshLCnMID();
+			if (SpecKeySetCount > 0)
 			for(int i = 1; i <= SpecKeySetCount; i++) {
-				if (SpecKeySetCount < 1)
-					break;
-				Debug.WriteLine("Initializing Set #"+i);
+				Logging.Log("Refreshing Specific Hotkey Set #"+i);
 				var cbb = (pan_KeySets.Controls["set_"+i].Controls["cbb_typ"+i] as ComboBox);
 				cbb.Items.Clear();
 				cbb.Items.Add(MMain.Lang[Languages.Element.SwitchBetween]);
@@ -2361,7 +2363,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 					var data = getResponce("https://github.com/BladeMight/Mahou/releases/latest-commit"); 
 					if (!String.IsNullOrEmpty(data)) {
 						var siz = Regex.Match(data, "<ul class=\"release-downloads\">.*\\n\\s+<li>.*\\n\\s+<a.*\\n\\s+<small.+>(.+)</small>").Groups[1].Value;
-						Debug.WriteLine(siz);
+						Logging.Log("Remote size of AS_dict: " + siz);
 						return siz;
 					} else throw new Exception(MMain.Lang[Languages.Element.NetError]);
 				} 
