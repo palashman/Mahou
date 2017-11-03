@@ -258,17 +258,23 @@ namespace Mahou {
 				if (m.WParam.ToInt32() >= 201 && m.WParam.ToInt32() <= 299 && 
 				    (MMain.mahou.ChangeLayoutInExcluded || !KMHook.ExcludedProgram())) {
 					var si = m.WParam.ToInt32() - 200;
+					var key = (Keys)(((int)m.LParam >> 16) & 0xFFFF);
 					var type = SpecKeySetsValues["cbb_typ"+si];
-					if (type == MMain.Lang[Languages.Element.SwitchBetween]) {
-						KMHook.ChangeLayout();
-					} else KMHook.ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(type).uId);
-					if ((Keys)(((int)m.LParam >> 16) & 0xFFFF) == Keys.CapsLock) {
-						KMHook.DoSelf(() => {
-							if (Control.IsKeyLocked(Keys.CapsLock)) {
-								KMHook.KeybdEvent(Keys.CapsLock, 0);
-								KMHook.KeybdEvent(Keys.CapsLock, 2);
-						    }
-		                });
+					try {
+						if (type == MMain.Lang[Languages.Element.SwitchBetween]) {
+							KMHook.ChangeLayout();
+						} else KMHook.ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(type).uId);
+						if (key == Keys.CapsLock) {
+							KMHook.DoSelf(() => {
+								if (Control.IsKeyLocked(Keys.CapsLock)) {
+									KMHook.KeybdEvent(Keys.CapsLock, 0);
+									KMHook.KeybdEvent(Keys.CapsLock, 2);
+							    }
+			                });
+						}
+					} catch (Exception e) {
+						Logging.Log("Possibly layout switch type was not selected for " + OemReadable((SpecKeySetsValues["txt_key"+si+"_mods"].Replace(",", " +") + " + " +
+						                                                                               Remake(key)).Replace("None + ", "")) + ". Layout string: ["+type+"]. Exception: " + e.Message + "\r\n" + e.StackTrace, 2);
 					}
 				}
 				#endregion
