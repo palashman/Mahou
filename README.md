@@ -24,6 +24,12 @@ Mahou работает так как **Вы** хотите, настраивай
 
 ###### Возможности по версиям:
 
+**v2.5.2.3**<br/>
+
+- 🐛 Исправлено что конфигурация не читала больше 255 букв(полезно для функции смены раскладки гор. клавишами).
+- 📝 Изменен тип выбора для списка выбора типа обновления.
+- 🐛 Исправлена ошибка при не выбранном типе смены раскладки гор. клавишей [#140](https://github.com/BladeMight/Mahou/issues/140).
+
 **v2.5.2.1**<br/>
 
 - 💎 Добавлен новый метод "смены раскладки 1 клавишей".
@@ -381,6 +387,12 @@ Even selected text switches just between **selected** layouts, though if you lik
 6. Read the [wiki](https://github.com/BladeMight/Mahou/wiki/Functions-list) or [ask me](#license).
 
 ###### By version features:
+
+**v2.5.2.3**<br/>
+
+- 🐛 Fixed configs wasn't reading more than 255 characters(useful for switch layout by hotkeys feature).
+- 📝 Changed updates channel combobox dropdown to list style.
+- 🐛 Fixed layout string was empty error for switch layout hotkeys [#140](https://github.com/BladeMight/Mahou/issues/140).
 
 **v2.5.2.1**<br/>
 
