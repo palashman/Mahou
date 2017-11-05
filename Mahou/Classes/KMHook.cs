@@ -168,16 +168,18 @@ namespace Mahou
 					c_snip.Add(stb.ToString()[0]);
 					Logging.Log("Added ["+ stb.ToString()[0] + "] to current snippet.");
 				}
-//				if (MSG == WinAPI.WM_KEYUP) {
+				var seKey = Keys.Space;
+				if (MMain.mahou.SnippetsExpandType == "Tab")
+					seKey = Keys.Tab;
+				Logging.Log("Snippet expand key: " +seKey);
+				if (Key == seKey)
+					preSnip = true;
+				if (MSG == WinAPI.WM_KEYUP) {
 					var snip = "";
 					foreach (var ch in c_snip) {
 						snip += ch;
 						Debug.WriteLine(ch);
 					}
-					var seKey = Keys.Space;
-					if (MMain.mahou.SnippetsExpandType == "Tab")
-						seKey = Keys.Tab;
-					Logging.Log("Snippet expand key: " +seKey);
 		            bool matched = false;
 					if (Key == seKey) {
 						Logging.Log("Current snippet is [" + snip + "].");
@@ -193,7 +195,8 @@ namespace Mahou
 								break;
 							}
 						}
-						c_snip.Clear();
+						if (matched)
+							c_snip.Clear();
 					}
 					if (MMain.mahou.AutoSwitchEnabled && !matched && as_wrongs != null && Key == Keys.Space) {
 						for (int i = 0; i < as_wrongs.Length; i++) {
@@ -219,7 +222,7 @@ namespace Mahou
 						}
 						c_snip.Clear();
 					}
-//				}
+				}
 			}
 			#endregion
 			#region Release Re-Pressed keys
@@ -337,7 +340,7 @@ namespace Mahou
 					MMain.c_word.Clear();
 					MMain.c_words.Clear();
 					Logging.Log("Words cleared.");
-					if (MMain.mahou.SnippetsEnabled) {
+					if (MMain.mahou.SnippetsEnabled && !preSnip) {
 						c_snip.Clear();
 						Logging.Log("Snippet cleared.");
 					}
@@ -423,6 +426,7 @@ namespace Mahou
 			#region Reset Modifiers in Hotkeys
 			MahouUI.ShiftInHotkey = MahouUI.AltInHotkey = MahouUI.WinInHotkey = MahouUI.CtrlInHotkey = false;
 			#endregion
+			preSnip = false;
 		}
 		public static void ListenMouse(WinAPI.RawMouseButtons MSG) {
 			if ((MSG == WinAPI.RawMouseButtons.MouseWheel && MMain.mahou.caretLangDisplay.Visible && MMain.mahou.CaretLangTooltipEnabled)) {
