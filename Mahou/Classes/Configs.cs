@@ -188,6 +188,7 @@ namespace Mahou
 			CheckBool("Snippets", "SnippetsEnabled", "false");
 			CheckBool("Snippets", "SpaceAfter", "false");
 			CheckBool("Snippets", "SwitchToGuessLayout", "false");
+			CheckString("Snippets", "SnippetExpandKey", "Space");
 			#endregion
 			#region AutoSwitch section
 			CheckBool("AutoSwitch", "Enabled", "false");

@@ -19,7 +19,7 @@ namespace Mahou
 			keyAfterCTRL, keyAfterALT, keyAfterSHIFT,
 			clickAfterCTRL, clickAfterALT, clickAfterSHIFT,
 			hotkeywithmodsfired, csdoing, incapt, waitfornum, 
-			IsHotkey, ff_wheeled;
+			IsHotkey, ff_wheeled, preSnip;
 		static string lastClipText = "";
 		static List<Keys> tempNumpads = new List<Keys>();
 		static List<char> c_snip = new List<char>();
@@ -168,26 +168,34 @@ namespace Mahou
 					c_snip.Add(stb.ToString()[0]);
 					Logging.Log("Added ["+ stb.ToString()[0] + "] to current snippet.");
 				}
-				if (MSG == WinAPI.WM_KEYUP && Key == Keys.Space) {
+//				if (MSG == WinAPI.WM_KEYUP) {
 					var snip = "";
 					foreach (var ch in c_snip) {
 						snip += ch;
+						Debug.WriteLine(ch);
 					}
-					bool matched = false;
-					Logging.Log("Current snippet is [" + snip + "].");
-					for (int i = 0; i < snipps.Length; i++) {
-						if (snip == snipps[i]) {
-							if (exps.Length > i) {
-								Logging.Log("Current snippet [" + snip + "] matched existing snippet [" + exps[i] + "].");
-								ExpandSnippet(snip, exps[i], MMain.mahou.SnippetSpaceAfter, MMain.mahou.SnippetsSwitchToGuessLayout);
-								matched = true;
-							} else {
-								Logging.Log("Snippet ["+snip+"] has no expansion, snippet is not finished or its expansion commented.", 1);
+					var seKey = Keys.Space;
+					if (MMain.mahou.SnippetsExpandType == "Tab")
+						seKey = Keys.Tab;
+					Logging.Log("Snippet expand key: " +seKey);
+		            bool matched = false;
+					if (Key == seKey) {
+						Logging.Log("Current snippet is [" + snip + "].");
+						for (int i = 0; i < snipps.Length; i++) {
+							if (snip == snipps[i]) {
+								if (exps.Length > i) {
+									Logging.Log("Current snippet [" + snip + "] matched existing snippet [" + exps[i] + "].");
+									ExpandSnippet(snip, exps[i], MMain.mahou.SnippetSpaceAfter, MMain.mahou.SnippetsSwitchToGuessLayout);
+									matched = true;
+								} else {
+									Logging.Log("Snippet ["+snip+"] has no expansion, snippet is not finished or its expansion commented.", 1);
+								}
+								break;
 							}
-							break;
 						}
+						c_snip.Clear();
 					}
-					if (MMain.mahou.AutoSwitchEnabled && !matched && as_wrongs != null) {
+					if (MMain.mahou.AutoSwitchEnabled && !matched && as_wrongs != null && Key == Keys.Space) {
 						for (int i = 0; i < as_wrongs.Length; i++) {
 							if (as_corrects.Length > i) {
 								if (snip == as_wrongs[i]) {
@@ -209,9 +217,9 @@ namespace Mahou
 								Logging.Log("Auto-switch word ["+snip+"] has no expansion, snippet is not finished or its expansion commented.", 1);
 							}
 						}
+						c_snip.Clear();
 					}
-					c_snip.Clear();
-				}
+//				}
 			}
 			#endregion
 			#region Release Re-Pressed keys

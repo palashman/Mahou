@@ -191,6 +191,8 @@ namespace Mahou
 		public System.Windows.Forms.ComboBox cbb_Key1;
 		private System.Windows.Forms.Label lbl_KeysType;
 		private System.Windows.Forms.ComboBox cbb_SpecKeysType;
+		private System.Windows.Forms.ComboBox cbb_SnippetExpandKeys;
+		private System.Windows.Forms.Label lbl_SnippetExpandKey;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -329,11 +331,13 @@ namespace Mahou
 			this.lbl_LangTTMouseRefreshRate = new System.Windows.Forms.Label();
 			this.chk_Change1KeyL = new System.Windows.Forms.CheckBox();
 			this.tab_snippets = new System.Windows.Forms.TabPage();
-			this.lbl_SnippetsCount = new System.Windows.Forms.Label();
-			this.chk_SnippetsSwitchToGuessLayout = new System.Windows.Forms.CheckBox();
-			this.chk_SnippetsSpaceAfter = new System.Windows.Forms.CheckBox();
+			this.cbb_SnippetExpandKeys = new System.Windows.Forms.ComboBox();
+			this.lbl_SnippetExpandKey = new System.Windows.Forms.Label();
 			this.txt_Snippets = new Mahou.MahouUI.TextBoxCA();
 			this.chk_Snippets = new System.Windows.Forms.CheckBox();
+			this.chk_SnippetsSpaceAfter = new System.Windows.Forms.CheckBox();
+			this.chk_SnippetsSwitchToGuessLayout = new System.Windows.Forms.CheckBox();
+			this.lbl_SnippetsCount = new System.Windows.Forms.Label();
 			this.tab_autoswitch = new System.Windows.Forms.TabPage();
 			this.chk_DownloadASD_InZip = new System.Windows.Forms.CheckBox();
 			this.lbl_AutoSwitchWordsCount = new System.Windows.Forms.Label();
@@ -1805,11 +1809,13 @@ namespace Mahou
 			// 
 			// tab_snippets
 			// 
-			this.tab_snippets.Controls.Add(this.lbl_SnippetsCount);
-			this.tab_snippets.Controls.Add(this.chk_SnippetsSwitchToGuessLayout);
-			this.tab_snippets.Controls.Add(this.chk_SnippetsSpaceAfter);
+			this.tab_snippets.Controls.Add(this.cbb_SnippetExpandKeys);
+			this.tab_snippets.Controls.Add(this.lbl_SnippetExpandKey);
 			this.tab_snippets.Controls.Add(this.txt_Snippets);
 			this.tab_snippets.Controls.Add(this.chk_Snippets);
+			this.tab_snippets.Controls.Add(this.chk_SnippetsSpaceAfter);
+			this.tab_snippets.Controls.Add(this.chk_SnippetsSwitchToGuessLayout);
+			this.tab_snippets.Controls.Add(this.lbl_SnippetsCount);
 			this.tab_snippets.Location = new System.Drawing.Point(4, 44);
 			this.tab_snippets.Name = "tab_snippets";
 			this.tab_snippets.Padding = new System.Windows.Forms.Padding(3);
@@ -1818,35 +1824,26 @@ namespace Mahou
 			this.tab_snippets.Text = "Snippets";
 			this.tab_snippets.UseVisualStyleBackColor = true;
 			// 
-			// lbl_SnippetsCount
+			// cbb_SnippetExpandKeys
 			// 
-			this.lbl_SnippetsCount.AutoSize = true;
-			this.lbl_SnippetsCount.ForeColor = System.Drawing.Color.Orange;
-			this.lbl_SnippetsCount.Location = new System.Drawing.Point(427, 32);
-			this.lbl_SnippetsCount.Name = "lbl_SnippetsCount";
-			this.lbl_SnippetsCount.Size = new System.Drawing.Size(64, 15);
-			this.lbl_SnippetsCount.TabIndex = 5;
-			this.lbl_SnippetsCount.Text = "Snippets: 2";
+			this.cbb_SnippetExpandKeys.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cbb_SnippetExpandKeys.FormattingEnabled = true;
+			this.cbb_SnippetExpandKeys.Items.AddRange(new object[] {
+			"Space",
+			"Tab"});
+			this.cbb_SnippetExpandKeys.Location = new System.Drawing.Point(427, 6);
+			this.cbb_SnippetExpandKeys.Name = "cbb_SnippetExpandKeys";
+			this.cbb_SnippetExpandKeys.Size = new System.Drawing.Size(121, 23);
+			this.cbb_SnippetExpandKeys.TabIndex = 7;
 			// 
-			// chk_SnippetsSwitchToGuessLayout
+			// lbl_SnippetExpandKey
 			// 
-			this.chk_SnippetsSwitchToGuessLayout.AutoSize = true;
-			this.chk_SnippetsSwitchToGuessLayout.Location = new System.Drawing.Point(8, 31);
-			this.chk_SnippetsSwitchToGuessLayout.Name = "chk_SnippetsSwitchToGuessLayout";
-			this.chk_SnippetsSwitchToGuessLayout.Size = new System.Drawing.Size(216, 19);
-			this.chk_SnippetsSwitchToGuessLayout.TabIndex = 4;
-			this.chk_SnippetsSwitchToGuessLayout.Text = "Switch to guess layout after snippet.";
-			this.chk_SnippetsSwitchToGuessLayout.UseVisualStyleBackColor = true;
-			// 
-			// chk_SnippetsSpaceAfter
-			// 
-			this.chk_SnippetsSpaceAfter.AutoSize = true;
-			this.chk_SnippetsSpaceAfter.Location = new System.Drawing.Point(275, 6);
-			this.chk_SnippetsSpaceAfter.Name = "chk_SnippetsSpaceAfter";
-			this.chk_SnippetsSpaceAfter.Size = new System.Drawing.Size(167, 19);
-			this.chk_SnippetsSpaceAfter.TabIndex = 2;
-			this.chk_SnippetsSpaceAfter.Text = "Add 1 space after snippets.";
-			this.chk_SnippetsSpaceAfter.UseVisualStyleBackColor = true;
+			this.lbl_SnippetExpandKey.Location = new System.Drawing.Point(261, 6);
+			this.lbl_SnippetExpandKey.Name = "lbl_SnippetExpandKey";
+			this.lbl_SnippetExpandKey.Size = new System.Drawing.Size(160, 23);
+			this.lbl_SnippetExpandKey.TabIndex = 6;
+			this.lbl_SnippetExpandKey.Text = "Expand key:";
+			this.lbl_SnippetExpandKey.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// txt_Snippets
 			// 
@@ -1864,13 +1861,43 @@ namespace Mahou
 			// chk_Snippets
 			// 
 			this.chk_Snippets.AutoSize = true;
-			this.chk_Snippets.Location = new System.Drawing.Point(8, 6);
+			this.chk_Snippets.Location = new System.Drawing.Point(8, 0);
 			this.chk_Snippets.Name = "chk_Snippets";
 			this.chk_Snippets.Size = new System.Drawing.Size(111, 19);
 			this.chk_Snippets.TabIndex = 0;
 			this.chk_Snippets.Text = "Enable snippets.";
 			this.chk_Snippets.UseVisualStyleBackColor = true;
 			this.chk_Snippets.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
+			// 
+			// chk_SnippetsSpaceAfter
+			// 
+			this.chk_SnippetsSpaceAfter.AutoSize = true;
+			this.chk_SnippetsSpaceAfter.Location = new System.Drawing.Point(8, 18);
+			this.chk_SnippetsSpaceAfter.Name = "chk_SnippetsSpaceAfter";
+			this.chk_SnippetsSpaceAfter.Size = new System.Drawing.Size(167, 19);
+			this.chk_SnippetsSpaceAfter.TabIndex = 2;
+			this.chk_SnippetsSpaceAfter.Text = "Add 1 space after snippets.";
+			this.chk_SnippetsSpaceAfter.UseVisualStyleBackColor = true;
+			// 
+			// chk_SnippetsSwitchToGuessLayout
+			// 
+			this.chk_SnippetsSwitchToGuessLayout.AutoSize = true;
+			this.chk_SnippetsSwitchToGuessLayout.Location = new System.Drawing.Point(8, 36);
+			this.chk_SnippetsSwitchToGuessLayout.Name = "chk_SnippetsSwitchToGuessLayout";
+			this.chk_SnippetsSwitchToGuessLayout.Size = new System.Drawing.Size(216, 19);
+			this.chk_SnippetsSwitchToGuessLayout.TabIndex = 4;
+			this.chk_SnippetsSwitchToGuessLayout.Text = "Switch to guess layout after snippet.";
+			this.chk_SnippetsSwitchToGuessLayout.UseVisualStyleBackColor = true;
+			// 
+			// lbl_SnippetsCount
+			// 
+			this.lbl_SnippetsCount.AutoSize = true;
+			this.lbl_SnippetsCount.ForeColor = System.Drawing.Color.Orange;
+			this.lbl_SnippetsCount.Location = new System.Drawing.Point(427, 32);
+			this.lbl_SnippetsCount.Name = "lbl_SnippetsCount";
+			this.lbl_SnippetsCount.Size = new System.Drawing.Size(64, 15);
+			this.lbl_SnippetsCount.TabIndex = 5;
+			this.lbl_SnippetsCount.Text = "Snippets: 2";
 			// 
 			// tab_autoswitch
 			// 

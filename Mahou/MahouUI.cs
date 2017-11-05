@@ -38,6 +38,7 @@ namespace Mahou {
 		static Timer animate = new Timer();
 		static Timer showUpdWnd = new Timer();
 		static int progress = 0, _progress = 0;
+		public string SnippetsExpandType = "";
 		int titlebar = 12;
 		public static int AtUpdateShow, SpecKeySetCount;
 		public int DoubleHKInterval = 200, SelectedTextGetMoreTriesCount;
@@ -735,6 +736,7 @@ namespace Mahou {
 				MMain.MyConfs.Write("Snippets", "SwitchToGuessLayout", chk_SnippetsSwitchToGuessLayout.Checked.ToString());
 				if (chk_Snippets.Checked)
 					File.WriteAllText(snipfile, txt_Snippets.Text, Encoding.UTF8);
+				MMain.MyConfs.Write("Snippets", "SnippetExpandKey", cbb_SnippetExpandKeys.SelectedItem.ToString());
 				#endregion
 				#region AutoSwitch
 				MMain.MyConfs.Write("AutoSwitch", "Enabled", chk_AutoSwitch.Checked.ToString());
@@ -954,6 +956,8 @@ namespace Mahou {
 				KMHook.DoLater.Interval = 250;
 				KMHook.DoLater.Start();
 			}
+			SnippetsExpandType = MMain.MyConfs.Read("Snippets", "SnippetExpandKey");
+			cbb_SnippetExpandKeys.SelectedIndex = cbb_SnippetExpandKeys.Items.IndexOf(SnippetsExpandType);
 			#endregion
 			#region Appearence & Hotkeys
 			LoadTemps();
@@ -2718,6 +2722,7 @@ DEL ""ExtractASD.cmd""";
 			chk_SnippetsSpaceAfter.Text = MMain.Lang[Languages.Element.SnippetSpaceAfter];
 			chk_SnippetsSwitchToGuessLayout.Text = MMain.Lang[Languages.Element.SnippetSwitchToGuessLayout];
 			lbl_SnippetsCount.Text = MMain.Lang[Languages.Element.SnippetsCount];
+			lbl_SnippetExpandKey.Text = MMain.Lang[Languages.Element.SnippetsExpandKey];
 			#endregion
 			#region AutoSwitch
 			chk_AutoSwitch.Text = MMain.Lang[Languages.Element.AutoSwitchEnabled];
@@ -2838,6 +2843,8 @@ DEL ""ExtractASD.cmd""";
 			HelpMeUnderstand.SetToolTip(chk_AppDataConfigs, MMain.Lang[Languages.Element.TT_ConfigsInAppData]);
 			HelpMeUnderstand.SetToolTip(lbl_KeysType, MMain.Lang[Languages.Element.TT_KeysType]);
 			HelpMeUnderstand.SetToolTip(cbb_SpecKeysType, MMain.Lang[Languages.Element.TT_KeysType]);
+			HelpMeUnderstand.SetToolTip(lbl_SnippetExpandKey, MMain.Lang[Languages.Element.TT_SnippetExpandKey]);
+			HelpMeUnderstand.SetToolTip(cbb_SnippetExpandKeys, MMain.Lang[Languages.Element.TT_SnippetExpandKey]);
 		}
 		void HelpMeUnderstandPopup(object sender, PopupEventArgs e) {
 			HelpMeUnderstand.ToolTipTitle = e.AssociatedControl.Text;

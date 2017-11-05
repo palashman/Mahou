@@ -91,6 +91,7 @@ public class Languages
 		SnippetSpaceAfter,
 		SnippetSwitchToGuessLayout,
 		SnippetsCount,
+		SnippetsExpandKey,
 		#endregion
 		#region AutoSwitch
 		AutoSwitchEnabled,
@@ -206,6 +207,7 @@ public class Languages
 		TT_GuessKeyCodeFix,
 		TT_ConfigsInAppData,
 		TT_KeysType,
+		TT_SnippetExpandKey,
 		#endregion
 		#region Messages
 		MSG_SnippetsError
@@ -301,6 +303,7 @@ public class Languages
 		{ Element.SnippetSpaceAfter, "Add 1 space after snippets." }, 
 		{ Element.SnippetSwitchToGuessLayout, "Switch to guess layout after snippet." }, 
 		{ Element.SnippetsCount, "Snippets: " }, 
+		{ Element.SnippetsExpandKey, "Snippet expand key: " }, 
 		#endregion
 		#region AutoSwitch
 		{ Element.AutoSwitchEnabled, "Enable auto-switch." }, 
@@ -434,6 +437,7 @@ public class Languages
 		{ Element.TT_GuessKeyCodeFix, "Enabling this will make snippets, convert selection, auto-switch to send real virtual key codes instead of unicode chars,\r\nbut that will cause that all characters will be in your current layout.\r\nUseful in programs virtual machines.(BlueStacks, VirtualBox etc.)" },
 		{ Element.TT_ConfigsInAppData, "If enabled Mahou will copy current configs to AppData, and will use them.\r\nAlso logs and snippets will be stored in %AppData%\\Mahou.\r\nAfter this checkbox state changed other checkboxes/datas configurations from user interface will not be saved, because they will be loaded from another configs(if switched, from Mahou's directory or from %AppData%\\Mahou).\r\nUseful if you need to run Mahou from Program Files directory by multiple users, and while some of them have no write access to it,\r\nalso it makes possible to have different configurations for each user." },		
 		{ Element.TT_KeysType, "Select which keys type to display in Mahou user interface, they are both working at same time,\r\nso try not to set same keys/hotkeys to avoid double layout switching."},
+		{ Element.TT_SnippetExpandKey, "Select custom snippet expand key,\r\nworks only for snippets, auto-switch will still expand only on space." }, 
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Snippets contains error in syntax, check if there are errors, details on snippets syntax you can find on Wiki." }
@@ -532,6 +536,7 @@ public class Languages
 		{ Element.SnippetSpaceAfter, "Добавлять 1 пробел после сниппетов." },
 		{ Element.SnippetSwitchToGuessLayout, "Переключать на предполагаемую раскладку сниппетов." }, 
 		{ Element.SnippetsCount, "Сниппетов: " }, 
+		{ Element.SnippetsExpandKey, "Клавшиа развертывания:" }, 
 		#region AutoSwitch
 		{ Element.AutoSwitchEnabled, "Включить автозамену." }, 
 		{ Element.AutoSwitchSpaceAfter, "Добавлять 1 пробел после автозамены." }, 
@@ -663,6 +668,7 @@ public class Languages
 		{ Element.TT_GuessKeyCodeFix, "Включая это сниппеты, конвертация выделения, автозамена будут отправлять реальные коды клавиш вместо юникод символов,\r\nно это сделает так что все символы будут в вашей текущей раскладке.\r\nПолезно в приложениях виртуальных машинах(BlueStacks, VirtualBox, etc)." },
 		{ Element.TT_ConfigsInAppData, "Если включено Mahou скопирует текущую конфигурацию(Mahou.ini) в AppData, и будет использовать их.\r\nТакже логи и сниппеты будут храниться в %AppData%\\Mahou.\r\nКогда состояние этой галочки изменено все другие галочки/данные конфигурации измененные в пользовательском интерфейсе не будут сохранены,\r\nт.к. произойдет смена конфигурации и загрузка выбранной(из папки Mahou или из %AppData%\\Mahou).\r\nПолезно если нужно запускать Mahou в папке Program files а прав на запись у всех пользователей - нет,\r\nи еще даёт возможность иметь разные настройки для каждого пользователя." },		
 		{ Element.TT_KeysType, "Выбирите какой тип клавиш отображать в Mahou, оба типа работают ВМЕСТЕ,\r\nтак что лучше не назначайте одиннаковые клавиши/гор. клавиши во избежание двойного переключения раскладки."},
+		{ Element.TT_SnippetExpandKey, "Выберите какой клавишей развертывать(увеличивать/превращать) сниппеты,\r\nработает толкьо для сниппетов, автозамена как и раньше будет работать только при Space." },
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Сниппеты содержат ошибки в синтаксисе, проверьте ваши сниппеты, детали синтаксиса можете найти на Wiki." }
