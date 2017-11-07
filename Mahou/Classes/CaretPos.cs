@@ -95,31 +95,24 @@ namespace Mahou
 				} else {
 					if (_pntCR.Equals(new Point(0,0)))
 						return LuckyNone;
-					var _fwTitle = new StringBuilder(128);
-					WinAPI.GetWindowText(_fw, _fwTitle, 127);
 					Logging.Log("CaretPos = x["+_pntCR.X+"], y["+_pntCR.Y+"].");	
+					var _clsNM = _clsNMb.ToString().ToLower();
 					// Do not display caret for these classes:
-					var _clsNM = _clsNMb.ToString();
-					if (new Regex("[L][I][S][T][B][O][X]", RegexOptions.IgnoreCase).IsMatch(_clsNM) ||
-					    new Regex("[B][U][T][T][O][N]", RegexOptions.IgnoreCase).IsMatch(_clsNM) ||
-				  	    new Regex("[C][H][E][C][K][B][O][X]", RegexOptions.IgnoreCase).IsMatch(_clsNM) ||
-					    new Regex("[C][O][M][B][O][B][O][X]", RegexOptions.IgnoreCase).IsMatch(_clsNM) ||
-					    new Regex("[L][I][S][T][V][I][E][W]", RegexOptions.IgnoreCase).IsMatch(_clsNM) ||
-					    new Regex("[P][A][G][E][C][O][N][T][r][o][l]", RegexOptions.IgnoreCase).IsMatch(_clsNM) ||
-					    (new Regex("[W][I][N][D][O][W]", RegexOptions.IgnoreCase).IsMatch(_clsNM) && _clsNM != "MozillaWindowClass") ||
-					    new Regex("[S][Y][S][L][I][N][K]", RegexOptions.IgnoreCase).IsMatch(_clsNM) ||
-					    new Regex("[T][R][E][E]", RegexOptions.IgnoreCase).IsMatch(_clsNM) ||
-					    new Regex("[H][E][L][P][F][O][R][M]", RegexOptions.IgnoreCase).IsMatch(_clsNM) ||
-					    new Regex("[T][M][A][I][N][F][O][R][M]", RegexOptions.IgnoreCase).IsMatch(_clsNM) ||
-					    new Regex("[B][T][N]", RegexOptions.IgnoreCase).IsMatch(_clsNM) || _clsNM.Contains("Afx:") || 
-					    _clsNM == "msctls_trackbar32"|| _clsNM.Contains("wxWindow") ||
-					    _clsNM == "SysTabControl32" || _clsNM == "DirectUIHWND" ||
-					    _clsNM == "Static" ||  _clsNM == "NetUIHWND" || _clsNMfw == "MSPaintApp" ||
-					    _clsNM == "PotPlayer" || _clsNM == "MDIClient" || 
-					    _clsNMfw == "#32770" && (new Regex("[У][Д][А][Л][И][Т][Ь]", RegexOptions.IgnoreCase).IsMatch(_fwTitle.ToString()) ||
-					                            (new Regex("[D][E][L][E][T][E]", RegexOptions.IgnoreCase).IsMatch(_fwTitle.ToString()))))
+					if (_clsNM.Contains("listbox") || _clsNM.Contains("button") || 
+						_clsNM.Contains("checkbox") || _clsNM.Contains("combobox") || 
+						_clsNM.Contains("listview") || _clsNM.Contains("pagecontrol") || 
+						_clsNM.Contains("window") || _clsNM.Contains("syslink") || 
+						_clsNM.Contains("tree") || _clsNM.Contains("helpform") || 
+						_clsNM.Contains("tmainform") || _clsNM.Contains("btn") ||  
+						_clsNM.Contains("удалить") || _clsNM.Contains("delete") ||
+					    _clsNM.Contains("afx:") ||
+					    _clsNM == "msctls_trackbar32"|| _clsNM.Contains("wxwindow") ||
+					    _clsNM == "systabcontrol32" || _clsNM == "directuihwnd" ||
+					    _clsNM == "static" ||  _clsNM == "netuihwnd" || _clsNMfw == "mspaintapp" ||
+					    _clsNM == "potplayer" || _clsNM == "mdiclient" || 
+					    (_clsNMfw == "#32770" && _clsNM != "edit"))
 						return LuckyNone;
-					if (_clsNM.Contains("SharpDevelop.exe")) {
+					if (_clsNM.Contains("sharpdevelop.exe")) {
 						_pntCR.Y += 28; _pntCR.X += 3;
 					}
 					Logging.Log("Get caret position finished successfully.", 0);
