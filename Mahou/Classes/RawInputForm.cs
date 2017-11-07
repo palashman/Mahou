@@ -19,7 +19,10 @@ namespace Mahou {
 	            if (outSize != -1) {
 	                if (input.Header.Type == WinAPI.RawInputType.Mouse)
 	            		if (input.Data.Mouse.Data.ButtonFlags != WinAPI.RawMouseButtons.None)
-	            	    	KMHook.ListenMouse(input.Data.Mouse.Data.ButtonFlags);
+	            	    	KMHook.ListenMouse((ushort)input.Data.Mouse.Data.ButtonFlags);
+	                	else 
+	            	    	KMHook.ListenMouse((ushort)input.Data.Mouse.Flags);
+	                		
 	                if (input.Header.Type == WinAPI.RawInputType.Keyboard) {
 	                	var kbd = input.Data.Keyboard;
 	                	var k = kbd.VKey;

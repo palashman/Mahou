@@ -171,6 +171,8 @@ namespace Mahou
 			// Upper arrows for lang displays
 			CheckBool("Appearence", "MouseLTUpperArrow", "false");
 			CheckBool("Appearence", "CaretLTUpperArrow", "false");
+			// Windows Messages instead of timers
+			CheckBool("Appearence", "WindowsMessages", "true");
 			#endregion
 			#region Timings section
 			CheckInt("Timings", "LangTooltipForMouseRefreshRate", "25");
@@ -183,6 +185,7 @@ namespace Mahou
 			CheckInt("Timings", "SelectedTextGetMoreTriesCount", "5");
 			CheckString("Timings", "ExcludedPrograms", "LA.exe SomeProg.exe");
             CheckBool("Timings", "ChangeLayoutInExcluded", "true");
+			CheckInt("Timings", "LangTooltipForMouseSkipMessages", "5");
 			#endregion
 			#region Snippets section
 			CheckBool("Snippets", "SnippetsEnabled", "false");

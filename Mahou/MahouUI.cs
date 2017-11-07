@@ -50,7 +50,8 @@ namespace Mahou {
 					ConvertSelectionLS, ConvertSelectionLSPlus, MCDSSupport, OneLayoutWholeWord,
 					MouseTTAlways, OneLayout, MouseLangTooltipEnabled, CaretLangTooltipEnabled, QWERTZ_fix, 
 					ChangeLayoutInExcluded, SnippetSpaceAfter, SnippetsSwitchToGuessLayout, AutoSwitchEnabled,
-					AutoSwitchSpaceAfter, AutoSwitchSwitchToGuessLayout, GuessKeyCodeFix, Dowload_ASD_InZip;
+					AutoSwitchSpaceAfter, AutoSwitchSwitchToGuessLayout, GuessKeyCodeFix, Dowload_ASD_InZip, 
+					LDForCaret, LDForMouse, LDUseWindowsMessages;
 		/// <summary> Temporary modifiers of hotkeys. </summary>
 		string Mainhk_tempMods, ExitHk_tempMods, HKCLast_tempMods, HKCSelection_tempMods, 
 			    HKCLine_tempMods, HKSymIgn_tempMods, HKConMorWor_tempMods, HKTitleCase_tempMods,
@@ -151,6 +152,8 @@ namespace Mahou {
 		public static string mahou_folder_appd = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Mahou");
 		public static string latest_save_dir = "";
 		public static string AutoSwitchDictionaryRaw = "";
+		public static Point LDC_lp = new Point(0,0);
+		public static int LD_MouseSkipMessagesCount = 0;
 		#endregion
 		public MahouUI() {
 			InitializeComponent();
@@ -716,9 +719,13 @@ namespace Mahou {
 				}
 				MMain.MyConfs.Write("Appearence", "MouseLTUpperArrow", mouseLTUpperArrow.ToString());
 				MMain.MyConfs.Write("Appearence", "CaretLTUpperArrow", caretLTUpperArrow.ToString());
+				MMain.MyConfs.Write("Appearence", "WindowsMessages", chk_LDMessages.Checked.ToString());
 				#endregion
 				#region Timings
-				MMain.MyConfs.Write("Timings", "LangTooltipForMouseRefreshRate", nud_LangTTMouseRefreshRate.Value.ToString());
+				if (LDUseWindowsMessages)
+					MMain.MyConfs.Write("Timings", "LangTooltipForMouseSkipMessages", nud_LangTTMouseRefreshRate.Value.ToString());
+				else
+					MMain.MyConfs.Write("Timings", "LangTooltipForMouseRefreshRate", nud_LangTTMouseRefreshRate.Value.ToString());
 				MMain.MyConfs.Write("Timings", "LangTooltipForCaretRefreshRate", nud_LangTTCaretRefreshRate.Value.ToString());
 				MMain.MyConfs.Write("Timings", "DoubleHotkey2ndPressWait", nud_DoubleHK2ndPressWaitTime.Value.ToString());
 				MMain.MyConfs.Write("Timings", "FlagsInTrayRefreshRate", nud_TrayFlagRefreshRate.Value.ToString());
@@ -889,17 +896,30 @@ namespace Mahou {
 			PersistentLayout2Processes = txt_PersistentLayout2Processes.Text = MMain.MyConfs.Read("PersistentLayout", "Layout2Processes").Replace("^cr^lf", Environment.NewLine);
 			#endregion
 			#region Appearence
-			chk_LangTooltipMouse.Checked = MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForMouse");
-			chk_LangTooltipCaret.Checked = MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForCaret");
+			LDForMouse = chk_LangTooltipMouse.Checked = MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForMouse");
+			LDForCaret = chk_LangTooltipCaret.Checked = MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForCaret");
 			LDForMouseOnChange = chk_LangTTMouseOnChange.Checked = MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForMouseOnChange");
 			LDForCaretOnChange = chk_LangTTCaretOnChange.Checked = MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForCaretOnChange");
 			DiffAppearenceForLayouts = chk_LangTTDiffLayoutColors.Checked = MMain.MyConfs.ReadBool("Appearence", "DifferentColorsForLayouts");
 			MouseTTAlways = chk_MouseTTAlways.Checked = MMain.MyConfs.ReadBool("Appearence", "MouseLTAlways");
 			mouseLTUpperArrow = MMain.MyConfs.ReadBool("Appearence", "MouseLTUpperArrow");
 			caretLTUpperArrow = MMain.MyConfs.ReadBool("Appearence", "CaretLTUpperArrow");
+			LDUseWindowsMessages = chk_LDMessages.Checked = MMain.MyConfs.ReadBool("Appearence", "WindowsMessages");
 			#endregion
 			#region Timings
-			nud_LangTTMouseRefreshRate.Value = MMain.MyConfs.ReadInt("Timings", "LangTooltipForMouseRefreshRate");
+			LD_MouseSkipMessagesCount = MMain.MyConfs.ReadInt("Timings", "LangTooltipForMouseSkipMessages");
+			if (LDUseWindowsMessages) {
+				nud_LangTTMouseRefreshRate.Maximum = 100;
+				nud_LangTTMouseRefreshRate.Minimum = 0;
+				nud_LangTTMouseRefreshRate.Increment = 1;
+				nud_LangTTMouseRefreshRate.Value = LD_MouseSkipMessagesCount;
+				lbl_LangTTMouseRefreshRate.Text = MMain.Lang[Languages.Element.LD_MouseSkipMessages];
+			} else {
+				nud_LangTTMouseRefreshRate.Maximum = 2500;
+				nud_LangTTMouseRefreshRate.Minimum = 1;
+				nud_LangTTMouseRefreshRate.Increment = 25;
+				nud_LangTTMouseRefreshRate.Value = MMain.MyConfs.ReadInt("Timings", "LangTooltipForMouseRefreshRate");
+			}
 			nud_LangTTCaretRefreshRate.Value = MMain.MyConfs.ReadInt("Timings", "LangTooltipForCaretRefreshRate");
 			nud_DoubleHK2ndPressWaitTime.Value = DoubleHKInterval =  MMain.MyConfs.ReadInt("Timings", "DoubleHotkey2ndPressWait");
 			nud_TrayFlagRefreshRate.Value = MMain.MyConfs.ReadInt("Timings", "FlagsInTrayRefreshRate");
@@ -1183,6 +1203,7 @@ namespace Mahou {
 			lbl_FlagTrayRefreshRate.Enabled = nud_TrayFlagRefreshRate.Enabled = chk_FlagsInTray.Checked;
 			lbl_LangTTCaretRefreshRate.Enabled = nud_LangTTCaretRefreshRate.Enabled = chk_LangTooltipCaret.Checked;
 			lbl_LangTTMouseRefreshRate.Enabled = nud_LangTTMouseRefreshRate.Enabled = chk_LangTooltipMouse.Checked;
+			lbl_LangTTCaretRefreshRate.Enabled = nud_LangTTCaretRefreshRate.Enabled = !chk_LDMessages.Checked;
 		}
 		/// <summary>
 		/// Toggles visibility of main window.
@@ -1503,63 +1524,9 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			KMHook.doublekey = new Timer();
 			#endregion
 			crtCheck.Interval = MMain.MyConfs.ReadInt("Timings", "LangTooltipForCaretRefreshRate");
-			crtCheck.Tick += (_, __) => {
-				var crtOnly = new Point(0,0);
-				var curCrtPos = CaretPos.GetCaretPointToScreen(out crtOnly);
-				uint cLuid = 0;
-				var notTwo = false;
-				if (LDForCaretOnChange || DiffAppearenceForLayouts)
-					cLuid = Locales.GetCurrentLocale();
-				if (DiffAppearenceForLayouts && cLuid != 0) {
-					if (cLuid == Locales.GetLocaleFromString(MainLayout1).uId) {
-						caretLangDisplay.Location = new Point(curCrtPos.X + Layout1X_Pos_temp, 
-						                                      curCrtPos.Y + Layout1Y_Pos_temp);
-					} else if (cLuid == Locales.GetLocaleFromString(MainLayout2).uId) {
-						caretLangDisplay.Location = new Point(curCrtPos.X + Layout2X_Pos_temp, 
-						                                      curCrtPos.Y + Layout2Y_Pos_temp);
-					} else notTwo = true;
-				} else notTwo = true;
-				if (notTwo)
-					caretLangDisplay.Location = new Point(curCrtPos.X + LDCaretX_Pos_temp, 
-					                                      curCrtPos.Y + LDCaretY_Pos_temp);
-				if (LDForCaretOnChange && cLuid != 0) {
-					if (onepassC) {
-						latestCL = cLuid;
-						onepassC = false;
-					}
-					if (latestCL != cLuid) {
-						caretLangDisplay.ShowInactiveTopmost();
-						res.Start();
-					}
-				} else {
-				if (KMHook.ff_wheeled || caretLangDisplay.Empty)
-					caretLangDisplay.HideWnd();
-				else if (crtOnly.X != 77777 && crtOnly.Y != 77777) // 77777x77777 is null/none point
-					caretLangDisplay.ShowInactiveTopmost();
-				caretLangDisplay.RefreshLang();
-				}
-			};
+			crtCheck.Tick += (_, __) => UpdateCaredLD();
 			ICheck.Interval = MMain.MyConfs.ReadInt("Timings", "LangTooltipForMouseRefreshRate");
-			ICheck.Tick += (_, __) => {
-				if (LDForMouseOnChange) {
-					var cLuid = Locales.GetCurrentLocale();
-					if (onepass) {
-						latestL = cLuid;
-						onepass = false;
-					}
-					if (latestL != cLuid) {
-						mouseLangDisplay.ShowInactiveTopmost();
-						res.Start();
-					}
-				} else {
-					if ((ICheckings.IsICursor() || MouseTTAlways) && !mouseLangDisplay.Empty)
-						mouseLangDisplay.ShowInactiveTopmost();
-					else
-						mouseLangDisplay.HideWnd();
-				}
-				mouseLangDisplay.Location = new Point(Cursor.Position.X + LDMouseX_Pos_temp, Cursor.Position.Y + LDMouseY_Pos_temp);
-				mouseLangDisplay.RefreshLang();
-			};
+			ICheck.Tick += (_, __) => UpdateMouseLD();
 			res.Interval = (ICheck.Interval + crtCheck.Interval) * 2;
 			res.Tick += (_, __) => {
 				onepass = true;
@@ -1648,6 +1615,70 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			InitLangDisplays();
 			ToggleTimers();
 		}
+		public void UpdateMouseLD() {
+			if (LDForMouseOnChange) {
+				var cLuid = Locales.GetCurrentLocale();
+				if (onepass) {
+					latestL = cLuid;
+					onepass = false;
+				}
+				if (latestL != cLuid) {
+					mouseLangDisplay.ShowInactiveTopmost();
+					res.Start();
+				}
+			} else {
+				if ((ICheckings.IsICursor() || MouseTTAlways) && !mouseLangDisplay.Empty)
+					mouseLangDisplay.ShowInactiveTopmost();
+				else
+					mouseLangDisplay.HideWnd();
+			}
+			if (mouseLangDisplay.Visible) {
+				mouseLangDisplay.Location = new Point(Cursor.Position.X + LDMouseX_Pos_temp, Cursor.Position.Y + LDMouseY_Pos_temp);
+				mouseLangDisplay.RefreshLang();
+			}
+		}
+		public void UpdateCaredLD() {
+			var crtOnly = new Point(0,0);
+			var curCrtPos = CaretPos.GetCaretPointToScreen(out crtOnly);
+			uint cLuid = 0;
+			var notTwo = false;
+			if (LDForCaretOnChange || DiffAppearenceForLayouts)
+				cLuid = Locales.GetCurrentLocale();
+			if (LDForCaretOnChange && cLuid != 0) {
+				if (onepassC) {
+					latestCL = cLuid;
+					onepassC = false;
+				}
+				if (latestCL != cLuid) {
+					caretLangDisplay.ShowInactiveTopmost();
+					res.Start();
+				}
+			} else {
+				if (KMHook.ff_wheeled || caretLangDisplay.Empty)
+					caretLangDisplay.HideWnd();
+				else if (crtOnly.X != 77777 && crtOnly.Y != 77777) // 77777x77777 is null/none point
+					caretLangDisplay.ShowInactiveTopmost();
+			}
+			if (caretLangDisplay.Visible) {
+				var LDC_np = new Point(0,0);
+				if (DiffAppearenceForLayouts && cLuid != 0) {
+					if (cLuid == Locales.GetLocaleFromString(MainLayout1).uId) {
+						LDC_np = new Point(curCrtPos.X + Layout1X_Pos_temp, 
+						                                      curCrtPos.Y + Layout1Y_Pos_temp);
+					} else if (cLuid == Locales.GetLocaleFromString(MainLayout2).uId) {
+						LDC_np = new Point(curCrtPos.X + Layout2X_Pos_temp, 
+						                                      curCrtPos.Y + Layout2Y_Pos_temp);
+					} else notTwo = true;
+				} else notTwo = true;
+				if (notTwo)
+					LDC_np = new Point(curCrtPos.X + LDCaretX_Pos_temp, 
+					                                      curCrtPos.Y + LDCaretY_Pos_temp);
+				caretLangDisplay.RefreshLang();
+				if (LDC_lp != LDC_np) 
+					caretLangDisplay.Location = LDC_np;
+				LDC_lp = LDC_np;
+			}
+		}
 		public void PersistentLayoutCheck(string ProcessNames, string Layout) {
 			try {
 				var actProcName = Locales.ActiveWindowProcess().ProcessName.ToLower().Replace(" ", "_") + ".exe";
@@ -1669,12 +1700,14 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 		/// </summary>
 		public void ToggleTimers() {
 			if (!Configs.fine) return;
-			if (MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForMouse"))
-				ICheck.Start();
+			if (!LDUseWindowsMessages) {
+				if (LDForMouse)
+					ICheck.Start();
+				if (LDForCaret)
+					crtCheck.Start();
+			}
 			if (MMain.MyConfs.ReadBool("Functions", "ScrollTip"))
 				ScrlCheck.Start();
-			if (MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForCaret"))
-				crtCheck.Start();
 			if (MMain.MyConfs.ReadBool("Functions", "CapsLockTimer"))
 				capsCheck.Start();
 			if (MMain.MyConfs.ReadBool("Functions", "TrayFlags"))
@@ -2705,6 +2738,7 @@ DEL ""ExtractASD.cmd""";
 														});
 			chk_LangTTUseFlags.Text = MMain.Lang[Languages.Element.UseFlags];
 			chk_LangTTUpperArrow.Text = MMain.Lang[Languages.Element.LDUpperArrow];
+			chk_LDMessages.Text = MMain.Lang[Languages.Element.LDUseWinMessages];
 			#endregion
 			#region Timings
 			lbl_LangTTMouseRefreshRate.Text = MMain.Lang[Languages.Element.LDForMouseRefreshRate];
@@ -2845,6 +2879,7 @@ DEL ""ExtractASD.cmd""";
 			HelpMeUnderstand.SetToolTip(cbb_SpecKeysType, MMain.Lang[Languages.Element.TT_KeysType]);
 			HelpMeUnderstand.SetToolTip(lbl_SnippetExpandKey, MMain.Lang[Languages.Element.TT_SnippetExpandKey]);
 			HelpMeUnderstand.SetToolTip(cbb_SnippetExpandKeys, MMain.Lang[Languages.Element.TT_SnippetExpandKey]);
+			HelpMeUnderstand.SetToolTip(chk_LDMessages, MMain.Lang[Languages.Element.TT_LDUseWinMessages]);
 		}
 		void HelpMeUnderstandPopup(object sender, PopupEventArgs e) {
 			HelpMeUnderstand.ToolTipTitle = e.AssociatedControl.Text;

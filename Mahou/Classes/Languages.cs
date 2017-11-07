@@ -74,6 +74,7 @@ public class Languages
 		UseFlags,
 		Always,
 		LDUpperArrow,
+		LDUseWinMessages,
 		#endregion
 		#region Timings
 		LDForMouseRefreshRate,
@@ -85,6 +86,7 @@ public class Languages
 		MoreTriesToGetSelectedText,
 		ExcludedPrograms,
 		Change1KeyLayoutInExcluded,
+		LD_MouseSkipMessages,
 		#endregion
 		#region Snippets
 		SnippetsEnabled,
@@ -208,6 +210,7 @@ public class Languages
 		TT_ConfigsInAppData,
 		TT_KeysType,
 		TT_SnippetExpandKey,
+		TT_LDUseWinMessages,
 		#endregion
 		#region Messages
 		MSG_SnippetsError
@@ -286,6 +289,7 @@ public class Languages
 		{ Element.UseFlags, "Use flags." },
 		{ Element.Always, "Always." },
 		{ Element.LDUpperArrow, "Arrow when upper case." },
+		{ Element.LDUseWinMessages, "Use Windows Messages instead of timers." },
 		#endregion
 		#region Timings
 		{ Element.LDForMouseRefreshRate, "Language tooltip around mouse refresh rate(ms):" }, 
@@ -297,6 +301,7 @@ public class Languages
 		{ Element.MoreTriesToGetSelectedText, "Use more tries to get selected text:" }, 
 		{ Element.ExcludedPrograms, "Excluded programs:" }, 
 		{ Element.Change1KeyLayoutInExcluded, "Change layout by 1 key even in excluded." }, 
+		{ Element.LD_MouseSkipMessages, "Windows Messages to skip before updating mouse LT:" }, 
 		#endregion
 		#region Snippets
 		{ Element.SnippetsEnabled, "Enable snippets." }, 
@@ -437,7 +442,8 @@ public class Languages
 		{ Element.TT_GuessKeyCodeFix, "Enabling this will make snippets, convert selection, auto-switch to send real virtual key codes instead of unicode chars,\r\nbut that will cause that all characters will be in your current layout.\r\nUseful in programs virtual machines.(BlueStacks, VirtualBox etc.)" },
 		{ Element.TT_ConfigsInAppData, "If enabled Mahou will copy current configs to AppData, and will use them.\r\nAlso logs and snippets will be stored in %AppData%\\Mahou.\r\nAfter this checkbox state changed other checkboxes/datas configurations from user interface will not be saved, because they will be loaded from another configs(if switched, from Mahou's directory or from %AppData%\\Mahou).\r\nUseful if you need to run Mahou from Program Files directory by multiple users, and while some of them have no write access to it,\r\nalso it makes possible to have different configurations for each user." },		
 		{ Element.TT_KeysType, "Select which keys type to display in Mahou user interface, they are both working at same time,\r\nso try not to set same keys/hotkeys to avoid double layout switching."},
-		{ Element.TT_SnippetExpandKey, "Select custom snippet expand key,\r\nworks only for snippets, auto-switch will still expand only on space." }, 
+		{ Element.TT_SnippetExpandKey, "Select custom snippet expand key,\r\nworks only for snippets, auto-switch will still expand only on space." },
+		{ Element.TT_LDUseWinMessages, "If enabled, timers will not be used to update language tooltips,\r\ninstead they will be updated on appropriate Windows Messages.\r\nLess CPU hungry than timers.\r\nMost CPU hungry is mouse tooltip with always enabled,\r\nconsumes CPU only on mouse move/clicks,\r\nto decrease its CPU usage, there will be 1 new config in Timings tab.\r\nSkip x Windows Messages before updating tooltip." },
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Snippets contains error in syntax, check if there are errors, details on snippets syntax you can find on Wiki." }
@@ -519,6 +525,7 @@ public class Languages
 		{ Element.UseFlags, "Использовать флаги." }, 
 		{ Element.Always, "Всегда." },
 		{ Element.LDUpperArrow, "Стелка при верхнем регистре." },
+		{ Element.LDUseWinMessages, "Использовать Сообщения Windows вместо таймеров." },
 		#endregion
 		#region Timings
 		{ Element.LDForMouseRefreshRate, "Скорость обновления подсказки языка возле мыши(мс):" }, 
@@ -530,6 +537,7 @@ public class Languages
 		{ Element.MoreTriesToGetSelectedText, "Использовать больше попыток взятия текста:" }, 
 		{ Element.ExcludedPrograms, "Программы исключения:" }, 
 		{ Element.Change1KeyLayoutInExcluded, "Менять раскладку 1 клавишей даже в исключениях." }, 
+		{ Element.LD_MouseSkipMessages, "Сообщений Windows пропускается перед обновлением подсказки мыши:" },
 		#endregion
 		#region Snippets
 		{ Element.SnippetsEnabled, "Включить сниппеты." }, 
@@ -669,6 +677,7 @@ public class Languages
 		{ Element.TT_ConfigsInAppData, "Если включено Mahou скопирует текущую конфигурацию(Mahou.ini) в AppData, и будет использовать их.\r\nТакже логи и сниппеты будут храниться в %AppData%\\Mahou.\r\nКогда состояние этой галочки изменено все другие галочки/данные конфигурации измененные в пользовательском интерфейсе не будут сохранены,\r\nт.к. произойдет смена конфигурации и загрузка выбранной(из папки Mahou или из %AppData%\\Mahou).\r\nПолезно если нужно запускать Mahou в папке Program files а прав на запись у всех пользователей - нет,\r\nи еще даёт возможность иметь разные настройки для каждого пользователя." },		
 		{ Element.TT_KeysType, "Выбирите какой тип клавиш отображать в Mahou, оба типа работают ВМЕСТЕ,\r\nтак что лучше не назначайте одиннаковые клавиши/гор. клавиши во избежание двойного переключения раскладки."},
 		{ Element.TT_SnippetExpandKey, "Выберите какой клавишей развертывать(увеличивать/превращать) сниппеты,\r\nработает толкьо для сниппетов, автозамена как и раньше будет работать только при Space." },
+		{ Element.TT_LDUseWinMessages, "Если включено, подсказки будут обновлятся не через таймеры,\r\nвместо этого они будут обновлятся на соответствующих Сообщениях Windows.\r\nПотребляет меньше ЦП.\r\nСамая требовательная к ЦП функция - подсказка возле мыши при всегда включенной,\r\nпотребляет ЦП только при движении/кликах мыши,\r\nчтобы уменьшить ее потребление ЦП, есть новая конфигурация во вкладке Тайминги.\r\nПропуск х Сообщений Windows перед обновлением подсказки." },
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Сниппеты содержат ошибки в синтаксисе, проверьте ваши сниппеты, детали синтаксиса можете найти на Wiki." }

@@ -193,6 +193,7 @@ namespace Mahou
 		private System.Windows.Forms.ComboBox cbb_SpecKeysType;
 		private System.Windows.Forms.ComboBox cbb_SnippetExpandKeys;
 		private System.Windows.Forms.Label lbl_SnippetExpandKey;
+		private System.Windows.Forms.CheckBox chk_LDMessages;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -282,12 +283,7 @@ namespace Mahou
 			this.chk_PersistentLayout1Active = new System.Windows.Forms.CheckBox();
 			this.txt_PersistentLayout1Processes = new Mahou.MahouUI.TextBoxCA();
 			this.tab_appearence = new System.Windows.Forms.TabPage();
-			this.chk_MouseTTAlways = new System.Windows.Forms.CheckBox();
-			this.cbb_Language = new System.Windows.Forms.ComboBox();
-			this.lbl_Language = new System.Windows.Forms.Label();
-			this.chk_LangTTDiffLayoutColors = new System.Windows.Forms.CheckBox();
-			this.chk_LangTTCaretOnChange = new System.Windows.Forms.CheckBox();
-			this.chk_LangTTMouseOnChange = new System.Windows.Forms.CheckBox();
+			this.chk_LDMessages = new System.Windows.Forms.CheckBox();
 			this.grb_LangTTAppearence = new System.Windows.Forms.GroupBox();
 			this.txt_LangTTText = new System.Windows.Forms.TextBox();
 			this.chk_LangTTUpperArrow = new System.Windows.Forms.CheckBox();
@@ -310,6 +306,12 @@ namespace Mahou
 			this.btn_LangTTBackgroundColor = new System.Windows.Forms.Button();
 			this.btn_LangTTForegroundColor = new System.Windows.Forms.Button();
 			this.lsb_LangTTAppearenceForList = new System.Windows.Forms.ListBox();
+			this.chk_MouseTTAlways = new System.Windows.Forms.CheckBox();
+			this.cbb_Language = new System.Windows.Forms.ComboBox();
+			this.lbl_Language = new System.Windows.Forms.Label();
+			this.chk_LangTTDiffLayoutColors = new System.Windows.Forms.CheckBox();
+			this.chk_LangTTCaretOnChange = new System.Windows.Forms.CheckBox();
+			this.chk_LangTTMouseOnChange = new System.Windows.Forms.CheckBox();
 			this.chk_LangTooltipCaret = new System.Windows.Forms.CheckBox();
 			this.chk_LangTooltipMouse = new System.Windows.Forms.CheckBox();
 			this.tab_timings = new System.Windows.Forms.TabPage();
@@ -1231,13 +1233,14 @@ namespace Mahou
 			// 
 			// tab_appearence
 			// 
+			this.tab_appearence.Controls.Add(this.chk_LDMessages);
+			this.tab_appearence.Controls.Add(this.grb_LangTTAppearence);
 			this.tab_appearence.Controls.Add(this.chk_MouseTTAlways);
 			this.tab_appearence.Controls.Add(this.cbb_Language);
 			this.tab_appearence.Controls.Add(this.lbl_Language);
 			this.tab_appearence.Controls.Add(this.chk_LangTTDiffLayoutColors);
 			this.tab_appearence.Controls.Add(this.chk_LangTTCaretOnChange);
 			this.tab_appearence.Controls.Add(this.chk_LangTTMouseOnChange);
-			this.tab_appearence.Controls.Add(this.grb_LangTTAppearence);
 			this.tab_appearence.Controls.Add(this.chk_LangTooltipCaret);
 			this.tab_appearence.Controls.Add(this.chk_LangTooltipMouse);
 			this.tab_appearence.Location = new System.Drawing.Point(4, 44);
@@ -1248,68 +1251,15 @@ namespace Mahou
 			this.tab_appearence.Text = "Appearence";
 			this.tab_appearence.UseVisualStyleBackColor = true;
 			// 
-			// chk_MouseTTAlways
+			// chk_LDMessages
 			// 
-			this.chk_MouseTTAlways.AutoSize = true;
-			this.chk_MouseTTAlways.Location = new System.Drawing.Point(484, 6);
-			this.chk_MouseTTAlways.Name = "chk_MouseTTAlways";
-			this.chk_MouseTTAlways.Size = new System.Drawing.Size(66, 19);
-			this.chk_MouseTTAlways.TabIndex = 16;
-			this.chk_MouseTTAlways.Text = "Always.";
-			this.chk_MouseTTAlways.UseVisualStyleBackColor = true;
-			this.chk_MouseTTAlways.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
-			// 
-			// cbb_Language
-			// 
-			this.cbb_Language.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cbb_Language.FormattingEnabled = true;
-			this.cbb_Language.Items.AddRange(new object[] {
-			"Русский",
-			"English"});
-			this.cbb_Language.Location = new System.Drawing.Point(435, 54);
-			this.cbb_Language.Name = "cbb_Language";
-			this.cbb_Language.Size = new System.Drawing.Size(117, 23);
-			this.cbb_Language.TabIndex = 15;
-			// 
-			// lbl_Language
-			// 
-			this.lbl_Language.AutoSize = true;
-			this.lbl_Language.Location = new System.Drawing.Point(367, 57);
-			this.lbl_Language.Name = "lbl_Language";
-			this.lbl_Language.Size = new System.Drawing.Size(62, 15);
-			this.lbl_Language.TabIndex = 14;
-			this.lbl_Language.Text = "Language:";
-			// 
-			// chk_LangTTDiffLayoutColors
-			// 
-			this.chk_LangTTDiffLayoutColors.AutoSize = true;
-			this.chk_LangTTDiffLayoutColors.Location = new System.Drawing.Point(8, 56);
-			this.chk_LangTTDiffLayoutColors.Name = "chk_LangTTDiffLayoutColors";
-			this.chk_LangTTDiffLayoutColors.Size = new System.Drawing.Size(219, 19);
-			this.chk_LangTTDiffLayoutColors.TabIndex = 13;
-			this.chk_LangTTDiffLayoutColors.Text = "Use different appearence for layouts.";
-			this.chk_LangTTDiffLayoutColors.UseVisualStyleBackColor = true;
-			// 
-			// chk_LangTTCaretOnChange
-			// 
-			this.chk_LangTTCaretOnChange.AutoSize = true;
-			this.chk_LangTTCaretOnChange.Location = new System.Drawing.Point(361, 32);
-			this.chk_LangTTCaretOnChange.Name = "chk_LangTTCaretOnChange";
-			this.chk_LangTTCaretOnChange.Size = new System.Drawing.Size(113, 19);
-			this.chk_LangTTCaretOnChange.TabIndex = 12;
-			this.chk_LangTTCaretOnChange.Text = "Only on change.";
-			this.chk_LangTTCaretOnChange.UseVisualStyleBackColor = true;
-			// 
-			// chk_LangTTMouseOnChange
-			// 
-			this.chk_LangTTMouseOnChange.AutoSize = true;
-			this.chk_LangTTMouseOnChange.Location = new System.Drawing.Point(361, 6);
-			this.chk_LangTTMouseOnChange.Name = "chk_LangTTMouseOnChange";
-			this.chk_LangTTMouseOnChange.Size = new System.Drawing.Size(113, 19);
-			this.chk_LangTTMouseOnChange.TabIndex = 11;
-			this.chk_LangTTMouseOnChange.Text = "Only on change.";
-			this.chk_LangTTMouseOnChange.UseVisualStyleBackColor = true;
-			this.chk_LangTTMouseOnChange.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
+			this.chk_LDMessages.AutoSize = true;
+			this.chk_LDMessages.Location = new System.Drawing.Point(8, 59);
+			this.chk_LDMessages.Name = "chk_LDMessages";
+			this.chk_LDMessages.Size = new System.Drawing.Size(245, 19);
+			this.chk_LDMessages.TabIndex = 17;
+			this.chk_LDMessages.Text = "Use Windows Messages instead of timers.";
+			this.chk_LDMessages.UseVisualStyleBackColor = true;
 			// 
 			// grb_LangTTAppearence
 			// 
@@ -1326,9 +1276,9 @@ namespace Mahou
 			this.grb_LangTTAppearence.Controls.Add(this.btn_LangTTBackgroundColor);
 			this.grb_LangTTAppearence.Controls.Add(this.btn_LangTTForegroundColor);
 			this.grb_LangTTAppearence.Controls.Add(this.lsb_LangTTAppearenceForList);
-			this.grb_LangTTAppearence.Location = new System.Drawing.Point(7, 75);
+			this.grb_LangTTAppearence.Location = new System.Drawing.Point(7, 77);
 			this.grb_LangTTAppearence.Name = "grb_LangTTAppearence";
-			this.grb_LangTTAppearence.Size = new System.Drawing.Size(545, 192);
+			this.grb_LangTTAppearence.Size = new System.Drawing.Size(545, 190);
 			this.grb_LangTTAppearence.TabIndex = 2;
 			this.grb_LangTTAppearence.TabStop = false;
 			this.grb_LangTTAppearence.Text = "Language tooltip appearence";
@@ -1540,10 +1490,73 @@ namespace Mahou
 			this.lsb_LangTTAppearenceForList.TabIndex = 0;
 			this.lsb_LangTTAppearenceForList.SelectedIndexChanged += new System.EventHandler(this.Lsb_LangTTAppearenceForListSelectedIndexChanged);
 			// 
+			// chk_MouseTTAlways
+			// 
+			this.chk_MouseTTAlways.AutoSize = true;
+			this.chk_MouseTTAlways.Location = new System.Drawing.Point(484, 3);
+			this.chk_MouseTTAlways.Name = "chk_MouseTTAlways";
+			this.chk_MouseTTAlways.Size = new System.Drawing.Size(66, 19);
+			this.chk_MouseTTAlways.TabIndex = 16;
+			this.chk_MouseTTAlways.Text = "Always.";
+			this.chk_MouseTTAlways.UseVisualStyleBackColor = true;
+			this.chk_MouseTTAlways.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
+			// 
+			// cbb_Language
+			// 
+			this.cbb_Language.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cbb_Language.FormattingEnabled = true;
+			this.cbb_Language.Items.AddRange(new object[] {
+			"Русский",
+			"English"});
+			this.cbb_Language.Location = new System.Drawing.Point(435, 54);
+			this.cbb_Language.Name = "cbb_Language";
+			this.cbb_Language.Size = new System.Drawing.Size(117, 23);
+			this.cbb_Language.TabIndex = 15;
+			// 
+			// lbl_Language
+			// 
+			this.lbl_Language.AutoSize = true;
+			this.lbl_Language.Location = new System.Drawing.Point(367, 57);
+			this.lbl_Language.Name = "lbl_Language";
+			this.lbl_Language.Size = new System.Drawing.Size(62, 15);
+			this.lbl_Language.TabIndex = 14;
+			this.lbl_Language.Text = "Language:";
+			// 
+			// chk_LangTTDiffLayoutColors
+			// 
+			this.chk_LangTTDiffLayoutColors.AutoSize = true;
+			this.chk_LangTTDiffLayoutColors.Location = new System.Drawing.Point(8, 41);
+			this.chk_LangTTDiffLayoutColors.Name = "chk_LangTTDiffLayoutColors";
+			this.chk_LangTTDiffLayoutColors.Size = new System.Drawing.Size(219, 19);
+			this.chk_LangTTDiffLayoutColors.TabIndex = 13;
+			this.chk_LangTTDiffLayoutColors.Text = "Use different appearence for layouts.";
+			this.chk_LangTTDiffLayoutColors.UseVisualStyleBackColor = true;
+			// 
+			// chk_LangTTCaretOnChange
+			// 
+			this.chk_LangTTCaretOnChange.AutoSize = true;
+			this.chk_LangTTCaretOnChange.Location = new System.Drawing.Point(361, 23);
+			this.chk_LangTTCaretOnChange.Name = "chk_LangTTCaretOnChange";
+			this.chk_LangTTCaretOnChange.Size = new System.Drawing.Size(113, 19);
+			this.chk_LangTTCaretOnChange.TabIndex = 12;
+			this.chk_LangTTCaretOnChange.Text = "Only on change.";
+			this.chk_LangTTCaretOnChange.UseVisualStyleBackColor = true;
+			// 
+			// chk_LangTTMouseOnChange
+			// 
+			this.chk_LangTTMouseOnChange.AutoSize = true;
+			this.chk_LangTTMouseOnChange.Location = new System.Drawing.Point(361, 3);
+			this.chk_LangTTMouseOnChange.Name = "chk_LangTTMouseOnChange";
+			this.chk_LangTTMouseOnChange.Size = new System.Drawing.Size(113, 19);
+			this.chk_LangTTMouseOnChange.TabIndex = 11;
+			this.chk_LangTTMouseOnChange.Text = "Only on change.";
+			this.chk_LangTTMouseOnChange.UseVisualStyleBackColor = true;
+			this.chk_LangTTMouseOnChange.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
+			// 
 			// chk_LangTooltipCaret
 			// 
 			this.chk_LangTooltipCaret.AutoSize = true;
-			this.chk_LangTooltipCaret.Location = new System.Drawing.Point(8, 31);
+			this.chk_LangTooltipCaret.Location = new System.Drawing.Point(8, 22);
 			this.chk_LangTooltipCaret.Name = "chk_LangTooltipCaret";
 			this.chk_LangTooltipCaret.Size = new System.Drawing.Size(268, 19);
 			this.chk_LangTooltipCaret.TabIndex = 1;
@@ -1554,7 +1567,7 @@ namespace Mahou
 			// chk_LangTooltipMouse
 			// 
 			this.chk_LangTooltipMouse.AutoSize = true;
-			this.chk_LangTooltipMouse.Location = new System.Drawing.Point(8, 6);
+			this.chk_LangTooltipMouse.Location = new System.Drawing.Point(8, 3);
 			this.chk_LangTooltipMouse.Name = "chk_LangTooltipMouse";
 			this.chk_LangTooltipMouse.Size = new System.Drawing.Size(278, 19);
 			this.chk_LangTooltipMouse.TabIndex = 0;
@@ -1622,7 +1635,7 @@ namespace Mahou
 			// 
 			// txt_ExcludedPrograms
 			// 
-			this.txt_ExcludedPrograms.Location = new System.Drawing.Point(8, 225);
+			this.txt_ExcludedPrograms.Location = new System.Drawing.Point(8, 222);
 			this.txt_ExcludedPrograms.Multiline = true;
 			this.txt_ExcludedPrograms.Name = "txt_ExcludedPrograms";
 			this.txt_ExcludedPrograms.ScrollBars = System.Windows.Forms.ScrollBars.Both;

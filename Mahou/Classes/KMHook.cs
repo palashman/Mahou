@@ -19,7 +19,8 @@ namespace Mahou
 			keyAfterCTRL, keyAfterALT, keyAfterSHIFT,
 			clickAfterCTRL, clickAfterALT, clickAfterSHIFT,
 			hotkeywithmodsfired, csdoing, incapt, waitfornum, 
-			IsHotkey, ff_wheeled, preSnip;
+			IsHotkey, ff_wheeled, preSnip, LMB_down, RMB_down, MMB_down;
+		public static int skip_mouse_events;
 		static string lastClipText = "";
 		static List<Keys> tempNumpads = new List<Keys>();
 		static List<char> c_snip = new List<char>();
@@ -427,16 +428,28 @@ namespace Mahou
 			MahouUI.ShiftInHotkey = MahouUI.AltInHotkey = MahouUI.WinInHotkey = MahouUI.CtrlInHotkey = false;
 			#endregion
 			preSnip = false;
-		}
-		public static void ListenMouse(WinAPI.RawMouseButtons MSG) {
-			if ((MSG == WinAPI.RawMouseButtons.MouseWheel && MMain.mahou.caretLangDisplay.Visible && MMain.mahou.CaretLangTooltipEnabled)) {
-				var _fw = WinAPI.GetForegroundWindow();
-				var _clsNMb = new StringBuilder(40);
-				WinAPI.GetClassName(_fw, _clsNMb, _clsNMb.Capacity);
-				if (_clsNMb.ToString() == "MozillaWindowClass")
-					ff_wheeled = true;
+			#region Update LD
+			if (MMain.mahou.LDUseWindowsMessages) {
+				if (MMain.mahou.LDForCaret) {
+					MMain.mahou.UpdateCaredLD();
+				}
+				if (MMain.mahou.LDForMouse) {
+					MMain.mahou.UpdateMouseLD();
+				}
 			}
-			if (MSG == WinAPI.RawMouseButtons.LeftDown || MSG == WinAPI.RawMouseButtons.RightDown) {
+			#endregion
+		}
+		public static void ListenMouse(ushort MSG) {
+			if ((MSG == (ushort)WinAPI.RawMouseButtons.MouseWheel)) {
+				if (MMain.mahou.caretLangDisplay.Visible && MMain.mahou.CaretLangTooltipEnabled) {
+					var _fw = WinAPI.GetForegroundWindow();
+					var _clsNMb = new StringBuilder(40);
+					WinAPI.GetClassName(_fw, _clsNMb, _clsNMb.Capacity);
+					if (_clsNMb.ToString() == "MozillaWindowClass")
+						ff_wheeled = true;
+				}
+			}
+			if (MSG == (ushort)WinAPI.RawMouseButtons.LeftDown || MSG == (ushort)WinAPI.RawMouseButtons.RightDown) {
 				if (ctrl || ctrl_r)
 					clickAfterCTRL = true;
 				if (shift || shift_r)
@@ -452,7 +465,38 @@ namespace Mahou
 					c_snip.Clear();
 					Logging.Log("Current snippet cleared[with mouse click].");
 				}
-			}	
+			}
+			if (MMain.mahou.LDUseWindowsMessages) {
+				if (MSG == (ushort)WinAPI.RawMouseButtons.LeftDown)
+					LMB_down = true;
+				else if (MSG == (ushort)WinAPI.RawMouseButtons.LeftUp)
+					LMB_down = false;
+				if (MSG == (ushort)WinAPI.RawMouseButtons.RightDown)
+					RMB_down = true;
+				else if (MSG == (ushort)WinAPI.RawMouseButtons.RightUp)
+					RMB_down = false; 
+				if (MSG == (ushort)WinAPI.RawMouseButtons.MiddleDown)
+					MMB_down = true;
+				else if (MSG == (ushort)WinAPI.RawMouseButtons.MiddleUp)
+					MMB_down = false;
+				if ((LMB_down || RMB_down || MMB_down) && MSG == (ushort)WinAPI.RawMouseFlags.MoveRelative ||
+				    MSG == (ushort)WinAPI.RawMouseButtons.MouseWheel ||
+				   	MSG == (ushort)WinAPI.RawMouseButtons.LeftUp || 
+				  	MSG == (ushort)WinAPI.RawMouseButtons.RightUp || 
+					MSG == (ushort)WinAPI.RawMouseButtons.MiddleUp) {
+					if (MMain.mahou.LDForCaret) {
+						MMain.mahou.UpdateCaredLD();
+					}
+				}
+				if (skip_mouse_events-- == 0 || skip_mouse_events == 0) {
+					skip_mouse_events = MahouUI.LD_MouseSkipMessagesCount;
+					if (MSG == (ushort)WinAPI.RawMouseFlags.MoveRelative) {
+						if (MMain.mahou.LDForMouse) {
+							MMain.mahou.UpdateMouseLD();
+						}
+					}
+				}
+			}
 		}
 		public static void EventHookCallback(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject,
 		                                       int idChild, uint dwEventThread, uint dwmsEventTime) {
