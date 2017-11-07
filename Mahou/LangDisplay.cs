@@ -70,9 +70,9 @@ namespace Mahou
 		{
 			uint cLid = Locales.GetCurrentLocale();
 			if (DisplayFlag && MMain.mahou.DiffAppearenceForLayouts) {
-				if (cLid == Locales.GetLocaleFromString(MMain.mahou.MainLayout1).uId && MMain.mahou.Layout1TText.Length < 2)
+				if (cLid == MahouUI.MAIN_LAYOUT1 && MMain.mahou.Layout1TText.Length < 2)
 					lbLang.Text = MMain.mahou.Layout1TText;
-				else if (cLid == Locales.GetLocaleFromString(MMain.mahou.MainLayout2).uId && MMain.mahou.Layout2TText.Length < 2)
+				else if (cLid == MahouUI.MAIN_LAYOUT2 && MMain.mahou.Layout2TText.Length < 2)
 					lbLang.Text = MMain.mahou.Layout2TText;
 				Empty = (MMain.mahou.DiffAppearenceForLayouts && lbLang.Text == " ");
 			}
@@ -90,12 +90,12 @@ namespace Mahou
 			if ((cLid & 0xffff) > 0) {
 				var clangname = new System.Globalization.CultureInfo((int)(cLid & 0xffff));
 				if (MMain.mahou.DiffAppearenceForLayouts && !DisplayFlag) {
-					if (cLid == Locales.GetLocaleFromString(MMain.mahou.MainLayout1).uId) {
+					if (cLid == MahouUI.MAIN_LAYOUT1) {
 						ChangeColors(MMain.mahou.Layout1Font_temp, MMain.mahou.Layout1Fore_temp, 
 						             MMain.mahou.Layout1Back_temp, MMain.mahou.Layout1TransparentBack_temp);
 						ChangeSize(MMain.mahou.Layout1Height_temp, MMain.mahou.Layout1Width_temp);
 						ChangeLD(MMain.mahou.Layout1TText);
-					} else if (cLid == Locales.GetLocaleFromString(MMain.mahou.MainLayout2).uId) {
+					} else if (cLid == MahouUI.MAIN_LAYOUT2) {
 						ChangeColors(MMain.mahou.Layout2Font_temp, MMain.mahou.Layout2Fore_temp, 
 						             MMain.mahou.Layout2Back_temp, MMain.mahou.Layout2TransparentBack_temp);
 						ChangeSize(MMain.mahou.Layout2Height_temp, MMain.mahou.Layout2Width_temp);

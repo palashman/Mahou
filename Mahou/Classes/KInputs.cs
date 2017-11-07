@@ -89,9 +89,9 @@ static class KInputs
         {
         	bool uselt1_vk, uselt2_vk;
         	ushort resultvk = 0;
-        	short lt1_vk = WinAPI.VkKeyScanEx(s, Mahou.Locales.GetLocaleFromString(Mahou.MMain.mahou.MainLayout1).uId);
+        	short lt1_vk = WinAPI.VkKeyScanEx(s, Mahou.MahouUI.MAIN_LAYOUT1);
         	uselt1_vk = lt1_vk != -1;
-        	short lt2_vk = WinAPI.VkKeyScanEx(s, Mahou.Locales.GetLocaleFromString(Mahou.MMain.mahou.MainLayout2).uId);
+        	short lt2_vk = WinAPI.VkKeyScanEx(s, Mahou.MahouUI.MAIN_LAYOUT2);
         	uselt2_vk = lt2_vk != -1;
         	if (uselt1_vk && uselt2_vk) {
         		var guess = Mahou.KMHook.WordGuessLayout(GetWordByIndex(str, index));

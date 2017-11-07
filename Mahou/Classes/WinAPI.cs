@@ -243,6 +243,7 @@ public static class WinAPI {
 	#region EventHook
 	public const uint EVENT_SYSTEM_FOREGROUND = 3;
     public const uint WINEVENT_OUTOFCONTEXT = 0;
+	public const uint EVENT_OBJECT_FOCUS = 0x8005;
 	#endregion
 	#region LangPanel
 	public const int WM_NCLBUTTONDOWN = 0xA1;

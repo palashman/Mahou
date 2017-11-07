@@ -131,6 +131,7 @@ namespace Mahou {
 		public LangPanel _langPanel;
 		uint latestL = 0, latestCL = 0;
 		public static uint currentLayout, GlobalLayout;
+		public static uint MAIN_LAYOUT1, MAIN_LAYOUT2;
 		bool onepass = true, onepassC = true;
 		/// <summary>
 		/// Has a lot of values/keys taken from dynamic controls:<br/>
@@ -203,13 +204,10 @@ namespace Mahou {
 				showUpdWnd.Interval = 1000;
 				showUpdWnd.Start();
 			} else { showUpdWnd.Dispose(); }
-			KMHook.DoLater.Tick += (_, __) => {
+			KMHook.DoLater(() => {
 				Logging.Log("Initializing Lang Panel.");
 				InitializeLangPanel();
-				KMHook.DoLater.Dispose();
-				KMHook.DoLater = new Timer() { Interval = 100 };
-			};
-			KMHook.DoLater.Start(); // Do things after MMain.mahou is initialized.
+               }, 100);
 			Memory.Flush();
 		}
 		#region WndProc(Hotkeys) & Functions
@@ -866,6 +864,8 @@ namespace Mahou {
 			ChangeLayouByKey = chk_SpecificLS.Checked = MMain.MyConfs.ReadBool("Layouts", "ChangeToSpecificLayoutByKey");
 			MainLayout1 = MMain.MyConfs.Read("Layouts", "MainLayout1");
 			MainLayout2 = MMain.MyConfs.Read("Layouts", "MainLayout2");
+			MAIN_LAYOUT1 = Locales.GetLocaleFromString(MainLayout1).uId;
+			MAIN_LAYOUT2 = Locales.GetLocaleFromString(MainLayout2).uId;
 			Layout1 = MMain.MyConfs.Read("Layouts", "SpecificLayout1");
 			Layout2 = MMain.MyConfs.Read("Layouts", "SpecificLayout2");
 			Layout3 = MMain.MyConfs.Read("Layouts", "SpecificLayout3");
@@ -966,15 +966,11 @@ namespace Mahou {
 			if (File.Exists(snipfile) && SnippetsEnabled) {
 				txt_Snippets.Text = File.ReadAllText(snipfile);
 				UpdateSnippetCountLabel(txt_Snippets.Text, lbl_SnippetsCount);
-				KMHook.DoLater.Tick += (_, __) => { 
+				KMHook.DoLater(() => {
 					var initSnippetsThread = new System.Threading.Thread(() =>KMHook.ReInitSnippets());
 					initSnippetsThread.Name = "Snippets initialization thread.";
 					initSnippetsThread.Start();
-					KMHook.DoLater.Stop(); 
-					KMHook.DoLater = new Timer();
-				};
-				KMHook.DoLater.Interval = 250;
-				KMHook.DoLater.Start();
+              	 }, 250);
 			}
 			SnippetsExpandType = MMain.MyConfs.Read("Snippets", "SnippetExpandKey");
 			cbb_SnippetExpandKeys.SelectedIndex = cbb_SnippetExpandKeys.Items.IndexOf(SnippetsExpandType);
@@ -1540,7 +1536,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				if (ScrollTip && !KMHook.alt) {
 					KMHook.DoSelf(() => {
 						if (Locales.GetCurrentLocale() == 
-						    Locales.GetLocaleFromString(MainLayout1).uId) {
+						    MahouUI.MAIN_LAYOUT1) {
 							if (!Control.IsKeyLocked(Keys.Scroll)) { // Turn on 
 								KMHook.KeybdEvent(Keys.Scroll, 0);
 								KMHook.KeybdEvent(Keys.Scroll, 2);
@@ -1662,10 +1658,10 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			if (caretLangDisplay.Visible) {
 				var LDC_np = new Point(0,0);
 				if (DiffAppearenceForLayouts && cLuid != 0) {
-					if (cLuid == Locales.GetLocaleFromString(MainLayout1).uId) {
+					if (cLuid == MahouUI.MAIN_LAYOUT1) {
 						LDC_np = new Point(curCrtPos.X + Layout1X_Pos_temp, 
 						                                      curCrtPos.Y + Layout1Y_Pos_temp);
-					} else if (cLuid == Locales.GetLocaleFromString(MainLayout2).uId) {
+					} else if (cLuid == MahouUI.MAIN_LAYOUT2) {
 						LDC_np = new Point(curCrtPos.X + Layout2X_Pos_temp, 
 						                                      curCrtPos.Y + Layout2Y_Pos_temp);
 					} else notTwo = true;

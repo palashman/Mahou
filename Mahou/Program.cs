@@ -21,7 +21,9 @@ namespace Mahou
 		public static List<KMHook.YuKey> c_word = new List<KMHook.YuKey>();
 		public static List<List<KMHook.YuKey>> c_words = new List<List<KMHook.YuKey>>();
 		public static IntPtr _evt_hookID = IntPtr.Zero;
+		public static IntPtr _LDevt_hookID = IntPtr.Zero;
 		public static WinAPI.WinEventDelegate _evt_proc = KMHook.EventHookCallback;
+		public static WinAPI.WinEventDelegate _LDevt_proc = KMHook.LDEventHook;
 		public static Locales.Locale[] locales = Locales.AllList();
 		public static string _language = "";
 		public static Dictionary<Languages.Element, string> Lang = Languages.English;
@@ -87,6 +89,8 @@ namespace Mahou
 				Application.EnableVisualStyles(); // Huh i did not noticed that it was missing... '~'
 				_evt_hookID = WinAPI.SetWinEventHook(WinAPI.EVENT_SYSTEM_FOREGROUND, WinAPI.EVENT_SYSTEM_FOREGROUND,
 				                                     IntPtr.Zero, _evt_proc, 0, 0, WinAPI.WINEVENT_OUTOFCONTEXT);
+				_LDevt_hookID = WinAPI.SetWinEventHook(WinAPI.EVENT_OBJECT_FOCUS, WinAPI.EVENT_OBJECT_FOCUS,
+				                                     IntPtr.Zero, _LDevt_proc, 0, 0, WinAPI.WINEVENT_OUTOFCONTEXT);
 				KMHook.CheckLayoutLater.Tick += (_, __) => { MahouUI.GlobalLayout = Locales.GetCurrentLocale(); KMHook.CheckLayoutLater.Stop();};
 				if (args.Length != 0)
 				if (args[0] == "_!_updated_!_") {
