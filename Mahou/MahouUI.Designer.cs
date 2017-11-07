@@ -1577,9 +1577,9 @@ namespace Mahou
 			// 
 			// tab_timings
 			// 
+			this.tab_timings.Controls.Add(this.txt_ExcludedPrograms);
 			this.tab_timings.Controls.Add(this.nud_SelectedTextGetTriesCount);
 			this.tab_timings.Controls.Add(this.lbl_ExcludedPrograms);
-			this.tab_timings.Controls.Add(this.txt_ExcludedPrograms);
 			this.tab_timings.Controls.Add(this.chk_SelectedTextGetMoreTries);
 			this.tab_timings.Controls.Add(this.nud_CapsLockRefreshRate);
 			this.tab_timings.Controls.Add(this.lbl_CapsLockRefreshRate);
@@ -1627,7 +1627,7 @@ namespace Mahou
 			// lbl_ExcludedPrograms
 			// 
 			this.lbl_ExcludedPrograms.AutoSize = true;
-			this.lbl_ExcludedPrograms.Location = new System.Drawing.Point(18, 204);
+			this.lbl_ExcludedPrograms.Location = new System.Drawing.Point(22, 203);
 			this.lbl_ExcludedPrograms.Name = "lbl_ExcludedPrograms";
 			this.lbl_ExcludedPrograms.Size = new System.Drawing.Size(111, 15);
 			this.lbl_ExcludedPrograms.TabIndex = 22;
@@ -1813,7 +1813,7 @@ namespace Mahou
 			// chk_Change1KeyL
 			// 
 			this.chk_Change1KeyL.AutoSize = true;
-			this.chk_Change1KeyL.Location = new System.Drawing.Point(187, 203);
+			this.chk_Change1KeyL.Location = new System.Drawing.Point(187, 201);
 			this.chk_Change1KeyL.Name = "chk_Change1KeyL";
 			this.chk_Change1KeyL.Size = new System.Drawing.Size(243, 19);
 			this.chk_Change1KeyL.TabIndex = 23;
