@@ -301,7 +301,7 @@ public class Languages
 		{ Element.MoreTriesToGetSelectedText, "Use more tries to get selected text:" }, 
 		{ Element.ExcludedPrograms, "Excluded programs:" }, 
 		{ Element.Change1KeyLayoutInExcluded, "Change layout by 1 key even in excluded." }, 
-		{ Element.LD_MouseSkipMessages, "Windows Messages to skip before updating mouse LT:" }, 
+		{ Element.LD_MouseSkipMessages, "Mouse movement Messages to skip before updating language tooltips:" }, 
 		#endregion
 		#region Snippets
 		{ Element.SnippetsEnabled, "Enable snippets." }, 
@@ -537,7 +537,7 @@ public class Languages
 		{ Element.MoreTriesToGetSelectedText, "Использовать больше попыток взятия текста:" }, 
 		{ Element.ExcludedPrograms, "Программы исключения:" }, 
 		{ Element.Change1KeyLayoutInExcluded, "Менять раскладку 1 клавишей даже в исключениях." }, 
-		{ Element.LD_MouseSkipMessages, "Сообщений Windows пропускается перед обновлением подсказки мыши:" },
+		{ Element.LD_MouseSkipMessages, "Сообщений движения мыши пропускается перед обновлением подсказок:" },
 		#endregion
 		#region Snippets
 		{ Element.SnippetsEnabled, "Включить сниппеты." }, 
