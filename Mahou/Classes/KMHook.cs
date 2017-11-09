@@ -429,14 +429,7 @@ namespace Mahou
 			#endregion
 			preSnip = false;
 			#region Update LD
-			if (MMain.mahou.LDUseWindowsMessages) {
-				if (MMain.mahou.LDForCaret) {
-					MMain.mahou.UpdateCaredLD();
-				}
-				if (MMain.mahou.LDForMouse) {
-					MMain.mahou.UpdateMouseLD();
-				}
-			}
+			MMain.mahou.UpdateLDs();
 			#endregion
 		}
 		public static void ListenMouse(ushort MSG) {
@@ -506,14 +499,7 @@ namespace Mahou
 		                                     int idChild, uint dwEventThread, uint dwmsEventTime) {
 			if (MMain.mahou.LDUseWindowsMessages) {
 				if (eventType == WinAPI.EVENT_OBJECT_FOCUS) {
-					if (MMain.mahou.LDUseWindowsMessages) {
-						if (MMain.mahou.LDForCaret) {
-							MMain.mahou.UpdateCaredLD();
-						}
-						if (MMain.mahou.LDForMouse) {
-							MMain.mahou.UpdateMouseLD();
-						}
-					}
+					MMain.mahou.UpdateLDs();
 				}
 			}
 		}
@@ -555,6 +541,9 @@ namespace Mahou
 					}
 					if (spaceAft)
 						KInputs.MakeInput(KInputs.AddString(" "));
+					DoLater(() => MMain.mahou.Invoke((MethodInvoker)delegate {
+						MMain.mahou.UpdateLDs();
+					}), 500);
 				} catch {
 					Logging.Log("Some snippets configured wrong, check them.", 1);
 					// If not use TASK, form(MessageBox) won't accept the keys(Enter/Escape/Alt+F4).
@@ -1226,9 +1215,8 @@ namespace Mahou
 		public static void ConvertLast(List<YuKey> c_)
 		{
 			try { //Used to catch errors, since it called as Task
-			Locales.IfLessThan2();
-			YuKey[] YuKeys = c_.ToArray();
-			{
+				Locales.IfLessThan2();
+				YuKey[] YuKeys = c_.ToArray();
 				Logging.Log("Starting to convert word.");
 				DoSelf(() => {
 					var backs = YuKeys.Length;
@@ -1278,7 +1266,6 @@ namespace Mahou
 						}
 					}
 		       });
-			}
 			} catch (Exception e) {
 				Logging.Log("Convert Last encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
 			}

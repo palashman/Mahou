@@ -1680,6 +1680,14 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				LDC_lp = LDC_np;
 			}
 		}
+		public void UpdateLDs() {
+			if (LDUseWindowsMessages) {
+				if (LDForCaret)
+					UpdateCaredLD();
+				if (LDForMouse)
+					UpdateMouseLD();
+			}
+		}
 		public void PersistentLayoutCheck(string ProcessNames, string Layout) {
 			try {
 				var actProcName = Locales.ActiveWindowProcess().ProcessName.ToLower().Replace(" ", "_") + ".exe";
