@@ -178,7 +178,7 @@ namespace Mahou
 					var snip = "";
 					foreach (var ch in c_snip) {
 						snip += ch;
-						Debug.WriteLine(ch);
+//						Debug.WriteLine(ch);
 					}
 		            bool matched = false;
 					if (Key == seKey) {
@@ -1664,31 +1664,32 @@ namespace Mahou
 			exp = null;
 			if (String.IsNullOrEmpty(snippets)) return;
 			snippets = snippets.Replace("\r", "");
+			int last_exp_len = 0;
 			for (int k = 0; k < snippets.Length-6; k++) {
 				var com = SnippetsLineCommented(snippets, k);
 				if (com.Item1) {
 					k+=com.Item2; // skip commented line, speedup!
 					continue;
 				}
-				if (snippets[k].Equals('-') && snippets[k+1].Equals('>')) {
-				var len = -1;
-				var endl = snippets.IndexOf('\n', k+2);
-				if (endl==-1)
-					endl=snippets.Length;
-//				Debug.WriteLine((k+2) + " X " +endl);
-				string cool = snippets.Substring(k+2, endl - (k+2));
-				if (cool.Length > 4)
-					for (int i = 0; i != cool.Length-5; i ++) {
-						if (cool[i].Equals('=') && cool[i+1].Equals('=') && cool[i+2].Equals('=') && cool[i+3].Equals('=') && cool[i+4].Equals('>')) {
-							len = i;
+				if ((last_exp_len <= 0 || last_exp_len-- == 0) && snippets[k].Equals('-') && snippets[k+1].Equals('>')) {
+					var len = -1;
+					var endl = snippets.IndexOf('\n', k+2);
+					if (endl==-1)
+						endl=snippets.Length;
+//					Debug.WriteLine((k+2) + " X " +endl);
+					string cool = snippets.Substring(k+2, endl - (k+2));
+					if (cool.Length > 4)
+						for (int i = 0; i != cool.Length-5; i ++) {
+							if (cool[i].Equals('=') && cool[i+1].Equals('=') && cool[i+2].Equals('=') && cool[i+3].Equals('=') && cool[i+4].Equals('>')) {
+								len = i;
+							}
 						}
-					}
-				else 
-					len = cool.Length;
-				if (len == -1)
-					len = endl-(k+2);
-				smalls.Add(snippets.Substring(k+2, len).Replace("\r", ""));
-			} else
+					else 
+						len = cool.Length;
+					if (len == -1)
+						len = endl-(k+2);
+					smalls.Add(snippets.Substring(k+2, len).Replace("\r", ""));
+				}
 				if (snippets[k].Equals('=') && snippets[k+1].Equals('=') && snippets[k+2].Equals('=') && snippets[k+3].Equals('=') && snippets[k+4].Equals('>')) {
 					var endl = snippets.IndexOf('\n', k+2);
 					if (endl==-1)
@@ -1702,7 +1703,9 @@ namespace Mahou
 							break;
 						pyust.Append(pool[g]);
 					}
+					last_exp_len = pyust.Length;
 					bigs.Add(pyust.ToString());
+					k+=5;
 				}
 			}
 			sni = smalls.ToArray();

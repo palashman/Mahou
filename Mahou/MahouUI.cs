@@ -1050,6 +1050,7 @@ namespace Mahou {
 			var ci = 0;
 			var cia = 0;
 			var cic = 0;
+			bool in_exp = false;
 			for (int k = 0; k < snippets.Length-1; k++) {
 				// Do not try to store snippets[k] & snippets[k+n] to string variable, that will be significally slower.
 				// with string.Concat() ~x15 slower, with string.Format() ~x45 slower.			
@@ -1059,17 +1060,21 @@ namespace Mahou {
 					k+= cml.Item2;
 					continue;
 				}
-				if(snippets[k].Equals('-') && snippets[k+1].Equals('>'))
+				if(!in_exp && (snippets[k].Equals('-') && snippets[k+1].Equals('>')))
 					ci++;
 				if (k+4 < snippets.Length) {
 					if(snippets[k].Equals('=') && snippets[k+1].Equals('=') &&
 					   snippets[k+2].Equals('=') && snippets[k+3].Equals('=') &&
-					   snippets[k+4].Equals('>'))
+					   snippets[k+4].Equals('>')) {
 						cia++;
+						in_exp = true;
+					}
 					if(snippets[k].Equals('<') && snippets[k+1].Equals('=') &&
 					   snippets[k+2].Equals('=') && snippets[k+3].Equals('=') &&
-					   snippets[k+4].Equals('='))
+					   snippets[k+4].Equals('=')) {
 						cic++;
+						in_exp = false;
+					}
 				}
 			}
 			Logging.Log("Snippets word count details: " + cic + ", " + cia + ", " + ci + "<com> " + com);
