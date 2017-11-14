@@ -24,6 +24,17 @@ Mahou работает так как **Вы** хотите, настраивай
 
 ###### Возможности по версиям:
 
+**v2.5.5.0**<br/>
+
+- 💎 Добавлена функция переопределения CapsLock как F18.
+- 💎 Улучшена функция "Смены раскладки 1 клавишей" для поддержки CapsLock как F18.
+- 📝 Добавлено исправление для Google Japanese IME в функции "Смены раскладки 1 (гор.) клавишей".
+- 🐛 Исправлена двойноя работа функции "смена раскладки 1 клавишей".
+- 📝 Добавлен новый класс LLHook.cs (Low-Level hook)
+- 💬 Добавлена подсказка.
+- 📝 Обновлен перевод.
+- 🐛 Исправлена неправлильная раскладка в Mahou при смене системной горячей клавишей в некоторых случаях.
+
 **v2.5.2.4**<br/>
 
  - 💎 Добавлена возможность назначить Tab для развертывания сниппетов.
@@ -391,6 +402,17 @@ Even selected text switches just between **selected** layouts, though if you lik
 6. Read the [wiki](https://github.com/BladeMight/Mahou/wiki/Functions-list) or [ask me](#license).
 
 ###### By version features:
+
+**v2.5.5.0**<br/>
+
+- 💎 Added remap CapsLock as F18 feature.
+- 💎 Improved specific layout switching keys/hotkeys to support CapsLock as F18.
+- 📝 Added Google Japanese IME fix for specific layout switching keys/hotkeys.
+- 🐛 Fixed specific layout switching was working multiple times.
+- 📝 Added new class LLHook.cs (Low-Level hook)
+- 💬 Added new tooltip.
+- 📝 Updated translation.
+- 🐛 Fixed Mahou's layout wasn't changing sometimes on system hotkey layout switching.
 
 **v2.5.2.4**<br/>
 
