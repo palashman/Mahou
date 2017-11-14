@@ -75,7 +75,7 @@ namespace Mahou
             CheckBool("Functions", "ScrollTip", "false");
             CheckBool("Functions", "StartupUpdatesCheck", "false");
             CheckBool("Functions", "Logging", "false");
-            CheckBool("Functions", "CapsLockTimer", "true");
+            CheckBool("Functions", "CapsLockTimer", "false");
             CheckBool("Functions", "TrayFlags", "true");
             CheckBool("Functions", "BlockMahouHotkeysWithCtrl", "false");
             CheckBool("Functions", "SymbolIgnoreModeEnabled", "false");
