@@ -91,7 +91,7 @@ namespace Mahou
 				                                     IntPtr.Zero, _evt_proc, 0, 0, WinAPI.WINEVENT_OUTOFCONTEXT);
 				_LDevt_hookID = WinAPI.SetWinEventHook(WinAPI.EVENT_OBJECT_FOCUS, WinAPI.EVENT_OBJECT_FOCUS,
 				                                     IntPtr.Zero, _LDevt_proc, 0, 0, WinAPI.WINEVENT_OUTOFCONTEXT);
-				KMHook.CheckLayoutLater.Tick += (_, __) => { MahouUI.GlobalLayout = Locales.GetCurrentLocale(); KMHook.CheckLayoutLater.Stop();};
+				KMHook.CheckLayoutLater.Tick += (_, __) => { MahouUI.currentLayout = MahouUI.GlobalLayout = Locales.GetCurrentLocale(); KMHook.CheckLayoutLater.Stop();};
 				if (args.Length != 0)
 				if (args[0] == "_!_updated_!_") {
 					Logging.Log("Mahou updated.");

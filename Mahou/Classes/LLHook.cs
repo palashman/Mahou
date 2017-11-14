@@ -1,0 +1,89 @@
+﻿using System;
+using System.Windows.Forms;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+
+namespace Mahou {
+	/// <summary>
+	/// Low level hook.
+	/// </summary>
+	public static class LLHook {
+		public static IntPtr _LLHook_ID = IntPtr.Zero;
+		public static WinAPI.LowLevelProc _LLHook_proc = LLHook.Callback;
+		static bool alt, shift, ctrl, win;
+		public static void Set() {
+			using (Process currProcess = Process.GetCurrentProcess())
+				using (ProcessModule currModule = currProcess.MainModule)
+					_LLHook_ID = WinAPI.SetWindowsHookEx(WinAPI.WH_KEYBOARD_LL, _LLHook_proc, 
+					                                     WinAPI.GetModuleHandle(currModule.ModuleName), 0);
+		}
+		public static bool UnSet() {
+			return WinAPI.UnhookWindowsHookEx(_LLHook_ID);
+		}
+		public static IntPtr Callback(int nCode, IntPtr wParam, IntPtr lParam) {
+			var vk = Marshal.ReadInt32(lParam);
+			var Key = (Keys)vk;
+			SetModifs(Key, wParam);
+			bool _shift = !shift, _alt = !alt, _ctrl = !ctrl, _win = !win;
+			if (Key == Keys.CapsLock) {
+				for (int i = 1; i!=5; i++) {
+					var KeyIndex = (int)typeof(MahouUI).GetField("Key"+i).GetValue(MMain.mahou);
+					if (KeyIndex == 8) // Shift+CapsLock 
+						_shift = shift;
+				}
+			}
+			uint mods = 0;
+			if (alt) mods += WinAPI.MOD_ALT;
+			if (ctrl) mods += WinAPI.MOD_CONTROL;
+			if (shift) mods += WinAPI.MOD_SHIFT;
+			if (win) mods += WinAPI.MOD_WIN;
+			bool has = MMain.mahou.HasHotkey(new Hotkey(false, (uint)Keys.F18, mods, 77));
+			if (has) {
+				if (Hotkey.ContainsModifier((int)mods, (int)WinAPI.MOD_SHIFT))
+					_shift = shift;
+				if (Hotkey.ContainsModifier((int)mods, (int)WinAPI.MOD_ALT))
+					_alt = alt;
+				if (Hotkey.ContainsModifier((int)mods, (int)WinAPI.MOD_CONTROL))
+					_ctrl = ctrl;
+				if (Hotkey.ContainsModifier((int)mods, (int)WinAPI.MOD_WIN))
+					_win = win;
+			}
+			var GJIME = false;
+			if (vk >= 240 && vk <= 242) // GJ IME's Shift/Alt/Ctrl + CapsLock
+				GJIME = true;
+//			Debug.WriteLine(Key + " " +has + "// " + _shift + " " + _alt + " " + _ctrl + " " + _win + " " + mods + " >> " + (Key == Keys.CapsLock && _shift && _alt && _ctrl && _win));
+			if ((Key == Keys.CapsLock || GJIME) && _shift && _alt && _ctrl && _win) {
+				var flags = (int)(KInputs.IsExtended(Key) ? WinAPI.KEYEVENTF_EXTENDEDKEY : 0);
+				if (wParam == (IntPtr)WinAPI.WM_KEYUP)
+					flags |= (int)WinAPI.KEYEVENTF_KEYUP;
+				WinAPI.keybd_event((byte)Keys.F18, (byte)Keys.F18, flags , 0);
+				return (IntPtr)1; // Disable event
+			}
+//			Debug.WriteLine(Marshal.GetLastWin32Error());
+			return WinAPI.CallNextHookEx(_LLHook_ID, nCode, wParam, lParam);
+		}
+		static void SetModifs(Keys Key, IntPtr msg) {
+			switch (Key) {
+				case Keys.LShiftKey:
+				case Keys.RShiftKey:
+				case Keys.ShiftKey:
+					shift = ((msg == (IntPtr)WinAPI.WM_SYSKEYDOWN) ? true : false) || ((msg == (IntPtr)WinAPI.WM_KEYDOWN) ? true : false);
+					break;
+				case Keys.RControlKey:
+				case Keys.LControlKey:
+				case Keys.ControlKey:
+					ctrl = ((msg == (IntPtr)WinAPI.WM_SYSKEYDOWN) ? true : false) || ((msg == (IntPtr)WinAPI.WM_KEYDOWN) ? true : false);
+					break;
+				case Keys.RMenu:
+				case Keys.LMenu:
+				case Keys.Menu:
+					alt = ((msg == (IntPtr)WinAPI.WM_SYSKEYDOWN) ? true : false) || ((msg == (IntPtr)WinAPI.WM_KEYDOWN) ? true : false);
+					break;
+				case Keys.RWin:
+				case Keys.LWin:
+					win = ((msg == (IntPtr)WinAPI.WM_SYSKEYDOWN) ? true : false) || ((msg == (IntPtr)WinAPI.WM_KEYDOWN) ? true : false);
+					break;
+			}
+		}
+	}
+}

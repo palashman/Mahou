@@ -130,6 +130,7 @@
     <Compile Include="Classes\KMHook.cs" />
     <Compile Include="Classes\KInputs.cs" />
     <Compile Include="Classes\Languages.cs" />
+    <Compile Include="Classes\LLHook.cs" />
     <Compile Include="Classes\Locales.cs" />
     <Compile Include="Classes\Logging.cs" />
     <Compile Include="Classes\Memory.cs" />

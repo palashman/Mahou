@@ -20,7 +20,7 @@ namespace Mahou
 			clickAfterCTRL, clickAfterALT, clickAfterSHIFT,
 			hotkeywithmodsfired, csdoing, incapt, waitfornum, 
 			IsHotkey, ff_wheeled, preSnip, LMB_down, RMB_down, MMB_down;
-		public static int skip_mouse_events;
+		public static int skip_mouse_events, skip_spec_keys;
 		static string lastClipText = "";
 		static List<Keys> tempNumpads = new List<Keys>();
 		static List<char> c_snip = new List<char>();
@@ -267,11 +267,8 @@ namespace Mahou
 					    ((Key == Keys.LShiftKey || Key == Keys.RShiftKey) && !MahouUI.ShiftInHotkey) ||
 					    ((Key == Keys.LMenu || Key == Keys.RMenu) && !MahouUI.AltInHotkey) ||
 					    ((Key == Keys.LWin || Key == Keys.RWin) && !MahouUI.WinInHotkey) ||
-			    		Key == Keys.CapsLock) {
-					SpecificKey(Key, MSG, MMain.mahou.Key1, 1);
-					SpecificKey(Key, MSG, MMain.mahou.Key2, 2);
-					SpecificKey(Key, MSG, MMain.mahou.Key3, 3);
-					SpecificKey(Key, MSG, MMain.mahou.Key4, 4);
+					    Key == Keys.CapsLock || Key == Keys.F18 || vkCode == 240) {
+						SpecificKey(Key, MSG, vkCode);
 				}
 				if ((ctrl || ctrl_r) && (Key != Keys.LControlKey && Key != Keys.RControlKey && Key != Keys.ControlKey || clickAfterCTRL))
 					keyAfterCTRL = true;
@@ -580,74 +577,86 @@ namespace Mahou
 			}
 			return false;
 		}
-		static void SpecificKey(Keys Key, uint MSG, int specificKey, int specKeyId)
+		static void SpecificKey(Keys Key, uint MSG, int vkCode = 0)
 		{
-//			Debug.WriteLine("Spekky->" + specificKey + " Ky->" + Key + " skId->" + specKeyId);
-//			Debug.WriteLine("A->" + alt + " Sh->" + shift + " Ct->" + ctrl);
-//			Debug.WriteLine("Speekky->" + (Key == Keys.CapsLock));
-			DoSelf(() => {
-				if (!shift && !shift_r && !alt  && !alt_r && !ctrl && !ctrl_r && specificKey == 1 && Key == Keys.CapsLock &&
-				    MSG == WinAPI.WM_KEYDOWN) {
-					//Code below removes CapsLock original action, but if hold will not work and will stuck, press again to off.
-					KeybdEvent(Keys.CapsLock, 0);
-					KeybdEvent(Keys.CapsLock, 2);
-				}
-				if ((MSG == WinAPI.WM_KEYUP || MSG == WinAPI.WM_SYSKEYUP)) {
+//			Debug.WriteLine("SPK:" + skip_spec_keys);
+			if (skip_spec_keys > 0) {
+				skip_spec_keys--;
+				if (skip_spec_keys < 0)
+					skip_spec_keys = 0;
+				return;
+			}
+//			Debug.WriteLine("Speekky->" + Key);
+			for (int i = 1; i!=5; i++) {
+				if ((MSG == WinAPI.WM_KEYUP || MSG == WinAPI.WM_SYSKEYUP || vkCode == 240)) {
+		       		var specificKey = (int)typeof(MahouUI).GetField("Key"+i).GetValue(MMain.mahou);
 					if (MMain.mahou.ChangeLayoutInExcluded || !ExcludedProgram()) {
 						#region Switch between layouts with one key
-						var speclayout = (string)typeof(MahouUI).GetField("Layout"+specKeyId).GetValue(MMain.mahou);
-						if (speclayout == MMain.Lang[Languages.Element.SwitchBetween] ||
-						     speclayout == MMain.Lang[Languages.Element.SwitchBetween]) {
+						bool F18 = Key == Keys.F18;
+						bool GJIME = false;
+						if (specificKey == 8) // Shift+CapsLock
+							if (vkCode == 240) { // Google Japanese IME's  Shift+CapsLock repam fix
+								skip_spec_keys++; // Skip next CapsLock up event
+								GJIME = true;
+							}
+						var speclayout = (string)typeof(MahouUI).GetField("Layout"+i).GetValue(MMain.mahou);
+						if (String.IsNullOrEmpty(speclayout)) {
+						    Logging.Log("No layout for Layout"+i + " variable.");
+						    return;
+					    }
+						if (speclayout == MMain.Lang[Languages.Element.SwitchBetween]) {
 							if (specificKey == 10 && (
 								(Key == Keys.LShiftKey && alt) || (Key == Keys.RShiftKey && alt_r) ||
 								(Key == Keys.LMenu && shift) || (Key == Keys.RMenu && shift_r)) && !win && !win_r && !ctrl && !ctrl_r) {
 								Logging.Log("Changing layout by Alt+Shift key.");
 								ChangeLayout();
+						    	return;
 							}
-							if (specificKey == 8 && Key == Keys.CapsLock && (shift || shift_r) && !alt && !alt_r && !ctrl && !ctrl_r) {
-								Logging.Log("Changing layout by Shift+CapsLock key.");
+							if (specificKey == 8 && (Key == Keys.CapsLock || F18 || GJIME) && (shift || shift_r) && !alt && !alt_r && !ctrl && !ctrl_r) {
+								Logging.Log("Changing layout by Shift+CapsLock"+(GJIME?"(KeyCode: 240, Google Japanese IME's Shift+CapsLock remap)":"")+(F18?"(F18)":"")+" key.");
 								ChangeLayout();
-								Thread.Sleep(5);
-								if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
-									KeybdEvent(Keys.CapsLock, 0);
-									KeybdEvent(Keys.CapsLock, 2);
-								}
+						    	return;
 							} else 
-							if (!shift && !shift_r && !alt && !alt_r && !ctrl && !ctrl_r && specificKey == 1 && Key == Keys.CapsLock) {
+							if (!shift && !shift_r && !alt && !alt_r && !ctrl && !ctrl_r && specificKey == 1 && 
+								    (Key == Keys.CapsLock || F18)) {
 								ChangeLayout();
-								if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
-									KeybdEvent(Keys.CapsLock, 0);
-									KeybdEvent(Keys.CapsLock, 2);
-								}
-								Logging.Log("Changing layout by CapsLock key.");
+								Logging.Log("Changing layout by CapsLock"+(F18?"(F18)":"")+" key.");
+						    	return;
 							}
 							if (specificKey == 2 && Key == Keys.LControlKey && !keyAfterCTRL) {
 								Logging.Log("Changing layout by L-Ctrl key.");
 								ChangeLayout();
+						    	return;
 							}
 							if (specificKey == 3 && Key == Keys.RControlKey && !keyAfterCTRL) {
 								Logging.Log("Changing layout by R-Ctrl key.");
 								ChangeLayout();
+						    	return;
 							}
 							if (specificKey == 4 && Key == Keys.LShiftKey && !keyAfterSHIFT) {
 								Logging.Log("Changing layout by L-Shift key.");
 								ChangeLayout();
+						    	return;
 							}
 							if (specificKey == 5 && Key == Keys.RShiftKey && !keyAfterSHIFT) {
 								Logging.Log("Changing layout by R-Shift key.");
 								ChangeLayout();
+						    	return;
 							}
 							if (specificKey == 6 && Key == Keys.LMenu && !keyAfterALT) {
 								Logging.Log("Changing layout by L-Alt key.");
 								ChangeLayout();
+						    	return;
 							}
 							if (specificKey == 7 && Key == Keys.RMenu && !keyAfterALT) {
 								Logging.Log("Changing layout by R-Alt key.");
 								ChangeLayout();
+						    	return;
 							}
 							if (specificKey == 9 && Key == Keys.RMenu) {
 								Logging.Log("Changing layout by AltGr key.");
 								ChangeLayout();
+						    	return;
 							}
 //							if (catched) {
 //			       			    if (Key == Keys.LMenu)
@@ -665,63 +674,68 @@ namespace Mahou
 								Logging.Log("Switching to specific layout by Alt+Shift key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
+						    	return;
 							}
-							if (specificKey == 8 && Key == Keys.CapsLock && (shift || shift_r) && !alt && !alt_r && !ctrl && !ctrl_r) {
-								Logging.Log("Switching to specific layout by Shift+CapsLock key.");
+							if (specificKey == 8 && (Key == Keys.CapsLock || F18 || GJIME) && (shift || shift_r) && !alt && !alt_r && !ctrl && !ctrl_r) {
+								Logging.Log("Switching to specific layout by Shift+CapsLock"+(GJIME?"(KeyCode: 240, Google Japanese IME's Shift+CapsLock remap)":"")+(F18?"(F18)":"")+" key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
-								Thread.Sleep(5);
-								if (Control.IsKeyLocked(Keys.CapsLock)) { // Turn off if already on
-									KeybdEvent(Keys.CapsLock, 0);
-									KeybdEvent(Keys.CapsLock, 2);
-								}
 								matched = true;
+						    	return;
 							} else
-							if (specificKey == 1 && Key == Keys.CapsLock) {
-								Logging.Log("Switching to specific layout by Caps Lock key.");
+							if (specificKey == 1 && (Key == Keys.CapsLock || F18)) {
+								Logging.Log("Switching to specific layout by Caps Lock"+(F18?"(F18)":"")+" key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
+						    	return;
 							}
 							if (specificKey == 2 && Key == Keys.LControlKey && !keyAfterCTRL) {
-								Logging.Log("Switching to specific layout by  LC-trl key.");
+								Logging.Log("Switching to specific layout by  L-Ctrl key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
+						    	return;
 							}
 							if (specificKey == 3 && Key == Keys.RControlKey && !keyAfterCTRL) {
 								Logging.Log("Switching to specific layout by R-Ctrl key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
+						    	return;
 							}
 							if (specificKey == 4 && Key == Keys.LShiftKey && !keyAfterSHIFT) {
 								Logging.Log("Switching to specific layout by L-Shift key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
+						    	return;
 							}
 							if (specificKey == 5 && Key == Keys.RShiftKey && !keyAfterSHIFT) {
 								Logging.Log("Switching to specific layout by R-Shift key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
+						    	return;
 							}
 							if (specificKey == 6 && Key == Keys.LMenu && !keyAfterALT) {
 								Logging.Log("Switching to specific layout by L-Alt key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);	
 								matched = true;
 								DoSelf(()=>{ KeybdEvent(Keys.LMenu, 0); KeybdEvent(Keys.LMenu, 2); });
+						    	return;
 							}
 							if (specificKey == 7 && Key == Keys.RMenu && !keyAfterALT) {
 								Logging.Log("Switching to specific layout by R-Alt key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
 								DoSelf(()=>{ KeybdEvent(Keys.RMenu, 0); KeybdEvent(Keys.RMenu, 2); });
+						    	return;
 							}
 							if (specificKey == 9 && Key == Keys.RMenu) {
 								Logging.Log("Switching to specific layout by AltGr key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
 								DoSelf(()=>{ KeybdEvent(Keys.RMenu, 0); KeybdEvent(Keys.RMenu, 2); });
+						    	return;
 							}
 							try {
 								if (matched) {
-									Logging.Log("Available layout from string ["+speclayout+"] & id ["+specKeyId+"].");
+									Logging.Log("Available layout from string ["+speclayout+"] & id ["+i+"].");
 									//Fix for alt-show-menu in programs
 //				       			    if (Key == Keys.LMenu)
 //										DoSelf(()=>{ KeybdEvent(Keys.LMenu, 0); KeybdEvent(Keys.LMenu, 2); });
@@ -729,13 +743,13 @@ namespace Mahou
 //										DoSelf(()=>{ KeybdEvent(Keys.RMenu, 0); KeybdEvent(Keys.RMenu, 2); });
 								}
 							} catch { 
-								Logging.Log("No layout available from string ["+speclayout+"] & id ["+specKeyId+"]."); 
+								Logging.Log("No layout available from string ["+speclayout+"] & id ["+i+"]."); 
 							}
 						}
 						#endregion
 				    }
           		}
-              });
+			}
 		}
 		/// <summary>
 		/// Converts selected text.
@@ -1200,11 +1214,16 @@ namespace Mahou
 		/// Do action without RawInput listeners(e.g. not catch).
 		/// Useful with SendInput or keybd_event functions.
 		/// </summary>
-		/// <param name="self_action">Action that will be done without RawInput listeners.</param>
+		/// <param name="self_action">Action that will be done without RawInput listeners, Hotkeys and low-level hook.</param>
 		public static void DoSelf(Action self_action) {
+			if (MMain.mahou.RemapCapslockAsF18)
+				if (!LLHook.UnSet())
+					Logging.Log("LLHook unregister failed: " + System.Runtime.InteropServices.Marshal.GetLastWin32Error(), 1);
 			MMain.mahou.UnregisterHotkeys();
 			MMain.rif.RegisterRawInputDevices(IntPtr.Zero, WinAPI.RawInputDeviceFlags.Remove);
 			self_action();
+			if (MMain.mahou.RemapCapslockAsF18)
+				LLHook.Set();
 			MMain.rif.RegisterRawInputDevices(MMain.rif.Handle);
 			MMain.mahou.RegisterHotkeys();
 		}

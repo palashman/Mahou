@@ -17,6 +17,7 @@ namespace Mahou {
 		// Hotkeys, HKC => HotKey Convert
 		public Hotkey Mainhk, ExitHk, HKCLast, HKCSelection, HKCLine, HKSymIgn, HKConMorWor,
 			  	      HKTitleCase, HKRandomCase, HKSwapCase, HKTransliteration, HKRestart, HKToggleLP;
+		public List<Hotkey> SpecificSwitchHotkeys = new List<Hotkey>();
 		/// <summary>
 		/// Hotkey OK to fire action bools.
 		/// </summary>
@@ -51,7 +52,7 @@ namespace Mahou {
 					MouseTTAlways, OneLayout, MouseLangTooltipEnabled, CaretLangTooltipEnabled, QWERTZ_fix, 
 					ChangeLayoutInExcluded, SnippetSpaceAfter, SnippetsSwitchToGuessLayout, AutoSwitchEnabled,
 					AutoSwitchSpaceAfter, AutoSwitchSwitchToGuessLayout, GuessKeyCodeFix, Dowload_ASD_InZip, 
-					LDForCaret, LDForMouse, LDUseWindowsMessages;
+					LDForCaret, LDForMouse, LDUseWindowsMessages, RemapCapslockAsF18;
 		/// <summary> Temporary modifiers of hotkeys. </summary>
 		string Mainhk_tempMods, ExitHk_tempMods, HKCLast_tempMods, HKCSelection_tempMods, 
 			    HKCLine_tempMods, HKSymIgn_tempMods, HKConMorWor_tempMods, HKTitleCase_tempMods,
@@ -667,6 +668,7 @@ namespace Mahou {
 				MMain.MyConfs.Write("Functions", "OneLayoutWholeWord", chk_OneLayoutWholeWord.Checked.ToString());
 				MMain.MyConfs.Write("Appearence", "MouseLTAlways", chk_MouseTTAlways.Checked.ToString());
 				MMain.MyConfs.Write("Functions", "GuessKeyCodeFix", chk_GuessKeyCodeFix.Checked.ToString());
+				MMain.MyConfs.Write("Functions", "RemapCapslockAsF18", chk_RemapCapsLockAsF18.Checked.ToString());
 				#endregion
 				#region Layouts
 				MMain.MyConfs.Write("Layouts", "SwitchBetweenLayouts", chk_SwitchBetweenLayouts.Checked.ToString());
@@ -857,6 +859,11 @@ namespace Mahou {
 			MouseLangTooltipEnabled = MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForMouse");
 			CaretLangTooltipEnabled = MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForCaret");
 			GuessKeyCodeFix = chk_GuessKeyCodeFix.Checked = MMain.MyConfs.ReadBool("Functions", "GuessKeyCodeFix");
+			RemapCapslockAsF18 = chk_RemapCapsLockAsF18.Checked = MMain.MyConfs.ReadBool("Functions", "RemapCapslockAsF18");
+			if (RemapCapslockAsF18)
+				LLHook.Set();
+			else
+				LLHook.UnSet();
 			#endregion
 			#region Layouts
 			SwitchBetweenLayouts = chk_SwitchBetweenLayouts.Checked = MMain.MyConfs.ReadBool("Layouts", "SwitchBetweenLayouts");
@@ -1025,8 +1032,7 @@ namespace Mahou {
 				SpecKeySetsValues["txt_key"+i+"_mods"] = values[2];
 				SpecKeySetsValues["cbb_typ"+i] = values[3];
 				if (!String.IsNullOrEmpty(values[3])) {
-					if ((values[3] == Languages.English[Languages.Element.SwitchBetween] && MMain.Lang == Languages.Russian) ||
-					    (values[3] == Languages.Russian[Languages.Element.SwitchBetween] && MMain.Lang == Languages.English)) {
+					if (values[3] == MMain.Lang[Languages.Element.SwitchBetween]) {
 							SaveSpecificKeySets(true, i, MMain.Lang[Languages.Element.SwitchBetween]);
 							SpecKeySetsValues["cbb_typ"+i] = MMain.Lang[Languages.Element.SwitchBetween];
 					} 
@@ -1489,6 +1495,11 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				thishk == HKRestart ||
 				thishk == HKToggleLP)
 				return true;
+			foreach (Hotkey hk in SpecificSwitchHotkeys) {
+				if (thishk == hk)
+					return true;
+				
+			}
 			return false;
 		}
 		void WrongColorLog(string color) {
@@ -1906,6 +1917,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				WinAPI.UnregisterHotKey(Handle, id);
 			}
 			for (int id = 201; id <= 300; id++) {
+				SpecificSwitchHotkeys.Clear();
 				WinAPI.UnregisterHotKey(Handle, id);
 			}
 		}
@@ -1954,7 +1966,12 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				var key = 0;
 				if (!String.IsNullOrEmpty(SpecKeySetsValues["txt_key"+i+"_key"])) {
 					key = Int32.Parse(SpecKeySetsValues["txt_key"+i+"_key"]);
-					WinAPI.RegisterHotKey(Handle, 200+i, Hotkey.GetMods(SpecKeySetsValues["txt_key"+i+"_mods"]), key);
+					var mods = Hotkey.GetMods(SpecKeySetsValues["txt_key"+i+"_mods"]);
+					if (key == (int)Keys.CapsLock && RemapCapslockAsF18)
+						key = (int)Keys.F18;
+					var hk = new Hotkey(true, (uint)key, mods, 200+i);
+					SpecificSwitchHotkeys.Add(hk);
+					WinAPI.RegisterHotKey(Handle, 200+i, mods, key);
 				}
 			}
 		}
@@ -2699,6 +2716,7 @@ DEL ""ExtractASD.cmd""";
 			chk_MCDS_support.Text = MMain.Lang[Languages.Element.MCDSSupport];
 			chk_GuessKeyCodeFix.Text = MMain.Lang[Languages.Element.GuessKeyCodeFix];
 			chk_AppDataConfigs.Text = MMain.Lang[Languages.Element.ConfigsInAppData];
+			chk_RemapCapsLockAsF18.Text = MMain.Lang[Languages.Element.RemapCapslockAsF18];
 			#endregion
 			#region Layouts
 			chk_SwitchBetweenLayouts.Text = MMain.Lang[Languages.Element.SwitchBetween]+":";
@@ -2889,6 +2907,7 @@ DEL ""ExtractASD.cmd""";
 			HelpMeUnderstand.SetToolTip(lbl_SnippetExpandKey, MMain.Lang[Languages.Element.TT_SnippetExpandKey]);
 			HelpMeUnderstand.SetToolTip(cbb_SnippetExpandKeys, MMain.Lang[Languages.Element.TT_SnippetExpandKey]);
 			HelpMeUnderstand.SetToolTip(chk_LDMessages, MMain.Lang[Languages.Element.TT_LDUseWinMessages]);
+			HelpMeUnderstand.SetToolTip(chk_RemapCapsLockAsF18, MMain.Lang[Languages.Element.TT_RemapCapslockAsF18]);
 		}
 		void HelpMeUnderstandPopup(object sender, PopupEventArgs e) {
 			HelpMeUnderstand.ToolTipTitle = e.AssociatedControl.Text;
@@ -3289,6 +3308,7 @@ DEL ""ExtractASD.cmd""";
 				SpecKeySetsValues[t.Name+"_key"] = SpecKeySetsValues[t.Name+"_mods"] = t.Text = "";
 				return;
 			}
+			Debug.WriteLine(e.KeyCode +" E");
 			t.Text = OemReadable((e.Modifiers.ToString().Replace(",", " +") + " + " +
 										  Remake(e.KeyCode)).Replace("None + ", ""));
 			SpecKeySetsValues[t.Name+"_key"] = ((int)e.KeyCode).ToString();

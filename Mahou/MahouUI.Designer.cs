@@ -194,6 +194,7 @@ namespace Mahou
 		private System.Windows.Forms.ComboBox cbb_SnippetExpandKeys;
 		private System.Windows.Forms.Label lbl_SnippetExpandKey;
 		private System.Windows.Forms.CheckBox chk_LDMessages;
+		private System.Windows.Forms.CheckBox chk_RemapCapsLockAsF18;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -217,6 +218,7 @@ namespace Mahou
 			this.components = new System.ComponentModel.Container();
 			this.tabs = new System.Windows.Forms.TabControl();
 			this.tab_functions = new System.Windows.Forms.TabPage();
+			this.chk_RemapCapsLockAsF18 = new System.Windows.Forms.CheckBox();
 			this.chk_AppDataConfigs = new System.Windows.Forms.CheckBox();
 			this.chk_GuessKeyCodeFix = new System.Windows.Forms.CheckBox();
 			this.lbl_TaskExist = new System.Windows.Forms.Label();
@@ -315,9 +317,9 @@ namespace Mahou
 			this.chk_LangTooltipCaret = new System.Windows.Forms.CheckBox();
 			this.chk_LangTooltipMouse = new System.Windows.Forms.CheckBox();
 			this.tab_timings = new System.Windows.Forms.TabPage();
+			this.txt_ExcludedPrograms = new Mahou.MahouUI.TextBoxCA();
 			this.nud_SelectedTextGetTriesCount = new System.Windows.Forms.NumericUpDown();
 			this.lbl_ExcludedPrograms = new System.Windows.Forms.Label();
-			this.txt_ExcludedPrograms = new Mahou.MahouUI.TextBoxCA();
 			this.chk_SelectedTextGetMoreTries = new System.Windows.Forms.CheckBox();
 			this.nud_CapsLockRefreshRate = new System.Windows.Forms.NumericUpDown();
 			this.lbl_CapsLockRefreshRate = new System.Windows.Forms.Label();
@@ -466,6 +468,7 @@ namespace Mahou
 			// 
 			// tab_functions
 			// 
+			this.tab_functions.Controls.Add(this.chk_RemapCapsLockAsF18);
 			this.tab_functions.Controls.Add(this.chk_AppDataConfigs);
 			this.tab_functions.Controls.Add(this.chk_GuessKeyCodeFix);
 			this.tab_functions.Controls.Add(this.lbl_TaskExist);
@@ -496,10 +499,20 @@ namespace Mahou
 			this.tab_functions.Text = "Functions";
 			this.tab_functions.UseVisualStyleBackColor = true;
 			// 
+			// chk_RemapCapsLockAsF18
+			// 
+			this.chk_RemapCapsLockAsF18.AutoSize = true;
+			this.chk_RemapCapsLockAsF18.Location = new System.Drawing.Point(302, 66);
+			this.chk_RemapCapsLockAsF18.Name = "chk_RemapCapsLockAsF18";
+			this.chk_RemapCapsLockAsF18.Size = new System.Drawing.Size(158, 19);
+			this.chk_RemapCapsLockAsF18.TabIndex = 22;
+			this.chk_RemapCapsLockAsF18.Text = "Remap Caps Lock as F18.";
+			this.chk_RemapCapsLockAsF18.UseVisualStyleBackColor = true;
+			// 
 			// chk_AppDataConfigs
 			// 
 			this.chk_AppDataConfigs.AutoSize = true;
-			this.chk_AppDataConfigs.Location = new System.Drawing.Point(302, 191);
+			this.chk_AppDataConfigs.Location = new System.Drawing.Point(302, 216);
 			this.chk_AppDataConfigs.Name = "chk_AppDataConfigs";
 			this.chk_AppDataConfigs.Size = new System.Drawing.Size(132, 19);
 			this.chk_AppDataConfigs.TabIndex = 21;
@@ -509,7 +522,7 @@ namespace Mahou
 			// chk_GuessKeyCodeFix
 			// 
 			this.chk_GuessKeyCodeFix.AutoSize = true;
-			this.chk_GuessKeyCodeFix.Location = new System.Drawing.Point(302, 166);
+			this.chk_GuessKeyCodeFix.Location = new System.Drawing.Point(302, 191);
 			this.chk_GuessKeyCodeFix.Name = "chk_GuessKeyCodeFix";
 			this.chk_GuessKeyCodeFix.Size = new System.Drawing.Size(146, 19);
 			this.chk_GuessKeyCodeFix.TabIndex = 20;
@@ -558,7 +571,7 @@ namespace Mahou
 			// chk_OneLayoutWholeWord
 			// 
 			this.chk_OneLayoutWholeWord.AutoSize = true;
-			this.chk_OneLayoutWholeWord.Location = new System.Drawing.Point(302, 141);
+			this.chk_OneLayoutWholeWord.Location = new System.Drawing.Point(302, 166);
 			this.chk_OneLayoutWholeWord.Name = "chk_OneLayoutWholeWord";
 			this.chk_OneLayoutWholeWord.Size = new System.Drawing.Size(220, 19);
 			this.chk_OneLayoutWholeWord.TabIndex = 15;
@@ -569,7 +582,7 @@ namespace Mahou
 			// lnk_plugin
 			// 
 			this.lnk_plugin.AutoSize = true;
-			this.lnk_plugin.Location = new System.Drawing.Point(493, 117);
+			this.lnk_plugin.Location = new System.Drawing.Point(493, 142);
 			this.lnk_plugin.Name = "lnk_plugin";
 			this.lnk_plugin.Size = new System.Drawing.Size(63, 15);
 			this.lnk_plugin.TabIndex = 14;
@@ -580,7 +593,7 @@ namespace Mahou
 			// chk_MCDS_support
 			// 
 			this.chk_MCDS_support.AutoSize = true;
-			this.chk_MCDS_support.Location = new System.Drawing.Point(302, 116);
+			this.chk_MCDS_support.Location = new System.Drawing.Point(302, 141);
 			this.chk_MCDS_support.Name = "chk_MCDS_support";
 			this.chk_MCDS_support.Size = new System.Drawing.Size(144, 19);
 			this.chk_MCDS_support.TabIndex = 13;
@@ -600,7 +613,7 @@ namespace Mahou
 			// chk_FlagsInTray
 			// 
 			this.chk_FlagsInTray.AutoSize = true;
-			this.chk_FlagsInTray.Location = new System.Drawing.Point(302, 66);
+			this.chk_FlagsInTray.Location = new System.Drawing.Point(302, 91);
 			this.chk_FlagsInTray.Name = "chk_FlagsInTray";
 			this.chk_FlagsInTray.Size = new System.Drawing.Size(201, 19);
 			this.chk_FlagsInTray.TabIndex = 11;
@@ -631,7 +644,7 @@ namespace Mahou
 			// chk_StartupUpdatesCheck
 			// 
 			this.chk_StartupUpdatesCheck.AutoSize = true;
-			this.chk_StartupUpdatesCheck.Location = new System.Drawing.Point(302, 91);
+			this.chk_StartupUpdatesCheck.Location = new System.Drawing.Point(302, 116);
 			this.chk_StartupUpdatesCheck.Name = "chk_StartupUpdatesCheck";
 			this.chk_StartupUpdatesCheck.Size = new System.Drawing.Size(178, 19);
 			this.chk_StartupUpdatesCheck.TabIndex = 8;
@@ -1602,6 +1615,16 @@ namespace Mahou
 			this.tab_timings.Text = "Timings";
 			this.tab_timings.UseVisualStyleBackColor = true;
 			// 
+			// txt_ExcludedPrograms
+			// 
+			this.txt_ExcludedPrograms.Location = new System.Drawing.Point(8, 222);
+			this.txt_ExcludedPrograms.Multiline = true;
+			this.txt_ExcludedPrograms.Name = "txt_ExcludedPrograms";
+			this.txt_ExcludedPrograms.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+			this.txt_ExcludedPrograms.Size = new System.Drawing.Size(541, 42);
+			this.txt_ExcludedPrograms.TabIndex = 21;
+			this.txt_ExcludedPrograms.Text = "LA.exe SomeProgram.exe";
+			// 
 			// nud_SelectedTextGetTriesCount
 			// 
 			this.nud_SelectedTextGetTriesCount.Location = new System.Drawing.Point(429, 181);
@@ -1632,16 +1655,6 @@ namespace Mahou
 			this.lbl_ExcludedPrograms.Size = new System.Drawing.Size(111, 15);
 			this.lbl_ExcludedPrograms.TabIndex = 22;
 			this.lbl_ExcludedPrograms.Text = "Excluded programs:";
-			// 
-			// txt_ExcludedPrograms
-			// 
-			this.txt_ExcludedPrograms.Location = new System.Drawing.Point(8, 222);
-			this.txt_ExcludedPrograms.Multiline = true;
-			this.txt_ExcludedPrograms.Name = "txt_ExcludedPrograms";
-			this.txt_ExcludedPrograms.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.txt_ExcludedPrograms.Size = new System.Drawing.Size(541, 42);
-			this.txt_ExcludedPrograms.TabIndex = 21;
-			this.txt_ExcludedPrograms.Text = "LA.exe SomeProgram.exe";
 			// 
 			// chk_SelectedTextGetMoreTries
 			// 

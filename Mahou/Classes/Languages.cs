@@ -34,6 +34,7 @@ public class Languages
 		OneLayoutWholeWord,
 		GuessKeyCodeFix,
 		ConfigsInAppData,
+		RemapCapslockAsF18,
 		#endregion
 		#region Layouts
 		SwitchBetween,
@@ -211,6 +212,7 @@ public class Languages
 		TT_KeysType,
 		TT_SnippetExpandKey,
 		TT_LDUseWinMessages,
+		TT_RemapCapslockAsF18,
 		#endregion
 		#region Messages
 		MSG_SnippetsError
@@ -249,6 +251,7 @@ public class Languages
 		{ Element.OneLayoutWholeWord, "Use layout for whole word in CS." }, 
 		{ Element.GuessKeyCodeFix, "Use guess key code fix." }, 
 		{ Element.ConfigsInAppData, "Configs in AppData." }, 
+		{ Element.RemapCapslockAsF18, "Remap Caps Lock as F18." }, 
 		#endregion
 		#region Layouts
 		{ Element.SwitchBetween, "Switch between layouts" }, 
@@ -444,6 +447,7 @@ public class Languages
 		{ Element.TT_KeysType, "Select which keys type to display in Mahou user interface, they are both working at same time,\r\nso try not to set same keys/hotkeys to avoid double layout switching."},
 		{ Element.TT_SnippetExpandKey, "Select custom snippet expand key,\r\nworks only for snippets, auto-switch will still expand only on space." },
 		{ Element.TT_LDUseWinMessages, "If enabled, timers will not be used to update language tooltips,\r\ninstead they will be updated on appropriate Windows Messages.\r\nLess CPU hungry than timers.\r\nMost CPU hungry is mouse tooltip with always enabled,\r\nconsumes CPU only on mouse move/clicks,\r\nto decrease its CPU usage, there will be 1 new config in Timings tab.\r\nSkip x Windows Messages(mouse movement) before updating tooltip." },
+		{ Element.TT_RemapCapslockAsF18, "Remaps Caps Lock as F18, after this CapsLock will be disabled.\r\nTo toggle its state use Ctrl/Alt/Shift/Win + Caps Lock key.\r\n! Mahou window excluded from remap!\r\nIn Mahou you should set hotkeys as Caps Lock key, in other programs they will be remapped as F18.\r\nAfter changing hotkey don't forget to press Apply or OK." }, 
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Snippets contains error in syntax, check if there are errors, details on snippets syntax you can find on Wiki." }
@@ -480,11 +484,12 @@ public class Languages
 		{ Element.Logging, "Включить журналирование действий для поиска ошибок." }, 
 		{ Element.CapsTimer, "Включить таймер отключатель Caps-Lock." }, 
 		{ Element.ContryFlags, "Отображать флаги стран в трее." }, 
-		{ Element.BlockCtrlHKs, "Блокировать горячие клавиши Mahou содержащие Ctrl." }, 
+		{ Element.BlockCtrlHKs, "Блокировать горячие клавиши содержащие Ctrl." }, 
 		{ Element.MCDSSupport, "Включить поддержку MCDS." }, 
 		{ Element.OneLayoutWholeWord, "Считать раскладку для всего слова в КВ." }, 
 		{ Element.GuessKeyCodeFix, "Исправление кодов клавиш." }, 
 		{ Element.ConfigsInAppData, "Конфигурация в AppData." }, 
+		{ Element.RemapCapslockAsF18, "Переопределить Caps Lock как F18." }, 
 		#endregion
 		#region Layouts
 		{ Element.SwitchBetween, "Переключать между раскладками" }, 
@@ -678,6 +683,7 @@ public class Languages
 		{ Element.TT_KeysType, "Выбирите какой тип клавиш отображать в Mahou, оба типа работают ВМЕСТЕ,\r\nтак что лучше не назначайте одиннаковые клавиши/гор. клавиши во избежание двойного переключения раскладки."},
 		{ Element.TT_SnippetExpandKey, "Выберите какой клавишей развертывать(увеличивать/превращать) сниппеты,\r\nработает толкьо для сниппетов, автозамена как и раньше будет работать только при Space." },
 		{ Element.TT_LDUseWinMessages, "Если включено, подсказки будут обновлятся не через таймеры,\r\nвместо этого они будут обновлятся на соответствующих Сообщениях Windows.\r\nПотребляет меньше ЦП.\r\nСамая требовательная к ЦП функция - подсказка возле мыши при всегда включенной,\r\nпотребляет ЦП только при движении/кликах мыши,\r\nчтобы уменьшить ее потребление ЦП, есть новая конфигурация во вкладке Тайминги.\r\nПропуск х Сообщений Windows(движения мыши) перед обновлением подсказки." },
+		{ Element.TT_RemapCapslockAsF18, "Переопределет клавишу Caps Lock как F18, после этого функция клавиши CapsLock будет отключена.\r\nЧтобы переключить состояние Caps Lock нажмите вместе с одной из клавиш модификаторов: Ctrl/Alt/Shift/Win.\r\n! Окно Mahou исключено из переопределения!\r\nВ Mahou назначайте гор. клавиши на Caps Lock, в других программах она будет переопределена как F18.\r\nПосле смены гор. клавиш не забудьте нажать Применить или ОК." },
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Сниппеты содержат ошибки в синтаксисе, проверьте ваши сниппеты, детали синтаксиса можете найти на Wiki." }

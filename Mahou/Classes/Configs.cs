@@ -83,6 +83,7 @@ namespace Mahou
             CheckBool("Functions", "OneLayoutWholeWord", "true");
             CheckBool("Functions", "GuessKeyCodeFix", "false");
             CheckBool("Functions", "AppDataConfigs", forceAppData.ToString());
+            CheckBool("Functions", "RemapCapslockAsF18", "true");
             #endregion
 			#region Layouts section
 			CheckBool("Layouts", "SwitchBetweenLayouts", "true");
