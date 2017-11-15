@@ -21,6 +21,7 @@ namespace Mahou {
 			return WinAPI.UnhookWindowsHookEx(_LLHook_ID);
 		}
 		public static IntPtr Callback(int nCode, IntPtr wParam, IntPtr lParam) {
+			if (KMHook.ExcludedProgram() && !MMain.mahou.ChangeLayoutInExcluded) return WinAPI.CallNextHookEx(_LLHook_ID, nCode, wParam, lParam);
 			var vk = Marshal.ReadInt32(lParam);
 			var Key = (Keys)vk;
 			SetModifs(Key, wParam);
