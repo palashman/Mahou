@@ -562,6 +562,7 @@ namespace Mahou
 			// 
 			// cbb_AutostartType
 			// 
+			this.cbb_AutostartType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cbb_AutostartType.FormattingEnabled = true;
 			this.cbb_AutostartType.Location = new System.Drawing.Point(302, 12);
 			this.cbb_AutostartType.Name = "cbb_AutostartType";
