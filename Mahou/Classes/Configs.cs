@@ -71,6 +71,7 @@ namespace Mahou
             CheckBool("Functions", "ReSelect", "true");
             CheckBool("Functions", "RePress", "false");
             CheckBool("Functions", "AddOneSpaceToLastWord", "false");
+            CheckBool("Functions", "AddOneEnterToLastWord", "false");
             CheckBool("Functions", "ConvertSelectionLayoutSwitchingPlus", "false");
             CheckBool("Functions", "ScrollTip", "false");
             CheckBool("Functions", "StartupUpdatesCheck", "false");

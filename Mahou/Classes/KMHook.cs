@@ -15,7 +15,7 @@ namespace Mahou
 		public static bool win, alt, ctrl, shift,
 			win_r, alt_r, ctrl_r, shift_r,
 			shiftRP, ctrlRP, altRP, winRP, //RP = Re-Press
-			awas, swas, cwas, wwas, afterEOS, //*was = alt/shift/ctrl was
+			awas, swas, cwas, wwas, afterEOS, afterEOL, //*was = alt/shift/ctrl was
 			keyAfterCTRL, keyAfterALT, keyAfterSHIFT,
 			clickAfterCTRL, clickAfterALT, clickAfterSHIFT,
 			hotkeywithmodsfired, csdoing, incapt, waitfornum, 
@@ -285,16 +285,8 @@ namespace Mahou
 			}
 			#endregion
 			if ((ctrl||win||alt||ctrl_r||win_r||alt_r) && Key == Keys.Tab) {
-					Logging.Log("Last word cleared.");
-					c_word_backup = new List<YuKey>(MMain.c_word);
-					MMain.c_word.Clear();
-					MMain.c_words.Clear();
-					Logging.Log("Words cleared.");
-					if (MMain.mahou.SnippetsEnabled) {
-						c_snip.Clear();
-						Logging.Log("Snippet cleared.");
-					}
-				}
+				ClearWord(true, true, true, "Any modifier + Tab");
+			}
 			#region Other, when KeyDown
 			if (MSG == WinAPI.WM_KEYDOWN && !waitfornum && !IsHotkey) {
 				if (Key == Keys.Back) { //Removes last item from current word when user press Backspace
@@ -318,7 +310,7 @@ namespace Mahou
 					}
 				}
 				//Pressing any of these Keys will empty current word, and snippet
-				if (Key == Keys.Enter || Key == Keys.Home || Key == Keys.End ||
+				if (Key == Keys.Home || Key == Keys.End ||
 				   Key == Keys.Tab || Key == Keys.PageDown || Key == Keys.PageUp ||
 				   Key == Keys.Left || Key == Keys.Right || Key == Keys.Down || Key == Keys.Up ||
 				   Key == Keys.BrowserSearch || 
@@ -333,15 +325,7 @@ namespace Mahou
 							Key != Keys.ControlKey &&
 							Key != Keys.LControlKey &&
 							Key != Keys.RControlKey ))) { 
-					Logging.Log("Last word cleared.");
-					c_word_backup = new List<YuKey>(MMain.c_word);
-					MMain.c_word.Clear();
-					MMain.c_words.Clear();
-					Logging.Log("Words cleared.");
-					if (MMain.mahou.SnippetsEnabled && !preSnip) {
-						c_snip.Clear();
-						Logging.Log("Snippet cleared.");
-					}
+					ClearWord(true, true, true, "Pressed combination of key and modifiers(not shift) or key that changes caret position.");
 				}
 				if (Key == Keys.Space) {
 					Logging.Log("Adding one new empty word to words, and adding to it [Space] key.");
@@ -353,10 +337,20 @@ namespace Mahou
 						MMain.c_word.Add(new YuKey() { key = Keys.Space });
 						afterEOS = true;
 					} else {
-						c_word_backup = new List<YuKey>(MMain.c_word);
-						MMain.c_word.Clear();
-						Logging.Log("Last word cleared.");
+						ClearWord(true, false, false, "Pressed space");
 						afterEOS = false;
+					}
+				}
+				if (Key == Keys.Enter) {
+					if (MMain.mahou.Add1NL && MMain.c_word.Count != 0 && 
+					    MMain.c_word[MMain.c_word.Count - 1].key != Keys.Enter) {
+						Logging.Log("Eat one New Line passed, next Enter will clear last word.");
+						MMain.c_word.Add(new YuKey() { key = Keys.Enter });
+						afterEOL = true;
+					} else {
+						c_word_backup = new List<YuKey>(MMain.c_word);
+						ClearWord(true, false, false, "Pressed enter");
+						afterEOL = false;
 					}
 				}
 				if (((Key >= Keys.D0 && Key <= Keys.Z) || // This is 0-9 & A-Z
@@ -367,9 +361,12 @@ namespace Mahou
 				   Key == Keys.Divide || Key == Keys.Add // Numpad symbols
 				  ) && !win && !win_r && !alt && !alt_r && !ctrl && !ctrl_r) {
 					if (afterEOS) { //Clears word after Eat ONE space
-						c_word_backup = new List<YuKey>(MMain.c_word);
-						MMain.c_word.Clear();
+						ClearWord(true, false, false, "Clear last word after 1 space");
 						afterEOS = false;
+					}
+					if (afterEOL) { //Clears word after Eat ONE enter
+						ClearWord(true, false, false, "Clear last word after 1 enter");
+						afterEOL = false;
 					}
 					if (!shift && !shift_r) {
 						MMain.c_word.Add(new YuKey() {
@@ -447,14 +444,7 @@ namespace Mahou
 				if (alt || alt_r)
 					clickAfterALT = true;
 				MahouUI.currentLayout = 0;
-				c_word_backup = new List<YuKey>(MMain.c_word);
-				MMain.c_word.Clear();
-				MMain.c_words.Clear();
-				Logging.Log("Last word & words cleared [with mouse click].");
-				if (MMain.mahou.SnippetsEnabled) {
-					c_snip.Clear();
-					Logging.Log("Current snippet cleared[with mouse click].");
-				}
+				ClearWord(true, true, true, "Mouse click");
 			}
 			if (MMain.mahou.LDUseWindowsMessages) {
 				if (MSG == (ushort)WinAPI.RawMouseButtons.LeftDown)
@@ -529,11 +519,8 @@ namespace Mahou
 								KInputs.AddKey(Keys.Back, false) 
 							});
 						}
-						Logging.Log("Last word, words cleared due to snippet expansion.");
 						Logging.Log("Expanding snippet [" + snip + "] to [" + expand + "].");
-						MMain.c_words.Clear();
-						c_word_backup = new List<YuKey>(MMain.c_word);
-						MMain.c_word.Clear();
+						ClearWord(true, true, false, "Cleared due to snippet expansion");
 						KInputs.MakeInput(KInputs.AddString(expand));
 					}
 					if (spaceAft)
@@ -754,6 +741,26 @@ namespace Mahou
 		public static void ClearModifiers() {
 			win = alt = ctrl = shift = win_r = alt_r = ctrl_r = shift_r = false;
 			DoSelf(() => SendModsUp((int)(WinAPI.MOD_ALT + WinAPI.MOD_CONTROL + WinAPI.MOD_SHIFT + WinAPI.MOD_WIN)));
+		}
+		static void ClearWord(bool LastWord = false, bool LastLine = false, bool Snippet = false, string ClearReason = "") {
+			string ReasonEnding = ".";
+			if (MahouUI.LoggingEnabled && !String.IsNullOrEmpty(ClearReason))
+				ReasonEnding = ", reason: [" + ClearReason + "].";
+			if (LastWord) {
+				c_word_backup = new List<YuKey>(MMain.c_word);
+				MMain.c_word.Clear();
+				Logging.Log("Cleared last word" + ReasonEnding);
+			}
+			if (LastLine) {
+				MMain.c_words.Clear();
+				Logging.Log("Cleared last line" + ReasonEnding);
+			}
+			if (Snippet) {
+				if (MMain.mahou.SnippetsEnabled) {
+					c_snip.Clear();
+					Logging.Log("Cleared current snippet" + ReasonEnding);
+				}
+			}
 		}
 		/// <summary>
 		/// Converts selected text.

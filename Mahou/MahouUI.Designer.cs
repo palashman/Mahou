@@ -195,6 +195,7 @@ namespace Mahou
 		private System.Windows.Forms.Label lbl_SnippetExpandKey;
 		private System.Windows.Forms.CheckBox chk_LDMessages;
 		private System.Windows.Forms.CheckBox chk_RemapCapsLockAsF18;
+		private System.Windows.Forms.CheckBox chk_Add1NL;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -404,6 +405,7 @@ namespace Mahou
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
 			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
+			this.chk_Add1NL = new System.Windows.Forms.CheckBox();
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -468,6 +470,8 @@ namespace Mahou
 			// 
 			// tab_functions
 			// 
+			this.tab_functions.Controls.Add(this.chk_Logging);
+			this.tab_functions.Controls.Add(this.chk_Add1NL);
 			this.tab_functions.Controls.Add(this.chk_RemapCapsLockAsF18);
 			this.tab_functions.Controls.Add(this.chk_AppDataConfigs);
 			this.tab_functions.Controls.Add(this.chk_GuessKeyCodeFix);
@@ -478,10 +482,8 @@ namespace Mahou
 			this.tab_functions.Controls.Add(this.chk_OneLayoutWholeWord);
 			this.tab_functions.Controls.Add(this.lnk_plugin);
 			this.tab_functions.Controls.Add(this.chk_MCDS_support);
-			this.tab_functions.Controls.Add(this.chk_BlockHKWithCtrl);
 			this.tab_functions.Controls.Add(this.chk_FlagsInTray);
 			this.tab_functions.Controls.Add(this.chk_CapsLockDTimer);
-			this.tab_functions.Controls.Add(this.chk_Logging);
 			this.tab_functions.Controls.Add(this.chk_StartupUpdatesCheck);
 			this.tab_functions.Controls.Add(this.chk_HighlightScroll);
 			this.tab_functions.Controls.Add(this.chk_CSLayoutSwitchingPlus);
@@ -491,6 +493,7 @@ namespace Mahou
 			this.tab_functions.Controls.Add(this.chk_CSLayoutSwitching);
 			this.tab_functions.Controls.Add(this.chk_TrayIcon);
 			this.tab_functions.Controls.Add(this.chk_AutoStart);
+			this.tab_functions.Controls.Add(this.chk_BlockHKWithCtrl);
 			this.tab_functions.Location = new System.Drawing.Point(4, 44);
 			this.tab_functions.Name = "tab_functions";
 			this.tab_functions.Padding = new System.Windows.Forms.Padding(3);
@@ -604,7 +607,7 @@ namespace Mahou
 			// chk_BlockHKWithCtrl
 			// 
 			this.chk_BlockHKWithCtrl.AutoSize = true;
-			this.chk_BlockHKWithCtrl.Location = new System.Drawing.Point(8, 216);
+			this.chk_BlockHKWithCtrl.Location = new System.Drawing.Point(8, 241);
 			this.chk_BlockHKWithCtrl.Name = "chk_BlockHKWithCtrl";
 			this.chk_BlockHKWithCtrl.Size = new System.Drawing.Size(191, 19);
 			this.chk_BlockHKWithCtrl.TabIndex = 12;
@@ -635,7 +638,7 @@ namespace Mahou
 			// chk_Logging
 			// 
 			this.chk_Logging.AutoSize = true;
-			this.chk_Logging.Location = new System.Drawing.Point(8, 241);
+			this.chk_Logging.Location = new System.Drawing.Point(302, 241);
 			this.chk_Logging.Name = "chk_Logging";
 			this.chk_Logging.Size = new System.Drawing.Size(187, 19);
 			this.chk_Logging.TabIndex = 9;
@@ -655,7 +658,7 @@ namespace Mahou
 			// chk_HighlightScroll
 			// 
 			this.chk_HighlightScroll.AutoSize = true;
-			this.chk_HighlightScroll.Location = new System.Drawing.Point(8, 191);
+			this.chk_HighlightScroll.Location = new System.Drawing.Point(8, 216);
 			this.chk_HighlightScroll.Name = "chk_HighlightScroll";
 			this.chk_HighlightScroll.Size = new System.Drawing.Size(263, 19);
 			this.chk_HighlightScroll.TabIndex = 7;
@@ -666,7 +669,7 @@ namespace Mahou
 			// chk_CSLayoutSwitchingPlus
 			// 
 			this.chk_CSLayoutSwitchingPlus.AutoSize = true;
-			this.chk_CSLayoutSwitchingPlus.Location = new System.Drawing.Point(8, 166);
+			this.chk_CSLayoutSwitchingPlus.Location = new System.Drawing.Point(8, 191);
 			this.chk_CSLayoutSwitchingPlus.Name = "chk_CSLayoutSwitchingPlus";
 			this.chk_CSLayoutSwitchingPlus.Size = new System.Drawing.Size(216, 19);
 			this.chk_CSLayoutSwitchingPlus.TabIndex = 6;
@@ -2635,6 +2638,16 @@ namespace Mahou
 			this.HelpMeUnderstand.ShowAlways = true;
 			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.HelpMeUnderstand.Popup += new System.Windows.Forms.PopupEventHandler(this.HelpMeUnderstandPopup);
+			// 
+			// chk_Add1NL
+			// 
+			this.chk_Add1NL.AutoSize = true;
+			this.chk_Add1NL.Location = new System.Drawing.Point(8, 166);
+			this.chk_Add1NL.Name = "chk_Add1NL";
+			this.chk_Add1NL.Size = new System.Drawing.Size(186, 19);
+			this.chk_Add1NL.TabIndex = 23;
+			this.chk_Add1NL.Text = "Add one new line to last word.";
+			this.chk_Add1NL.UseVisualStyleBackColor = true;
 			// 
 			// MahouUI
 			// 

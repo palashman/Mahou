@@ -52,7 +52,7 @@ namespace Mahou {
 					MouseTTAlways, OneLayout, MouseLangTooltipEnabled, CaretLangTooltipEnabled, QWERTZ_fix, 
 					ChangeLayoutInExcluded, SnippetSpaceAfter, SnippetsSwitchToGuessLayout, AutoSwitchEnabled,
 					AutoSwitchSpaceAfter, AutoSwitchSwitchToGuessLayout, GuessKeyCodeFix, Dowload_ASD_InZip, 
-					LDForCaret, LDForMouse, LDUseWindowsMessages, RemapCapslockAsF18;
+					LDForCaret, LDForMouse, LDUseWindowsMessages, RemapCapslockAsF18, Add1NL;
 		/// <summary> Temporary modifiers of hotkeys. </summary>
 		string Mainhk_tempMods, ExitHk_tempMods, HKCLast_tempMods, HKCSelection_tempMods, 
 			    HKCLine_tempMods, HKSymIgn_tempMods, HKConMorWor_tempMods, HKTitleCase_tempMods,
@@ -657,6 +657,7 @@ namespace Mahou {
 				MMain.MyConfs.Write("Functions", "ReSelect", chk_ReSelect.Checked.ToString());
 				MMain.MyConfs.Write("Functions", "RePress", chk_RePress.Checked.ToString());
 				MMain.MyConfs.Write("Functions", "AddOneSpaceToLastWord", chk_AddOneSpace.Checked.ToString());
+				MMain.MyConfs.Write("Functions", "AddOneEnterToLastWord", chk_Add1NL.Checked.ToString());
 				MMain.MyConfs.Write("Functions", "ConvertSelectionLayoutSwitchingPlus", chk_CSLayoutSwitchingPlus.Checked.ToString());
 				MMain.MyConfs.Write("Functions", "ScrollTip", chk_HighlightScroll.Checked.ToString());
 				MMain.MyConfs.Write("Functions", "StartupUpdatesCheck", chk_StartupUpdatesCheck.Checked.ToString());
@@ -840,6 +841,7 @@ namespace Mahou {
 			ReSelect = chk_ReSelect.Checked = MMain.MyConfs.ReadBool("Functions", "ReSelect");
 			RePress = chk_RePress.Checked = MMain.MyConfs.ReadBool("Functions", "RePress");
 			AddOneSpace = chk_AddOneSpace.Checked = MMain.MyConfs.ReadBool("Functions", "AddOneSpaceToLastWord");
+			Add1NL = chk_Add1NL.Checked = MMain.MyConfs.ReadBool("Functions", "AddOneEnterToLastWord");
 			ConvertSelectionLSPlus = chk_CSLayoutSwitchingPlus.Checked = MMain.MyConfs.ReadBool("Functions", "ConvertSelectionLayoutSwitchingPlus");
 			ScrollTip = chk_HighlightScroll.Checked = MMain.MyConfs.ReadBool("Functions", "ScrollTip");
 			chk_StartupUpdatesCheck.Checked = MMain.MyConfs.ReadBool("Functions", "StartupUpdatesCheck");
@@ -2707,6 +2709,7 @@ DEL ""ExtractASD.cmd""";
 			chk_ReSelect.Text = MMain.Lang[Languages.Element.ReSelect];
 			chk_RePress.Text = MMain.Lang[Languages.Element.RePress];
 			chk_AddOneSpace.Text = MMain.Lang[Languages.Element.Add1Space];
+			chk_Add1NL.Text = MMain.Lang[Languages.Element.Add1NL];
 			chk_CSLayoutSwitchingPlus.Text = MMain.Lang[Languages.Element.ConvertSelectionLSPlus];
 			chk_HighlightScroll.Text = MMain.Lang[Languages.Element.HighlightScroll];
 			chk_StartupUpdatesCheck.Text = MMain.Lang[Languages.Element.UpdatesCheck];
@@ -2874,6 +2877,7 @@ DEL ""ExtractASD.cmd""";
 			HelpMeUnderstand.SetToolTip(chk_ReSelect, MMain.Lang[Languages.Element.TT_ReSelect]);
 			HelpMeUnderstand.SetToolTip(chk_RePress, MMain.Lang[Languages.Element.TT_RePress]);
 			HelpMeUnderstand.SetToolTip(chk_AddOneSpace, MMain.Lang[Languages.Element.TT_Add1Space]);
+			HelpMeUnderstand.SetToolTip(chk_Add1NL, MMain.Lang[Languages.Element.TT_Add1NL]);
 			HelpMeUnderstand.SetToolTip(chk_CSLayoutSwitchingPlus, MMain.Lang[Languages.Element.TT_ConvertSelectionSwitchPlus]);
 			HelpMeUnderstand.SetToolTip(chk_HighlightScroll, MMain.Lang[Languages.Element.TT_ScrollTip]);
 			HelpMeUnderstand.SetToolTip(chk_Logging, MMain.Lang[Languages.Element.TT_Logging]);
