@@ -1224,6 +1224,7 @@ namespace Mahou {
 				TopMost = false;
 				WinAPI.SetForegroundWindow(Handle);
 			}
+			KMHook.ClearModifiers();
 			Memory.Flush();
 		}
 		public void ToggleLangPanel() {

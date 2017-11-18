@@ -751,6 +751,10 @@ namespace Mahou
           		}
 			}
 		}
+		public static void ClearModifiers() {
+			win = alt = ctrl = shift = win_r = alt_r = ctrl_r = shift_r = false;
+			DoSelf(() => SendModsUp((int)(WinAPI.MOD_ALT + WinAPI.MOD_CONTROL + WinAPI.MOD_SHIFT + WinAPI.MOD_WIN)));
+		}
 		/// <summary>
 		/// Converts selected text.
 		/// </summary>
