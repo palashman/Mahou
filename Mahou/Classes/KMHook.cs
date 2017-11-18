@@ -346,10 +346,10 @@ namespace Mahou
 					    MMain.c_word[MMain.c_word.Count - 1].key != Keys.Enter) {
 						Logging.Log("Eat one New Line passed, next Enter will clear last word.");
 						MMain.c_word.Add(new YuKey() { key = Keys.Enter });
+						MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() { key = Keys.Enter });
 						afterEOL = true;
 					} else {
-						c_word_backup = new List<YuKey>(MMain.c_word);
-						ClearWord(true, false, false, "Pressed enter");
+						ClearWord(true, true, true, "Pressed enter");
 						afterEOL = false;
 					}
 				}

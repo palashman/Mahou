@@ -355,6 +355,7 @@ namespace Mahou {
 				Hotkey.CallHotkey(MMain.mahou.Mainhk, id, ref hkShWndOK, ToggleVisibility);
 				Hotkey.CallHotkey(MMain.mahou.HKToggleLP, id, ref hkToglLPOK, ToggleLangPanel);
 				Hotkey.CallHotkey(MMain.mahou.ExitHk, id, ref hkExitOK, ExitProgram);
+				KMHook.ClearModifiers();
 			}
 			base.WndProc(ref m);
 		}
