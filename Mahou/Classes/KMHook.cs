@@ -740,7 +740,7 @@ namespace Mahou
 		}
 		public static void ClearModifiers() {
 			win = alt = ctrl = shift = win_r = alt_r = ctrl_r = shift_r = false;
-			DoSelf(() => SendModsUp((int)(WinAPI.MOD_ALT + WinAPI.MOD_CONTROL + WinAPI.MOD_SHIFT + WinAPI.MOD_WIN)));
+			SendModsUp((int)(WinAPI.MOD_ALT + WinAPI.MOD_CONTROL + WinAPI.MOD_SHIFT + WinAPI.MOD_WIN));
 		}
 		static void ClearWord(bool LastWord = false, bool LastLine = false, bool Snippet = false, string ClearReason = "") {
 			string ReasonEnding = ".";
@@ -1540,7 +1540,7 @@ namespace Mahou
 		public static void KeybdEvent(Keys key, int flags) // 
 		{
 			//Do not remove this line, it needed for "Left Control Switch Layout" to work properly
-			Thread.Sleep(15);
+//			Thread.Sleep(15);
 			WinAPI.keybd_event((byte)key, 0, flags | (KInputs.IsExtended(key) ? 1 : 0), 0);
 		}
 		public static void RePressAfter(int mods)
