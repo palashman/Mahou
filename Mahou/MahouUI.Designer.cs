@@ -2493,7 +2493,7 @@ namespace Mahou
 			// 
 			// txt_UpdateDetails
 			// 
-			this.txt_UpdateDetails.BackColor = System.Drawing.Color.White;
+			this.txt_UpdateDetails.BackColor = System.Drawing.SystemColors.Window;
 			this.txt_UpdateDetails.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.txt_UpdateDetails.Font = new System.Drawing.Font("Segoe UI Symbol", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.txt_UpdateDetails.Location = new System.Drawing.Point(3, 19);
@@ -2544,7 +2544,7 @@ namespace Mahou
 			// 
 			// txt_Help
 			// 
-			this.txt_Help.BackColor = System.Drawing.Color.White;
+			this.txt_Help.BackColor = System.Drawing.SystemColors.Window;
 			this.txt_Help.Location = new System.Drawing.Point(0, 0);
 			this.txt_Help.Multiline = true;
 			this.txt_Help.Name = "txt_Help";
