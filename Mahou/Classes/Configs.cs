@@ -75,6 +75,7 @@ namespace Mahou
             CheckBool("Functions", "ConvertSelectionLayoutSwitchingPlus", "false");
             CheckBool("Functions", "ScrollTip", "false");
             CheckBool("Functions", "StartupUpdatesCheck", "false");
+            CheckBool("Functions", "SilentUpdate", "false");
             CheckBool("Functions", "Logging", "false");
             CheckBool("Functions", "CapsLockTimer", "false");
             CheckBool("Functions", "TrayFlags", "true");

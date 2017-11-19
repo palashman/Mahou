@@ -196,6 +196,7 @@ namespace Mahou
 		private System.Windows.Forms.CheckBox chk_LDMessages;
 		private System.Windows.Forms.CheckBox chk_RemapCapsLockAsF18;
 		private System.Windows.Forms.CheckBox chk_Add1NL;
+		private System.Windows.Forms.CheckBox chk_SilentUpdate;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -406,6 +407,7 @@ namespace Mahou
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
 			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
+			this.chk_SilentUpdate = new System.Windows.Forms.CheckBox();
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -470,6 +472,7 @@ namespace Mahou
 			// 
 			// tab_functions
 			// 
+			this.tab_functions.Controls.Add(this.chk_SilentUpdate);
 			this.tab_functions.Controls.Add(this.chk_Logging);
 			this.tab_functions.Controls.Add(this.chk_Add1NL);
 			this.tab_functions.Controls.Add(this.chk_RemapCapsLockAsF18);
@@ -2648,6 +2651,16 @@ namespace Mahou
 			this.HelpMeUnderstand.ShowAlways = true;
 			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.HelpMeUnderstand.Popup += new System.Windows.Forms.PopupEventHandler(this.HelpMeUnderstandPopup);
+			// 
+			// chk_SilentUpdate
+			// 
+			this.chk_SilentUpdate.AutoSize = true;
+			this.chk_SilentUpdate.Location = new System.Drawing.Point(302, 154);
+			this.chk_SilentUpdate.Name = "chk_SilentUpdate";
+			this.chk_SilentUpdate.Size = new System.Drawing.Size(151, 19);
+			this.chk_SilentUpdate.TabIndex = 24;
+			this.chk_SilentUpdate.Text = "Silent update at startup.";
+			this.chk_SilentUpdate.UseVisualStyleBackColor = true;
 			// 
 			// MahouUI
 			// 

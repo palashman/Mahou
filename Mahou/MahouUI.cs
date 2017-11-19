@@ -188,12 +188,19 @@ namespace Mahou {
 				uche.Name = "Startup Check";
 				uche.Start();
 				showUpdWnd.Tick += (_, __) => {
+					Logging.Log("Checking: " + AtUpdateShow);
 					if (AtUpdateShow == 1) {
-						tabs.SelectedIndex = tabs.TabPages.IndexOf(tab_updates);
-						SetUInfo();
-						Visible = TopMost = true;
-						grb_DownloadUpdate.Enabled = true;
-						btn_DownloadUpdate.PerformClick();
+						if (MMain.MyConfs.ReadBool("Functions", "SilentUpdate")) {
+							Btn_DownloadUpdateClick((object)0, new EventArgs());
+							Logging.Log("Silent UPDATE!");
+						}
+						else {
+							tabs.SelectedIndex = tabs.TabPages.IndexOf(tab_updates);
+							SetUInfo();
+							Visible = TopMost = true;
+							grb_DownloadUpdate.Enabled = true;
+							btn_DownloadUpdate.PerformClick();
+						}
 						showUpdWnd.Stop();
 						showUpdWnd.Dispose();
 					}
@@ -662,6 +669,7 @@ namespace Mahou {
 				MMain.MyConfs.Write("Functions", "ConvertSelectionLayoutSwitchingPlus", chk_CSLayoutSwitchingPlus.Checked.ToString());
 				MMain.MyConfs.Write("Functions", "ScrollTip", chk_HighlightScroll.Checked.ToString());
 				MMain.MyConfs.Write("Functions", "StartupUpdatesCheck", chk_StartupUpdatesCheck.Checked.ToString());
+				MMain.MyConfs.Write("Functions", "SilentUpdate", chk_SilentUpdate.Checked.ToString());
 				MMain.MyConfs.Write("Functions", "Logging", chk_Logging.Checked.ToString());
 				MMain.MyConfs.Write("Functions", "TrayFlags", chk_FlagsInTray.Checked.ToString());
 				MMain.MyConfs.Write("Functions", "CapsLockTimer", chk_CapsLockDTimer.Checked.ToString());
@@ -846,6 +854,7 @@ namespace Mahou {
 			ConvertSelectionLSPlus = chk_CSLayoutSwitchingPlus.Checked = MMain.MyConfs.ReadBool("Functions", "ConvertSelectionLayoutSwitchingPlus");
 			ScrollTip = chk_HighlightScroll.Checked = MMain.MyConfs.ReadBool("Functions", "ScrollTip");
 			chk_StartupUpdatesCheck.Checked = MMain.MyConfs.ReadBool("Functions", "StartupUpdatesCheck");
+			chk_SilentUpdate.Checked = MMain.MyConfs.ReadBool("Functions", "SilentUpdate");
 			LoggingEnabled = chk_Logging.Checked = MMain.MyConfs.ReadBool("Functions", "Logging");
 			chk_AppDataConfigs.Checked = (bool)DoInMainConfigs(() => MMain.MyConfs.ReadBool("Functions", "AppDataConfigs"));
 			latest_save_dir = nPath;
@@ -2393,6 +2402,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				//which shutdown running Mahou,
 				//delete old version,
 				//unzip downloaded one, and start it.
+				var silent = MMain.MyConfs.ReadBool("Functions", "SilentUpdate");
 				var UpdateMahou =
 					@"@ECHO OFF
 chcp 65001
@@ -2408,7 +2418,7 @@ ECHO End With >> ""%MAHOUDIR%unzip.vbs""
 
 CSCRIPT ""%MAHOUDIR%unzip.vbs"" ""%MAHOUDIR%" + arch + @""" ""%MAHOUDIR%""
 
-START """" ""%MAHOUDIR%Mahou.exe"" ""_!_updated_!_""
+START """" ""%MAHOUDIR%Mahou.exe"" "+ (!silent ? "\"_!_updated_!_\"" : "\"_!_silent_updated_!_\"") + @"
 DEL ""%MAHOUDIR%" + arch + @"""
 DEL ""%MAHOUDIR%unzip.vbs""
 DEL ""%MAHOUDIR%UpdateMahou.cmd""";
@@ -2645,15 +2655,20 @@ DEL ""ExtractASD.cmd""";
 			Logging.Log("Startup check for updates.");
 			System.Threading.Tasks.Task.Factory.StartNew(GetUpdateInfo).Wait();
 			SetUInfo();
+			bool silent = MMain.MyConfs.ReadBool("Functions", "SilentUpdate");
+			if (silent)
+				AtUpdateShow = 1;
 			try {
 				if (UpdInfo[2] == "latest-commit" ? 
 				    MMain.MyConfs.Read("Updates", "LatestCommit") != UpdInfo[4] :
 				    flVersion("v" + Application.ProductVersion) < flVersion(UpdInfo[2])) {
 					Logging.Log("New version available, showing dialog...");
-					if (MessageBox.Show(new Form() { TopMost = false, Visible = false }, UpdInfo[1], UpdInfo[0],
-						     MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.OK) {
-						AtUpdateShow = 1;
-					} else { AtUpdateShow = 2; }
+					if (!silent) {
+						if (MessageBox.Show(new Form() { TopMost = false, Visible = false }, UpdInfo[1], UpdInfo[0],
+							     MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.OK) {
+							AtUpdateShow = 1;
+						} else { AtUpdateShow = 2; }
+					}
 				}
 			} catch(Exception e) {
 				Logging.Log("Unexpected error: \n" + e.Message +"\n" + e.StackTrace);

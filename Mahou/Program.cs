@@ -92,11 +92,19 @@ namespace Mahou
 				_LDevt_hookID = WinAPI.SetWinEventHook(WinAPI.EVENT_OBJECT_FOCUS, WinAPI.EVENT_OBJECT_FOCUS,
 				                                     IntPtr.Zero, _LDevt_proc, 0, 0, WinAPI.WINEVENT_OUTOFCONTEXT);
 				KMHook.CheckLayoutLater.Tick += (_, __) => { MahouUI.currentLayout = MahouUI.GlobalLayout = Locales.GetCurrentLocale(); KMHook.CheckLayoutLater.Stop();};
-				if (args.Length != 0)
-				if (args[0] == "_!_updated_!_") {
-					Logging.Log("Mahou updated.");
-					mahou.ToggleVisibility();
-					MessageBox.Show(Lang[Languages.Element.UpdateComplete], Lang[Languages.Element.UpdateComplete], MessageBoxButtons.OK, MessageBoxIcon.Information);
+				if (args.Length != 0) {
+					if (args[0] == "_!_updated_!_") {
+						Logging.Log("Mahou updated.");
+						mahou.ToggleVisibility();
+						MessageBox.Show(Lang[Languages.Element.UpdateComplete], Lang[Languages.Element.UpdateComplete], MessageBoxButtons.OK, MessageBoxIcon.Information);
+					}
+					if (args[0] == "_!_silent_updated_!_") {
+						Logging.Log("Mahou silently updated.");
+						mahou.icon.trIcon.Visible = true;
+						mahou.icon.trIcon.ShowBalloonTip(1000, Lang[Languages.Element.UpdateComplete], "Mahou -> " + mahou.Text, ToolTipIcon.Info);
+						if (!mahou.TrayIconVisible)
+							KMHook.DoLater(() => mahou.Invoke((MethodInvoker)delegate { mahou.icon.trIcon.Visible = false; }), 1005);
+					}
 				}
 				MahouUI.GlobalLayout = MahouUI.currentLayout = Locales.GetLocaleFromString(mahou.MainLayout1).uId;
 				Application.Run();
