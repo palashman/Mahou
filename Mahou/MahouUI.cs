@@ -1744,7 +1744,7 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				ScrlCheck.Start();
 			if (MMain.MyConfs.ReadBool("Functions", "CapsLockTimer"))
 				capsCheck.Start();
-			if (MMain.MyConfs.ReadBool("Functions", "TrayFlags"))
+			if (MMain.MyConfs.ReadBool("Functions", "TrayFlags") && TrayIconVisible)
 				flagsCheck.Start();
 			if (MMain.MyConfs.ReadBool("PersistentLayout", "ActivateForLayout1"))
 				persistentLayout1Check.Start();
