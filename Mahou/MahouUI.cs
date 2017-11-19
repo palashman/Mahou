@@ -2656,14 +2656,14 @@ DEL ""ExtractASD.cmd""";
 			System.Threading.Tasks.Task.Factory.StartNew(GetUpdateInfo).Wait();
 			SetUInfo();
 			bool silent = MMain.MyConfs.ReadBool("Functions", "SilentUpdate");
-			if (silent)
-				AtUpdateShow = 1;
 			try {
 				if (UpdInfo[2] == "latest-commit" ? 
 				    MMain.MyConfs.Read("Updates", "LatestCommit") != UpdInfo[4] :
 				    flVersion("v" + Application.ProductVersion) < flVersion(UpdInfo[2])) {
-					Logging.Log("New version available, showing dialog...");
-					if (!silent) {
+					Logging.Log("New version available, " + (!silent ? "showing dialog..." : "silent updating..."));
+					if (silent)
+						AtUpdateShow = 1;
+					else {
 						if (MessageBox.Show(new Form() { TopMost = false, Visible = false }, UpdInfo[1], UpdInfo[0],
 							     MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.OK) {
 							AtUpdateShow = 1;
