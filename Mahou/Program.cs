@@ -102,6 +102,7 @@ namespace Mahou
 						Logging.Log("Mahou silently updated.");
 						mahou.icon.trIcon.Visible = true;
 						mahou.icon.trIcon.ShowBalloonTip(1000, Lang[Languages.Element.UpdateComplete], "Mahou -> " + mahou.Text, ToolTipIcon.Info);
+						mahou.icon.trIcon.BalloonTipClicked += (_, __) => mahou.ToggleVisibility();
 						if (!mahou.TrayIconVisible)
 							KMHook.DoLater(() => mahou.Invoke((MethodInvoker)delegate { mahou.icon.trIcon.Visible = false; }), 1005);
 					}

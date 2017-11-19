@@ -205,6 +205,7 @@ namespace Mahou {
 						showUpdWnd.Dispose();
 					}
 					if (AtUpdateShow == 2) {
+						Logging.Log("No new version updates found.");
 						showUpdWnd.Stop();
 						showUpdWnd.Dispose();
 					}
@@ -2669,7 +2670,8 @@ DEL ""ExtractASD.cmd""";
 							AtUpdateShow = 1;
 						} else { AtUpdateShow = 2; }
 					}
-				}
+				} else
+					AtUpdateShow = 2; // No Updates
 			} catch(Exception e) {
 				Logging.Log("Unexpected error: \n" + e.Message +"\n" + e.StackTrace);
 			}
