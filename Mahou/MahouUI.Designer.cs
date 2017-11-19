@@ -220,6 +220,7 @@ namespace Mahou
 			this.components = new System.ComponentModel.Container();
 			this.tabs = new System.Windows.Forms.TabControl();
 			this.tab_functions = new System.Windows.Forms.TabPage();
+			this.chk_SilentUpdate = new System.Windows.Forms.CheckBox();
 			this.chk_Logging = new System.Windows.Forms.CheckBox();
 			this.chk_Add1NL = new System.Windows.Forms.CheckBox();
 			this.chk_RemapCapsLockAsF18 = new System.Windows.Forms.CheckBox();
@@ -407,7 +408,6 @@ namespace Mahou
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
 			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
-			this.chk_SilentUpdate = new System.Windows.Forms.CheckBox();
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -504,6 +504,16 @@ namespace Mahou
 			this.tab_functions.TabIndex = 0;
 			this.tab_functions.Text = "Functions";
 			this.tab_functions.UseVisualStyleBackColor = true;
+			// 
+			// chk_SilentUpdate
+			// 
+			this.chk_SilentUpdate.AutoSize = true;
+			this.chk_SilentUpdate.Location = new System.Drawing.Point(302, 154);
+			this.chk_SilentUpdate.Name = "chk_SilentUpdate";
+			this.chk_SilentUpdate.Size = new System.Drawing.Size(151, 19);
+			this.chk_SilentUpdate.TabIndex = 24;
+			this.chk_SilentUpdate.Text = "Silent update at startup.";
+			this.chk_SilentUpdate.UseVisualStyleBackColor = true;
 			// 
 			// chk_Logging
 			// 
@@ -657,6 +667,7 @@ namespace Mahou
 			this.chk_StartupUpdatesCheck.TabIndex = 8;
 			this.chk_StartupUpdatesCheck.Text = "Check for updates at startup.";
 			this.chk_StartupUpdatesCheck.UseVisualStyleBackColor = true;
+			this.chk_StartupUpdatesCheck.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
 			// 
 			// chk_HighlightScroll
 			// 
@@ -2651,16 +2662,6 @@ namespace Mahou
 			this.HelpMeUnderstand.ShowAlways = true;
 			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.HelpMeUnderstand.Popup += new System.Windows.Forms.PopupEventHandler(this.HelpMeUnderstandPopup);
-			// 
-			// chk_SilentUpdate
-			// 
-			this.chk_SilentUpdate.AutoSize = true;
-			this.chk_SilentUpdate.Location = new System.Drawing.Point(302, 154);
-			this.chk_SilentUpdate.Name = "chk_SilentUpdate";
-			this.chk_SilentUpdate.Size = new System.Drawing.Size(151, 19);
-			this.chk_SilentUpdate.TabIndex = 24;
-			this.chk_SilentUpdate.Text = "Silent update at startup.";
-			this.chk_SilentUpdate.UseVisualStyleBackColor = true;
 			// 
 			// MahouUI
 			// 

@@ -1178,6 +1178,7 @@ namespace Mahou {
 			chk_CSLayoutSwitchingPlus.Enabled = chk_CSLayoutSwitching.Checked;
 			chk_OneLayoutWholeWord.Enabled = !chk_CSLayoutSwitching.Checked;
 			chk_FlagsInTray.Enabled = chk_TrayIcon.Checked;
+			chk_SilentUpdate.Enabled = chk_StartupUpdatesCheck.Checked;
 			// Layouts tab
 			lbl_SetsCount.Enabled = pan_KeySets.Enabled = btn_AddSet.Enabled = btn_SubSet.Enabled = 
 				lbl_KeysType.Enabled = cbb_SpecKeysType.Enabled = chk_SpecificLS.Checked;
@@ -2731,6 +2732,7 @@ DEL ""ExtractASD.cmd""";
 			chk_CSLayoutSwitchingPlus.Text = MMain.Lang[Languages.Element.ConvertSelectionLSPlus];
 			chk_HighlightScroll.Text = MMain.Lang[Languages.Element.HighlightScroll];
 			chk_StartupUpdatesCheck.Text = MMain.Lang[Languages.Element.UpdatesCheck];
+			chk_SilentUpdate.Text = MMain.Lang[Languages.Element.SilentUpdate];
 			chk_Logging.Text = MMain.Lang[Languages.Element.Logging];
 			chk_CapsLockDTimer.Text = MMain.Lang[Languages.Element.CapsTimer];
 			chk_FlagsInTray.Text = MMain.Lang[Languages.Element.ContryFlags];
