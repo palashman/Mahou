@@ -50,6 +50,8 @@ public class Languages
 		SetHotkeyType,
 		#endregion
 		#region Persistent Layout
+		SwitchOnlyOnWindowChange,
+		SwitchOnlyOnce,
 		PersistentLayout,
 		ActivatePLFP,
 		CheckInterval,
@@ -204,6 +206,8 @@ public class Languages
 		TT_LDText,
 		TT_OneLayoutWholeWordCS,
 		TT_PersistentLayout,
+		TT_SwitchOnlyOnWindowChange,
+		TT_SwitchOnlyOnce,
 		TT_RestartHooks,
 		TT_OneLayout,
 		TT_QWERTZ,
@@ -271,6 +275,8 @@ public class Languages
 		#endregion
 		#region Persistent Layout
 		{ Element.PersistentLayout, "Persistent layout" }, 
+		{ Element.SwitchOnlyOnWindowChange, "Change only when active window changes." }, 
+		{ Element.SwitchOnlyOnce, "Change layout only once per window." }, 
 		{ Element.ActivatePLFP, "Activate persistent layout for processes:" }, 
 		{ Element.CheckInterval, "Check interval:" }, 
 		#endregion
@@ -442,6 +448,8 @@ public class Languages
 				"this feature uses quantity of rightly recognized chars in two selected layouts to indicate layout of whole word,"+
 				"\r\nthis feature works PERFECTLY with words that have symbols around them, but word lenght must be greater that 1 char for this feature to work properly." },
 		{ Element.TT_PersistentLayout, "Write here process names in which you want to have persistent layout, separators are spaces and new lines.\r\nIf process name has spaces in it replace it with _, if process name has the _ just write it so.\r\nExample: Process Name: foo_bar 2000.exe\r\nIn Mahou: foo_bar_2000.exe."},
+		{ Element.TT_SwitchOnlyOnWindowChange, "Enabling this will disable timers and persistent layout will update only when active window changes(Windows message).\r\nConsumes CPU only when changing windows, i.e. way less CPU usage than timers."},
+		{ Element.TT_SwitchOnlyOnce, "If enabled switching layout will be only once per window,\r\ne.g. it will switch window's layout on activation if its process name matches selected only once.\r\nList of windows for which layout already been changed clears when clicked on Apply or OK."},
 		{ Element.TT_RestartHooks, "Restart global keyboard and mouse hooks on every Mahou's hotkey action end.\r\nEnabling this will make hooks (almost) impossible to kill, useful if Mahou stops catching pressed keys."},
 		{ Element.TT_OneLayout, "Allows to store global layout in Mahou, insted of layout per window/program.\r\n(if You have Windows 8 or greater this feature is built in Windows, so you don't need to use enable it in Mahou)"},
 		{ Element.TT_QWERTZ, "Makes right substitutes in QWERTZ keyboards for chars: ß, ä, ö, ü, Ä, Ö, Ü, Y, Z in Convert Selection\r\n(!! but convert selection layout switching(or +) not supported)." },
@@ -507,6 +515,8 @@ public class Languages
 		#endregion
 		#region Persistent Layout
 		{ Element.PersistentLayout, "Постоянная раскладка" }, 
+		{ Element.SwitchOnlyOnWindowChange, "Менять только когда меняются окна." }, 
+		{ Element.SwitchOnlyOnce, "Менять 1 раз для окна." }, 
 		{ Element.ActivatePLFP, "Постоянная раскладка для процессов:" }, 
 		{ Element.CheckInterval, "Интервал проверки:" }, 
 		{ Element.OneLayout, "Единая раскладка для всех программ." }, 
@@ -681,6 +691,8 @@ public class Languages
 				"эта функция использует количество правильно распознанных букв в двух раскладках чтобы определить раскладку слова,\r\n"+
 				"эта функция ПРЕКРАСНО работает с словами которые имеют рядом символы, но длинна слова должна быть больше 1(не включая символы) чтобы функция нормально работала." },
 		{ Element.TT_PersistentLayout, "Напишите здесь названия процессов в которых вы бы хотели иметь постоянную раскладку, разделитель - пробел или новая строка.\r\nЕсли в именах процессах есть пробел заменяйте его на _ , сам _ тоже можно заменять на _ .\r\nПример: Имя процесса: mon_hun online.exe\r\nВ Mahou: mon_hun_online.exe."},
+		{ Element.TT_SwitchOnlyOnWindowChange, "Если включено то функция постоянной раскладки не будет обновляться через таймеры, а будет обновлятся только при смене окон(Сообщения Windows).\r\nПотребляет ЦП только при смене окон, в итоге НАМНОГО меньше чем таймеры."},
+		{ Element.TT_SwitchOnlyOnce, "Если включено смена раскладки будет происходить только ОДИН раз для каждого окна выбранных процессов.\r\nСписок окон для которых уже менялась раскладка очищается при нажатии Применить или ОК."},
 		{ Element.TT_RestartHooks, "Перезапускает глобальные перехваты(HOOK'и) клавиатуры и мыши по окончанию действия любой горячей клавиши Mahou.\r\nВключая эту функцию перехватов будет (почти) что невозможно *убить*, полезно если Mahou перестаёт ловить введенные клавиши."},
 		{ Element.TT_OneLayout, "Позволяет хранить раскладку в Mahou, вместо раскладки для каждого окна/программы.\r\n(если у Вас Windows 8 и выше, то там уже стоит данная функция по умолчанию, нет необходимости включать ее в Mahou)"},
 		{ Element.TT_QWERTZ, "Делает правильные замены в клавиатурах QWERTZ для букв: ß, ä, ö, ü, Ä, Ö, Ü, Y, Z в Конверт выделения\r\n(!! но не совместимо со сменой раскладки в конверт выделения (или +))." },

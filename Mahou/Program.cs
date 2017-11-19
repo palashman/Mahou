@@ -36,6 +36,7 @@ namespace Mahou
 		[STAThread] //DO NOT REMOVE THIS
         public static void Main(string[] args)
 		{
+			Application.EnableVisualStyles(); // at first enable styles.
 			//Catch any error during program runtime
 			AppDomain.CurrentDomain.UnhandledException += (obj, arg) => {
 				var e = (Exception)arg.ExceptionObject;
@@ -86,7 +87,6 @@ namespace Mahou
 					mahou.cbb_MainLayout1.SelectedIndex = 0;
 					mahou.cbb_MainLayout2.SelectedIndex = 1;
 				}
-				Application.EnableVisualStyles(); // Huh i did not noticed that it was missing... '~'
 				_evt_hookID = WinAPI.SetWinEventHook(WinAPI.EVENT_SYSTEM_FOREGROUND, WinAPI.EVENT_SYSTEM_FOREGROUND,
 				                                     IntPtr.Zero, _evt_proc, 0, 0, WinAPI.WINEVENT_OUTOFCONTEXT);
 				_LDevt_hookID = WinAPI.SetWinEventHook(WinAPI.EVENT_OBJECT_FOCUS, WinAPI.EVENT_OBJECT_FOCUS,

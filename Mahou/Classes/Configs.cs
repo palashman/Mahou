@@ -108,6 +108,8 @@ namespace Mahou
 			CheckBool("Layouts", "QWERTZfix", "false");
 			#endregion
 			#region Persistent Layout
+			CheckBool("PersistentLayout", "OnlyOnWindowChange", "false");
+			CheckBool("PersistentLayout", "ChangeOnlyOnce", "false");
 			CheckBool("PersistentLayout", "ActivateForLayout1", "false");
 			CheckBool("PersistentLayout", "ActivateForLayout2", "false");
 			CheckInt("PersistentLayout", "Layout1CheckInterval", "50");

@@ -197,6 +197,8 @@ namespace Mahou
 		private System.Windows.Forms.CheckBox chk_RemapCapsLockAsF18;
 		private System.Windows.Forms.CheckBox chk_Add1NL;
 		private System.Windows.Forms.CheckBox chk_SilentUpdate;
+		private System.Windows.Forms.CheckBox chk_OnlyOnWindowChange;
+		private System.Windows.Forms.CheckBox chk_ChangeLayoutOnlyOnce;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -283,11 +285,13 @@ namespace Mahou
 			this.lbl_PersistentLayout2Interval = new System.Windows.Forms.Label();
 			this.chk_PersistentLayout2Active = new System.Windows.Forms.CheckBox();
 			this.txt_PersistentLayout2Processes = new Mahou.MahouUI.TextBoxCA();
+			this.chk_ChangeLayoutOnlyOnce = new System.Windows.Forms.CheckBox();
 			this.grb_PersistentLayout1 = new System.Windows.Forms.GroupBox();
 			this.nud_PersistentLayout1Interval = new System.Windows.Forms.NumericUpDown();
 			this.lbl_PersistentLayout1Interval = new System.Windows.Forms.Label();
 			this.chk_PersistentLayout1Active = new System.Windows.Forms.CheckBox();
 			this.txt_PersistentLayout1Processes = new Mahou.MahouUI.TextBoxCA();
+			this.chk_OnlyOnWindowChange = new System.Windows.Forms.CheckBox();
 			this.tab_appearence = new System.Windows.Forms.TabPage();
 			this.chk_LDMessages = new System.Windows.Forms.CheckBox();
 			this.grb_LangTTAppearence = new System.Windows.Forms.GroupBox();
@@ -1157,7 +1161,9 @@ namespace Mahou
 			// tab_persistent
 			// 
 			this.tab_persistent.Controls.Add(this.grb_PersistentLayout2);
+			this.tab_persistent.Controls.Add(this.chk_ChangeLayoutOnlyOnce);
 			this.tab_persistent.Controls.Add(this.grb_PersistentLayout1);
+			this.tab_persistent.Controls.Add(this.chk_OnlyOnWindowChange);
 			this.tab_persistent.Location = new System.Drawing.Point(4, 44);
 			this.tab_persistent.Name = "tab_persistent";
 			this.tab_persistent.Padding = new System.Windows.Forms.Padding(3);
@@ -1172,16 +1178,16 @@ namespace Mahou
 			this.grb_PersistentLayout2.Controls.Add(this.lbl_PersistentLayout2Interval);
 			this.grb_PersistentLayout2.Controls.Add(this.chk_PersistentLayout2Active);
 			this.grb_PersistentLayout2.Controls.Add(this.txt_PersistentLayout2Processes);
-			this.grb_PersistentLayout2.Location = new System.Drawing.Point(287, 1);
+			this.grb_PersistentLayout2.Location = new System.Drawing.Point(287, 25);
 			this.grb_PersistentLayout2.Name = "grb_PersistentLayout2";
-			this.grb_PersistentLayout2.Size = new System.Drawing.Size(261, 261);
+			this.grb_PersistentLayout2.Size = new System.Drawing.Size(261, 236);
 			this.grb_PersistentLayout2.TabIndex = 4;
 			this.grb_PersistentLayout2.TabStop = false;
 			this.grb_PersistentLayout2.Text = "Layout 2";
 			// 
 			// nud_PersistentLayout2Interval
 			// 
-			this.nud_PersistentLayout2Interval.Location = new System.Drawing.Point(186, 234);
+			this.nud_PersistentLayout2Interval.Location = new System.Drawing.Point(186, 204);
 			this.nud_PersistentLayout2Interval.Maximum = new decimal(new int[] {
 			5000,
 			0,
@@ -1194,7 +1200,7 @@ namespace Mahou
 			// lbl_PersistentLayout2Interval
 			// 
 			this.lbl_PersistentLayout2Interval.AutoSize = true;
-			this.lbl_PersistentLayout2Interval.Location = new System.Drawing.Point(6, 237);
+			this.lbl_PersistentLayout2Interval.Location = new System.Drawing.Point(6, 207);
 			this.lbl_PersistentLayout2Interval.Name = "lbl_PersistentLayout2Interval";
 			this.lbl_PersistentLayout2Interval.Size = new System.Drawing.Size(85, 15);
 			this.lbl_PersistentLayout2Interval.TabIndex = 2;
@@ -1213,11 +1219,21 @@ namespace Mahou
 			// 
 			// txt_PersistentLayout2Processes
 			// 
-			this.txt_PersistentLayout2Processes.Location = new System.Drawing.Point(7, 52);
+			this.txt_PersistentLayout2Processes.Location = new System.Drawing.Point(7, 47);
 			this.txt_PersistentLayout2Processes.Multiline = true;
 			this.txt_PersistentLayout2Processes.Name = "txt_PersistentLayout2Processes";
-			this.txt_PersistentLayout2Processes.Size = new System.Drawing.Size(247, 178);
+			this.txt_PersistentLayout2Processes.Size = new System.Drawing.Size(247, 151);
 			this.txt_PersistentLayout2Processes.TabIndex = 0;
+			// 
+			// chk_ChangeLayoutOnlyOnce
+			// 
+			this.chk_ChangeLayoutOnlyOnce.AutoSize = true;
+			this.chk_ChangeLayoutOnlyOnce.Location = new System.Drawing.Point(287, 7);
+			this.chk_ChangeLayoutOnlyOnce.Name = "chk_ChangeLayoutOnlyOnce";
+			this.chk_ChangeLayoutOnlyOnce.Size = new System.Drawing.Size(226, 19);
+			this.chk_ChangeLayoutOnlyOnce.TabIndex = 6;
+			this.chk_ChangeLayoutOnlyOnce.Text = "Change layout only once per window.";
+			this.chk_ChangeLayoutOnlyOnce.UseVisualStyleBackColor = true;
 			// 
 			// grb_PersistentLayout1
 			// 
@@ -1225,16 +1241,16 @@ namespace Mahou
 			this.grb_PersistentLayout1.Controls.Add(this.lbl_PersistentLayout1Interval);
 			this.grb_PersistentLayout1.Controls.Add(this.chk_PersistentLayout1Active);
 			this.grb_PersistentLayout1.Controls.Add(this.txt_PersistentLayout1Processes);
-			this.grb_PersistentLayout1.Location = new System.Drawing.Point(8, 1);
+			this.grb_PersistentLayout1.Location = new System.Drawing.Point(8, 25);
 			this.grb_PersistentLayout1.Name = "grb_PersistentLayout1";
-			this.grb_PersistentLayout1.Size = new System.Drawing.Size(261, 261);
+			this.grb_PersistentLayout1.Size = new System.Drawing.Size(261, 236);
 			this.grb_PersistentLayout1.TabIndex = 0;
 			this.grb_PersistentLayout1.TabStop = false;
 			this.grb_PersistentLayout1.Text = "Layout 1";
 			// 
 			// nud_PersistentLayout1Interval
 			// 
-			this.nud_PersistentLayout1Interval.Location = new System.Drawing.Point(186, 234);
+			this.nud_PersistentLayout1Interval.Location = new System.Drawing.Point(186, 204);
 			this.nud_PersistentLayout1Interval.Maximum = new decimal(new int[] {
 			5000,
 			0,
@@ -1247,7 +1263,7 @@ namespace Mahou
 			// lbl_PersistentLayout1Interval
 			// 
 			this.lbl_PersistentLayout1Interval.AutoSize = true;
-			this.lbl_PersistentLayout1Interval.Location = new System.Drawing.Point(6, 237);
+			this.lbl_PersistentLayout1Interval.Location = new System.Drawing.Point(6, 207);
 			this.lbl_PersistentLayout1Interval.Name = "lbl_PersistentLayout1Interval";
 			this.lbl_PersistentLayout1Interval.Size = new System.Drawing.Size(85, 15);
 			this.lbl_PersistentLayout1Interval.TabIndex = 2;
@@ -1266,11 +1282,22 @@ namespace Mahou
 			// 
 			// txt_PersistentLayout1Processes
 			// 
-			this.txt_PersistentLayout1Processes.Location = new System.Drawing.Point(7, 52);
+			this.txt_PersistentLayout1Processes.Location = new System.Drawing.Point(7, 47);
 			this.txt_PersistentLayout1Processes.Multiline = true;
 			this.txt_PersistentLayout1Processes.Name = "txt_PersistentLayout1Processes";
-			this.txt_PersistentLayout1Processes.Size = new System.Drawing.Size(247, 176);
+			this.txt_PersistentLayout1Processes.Size = new System.Drawing.Size(247, 151);
 			this.txt_PersistentLayout1Processes.TabIndex = 0;
+			// 
+			// chk_OnlyOnWindowChange
+			// 
+			this.chk_OnlyOnWindowChange.AutoSize = true;
+			this.chk_OnlyOnWindowChange.Location = new System.Drawing.Point(8, 7);
+			this.chk_OnlyOnWindowChange.Name = "chk_OnlyOnWindowChange";
+			this.chk_OnlyOnWindowChange.Size = new System.Drawing.Size(257, 19);
+			this.chk_OnlyOnWindowChange.TabIndex = 5;
+			this.chk_OnlyOnWindowChange.Text = "Change only when active window changes. ";
+			this.chk_OnlyOnWindowChange.UseVisualStyleBackColor = true;
+			this.chk_OnlyOnWindowChange.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
 			// 
 			// tab_appearence
 			// 
@@ -2356,7 +2383,7 @@ namespace Mahou
 			// chk_DisplayLangPanel
 			// 
 			this.chk_DisplayLangPanel.AutoSize = true;
-			this.chk_DisplayLangPanel.Location = new System.Drawing.Point(6, 7);
+			this.chk_DisplayLangPanel.Location = new System.Drawing.Point(8, 7);
 			this.chk_DisplayLangPanel.Name = "chk_DisplayLangPanel";
 			this.chk_DisplayLangPanel.Size = new System.Drawing.Size(151, 19);
 			this.chk_DisplayLangPanel.TabIndex = 0;
@@ -2690,6 +2717,7 @@ namespace Mahou
 			this.grb_Keys.ResumeLayout(false);
 			this.grb_Layouts.ResumeLayout(false);
 			this.tab_persistent.ResumeLayout(false);
+			this.tab_persistent.PerformLayout();
 			this.grb_PersistentLayout2.ResumeLayout(false);
 			this.grb_PersistentLayout2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.nud_PersistentLayout2Interval)).EndInit();

@@ -27,6 +27,7 @@ namespace Mahou
 		public static System.Windows.Forms.Timer CheckLayoutLater = new System.Windows.Forms.Timer() { Interval = 100 };
 		public static System.Windows.Forms.Timer doublekey = new System.Windows.Forms.Timer();
 		public static List<YuKey> c_word_backup = new List<YuKey>();
+		public static List<IntPtr> PLC_HWNDs = new List<IntPtr>();
 		public static string[] snipps = new []{ "mahou", "eml" };
 		public static string[] exps = new [] {
 			"Mahou (魔法) - Magical layout switcher.",
@@ -492,6 +493,18 @@ namespace Mahou
 		}
 		public static void EventHookCallback(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject,
 		                                       int idChild, uint dwEventThread, uint dwmsEventTime) {
+			if (MMain.mahou.PersistentLayoutOnWindowChange) {
+				var proc = Locales.ActiveWindowProcess();
+				var cont = PLC_HWNDs.Contains(hwnd);
+				if (!cont || !MMain.mahou.PersistentLayoutOnlyOnce) {
+					if (MMain.mahou.PersistentLayoutForLayout1)
+						MMain.mahou.PersistentLayoutCheck(MMain.mahou.PersistentLayout1Processes, MahouUI.MAIN_LAYOUT1, proc.ProcessName);
+					if (MMain.mahou.PersistentLayoutForLayout2)
+						MMain.mahou.PersistentLayoutCheck(MMain.mahou.PersistentLayout2Processes, MahouUI.MAIN_LAYOUT2, proc.ProcessName);
+				}
+				if (MMain.mahou.PersistentLayoutOnlyOnce && !cont)
+					PLC_HWNDs.Add(hwnd);
+			}
 			uint hwndLayout = Locales.GetCurrentLocale(hwnd);
 			Logging.Log("Hwnd " + hwnd + ", layout: " + hwndLayout + ", Mahou layout: " + MahouUI.GlobalLayout);			
 			if (hwndLayout != MahouUI.GlobalLayout && MMain.mahou.OneLayout) {
@@ -1674,14 +1687,17 @@ namespace Mahou
 			}
 			return new Tuple<bool, int>(false, 0);
 		}
-		public static void GetSnippetsData(string snippets, out string[] sni, out string[] exp) {
-			List<string> smalls = new List<string>();
-			List<string> bigs = new List<string>();
-			sni = null;
-			exp = null;
+		public static void GetSnippetsData(string snippets, bool isSnip = true) {
+			var leng = 0;
+			if (isSnip)
+				leng = MMain.mahou.SnippetsCount;
+			else
+				leng = MMain.mahou.AutoSwitchCount;
+			string[] smalls = new string[leng];
+			string[]  bigs = new string[leng];
 			if (String.IsNullOrEmpty(snippets)) return;
 			snippets = snippets.Replace("\r", "");
-			int last_exp_len = 0;
+			int last_exp_len = 0, ids = 0, idb = 0;
 			for (int k = 0; k < snippets.Length-6; k++) {
 				var com = SnippetsLineCommented(snippets, k);
 				if (com.Item1) {
@@ -1705,14 +1721,15 @@ namespace Mahou
 						len = cool.Length;
 					if (len == -1)
 						len = endl-(k+2);
-					smalls.Add(snippets.Substring(k+2, len).Replace("\r", ""));
+					smalls[ids] = (snippets.Substring(k+2, len).Replace("\r", ""));
+					ids++;
 				}
 				if (snippets[k].Equals('=') && snippets[k+1].Equals('=') && snippets[k+2].Equals('=') && snippets[k+3].Equals('=') && snippets[k+4].Equals('>')) {
 					var endl = snippets.IndexOf('\n', k+2);
 					if (endl==-1)
 						endl=snippets.Length;
 					var pool = snippets.Substring(k+5, endl - (k+5));
-					if(sni == snipps)
+					if(isSnip)
 						pool = snippets.Substring(k+5);
 					StringBuilder pyust = new StringBuilder(); // Should be faster than string +=
 					for (int g = 0; g != pool.Length-5; g++) {
@@ -1721,18 +1738,30 @@ namespace Mahou
 						pyust.Append(pool[g]);
 					}
 					last_exp_len = pyust.Length;
-					bigs.Add(pyust.ToString());
+					bigs[idb] = (pyust.ToString());
+					idb++;
 					k+=5;
 				}
 			}
-			sni = smalls.ToArray();
-			exp = bigs.ToArray();
+			if (isSnip) {
+//				snipps = exps = null;
+//				Memory.Flush();
+				snipps = smalls;
+				exps = bigs;
+			} else {
+//				as_wrongs = as_corrects = null;
+//				Memory.Flush();
+				as_wrongs = smalls;
+				as_corrects = bigs;
+				
+			}
 		}
 		/// <summary>
 		/// Re-Initializes snippets.
 		/// </summary>
 		public static void ReInitSnippets()
 		{
+			Debug.WriteLine("Memory: " + GC.GetTotalMemory(false));
 			if (System.IO.File.Exists(MahouUI.snipfile)) {
 				var snippets = System.IO.File.ReadAllText(MahouUI.snipfile);
 				Stopwatch watch = null;
@@ -1740,7 +1769,7 @@ namespace Mahou
 					watch = new Stopwatch();
 					watch.Start();
 				}
-				GetSnippetsData(snippets, out snipps, out exps);
+				GetSnippetsData(snippets);
 				if (MahouUI.LoggingEnabled) {
 					watch.Stop();
 					Logging.Log("Snippet init finished, elapsed ["+watch.Elapsed.TotalMilliseconds+"] ms.");
@@ -1748,12 +1777,17 @@ namespace Mahou
 					watch.Start();
 				}
 				if (MMain.mahou.AutoSwitchEnabled)
-					GetSnippetsData(MahouUI.AutoSwitchDictionaryRaw, out as_wrongs, out as_corrects);
+					GetSnippetsData(MahouUI.AutoSwitchDictionaryRaw, false);
+				else {
+					as_wrongs = as_corrects = null;
+					Memory.Flush();
+				}
 				if (MahouUI.LoggingEnabled) {
 					watch.Stop();
 					Logging.Log("AutoSwitch dictionary init finished, elapsed ["+watch.Elapsed.TotalMilliseconds+"] ms.");
 				}
 			}
+			Debug.WriteLine("AFT Memory: " + GC.GetTotalMemory(false));
 			Memory.Flush();
 		}
 		/// <summary>

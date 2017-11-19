@@ -42,7 +42,7 @@ namespace Mahou {
 		public string SnippetsExpandType = "";
 		int titlebar = 12;
 		public static int AtUpdateShow, SpecKeySetCount;
-		public int DoubleHKInterval = 200, SelectedTextGetMoreTriesCount;
+		public int DoubleHKInterval = 200, SelectedTextGetMoreTriesCount, SnippetsCount, AutoSwitchCount;
 		#region Temporary variables
 		/// <summary> In memory settings, for timers/hooks.</summary>
 		public bool DiffAppearenceForLayouts, LDForCaretOnChange, LDForMouseOnChange, ScrollTip, AddOneSpace,
@@ -52,7 +52,8 @@ namespace Mahou {
 					MouseTTAlways, OneLayout, MouseLangTooltipEnabled, CaretLangTooltipEnabled, QWERTZ_fix, 
 					ChangeLayoutInExcluded, SnippetSpaceAfter, SnippetsSwitchToGuessLayout, AutoSwitchEnabled,
 					AutoSwitchSpaceAfter, AutoSwitchSwitchToGuessLayout, GuessKeyCodeFix, Dowload_ASD_InZip, 
-					LDForCaret, LDForMouse, LDUseWindowsMessages, RemapCapslockAsF18, Add1NL;
+					LDForCaret, LDForMouse, LDUseWindowsMessages, RemapCapslockAsF18, Add1NL, PersistentLayoutOnWindowChange, PersistentLayoutOnlyOnce,
+					PersistentLayoutForLayout1, PersistentLayoutForLayout2;
 		/// <summary> Temporary modifiers of hotkeys. </summary>
 		string Mainhk_tempMods, ExitHk_tempMods, HKCLast_tempMods, HKCSelection_tempMods, 
 			    HKCLine_tempMods, HKSymIgn_tempMods, HKConMorWor_tempMods, HKTitleCase_tempMods,
@@ -709,6 +710,8 @@ namespace Mahou {
 				MMain.MyConfs.Write("Layouts", "QWERTZfix", chk_qwertz.Checked.ToString());
 				#endregion
 				#region Persistent Layout
+				MMain.MyConfs.Write("PersistentLayout", "OnlyOnWindowChange", chk_OnlyOnWindowChange.Checked.ToString());
+				MMain.MyConfs.Write("PersistentLayout", "ChangeOnlyOnce", chk_ChangeLayoutOnlyOnce.Checked.ToString());
 				MMain.MyConfs.Write("PersistentLayout", "ActivateForLayout1", chk_PersistentLayout1Active.Checked.ToString());
 				MMain.MyConfs.Write("PersistentLayout", "ActivateForLayout2", chk_PersistentLayout2Active.Checked.ToString());
 				MMain.MyConfs.Write("PersistentLayout", "Layout1CheckInterval", nud_PersistentLayout1Interval.Value.ToString());
@@ -908,8 +911,11 @@ namespace Mahou {
 			RefreshComboboxes();
 			#endregion
 			#region Persistent Layout
-			chk_PersistentLayout1Active.Checked = MMain.MyConfs.ReadBool("PersistentLayout", "ActivateForLayout1");
-			chk_PersistentLayout2Active.Checked = MMain.MyConfs.ReadBool("PersistentLayout", "ActivateForLayout2");
+			PersistentLayoutOnWindowChange = chk_OnlyOnWindowChange.Checked = MMain.MyConfs.ReadBool("PersistentLayout", "OnlyOnWindowChange");
+			PersistentLayoutOnlyOnce = chk_ChangeLayoutOnlyOnce.Checked = MMain.MyConfs.ReadBool("PersistentLayout", "ChangeOnlyOnce");
+			KMHook.PLC_HWNDs.Clear();
+			PersistentLayoutForLayout1 = chk_PersistentLayout1Active.Checked = MMain.MyConfs.ReadBool("PersistentLayout", "ActivateForLayout1");
+			PersistentLayoutForLayout2 = chk_PersistentLayout2Active.Checked = MMain.MyConfs.ReadBool("PersistentLayout", "ActivateForLayout2");
 			nud_PersistentLayout1Interval.Value = MMain.MyConfs.ReadInt("PersistentLayout", "Layout1CheckInterval");
 			nud_PersistentLayout2Interval.Value = MMain.MyConfs.ReadInt("PersistentLayout", "Layout2CheckInterval");
 			PersistentLayout1Processes = txt_PersistentLayout1Processes.Text = MMain.MyConfs.Read("PersistentLayout", "Layout1Processes").Replace("^cr^lf", Environment.NewLine);
@@ -976,7 +982,7 @@ namespace Mahou {
 			if (File.Exists(AS_dictfile)) {
 				AutoSwitchDictionaryRaw = File.ReadAllText(AS_dictfile);
 				ChangeAutoSwitchDictionaryTextBox();
-				UpdateSnippetCountLabel(AutoSwitchDictionaryRaw, lbl_AutoSwitchWordsCount);
+				UpdateSnippetCountLabel(AutoSwitchDictionaryRaw, lbl_AutoSwitchWordsCount, false);
 			}
 			#endregion
 			#region Snippets
@@ -986,11 +992,7 @@ namespace Mahou {
 			if (File.Exists(snipfile) && SnippetsEnabled) {
 				txt_Snippets.Text = File.ReadAllText(snipfile);
 				UpdateSnippetCountLabel(txt_Snippets.Text, lbl_SnippetsCount);
-				KMHook.DoLater(() => {
-					var initSnippetsThread = new System.Threading.Thread(() =>KMHook.ReInitSnippets());
-					initSnippetsThread.Name = "Snippets initialization thread.";
-					initSnippetsThread.Start();
-              	 }, 250);
+				KMHook.DoLater(KMHook.ReInitSnippets, 250);
 			}
 			SnippetsExpandType = MMain.MyConfs.Read("Snippets", "SnippetExpandKey");
 			cbb_SnippetExpandKeys.SelectedIndex = cbb_SnippetExpandKeys.Items.IndexOf(SnippetsExpandType);
@@ -1207,10 +1209,17 @@ namespace Mahou {
 			// Auto Switch tab
 			btn_UpdateAutoSwitchDictionary.Enabled = txt_AutoSwitchDictionary.Enabled = chk_AutoSwitchSwitchToGuessLayout.Enabled = chk_AutoSwitchSpaceAfter.Enabled = chk_DownloadASD_InZip.Enabled = chk_AutoSwitch.Checked;
 			// Persistent Layout tab
-			txt_PersistentLayout1Processes.Enabled = lbl_PersistentLayout1Interval.Enabled = nud_PersistentLayout1Interval.Enabled =
-				chk_PersistentLayout1Active.Checked;
-			txt_PersistentLayout2Processes.Enabled = lbl_PersistentLayout2Interval.Enabled = nud_PersistentLayout2Interval.Enabled =
-				chk_PersistentLayout2Active.Checked;
+			chk_ChangeLayoutOnlyOnce.Enabled = chk_OnlyOnWindowChange.Checked;
+			txt_PersistentLayout1Processes.Enabled = chk_PersistentLayout1Active.Checked;
+			txt_PersistentLayout2Processes.Enabled = chk_PersistentLayout2Active.Checked;
+			if (chk_OnlyOnWindowChange.Checked || !chk_PersistentLayout1Active.Checked)
+				lbl_PersistentLayout1Interval.Enabled = nud_PersistentLayout1Interval.Enabled = false;
+			else
+				lbl_PersistentLayout1Interval.Enabled = nud_PersistentLayout1Interval.Enabled = true;
+			if (chk_OnlyOnWindowChange.Checked || !chk_PersistentLayout2Active.Checked)
+				lbl_PersistentLayout2Interval.Enabled = nud_PersistentLayout2Interval.Enabled = false;
+			else
+				lbl_PersistentLayout2Interval.Enabled = nud_PersistentLayout2Interval.Enabled = true;
 			// Language Panel tab
 			grb_LPConfig.Enabled = chk_DisplayLangPanel.Checked;
 			btn_LPBorderColor.Enabled = !chk_LPAeroColor.Checked;
@@ -1238,7 +1247,8 @@ namespace Mahou {
 				TopMost = false;
 				WinAPI.SetForegroundWindow(Handle);
 			}
-			KMHook.ClearModifiers();
+			if (MMain.mahou != null)
+				KMHook.ClearModifiers();
 			Memory.Flush();
 		}
 		public void ToggleLangPanel() {
@@ -1421,13 +1431,17 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 				mouseLangDisplay.Dispose();
 			if (caretLangDisplay != null)
 				caretLangDisplay.Dispose();
-			mouseLangDisplay = new LangDisplay();
-			caretLangDisplay = new LangDisplay();
-			mouseLangDisplay.mouseDisplay = true;
-			caretLangDisplay.caretDisplay = true;
-			mouseLangDisplay.DisplayFlag = LDMouseUseFlags_temp;
-			caretLangDisplay.DisplayFlag = LDCaretUseFlags_temp;
-			caretLangDisplay.AddOwnedForm(mouseLangDisplay); //Prevents flickering when tooltips are one on another 
+			if (LDForMouse) {
+				mouseLangDisplay = new LangDisplay();
+				mouseLangDisplay.mouseDisplay = true;
+				mouseLangDisplay.DisplayFlag = LDMouseUseFlags_temp;
+			}
+			if (LDForCaret) {
+				caretLangDisplay = new LangDisplay();
+				caretLangDisplay.caretDisplay = true;
+				caretLangDisplay.DisplayFlag = LDCaretUseFlags_temp;
+				caretLangDisplay.AddOwnedForm(mouseLangDisplay); //Prevents flickering when tooltips are one on another 
+			}
 		}
 		/// <summary>
 		/// Initializes tray icon.
@@ -1622,8 +1636,8 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			old.Tick += (_, __) => { isold = !isold; };	
 			persistentLayout1Check.Interval = MMain.MyConfs.ReadInt("PersistentLayout", "Layout1CheckInterval");
 			persistentLayout2Check.Interval = MMain.MyConfs.ReadInt("PersistentLayout", "Layout2CheckInterval");
-			persistentLayout1Check.Tick += (_, __) => PersistentLayoutCheck(PersistentLayout1Processes, MainLayout1);
-			persistentLayout2Check.Tick += (_, __) => PersistentLayoutCheck(PersistentLayout2Processes, MainLayout2);
+			persistentLayout1Check.Tick += (_, __) => PersistentLayoutCheck(PersistentLayout1Processes, MAIN_LAYOUT1);
+			persistentLayout2Check.Tick += (_, __) => PersistentLayoutCheck(PersistentLayout2Processes, MAIN_LAYOUT2);
 			langPanelRefresh.Interval = LangPanelRefreshRate;
 			langPanelRefresh.Tick += (_, __) => {
 				uint loc = 0;
@@ -1714,18 +1728,21 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 					UpdateMouseLD();
 			}
 		}
-		public void PersistentLayoutCheck(string ProcessNames, string Layout) {
+		public void PersistentLayoutCheck(string ProcessNames, uint Layout, string ProcName = "") {
 			try {
-				var actProcName = Locales.ActiveWindowProcess().ProcessName.ToLower().Replace(" ", "_") + ".exe";
+				var actProcName = "";
+				if (!String.IsNullOrEmpty(ProcName))
+					actProcName = ProcName;
+				else 
+					actProcName = Locales.ActiveWindowProcess().ProcessName;
+				actProcName = actProcName.ToLower().Replace(" ", "_") + ".exe";
 				Logging.Log("Checking active window's process name: ["+actProcName+"] with processes: ["+ProcessNames+"], for layout: ["+Layout+"].");
 				if (ProcessNames.ToLower().Replace(Environment.NewLine, " ").Contains(actProcName)) {
 					uint CurrentLayout = Locales.GetCurrentLocale();
-					uint PersistentLayout = Locales.GetLocaleFromString(Layout).uId;
-					Logging.Log("Checking current layout: ["+CurrentLayout+"] with selected persistent layout: ["+PersistentLayout+"].");
-					if (CurrentLayout != PersistentLayout) {
-						KMHook.ChangeToLayout(Locales.ActiveWindow(), PersistentLayout);
+					Logging.Log("Checking current layout: ["+CurrentLayout+"] with selected persistent layout: ["+Layout+"].");
+					if (CurrentLayout != Layout) {
+						KMHook.ChangeToLayout(Locales.ActiveWindow(), Layout);
 						Logging.Log("Layout was different, changing to: ["+Layout+"].");
-						System.Threading.Thread.Sleep(5);
 					}
 				}
 			} catch(Exception e) { Logging.Log("Exception in Persistent layout("+Layout+") check, error messages & stack:\r\n"+e.Message+"+\r\n"+e.StackTrace, 1); }
@@ -1738,21 +1755,39 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 			if (!LDUseWindowsMessages) {
 				if (LDForMouse)
 					ICheck.Start();
+				else
+					ICheck.Dispose();
 				if (LDForCaret)
 					crtCheck.Start();
+				else
+					crtCheck.Dispose();
 			}
 			if (MMain.MyConfs.ReadBool("Functions", "ScrollTip"))
 				ScrlCheck.Start();
+			else
+				ScrlCheck.Dispose();
 			if (MMain.MyConfs.ReadBool("Functions", "CapsLockTimer"))
 				capsCheck.Start();
+			else
+				capsCheck.Dispose();
 			if (MMain.MyConfs.ReadBool("Functions", "TrayFlags") && TrayIconVisible)
 				flagsCheck.Start();
-			if (MMain.MyConfs.ReadBool("PersistentLayout", "ActivateForLayout1"))
-				persistentLayout1Check.Start();
-			if (MMain.MyConfs.ReadBool("PersistentLayout", "ActivateForLayout2"))
-				persistentLayout2Check.Start();
+			else
+				flagsCheck.Dispose();
+			if (!PersistentLayoutOnWindowChange) {
+				if (PersistentLayoutForLayout1)
+					persistentLayout1Check.Start();
+				else
+					persistentLayout1Check.Dispose();
+				if (PersistentLayoutForLayout2)
+					persistentLayout2Check.Start();
+				else
+					persistentLayout2Check.Dispose();
+			}
 			if (LangPanelDisplay && !langPanelRefresh.Enabled)
 				langPanelRefresh.Start();
+			else
+				langPanelRefresh.Dispose();
 		}
 		void AutoStartTask(bool deleteonly = false) {
 			var xml = @"<?xml version=""1.0"" encoding=""UTF-16""?>
@@ -2564,7 +2599,7 @@ DEL ""ExtractASD.cmd""";
 				AutoSwitchDictionaryRaw = dict;
 				this.txt_AutoSwitchDictionary.Invoke((MethodInvoker)delegate {
 					ChangeAutoSwitchDictionaryTextBox();
-					UpdateSnippetCountLabel(AutoSwitchDictionaryRaw, lbl_AutoSwitchWordsCount);
+					UpdateSnippetCountLabel(AutoSwitchDictionaryRaw, lbl_AutoSwitchWordsCount, false);
 				});
 				File.WriteAllText(AS_dictfile, dict, Encoding.UTF8);
 			} else {
@@ -2692,10 +2727,14 @@ DEL ""ExtractASD.cmd""";
 			    btn_DownloadUpdate.Text = Regex.Replace(btn_DownloadUpdate.Text, @"\<.+?\>", UpdInfo[2]);
 			});
 		}
-		void UpdateSnippetCountLabel(string snippets, Label target) {
+		void UpdateSnippetCountLabel(string snippets, Label target, bool isSnip = true) {
 			var snipc = GetSnippetsCount(snippets);
 			target.Text = target.Text.Split(' ')[0] + " "  + snipc.Item1 + ((snipc.Item2 == Color.Red) ? "?" : "") + "(#" + snipc.Item3 +")";
 			target.ForeColor = snipc.Item2; 
+			if (isSnip)
+				SnippetsCount = snipc.Item1;
+			else
+				AutoSwitchCount = snipc.Item1;
 		}
 		#endregion
 		/// <summary>
@@ -2756,6 +2795,8 @@ DEL ""ExtractASD.cmd""";
 			cbb_SpecKeysType.Items.AddRange(new [] { MMain.Lang[Languages.Element.SelectKeyType], MMain.Lang[Languages.Element.SetHotkeyType]});
 			#endregion
 			#region Persistent Layout
+			chk_ChangeLayoutOnlyOnce.Text = MMain.Lang[Languages.Element.SwitchOnlyOnce];
+			chk_OnlyOnWindowChange.Text = MMain.Lang[Languages.Element.SwitchOnlyOnWindowChange];
 			tab_persistent.Text = MMain.Lang[Languages.Element.PersistentLayout];
 			grb_PersistentLayout1.Text = MMain.Lang[Languages.Element.Layout] + " 1";
 			grb_PersistentLayout2.Text = MMain.Lang[Languages.Element.Layout] + " 2";
@@ -2933,6 +2974,8 @@ DEL ""ExtractASD.cmd""";
 			HelpMeUnderstand.SetToolTip(cbb_SnippetExpandKeys, MMain.Lang[Languages.Element.TT_SnippetExpandKey]);
 			HelpMeUnderstand.SetToolTip(chk_LDMessages, MMain.Lang[Languages.Element.TT_LDUseWinMessages]);
 			HelpMeUnderstand.SetToolTip(chk_RemapCapsLockAsF18, MMain.Lang[Languages.Element.TT_RemapCapslockAsF18]);
+			HelpMeUnderstand.SetToolTip(chk_OnlyOnWindowChange, MMain.Lang[Languages.Element.TT_SwitchOnlyOnWindowChange]);
+			HelpMeUnderstand.SetToolTip(chk_ChangeLayoutOnlyOnce, MMain.Lang[Languages.Element.TT_SwitchOnlyOnce]);
 		}
 		void HelpMeUnderstandPopup(object sender, PopupEventArgs e) {
 			HelpMeUnderstand.ToolTipTitle = e.AssociatedControl.Text;
@@ -3257,7 +3300,7 @@ DEL ""ExtractASD.cmd""";
 			if(!as_checking) {
 				as_checking = true;
 				tmr.Tick += (_, __) => {
-					UpdateSnippetCountLabel(AutoSwitchDictionaryRaw, lbl_AutoSwitchWordsCount);
+					UpdateSnippetCountLabel(AutoSwitchDictionaryRaw, lbl_AutoSwitchWordsCount, false);
 					as_checking = false;
 					tmr.Dispose(); tmr = new Timer();
 				};
