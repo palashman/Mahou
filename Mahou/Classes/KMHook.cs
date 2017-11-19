@@ -1252,8 +1252,8 @@ namespace Mahou
 					var backs = YuKeys.Length;
 					// Fix for cmd exe pause hotkey leaving one char. 
 					var clsNM = new StringBuilder(256);
-					WinAPI.GetClassName(WinAPI.GetForegroundWindow(), clsNM, clsNM.Capacity);
-					if (clsNM.ToString() == "ConsoleWindowClass" && (
+					if (Environment.OSVersion.Version.Major >= 9 && 
+					    clsNM.ToString() == "ConsoleWindowClass" && (
 						MMain.mahou.HKCLast.VirtualKeyCode == (int)Keys.Pause))
 						backs++;
 					var wasLocale = Locales.GetCurrentLocale() & 0xFFFF;
