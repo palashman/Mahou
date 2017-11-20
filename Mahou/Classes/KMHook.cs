@@ -751,6 +751,7 @@ namespace Mahou
 		}
 		public static void ClearModifiers() {
 			win = alt = ctrl = shift = win_r = alt_r = ctrl_r = shift_r = false;
+			LLHook.ClearModifiers();
 			SendModsUp((int)(WinAPI.MOD_ALT + WinAPI.MOD_CONTROL + WinAPI.MOD_SHIFT + WinAPI.MOD_WIN));
 		}
 		static void ClearWord(bool LastWord = false, bool LastLine = false, bool Snippet = false, string ClearReason = "") {

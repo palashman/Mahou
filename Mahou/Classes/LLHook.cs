@@ -94,5 +94,8 @@ namespace Mahou {
 					break;
 			}
 		}
+		public static void ClearModifiers() {
+			alt = shift = ctrl = win = false;
+		}
 	}
 }
