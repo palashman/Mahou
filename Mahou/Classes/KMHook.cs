@@ -209,10 +209,10 @@ namespace Mahou
 //								} else {
 									if (snip.Length == as_wrongs[i].Length) {
 										if (snil == as_wrongs[i].ToLowerInvariant()) {
-											DoSelf(() => {
-									       		KInputs.MakeInput(new [] { KInputs.AddKey(Keys.Back, true), KInputs.AddKey(Keys.Back, false)});
-												ConvertLast(c_word_backup);
-											       });
+		            						DoSelf(() => KInputs.MakeInput(new [] { 
+		            					                               	KInputs.AddKey(Keys.Back, true), 
+		            					                               	KInputs.AddKey(Keys.Back, false)}));
+											ConvertLast(c_word_backup);
 											ExpandSnippet(snip, as_corrects[i], MMain.mahou.AutoSwitchSpaceAfter, MMain.mahou.AutoSwitchSwitchToGuessLayout, true);
 											break;
 										}
