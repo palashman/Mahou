@@ -214,10 +214,6 @@ namespace Mahou {
 				showUpdWnd.Interval = 1000;
 				showUpdWnd.Start();
 			} else { showUpdWnd.Dispose(); }
-			KMHook.DoLater(() => {
-				Logging.Log("Initializing Lang Panel.");
-				InitializeLangPanel();
-               }, 100);
 			Memory.Flush();
 		}
 		#region WndProc(Hotkeys) & Functions
@@ -1011,6 +1007,7 @@ namespace Mahou {
 			#endregion
 			InitializeHotkeys();
 			InitializeTimers();
+			InitializeLangPanel();
 			ToggleDependentControlsEnabledState();
 			RefreshAllIcons();
 			UnregisterHotkeys();
