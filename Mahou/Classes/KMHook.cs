@@ -1761,7 +1761,6 @@ namespace Mahou
 		/// </summary>
 		public static void ReInitSnippets()
 		{
-			Debug.WriteLine("Memory: " + GC.GetTotalMemory(false));
 			if (System.IO.File.Exists(MahouUI.snipfile)) {
 				var snippets = System.IO.File.ReadAllText(MahouUI.snipfile);
 				Stopwatch watch = null;
@@ -1787,7 +1786,6 @@ namespace Mahou
 					Logging.Log("AutoSwitch dictionary init finished, elapsed ["+watch.Elapsed.TotalMilliseconds+"] ms.");
 				}
 			}
-			Debug.WriteLine("AFT Memory: " + GC.GetTotalMemory(false));
 			Memory.Flush();
 		}
 		/// <summary>
