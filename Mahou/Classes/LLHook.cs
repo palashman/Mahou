@@ -12,13 +12,17 @@ namespace Mahou {
 		public static WinAPI.LowLevelProc _LLHook_proc = LLHook.Callback;
 		static bool alt, shift, ctrl, win;
 		public static void Set() {
+			if (_LLHook_ID == IntPtr.Zero)
 			using (Process currProcess = Process.GetCurrentProcess())
 				using (ProcessModule currModule = currProcess.MainModule)
 					_LLHook_ID = WinAPI.SetWindowsHookEx(WinAPI.WH_KEYBOARD_LL, _LLHook_proc, 
 					                                     WinAPI.GetModuleHandle(currModule.ModuleName), 0);
 		}
 		public static bool UnSet() {
-			return WinAPI.UnhookWindowsHookEx(_LLHook_ID);
+			var r = WinAPI.UnhookWindowsHookEx(_LLHook_ID);
+			if (r)
+				_LLHook_ID = IntPtr.Zero;
+			return r;
 		}
 		public static IntPtr Callback(int nCode, IntPtr wParam, IntPtr lParam) {
 			if (KMHook.ExcludedProgram() && !MMain.mahou.ChangeLayoutInExcluded) return WinAPI.CallNextHookEx(_LLHook_ID, nCode, wParam, lParam);

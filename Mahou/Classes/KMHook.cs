@@ -232,27 +232,25 @@ namespace Mahou
 			    (MSG == WinAPI.WM_KEYUP || MSG == WinAPI.WM_SYSKEYUP) &&
 			   ((Key == Keys.LShiftKey || Key == Keys.LMenu || Key == Keys.LControlKey || Key == Keys.LWin) ||
 			     (Key == Keys.RShiftKey || Key == Keys.RMenu || Key == Keys.RControlKey || Key == Keys.RWin))) {
-				DoSelf(() => {
-					hotkeywithmodsfired = false;
-					mods = 0;
-					if (cwas) {
-						cwas = false;
-						mods += WinAPI.MOD_CONTROL;
-					}
-					if (swas) {
-						swas = false;
-						mods += WinAPI.MOD_SHIFT;
-					}
-					if (awas) {
-						awas = false;
-						mods += WinAPI.MOD_ALT;
-					}
-					if (wwas) {
-						wwas = false;
-						mods += WinAPI.MOD_WIN;
-					}
-					SendModsUp((int)mods);
-	              });
+				hotkeywithmodsfired = false;
+				mods = 0;
+				if (cwas) {
+					cwas = false;
+					mods += WinAPI.MOD_CONTROL;
+				}
+				if (swas) {
+					swas = false;
+					mods += WinAPI.MOD_SHIFT;
+				}
+				if (awas) {
+					awas = false;
+					mods += WinAPI.MOD_ALT;
+				}
+				if (wwas) {
+					wwas = false;
+					mods += WinAPI.MOD_WIN;
+				}
+				SendModsUp((int)mods);
 			}
 			#endregion
 			#region One key layout switch
@@ -1242,7 +1240,7 @@ namespace Mahou
 		public static void DoSelf(Action self_action) {
 			if (MMain.mahou.RemapCapslockAsF18)
 				if (!LLHook.UnSet())
-					Logging.Log("LLHook unregister failed: " + System.Runtime.InteropServices.Marshal.GetLastWin32Error(), 1);
+					Logging.Log("BAD! LLHook unregister failed: " + System.Runtime.InteropServices.Marshal.GetLastWin32Error(), 1);
 			MMain.mahou.UnregisterHotkeys();
 			MMain.rif.RegisterRawInputDevices(IntPtr.Zero, WinAPI.RawInputDeviceFlags.Remove);
 			self_action();
