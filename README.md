@@ -24,6 +24,23 @@ Mahou работает так как **Вы** хотите, настраивай
 
 ###### Возможности по версиям:
 
+**v2.5.6.0**<br/>
+
+- 🐛 Исправлено исправление работающиее только для Windows 10, командная строка и клавиша Pause.
+- 📝 Изменены позиции контроллов в интерфейсе.
+- 📝 Установлен страндартный цвет текстовых форм во вкладке О.. и Обновления на цвет Окна.
+- 💎 Добавлена возможность тихого обновления.
+- 🐛 Исправлена ошибка бесконечного тихого обновления.
+- 📝 Исправлено ненужная включенность таймера обновления иконки в трее если она скрыта.
+- 💎 Добавлена возможность - постоянная раскладка только при смене окон.
+- 💎 Добавлена возможность - постоянная раскладка только при смене окон единожды для каждого окна.
+- 🚀💎 Оптимизирована скорость/память сниппетов/автозамены.
+- 📝 Обновлен перевод.
+- 💬 Добавлено 2 новые подсказки.
+- 📝 Другие оптимизации памяти.
+- 📝 Другие маленькие упрощения кода.
+- 🐛 Исправлен серьезный баг двойного DoSelf, воспроизводимый Авто-Заменой при функции "Caps-Lock как F18" включенной.
+
 **v2.5.5.4**<br/>
 
 - 📝 Отключен таймер отключатель CapsLock по умолчанию.
@@ -427,6 +444,23 @@ Even selected text switches just between **selected** layouts, though if you lik
 6. Read the [wiki](https://github.com/BladeMight/Mahou/wiki/Functions-list) or [ask me](#license).
 
 ###### By version features:
+
+**v2.5.6.0**<br/>
+
+- 🐛 Fixed Windows 10 only fix for command line Pause key.
+- 📝 UI reposition.
+- 📝 Set default color to Window color for About & Updates info.
+- 💎 Added silent update feature.
+- 🐛 Fixed infinite silent update.
+- 📝 Fixed tray icon update timer was enabled even if tray icon is invisible.
+- 💎 Added new feature - persistent layout change only on window switching only once.
+- 🚀💎 Optimized snippets/autoswitch initialization for memory.
+- 📝 Other memory managment fixes.
+- 📝 Updated translation.
+- 💬 Added 2 new tooltips.
+- 📝 Other minor code optimizations.
+- 💎 Added new feature - persistent layout change only on window switching.
+- 🐛 Fixed double DoSelf bug in autoswitch.
 
 **v2.5.5.4**<br/>
 
