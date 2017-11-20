@@ -24,6 +24,11 @@ Mahou работает так как **Вы** хотите, настраивай
 
 ###### Возможности по версиям:
 
+**v2.5.6.2**<br/>
+
+- 🐛 Исправлена ошибка нескольких Low-Level хуков, которая **сильно** снижала производительность.
+- 🐛 Исправлена ошибка с обновлением Панели Языка.
+
 **v2.5.6.0**<br/>
 
 - 🐛 Исправлено исправление работающиее только для Windows 10, командная строка и клавиша Pause.
@@ -444,6 +449,11 @@ Even selected text switches just between **selected** layouts, though if you lik
 6. Read the [wiki](https://github.com/BladeMight/Mahou/wiki/Functions-list) or [ask me](#license).
 
 ###### By version features:
+
+**v2.5.6.2**<br/>
+
+- 🐛 Fixed Multiple Low Level Hooks a huge performance issue.
+- 🐛 Fixed Cross Thread lang panel access issue.
 
 **v2.5.6.0**<br/>
 
