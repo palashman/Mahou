@@ -1239,8 +1239,7 @@ namespace Mahou
 		/// <param name="self_action">Action that will be done without RawInput listeners, Hotkeys and low-level hook.</param>
 		public static void DoSelf(Action self_action) {
 			if (MMain.mahou.RemapCapslockAsF18)
-				if (!LLHook.UnSet())
-					Logging.Log("BAD! LLHook unregister failed: " + System.Runtime.InteropServices.Marshal.GetLastWin32Error(), 1);
+				LLHook.UnSet();
 			MMain.mahou.UnregisterHotkeys();
 			MMain.rif.RegisterRawInputDevices(IntPtr.Zero, WinAPI.RawInputDeviceFlags.Remove);
 			self_action();
