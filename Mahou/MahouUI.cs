@@ -1269,6 +1269,9 @@ namespace Mahou {
 		public void Restart() {
 			int MahouPID = Process.GetCurrentProcess().Id;
 			MMain.mahou.icon.Hide();
+			LLHook.UnSet();
+			MMain.mahou.UnregisterHotkeys();
+			MMain.rif.RegisterRawInputDevices(IntPtr.Zero, WinAPI.RawInputDeviceFlags.Remove);
 			//Batch script to restart Mahou.
 			var restartMahou =
 				@"@ECHO OFF
@@ -1938,6 +1941,9 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 		public void ExitProgram() {
 			Logging.Log("Exit by user demand.");
 			icon.Hide();
+			LLHook.UnSet();
+			MMain.mahou.UnregisterHotkeys();
+			MMain.rif.RegisterRawInputDevices(IntPtr.Zero, WinAPI.RawInputDeviceFlags.Remove);
 			Application.Exit();
 		}
 		/// <summary>
