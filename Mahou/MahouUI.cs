@@ -347,10 +347,10 @@ namespace Mahou {
 					Hotkey.CallHotkey(HKSymIgn, id, ref hkSIOK, () => { 
 						if (SymIgnEnabled) {
 							SymIgnEnabled = false;
-							MMain.MyConfs.Write("Functions", "SymbolIgnoreModeEnabled", "false");
+							MMain.MyConfs.WriteSave("Functions", "SymbolIgnoreModeEnabled", "false");
 							Icon = icon.trIcon.Icon = Properties.Resources.MahouTrayHD;
 						} else {
-							MMain.MyConfs.Write("Functions", "SymbolIgnoreModeEnabled", "true");
+							MMain.MyConfs.WriteSave("Functions", "SymbolIgnoreModeEnabled", "true");
 							SymIgnEnabled = true;
 							Icon = icon.trIcon.Icon = Properties.Resources.MahouSymbolIgnoreMode;
 						}
@@ -653,7 +653,7 @@ namespace Mahou {
 				Logging.Log("Creating new configs file ["+ Configs.filePath + "].");
 				Configs.CreateConfigsFile();
 			}
-			DoInMainConfigs(() => { MMain.MyConfs.Write("Functions", "AppDataConfigs", chk_AppDataConfigs.Checked.ToString()); return (object)0; });
+			DoInMainConfigs(() => { MMain.MyConfs.WriteSave("Functions", "AppDataConfigs", chk_AppDataConfigs.Checked.ToString()); return (object)0; });
 			if (!only_load) {
 				tmpLangTTAppearenceIndex = lsb_LangTTAppearenceForList.SelectedIndex;
 				tmpHotkeysIndex = lsb_Hotkeys.SelectedIndex;
@@ -783,6 +783,7 @@ namespace Mahou {
 				MMain.MyConfs.Write("Proxy", "UserName", txt_ProxyLogin.Text);
 				MMain.MyConfs.Write("Proxy", "Password", Convert.ToBase64String(Encoding.Unicode.GetBytes(txt_ProxyPassword.Text)));
 				#endregion
+				MMain.MyConfs.WriteToDisk();
 				Logging.Log("All configurations saved.");
 			}
 			LoadConfigs();
@@ -816,6 +817,7 @@ namespace Mahou {
 				Configs.filePath = last;
 				return (object)true;
 			}
+			MMain.MyConfs.ReadFromDisk();
 			object rsl = act();
 			if (chk_AppDataConfigs.Checked) {;
 				if (!Directory.Exists(mahou_folder_appd))
@@ -1110,7 +1112,7 @@ namespace Mahou {
 		void TestLayout(string layout, int id) {
 			if ((layout == Languages.English[Languages.Element.SwitchBetween] && MMain.Lang == Languages.Russian) ||
 			    (layout == Languages.Russian[Languages.Element.SwitchBetween] && MMain.Lang == Languages.English)) {
-				MMain.MyConfs.Write("Layouts", "SpecificLayout" + id, MMain.Lang[Languages.Element.SwitchBetween]);
+				MMain.MyConfs.WriteSave("Layouts", "SpecificLayout" + id, MMain.Lang[Languages.Element.SwitchBetween]);
 			}
 		}
 		/// <summary>
@@ -1252,12 +1254,12 @@ namespace Mahou {
 		public void ToggleLangPanel() {
 			if (_langPanel.Visible) {
 				chk_DisplayLangPanel.Checked = LangPanelDisplay = _langPanel.Visible = false;
-				MMain.MyConfs.Write("LangPanel", "Display", "false");
+				MMain.MyConfs.WriteSave("LangPanel", "Display", "false");
 				langPanelRefresh.Stop();
 			}
 			else {
 				chk_DisplayLangPanel.Checked = LangPanelDisplay = _langPanel.Visible = true;
-				MMain.MyConfs.Write("LangPanel", "Display", "true");
+				MMain.MyConfs.WriteSave("LangPanel", "Display", "true");
 				langPanelRefresh.Start();
 			}
 		}
@@ -1346,6 +1348,9 @@ DEL %MAHOUDIR%RestartMahou.cmd";
 								break;
 							case "en":
 								FLAG = Properties.Resources.en;
+								break;
+							case "es":
+								FLAG = Properties.Resources.es;
 								break;
 							case "jp":
 								FLAG = Properties.Resources.jp;
@@ -3229,8 +3234,8 @@ DEL ""ExtractASD.cmd""";
 						wc.Proxy = MakeProxy();
 					}
 					if (UpdInfo.Length > 4)
-						MMain.MyConfs.Write("Updates", "LatestCommit", UpdInfo[4]);
-					else MMain.MyConfs.Write("Updates", "LatestCommit", "Downgraded to Stable");
+						MMain.MyConfs.WriteSave("Updates", "LatestCommit", UpdInfo[4]);
+					else MMain.MyConfs.WriteSave("Updates", "LatestCommit", "Downgraded to Stable");
 					Logging.Log("Downloading Mahou update: "+UpdInfo[3]);
 					wc.DownloadFileAsync(new Uri(UpdInfo[3]), Path.Combine(new [] { nPath, fn }));
 					btn_DownloadUpdate.Text = "Downloading " + fn;
@@ -3290,7 +3295,7 @@ DEL ""ExtractASD.cmd""";
 			}
 		}
 		void Cbb_UpdatesChannelSelectedIndexChanged(object sender, EventArgs e) {
-			MMain.MyConfs.Write("Updates", "Channel", (sender as ComboBox).SelectedItem.ToString());
+			MMain.MyConfs.WriteSave("Updates", "Channel", (sender as ComboBox).SelectedItem.ToString());
 		}
 		void Txt_AutoSwitchDictionaryTextChanged(object sender, EventArgs e) {
 			if (txt_AutoSwitchDictionary.Text.Length < 710000 && !txt_AutoSwitchDictionary.ReadOnly)

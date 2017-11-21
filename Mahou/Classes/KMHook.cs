@@ -597,6 +597,10 @@ namespace Mahou
 								skip_spec_keys++; // Skip next CapsLock up event
 								GJIME = true;
 							}
+						if ((Key == Keys.CapsLock && !shift && !shift_r && !alt && !alt_r && !ctrl && !ctrl_r && specificKey == 1) ||
+						    (Key == Keys.CapsLock && (shift || shift_r) && !alt && !alt_r && !ctrl && !ctrl_r && specificKey == 8) )
+							if (Control.IsKeyLocked(Keys.CapsLock))
+								DoSelf(() => { KeybdEvent(Keys.CapsLock, 0); KeybdEvent(Keys.CapsLock, 2); });
 						var speclayout = (string)typeof(MahouUI).GetField("Layout"+i).GetValue(MMain.mahou);
 						if (String.IsNullOrEmpty(speclayout)) {
 						    Logging.Log("No layout for Layout"+i + " variable.");

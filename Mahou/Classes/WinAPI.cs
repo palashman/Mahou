@@ -266,14 +266,6 @@ public static class WinAPI {
 	public static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode,
 		IntPtr wParam, IntPtr lParam);
 	#endregion
-	#region Configs requires
-    [DllImport("kernel32", CharSet = CharSet.Unicode)]
-    public static extern long WritePrivateProfileString(string section,
-    string key, string val, string filePath);
-    [DllImport("kernel32", CharSet = CharSet.Unicode)]
-    public static extern int GetPrivateProfileString(string section,
-    string key, string def, StringBuilder retVal, int size, string filePath);
-    #endregion
     #region ICheckings requires
 	[DllImport("user32.dll")]
 	public static extern bool GetCursorInfo(out CURSORINFO pci);

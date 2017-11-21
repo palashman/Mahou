@@ -77,6 +77,9 @@ namespace Mahou
 			this.pct_Upper.TabIndex = 2;
 			this.pct_Upper.TabStop = false;
 			this.pct_Upper.Visible = false;
+			this.pct_Upper.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LangPanelMouseDown);
+			this.pct_Upper.MouseMove += new System.Windows.Forms.MouseEventHandler(this.LangPanelMouseMove);
+			this.pct_Upper.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Lbl_LayoutNameMouseUp);
 			// 
 			// LangPanel
 			// 

@@ -25,11 +25,9 @@ namespace Mahou {
 		}
 		public void DisplayUpper(bool Upper) {
 			pct_Upper.Visible = Upper;
-			if (Upper)
-				lbl_LayoutName.Left = 4+16+16;
-			else 
-				lbl_LayoutName.Left = 4+16;
-			Width = lbl_LayoutName.Left + lbl_LayoutName.Width + 4;
+			var side = Upper ? 4+16+16 : 4+16;
+			Width = side + lbl_LayoutName.Width + 4;
+			lbl_LayoutName.Left = side;
 			ReSnap();
         }
 		void ReSnap() {
@@ -84,7 +82,7 @@ namespace Mahou {
 		
 		void Lbl_LayoutNameMouseUp(object sender, MouseEventArgs e) {
 			Logging.Log("Saved position of LangPanel");
-			MMain.MyConfs.Write("LangPanel", "Position", "X" + Location.X + " Y" + Location.Y);
+			MMain.MyConfs.WriteSave("LangPanel", "Position", "X" + Location.X + " Y" + Location.Y);
 		}
 		public void UpdateApperence(Color back, Color fore, int opacity, Font font) {
 			BackColor = back;
@@ -146,6 +144,7 @@ namespace Mahou {
 			base.WndProc(ref m);
 		}
 		protected override void OnPaint(PaintEventArgs e) {
+			if (MMain.mahou == null) { base.OnPaint(e); return; }
 			Graphics g = CreateGraphics();
 			var pn = new Pen(Color.Black);
 			if (AeroEnabled && MMain.mahou.LangPanelBorderAero)

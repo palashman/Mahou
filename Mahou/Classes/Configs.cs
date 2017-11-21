@@ -5,17 +5,132 @@ using System.Windows.Forms;
 
 namespace Mahou
 {
-    class Configs
-    {
-        /// <summary>
-        /// Mahou.ini file path.
-        /// </summary>
+	/// <summary>Ini settings writer/reader in memory, not from disk.</summary>
+	class INI {
+		#region Variables
+		/// <summary>Raw INI configs file</summary>
+		public string Raw;
+		/// <summary>Split into lines INI configs file</summary>
+		public string[] lines;
+		public bool DEBUG;
+		#endregion
+		
+		public INI(string ini, bool dbg = false) {
+			this.Raw = ini;
+			this.lines = Raw.Replace("\r", "").Split('\n');
+			this.DEBUG = dbg;
+		}
+		#region Debug
+		public void log(string str) {
+			if (!DEBUG) return;
+			Logging.Log(str);
+		}
+		#endregion
+		#region Has/Is
+		public bool IsCommented(string line) {
+			if (String.IsNullOrEmpty(line)) return false;
+			if (line[0] == '!' || line[0] == ';') {
+				log("Commented line: " + line);
+				return true;
+			}
+			return false;
+		}
+		public int HasSection(string Section) {
+			for (int a = 0; a != lines.Length; a++) {
+				log("Line => " + lines[a]);
+				if (IsCommented(lines[a]))
+					continue;
+				if (lines[a] == "["+Section+"]") {
+					return a;
+				}
+			}
+			return -1;
+		}
+		public int HasValue(int sect, string ValueName) {
+			if (sect == -1) return -1;
+			else {
+				log("SECT LINE: " + sect);
+				for (int i = sect+1; i != lines.Length; i++) {
+					var line = lines[i];
+					if (IsCommented(line))
+						continue;
+					if (line.Length <= 1) {
+						log("--EMPTY LINE!");
+						return -1;
+					}
+					if (line[0] == '[' && line[line.Length-1] == ']') {
+						log("--NEXT SECT!");
+						return -1;
+					}
+					var valeq = line.Split('=')[0];
+					log(">>Value Line => " + line + " I: " + i);
+					// log("ValEq: " + valeq);
+					if (valeq == ValueName) {
+						log("===Has value: " + ValueName);
+						return i;
+					}
+				}
+			}
+			return -1;
+		}
+		#endregion
+		#region Writing
+		string[] AddLine(string NewLine, int pos, string[] source) {
+			var _source = new string[source.Length+1];
+			if (pos == -1) {
+				_source[0] = NewLine;
+				Array.Copy(source, pos+1, _source, pos+2, source.Length-1);
+			} else { 
+				if (pos != 0)
+					Array.Copy(source, 0, _source, 0, pos);
+				else 
+					_source[0] = source[0];
+				_source[pos] = source[pos];
+				_source[pos+1] = NewLine;
+				Array.Copy(source, pos+1, _source, pos+2, source.Length-1-pos);
+			}
+			return _source;
+		}
+		public void SetValue(string Section, string ValueName, string Value) {
+			var sect = HasSection(Section);
+			var val_line = HasValue(sect, ValueName);
+			if (sect == -1) {
+				log("  NO SUCH SECT! " + Section);
+				lines = AddLine("["+Section+"]", sect, lines);
+				sect = 0;
+				val_line = -1;
+			}
+			if (val_line > -1) {
+				lines[val_line] = ValueName + "=" + Value;
+			}
+			if (val_line == -1) {
+				log("   NO SUCH VALUE! " + ValueName);
+				lines = AddLine(ValueName + "=" + Value, sect, lines);
+			}
+			if (val_line == -1 || val_line > -1 || sect == -1) {
+				Raw = string.Join(Environment.NewLine, lines);
+				lines = Raw.Replace("\r", "").Split('\n');
+			}
+		}
+		#endregion
+		#region Reading
+		public string GetValue(string Section, string ValueName) {
+			log("Getting value :"+ValueName+": from section ["+Section+"].");
+			var sect = HasSection(Section);
+			var val_line = HasValue(sect, ValueName);
+			if (val_line < 0) return "";
+			return lines[val_line].Split('=')[1];
+		}
+		#endregion
+	}
+    class Configs {
     	public static bool forceAppData;
     	public static bool fine = false;
+        /// <summary> Mahou.ini file path. </summary>
         public static string filePath = Path.Combine(MahouUI.nPath, "Mahou.ini");
-        /// <summary>
-        /// Creates if it is not exist and test that configs file Mahou.ini its readable, on startup can create dialog about forced AppData configs if configs file failed to be created/readen.
-        /// </summary>
+        
+        public INI _INI;
+        /// <summary> Creates if it is not exist and test that configs file Mahou.ini its readable, on startup can create dialog about forced AppData configs if configs file failed to be created/readen. </summary>
         public static void CreateConfigsFile() {
         	if (File.Exists(Path.Combine(MahouUI.mahou_folder_appd,".force"))) {
         		filePath = Path.Combine(MahouUI.mahou_folder_appd, "Mahou.ini");
@@ -44,9 +159,7 @@ namespace Mahou
         		System.Diagnostics.Process.GetCurrentProcess().Kill();
         	}
         }
-        /// <summary>
-        /// Check if configs file readable.
-        /// </summary>
+        /// <summary> Check if configs file readable. </summary>
         /// <returns>Read access.</returns>
 	        public static bool Readable() {
         	try {
@@ -56,11 +169,10 @@ namespace Mahou
         	} catch(Exception e) { Logging.Log("Configs file ["+filePath+"] cannot be readen, error:\r\n" + e.Message); return false; }
         	return true;
         }
-        /// <summary>
-        /// Initializes settings, if some of values or settings file, not exists it creates them with default value.
-        /// </summary>
+        /// <summary> Initializes settings, if some of values or settings file, not exists it creates them with default value. </summary>
         public Configs() {
         	CreateConfigsFile();
+        	ReadFromDisk();
         	#region FirstStart section
             CheckBool("FirstStart", "First", "true");
         	#endregion
@@ -307,47 +419,34 @@ namespace Mahou
             if (String.IsNullOrEmpty(Read(section, key)))
                 Write(section, key, default_value);
         }
-        /// <summary>
-        /// Writes "value" to "key" in "section" in INI configuration.
-        /// </summary>
-        /// <param name="section">Section name in which key will be written.</param>
-        /// <param name="key">Key name to be written.</param>
-        /// <param name="value">Key's value to be written.</param>
+        /// <summary> Writes "value" to "key" in "section" in INI configuration. </summary>
         public void Write(string section, string key, string value) {
-            WinAPI.WritePrivateProfileString(section, key, value, filePath);
+            _INI.SetValue(section, key, value);
         }
-        /// <summary>
-        /// Reads "value" from "key" in "section" from INI configuration.
-        /// </summary>
-        /// <param name="section">Section name in which key will be read.</param>
-        /// <param name="key">Key's name in which value will be read.</param>
-        /// <returns>string</returns>
+        /// <summary> Writes "value" to "key" in "section" in INI configuration, and saves to disk. </summary>
+        public void WriteSave(string section, string key, string value) {
+            _INI.SetValue(section, key, value);
+            WriteToDisk();
+        }
+        /// <summary> Reads "value" from "key" in "section" from INI configuration. </summary>
         public string Read(string section, string key) {
-            var SB = new StringBuilder(99*99);
-            int i = WinAPI.GetPrivateProfileString(section, key, "", SB, 99*99, filePath);
-            return SB.ToString();
+        	return _INI.GetValue(section, key);
         }
         /// <summary>
         /// Reads "value" as int from "key" in "section" from INI configuration.
         /// </summary>
-        /// <param name="section">Section name in which key will be read.</param>
-        /// <param name="key">Key's name in which value will be read.</param>
-        /// <returns>int</returns>
         public int ReadInt(string section, string key) {
-            var SB = new StringBuilder(255);
-            int i = WinAPI.GetPrivateProfileString(section, key, "", SB, 255, filePath);
-            return Int32.Parse(SB.ToString());
+            return Int32.Parse(_INI.GetValue(section, key));
         }
-        /// <summary>
-        /// Reads "value" as bool from "key" in "section" from INI configuration.
-        /// </summary>
-        /// <param name="section">Section name in which key will be read.</param>
-        /// <param name="key">Key's name in which value will be read.</param>
-        /// <returns>bool</returns>
+        /// <summary> Reads "value" as bool from "key" in "section" from INI configuration. </summary>
         public bool ReadBool(string section, string key) {
-            var SB = new StringBuilder(255);
-            int i = WinAPI.GetPrivateProfileString(section, key, "", SB, 255, filePath);
-            return Boolean.Parse(SB.ToString().ToLower());
+            return Boolean.Parse(_INI.GetValue(section, key).ToLower());
+        }
+        public void ReadFromDisk() {
+        	_INI = new INI(File.ReadAllText(filePath));
+        }
+        public void WriteToDisk() {
+        	File.WriteAllText(filePath, _INI.Raw);
         }
     }
 }
