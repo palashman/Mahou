@@ -105,8 +105,10 @@ namespace Mahou
 			var getLocale = new Regex(@"^(.+)\((\d+)");
 			var lang = getLocale.Match(localeString).Groups[1].Value;
 			uint id = 0;
-			if (!UInt32.TryParse(getLocale.Match(localeString).Groups[2].Value, out id)) 
-				throw new Exception("Locale string ["+localeString+"] does not contain a layout uID.");
+			if (!UInt32.TryParse(getLocale.Match(localeString).Groups[2].Value, out id)) {
+				Logging.Log("Locale string ["+localeString+"] does not contain a layout uID.");
+				return new Locale();
+			}
 			return new Locale() { Lang = lang, uId = id};
 		}
 		/// <summary>
