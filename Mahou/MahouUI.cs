@@ -751,7 +751,7 @@ namespace Mahou {
 				MMain.MyConfs.Write("Snippets", "SnippetsEnabled", chk_Snippets.Checked.ToString());
 				MMain.MyConfs.Write("Snippets", "SpaceAfter", chk_SnippetsSpaceAfter.Checked.ToString());
 				MMain.MyConfs.Write("Snippets", "SwitchToGuessLayout", chk_SnippetsSwitchToGuessLayout.Checked.ToString());
-				if (chk_Snippets.Checked)
+				if (SnippetsEnabled)
 					File.WriteAllText(snipfile, txt_Snippets.Text, Encoding.UTF8);
 				MMain.MyConfs.Write("Snippets", "SnippetExpandKey", cbb_SnippetExpandKeys.SelectedItem.ToString());
 				#endregion
@@ -760,7 +760,7 @@ namespace Mahou {
 				MMain.MyConfs.Write("AutoSwitch", "SpaceAfter", chk_AutoSwitchSpaceAfter.Checked.ToString());
 				MMain.MyConfs.Write("AutoSwitch", "SwitchToGuessLayout", chk_AutoSwitchSwitchToGuessLayout.Checked.ToString());
 				MMain.MyConfs.Write("AutoSwitch", "DownloadInZip", chk_DownloadASD_InZip.Checked.ToString());
-				if (chk_AutoSwitch.Checked)
+				if (AutoSwitchEnabled)
 					File.WriteAllText(AS_dictfile, AutoSwitchDictionaryRaw, Encoding.UTF8);
 				#endregion
 				#region Appearence & Hotkeys
