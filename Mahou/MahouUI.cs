@@ -31,13 +31,24 @@ namespace Mahou {
 						   ShiftInHotkey, AltInHotkey, CtrlInHotkey, WinInHotkey, AutoStartAsAdmin;
 		static string[] UpdInfo;
 		static bool updating, was, isold = true, checking, snip_checking, as_checking, check_ASD_size = true;
+		#region Timers
 		static Timer tmr = new Timer();
 		static Timer old = new Timer();
 		static Timer stimer = new Timer();
-		public static Bitmap FLAG;
-		static uint lastTrayFlagLayout = 0;
 		static Timer animate = new Timer();
 		static Timer showUpdWnd = new Timer();
+		public Timer ICheck = new Timer();
+		public Timer ScrlCheck = new Timer();
+		public Timer crtCheck = new Timer();
+		public Timer capsCheck = new Timer();
+		public Timer flagsCheck = new Timer();
+		public Timer persistentLayout1Check = new Timer();
+		public Timer persistentLayout2Check = new Timer();
+		public Timer langPanelRefresh = new Timer();
+		public Timer res = new Timer();
+		#endregion
+		static uint lastTrayFlagLayout = 0;
+		public static Bitmap FLAG;
 		static int progress = 0, _progress = 0;
 		public string SnippetsExpandType = "";
 		int titlebar = 12;
@@ -120,14 +131,6 @@ namespace Mahou {
 		public static uint lastLayoutLangPanel = 0;
 		#endregion
 		public TrayIcon icon;
-		public Timer ICheck = new Timer();
-		public Timer ScrlCheck = new Timer();
-		public Timer crtCheck = new Timer();
-		public Timer capsCheck = new Timer();
-		public Timer flagsCheck = new Timer();
-		public Timer persistentLayout1Check = new Timer();
-		public Timer persistentLayout2Check = new Timer();
-		public Timer langPanelRefresh = new Timer();
 		public LangDisplay mouseLangDisplay = new LangDisplay();
 		public LangDisplay caretLangDisplay = new LangDisplay();
 		public LangPanel _langPanel;
@@ -145,7 +148,6 @@ namespace Mahou {
 		/// </summary>
 		public Dictionary<string, string> SpecKeySetsValues = new Dictionary<string, string>();
 		static string latestSwitch = "null";
-		public Timer res = new Timer();
 		// From more configs
 		ColorDialog clrd = new ColorDialog();
 		FontDialog fntd = new FontDialog();
@@ -157,6 +159,7 @@ namespace Mahou {
 		public static string AutoSwitchDictionaryRaw = "";
 		public static Point LDC_lp = new Point(0,0);
 		public static int LD_MouseSkipMessagesCount = 0;
+		System.Threading.Thread uche;
 		#endregion
 		public MahouUI() {
 			InitializeComponent();
@@ -185,7 +188,7 @@ namespace Mahou {
 			RefreshAllIcons();
 			//Background startup check for updates
 			if (MMain.MyConfs.ReadBool("Functions", "StartupUpdatesCheck")) {
-				var uche = new System.Threading.Thread(StartupCheck);
+				uche = new System.Threading.Thread(StartupCheck);
 				uche.Name = "Startup Check";
 				uche.Start();
 				showUpdWnd.Tick += (_, __) => {
@@ -972,19 +975,6 @@ namespace Mahou {
 				} catch { WrongFontLog(MMain.MyConfs.Read("LangPanel", "Font")); }
 			LangPanelUpperArrow = chk_LPUpperArrow.Checked = MMain.MyConfs.ReadBool("LangPanel", "UpperArrow");
 			#endregion
-			#region AutoSwitch
-			AutoSwitchEnabled = chk_AutoSwitch.Checked = MMain.MyConfs.ReadBool("AutoSwitch", "Enabled");
-			AutoSwitchSpaceAfter = chk_AutoSwitchSpaceAfter.Checked = MMain.MyConfs.ReadBool("AutoSwitch", "SpaceAfter");
-			AutoSwitchSwitchToGuessLayout = chk_AutoSwitchSwitchToGuessLayout.Checked = MMain.MyConfs.ReadBool("AutoSwitch", "SwitchToGuessLayout");
-			Dowload_ASD_InZip = chk_DownloadASD_InZip.Checked = MMain.MyConfs.ReadBool("AutoSwitch", "DownloadInZip");
-			check_ASD_size = true;
-			if(AutoSwitchEnabled)
-				if (File.Exists(AS_dictfile)) {
-					AutoSwitchDictionaryRaw = File.ReadAllText(AS_dictfile);
-					ChangeAutoSwitchDictionaryTextBox();
-					UpdateSnippetCountLabel(AutoSwitchDictionaryRaw, lbl_AutoSwitchWordsCount, false);
-				}
-			#endregion
 			#region Snippets
 			SnippetsEnabled = chk_Snippets.Checked = MMain.MyConfs.ReadBool("Snippets", "SnippetsEnabled");
 			SnippetSpaceAfter = chk_SnippetsSpaceAfter.Checked = MMain.MyConfs.ReadBool("Snippets", "SpaceAfter");
@@ -997,6 +987,20 @@ namespace Mahou {
 				}
 			SnippetsExpandType = MMain.MyConfs.Read("Snippets", "SnippetExpandKey");
 			cbb_SnippetExpandKeys.SelectedIndex = cbb_SnippetExpandKeys.Items.IndexOf(SnippetsExpandType);
+			#endregion
+			#region AutoSwitch
+			AutoSwitchEnabled = chk_AutoSwitch.Checked = MMain.MyConfs.ReadBool("AutoSwitch", "Enabled");
+			AutoSwitchSpaceAfter = chk_AutoSwitchSpaceAfter.Checked = MMain.MyConfs.ReadBool("AutoSwitch", "SpaceAfter");
+			AutoSwitchSwitchToGuessLayout = chk_AutoSwitchSwitchToGuessLayout.Checked = MMain.MyConfs.ReadBool("AutoSwitch", "SwitchToGuessLayout");
+			Dowload_ASD_InZip = chk_DownloadASD_InZip.Checked = MMain.MyConfs.ReadBool("AutoSwitch", "DownloadInZip");
+			check_ASD_size = true;
+			if(AutoSwitchEnabled && SnippetsEnabled)
+				if (File.Exists(AS_dictfile)) {
+					AutoSwitchDictionaryRaw = File.ReadAllText(AS_dictfile);
+					ChangeAutoSwitchDictionaryTextBox();
+					UpdateSnippetCountLabel(AutoSwitchDictionaryRaw, lbl_AutoSwitchWordsCount, false);
+				}
+			MahouUIActivated((object)1, new EventArgs());
 			#endregion
 			#region Appearence & Hotkeys
 			LoadTemps();
@@ -1207,9 +1211,9 @@ namespace Mahou {
 				chk_LangTTMouseOnChange.Enabled = !chk_MouseTTAlways.Checked;
 			}
 			// Snippets tab
-			lbl_SnippetExpandKey.Enabled = cbb_SnippetExpandKeys.Enabled = txt_Snippets.Enabled = chk_SnippetsSwitchToGuessLayout.Enabled = chk_SnippetsSpaceAfter.Enabled = chk_Snippets.Checked;
+			lbl_SnippetsCount.Enabled = lbl_SnippetExpandKey.Enabled = cbb_SnippetExpandKeys.Enabled = txt_Snippets.Enabled = chk_SnippetsSwitchToGuessLayout.Enabled = chk_SnippetsSpaceAfter.Enabled = chk_Snippets.Checked;
 			// Auto Switch tab
-			btn_UpdateAutoSwitchDictionary.Enabled = txt_AutoSwitchDictionary.Enabled = chk_AutoSwitchSwitchToGuessLayout.Enabled = chk_AutoSwitchSpaceAfter.Enabled = chk_DownloadASD_InZip.Enabled = chk_AutoSwitch.Checked;
+			lbl_AutoSwitchWordsCount.Enabled = btn_UpdateAutoSwitchDictionary.Enabled = txt_AutoSwitchDictionary.Enabled = chk_AutoSwitchSwitchToGuessLayout.Enabled = chk_AutoSwitchSpaceAfter.Enabled = chk_DownloadASD_InZip.Enabled = chk_AutoSwitch.Checked;
 			// Persistent Layout tab
 			chk_ChangeLayoutOnlyOnce.Enabled = chk_OnlyOnWindowChange.Checked;
 			txt_PersistentLayout1Processes.Enabled = chk_PersistentLayout1Active.Checked;
@@ -1270,10 +1274,7 @@ namespace Mahou {
 		/// </summary>
 		public void Restart() {
 			int MahouPID = Process.GetCurrentProcess().Id;
-			MMain.mahou.icon.Hide();
-			LLHook.UnSet();
-			MMain.mahou.UnregisterHotkeys();
-			MMain.rif.RegisterRawInputDevices(IntPtr.Zero, WinAPI.RawInputDeviceFlags.Remove);
+			PreExit();
 			var restartMahouPath = Path.Combine(new string[] {
 				nPath,
 				"RestartMahou.cmd"
@@ -1933,15 +1934,33 @@ DEL "+restartMahouPath;
 				Logging.Log("Startup shortcut removed.");
 			}
 		}
-		/// <summary>
-		/// Exits Mahou.
-		/// </summary>
-		public void ExitProgram() {
-			Logging.Log("Exit by user demand.");
+		void PreExit() {
 			icon.Hide();
-			LLHook.UnSet();
+			if (RemapCapslockAsF18)
+				LLHook.UnSet();
 			MMain.mahou.UnregisterHotkeys();
 			MMain.rif.RegisterRawInputDevices(IntPtr.Zero, WinAPI.RawInputDeviceFlags.Remove);
+			if (uche != null)
+				uche.Abort();
+			if (tmr != null) tmr.Stop(); tmr.Dispose();
+			if (old != null) old.Stop(); old.Dispose();
+			if (res != null) res.Stop(); res.Dispose();
+			if (stimer != null) stimer.Stop(); stimer.Dispose();
+			if (ICheck != null) ICheck.Stop(); ICheck.Dispose();
+			if (animate != null) animate.Stop(); animate.Dispose();
+			if (crtCheck != null) crtCheck.Stop(); crtCheck.Dispose();
+			if (ScrlCheck != null) ScrlCheck.Stop(); ScrlCheck.Dispose();
+			if (capsCheck != null) capsCheck.Stop(); capsCheck.Dispose();
+			if (showUpdWnd != null) showUpdWnd.Stop(); showUpdWnd.Dispose();
+			if (flagsCheck != null) flagsCheck.Stop(); flagsCheck.Dispose();
+			if (langPanelRefresh != null) langPanelRefresh.Stop(); langPanelRefresh.Dispose();
+			if (persistentLayout1Check != null) persistentLayout1Check.Stop(); persistentLayout1Check.Dispose();
+			if (persistentLayout2Check != null) persistentLayout2Check.Stop(); persistentLayout2Check.Dispose();
+		}
+		/// <summary>Exits Mahou.</summary>
+		public void ExitProgram() {
+			Logging.Log("Exit by user demand.");
+			PreExit();
 			Application.Exit();
 		}
 		/// <summary>
