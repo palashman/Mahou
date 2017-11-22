@@ -608,8 +608,8 @@ namespace Mahou {
 		/// <summary>
 		/// Update save paths for logs, snippets, autoswitch dictionary, configs.
 		/// </summary>
-		void UpdateSavePaths() {
-			if (Configs.forceAppData)
+		void UpdateSaveLoadPaths(bool appdata = false) {
+			if (Configs.forceAppData || appdata)
 				nPath = mahou_folder_appd;
 			snipfile = Path.Combine(nPath, "snippets.txt");
 			AS_dictfile = Path.Combine(nPath, "AS_dict.txt");
@@ -637,7 +637,6 @@ namespace Mahou {
 				nPath = AppDomain.CurrentDomain.BaseDirectory;
 			}
 			Logging.Log("Base path: " + nPath);
-			UpdateSavePaths();
 			AutoStartAsAdmin = (cbb_AutostartType.SelectedIndex != 0);
 			if (chk_AutoStart.Checked) {
 				if (!AutoStartExist(AutoStartAsAdmin))
@@ -817,7 +816,7 @@ namespace Mahou {
 				Configs.filePath = last;
 				return (object)true;
 			}
-			MMain.MyConfs.ReadFromDisk();
+			MMain.MyConfs = new Configs();
 			object rsl = act();
 			if (chk_AppDataConfigs.Checked) {;
 				if (!Directory.Exists(mahou_folder_appd))
@@ -840,6 +839,8 @@ namespace Mahou {
 		/// Refresh all controls state from configs.
 		/// </summary>
 		void LoadConfigs() {
+			chk_AppDataConfigs.Checked = (bool)DoInMainConfigs(() => MMain.MyConfs.ReadBool("Functions", "AppDataConfigs"));
+			UpdateSaveLoadPaths(chk_AppDataConfigs.Checked);
 			InitLanguage();
 			RefreshLanguage();
 			#region Functions
@@ -859,7 +860,6 @@ namespace Mahou {
 			chk_StartupUpdatesCheck.Checked = MMain.MyConfs.ReadBool("Functions", "StartupUpdatesCheck");
 			chk_SilentUpdate.Checked = MMain.MyConfs.ReadBool("Functions", "SilentUpdate");
 			LoggingEnabled = chk_Logging.Checked = MMain.MyConfs.ReadBool("Functions", "Logging");
-			chk_AppDataConfigs.Checked = (bool)DoInMainConfigs(() => MMain.MyConfs.ReadBool("Functions", "AppDataConfigs"));
 			latest_save_dir = nPath;
 			if (LoggingEnabled) 
 				MMain._logTimer.Change(300, 0);
@@ -1274,27 +1274,23 @@ namespace Mahou {
 			LLHook.UnSet();
 			MMain.mahou.UnregisterHotkeys();
 			MMain.rif.RegisterRawInputDevices(IntPtr.Zero, WinAPI.RawInputDeviceFlags.Remove);
+			var restartMahouPath = Path.Combine(new string[] {
+				nPath,
+				"RestartMahou.cmd"
+            });
 			//Batch script to restart Mahou.
 			var restartMahou =
 				@"@ECHO OFF
 REM You should never see this file, if you are it means during restarting Mahou something went wrong. 
 chcp 65001
-SET MAHOUDIR=" + nPath + @"
+SET MAHOUDIR=" + AppDomain.CurrentDomain.BaseDirectory + @"
 TASKKILL /PID " + MahouPID + @" /F
 TASKKILL /IM Mahou.exe /F
 START """" ""%MAHOUDIR%Mahou.exe""
-DEL %MAHOUDIR%RestartMahou.cmd";
+DEL "+restartMahouPath;
 			Logging.Log("Writing restart script.");
-			File.WriteAllText(Path.Combine(new string[] {
-				nPath,
-				"RestartMahou.cmd"
-			}), restartMahou);
-			var piRestartMahou = new ProcessStartInfo();
-			piRestartMahou.FileName = Path.Combine(new string[] {
-				nPath,
-				"RestartMahou.cmd"
-			});
-			piRestartMahou.WindowStyle = ProcessWindowStyle.Hidden;
+			File.WriteAllText(restartMahouPath, restartMahou);
+			var piRestartMahou = new ProcessStartInfo() { FileName = restartMahouPath, WindowStyle = ProcessWindowStyle.Hidden };
 			Logging.Log("Starting restart script.");
 			Process.Start(piRestartMahou);
 		}
@@ -2727,6 +2723,7 @@ DEL ""ExtractASD.cmd""";
 		/// Sets UI info controls(version/title/description) text.
 		/// </summary>
 		void SetUInfo() {
+			if (MMain.mahou == null) return;
 			this.grb_MahouReleaseTitle.Invoke((MethodInvoker)delegate {
 			    this.grb_MahouReleaseTitle.Text = UpdInfo[0];
 			});
