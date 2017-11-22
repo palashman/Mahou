@@ -568,6 +568,7 @@ namespace Mahou
 			return false;
 		}
 		public static bool ExcludedProgram() {
+			if (MMain.mahou == null) return false;
 			var prc = Locales.ActiveWindowProcess();
 			if (MMain.mahou.ExcludedPrograms.Replace(Environment.NewLine, " ").ToLower().Contains(prc.ProcessName.ToLower().Replace(" ", "_") + ".exe")) {
 				Logging.Log(prc.ProcessName + ".exe->excluded");
