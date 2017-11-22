@@ -978,21 +978,23 @@ namespace Mahou {
 			AutoSwitchSwitchToGuessLayout = chk_AutoSwitchSwitchToGuessLayout.Checked = MMain.MyConfs.ReadBool("AutoSwitch", "SwitchToGuessLayout");
 			Dowload_ASD_InZip = chk_DownloadASD_InZip.Checked = MMain.MyConfs.ReadBool("AutoSwitch", "DownloadInZip");
 			check_ASD_size = true;
-			if (File.Exists(AS_dictfile)) {
-				AutoSwitchDictionaryRaw = File.ReadAllText(AS_dictfile);
-				ChangeAutoSwitchDictionaryTextBox();
-				UpdateSnippetCountLabel(AutoSwitchDictionaryRaw, lbl_AutoSwitchWordsCount, false);
-			}
+			if(AutoSwitchEnabled)
+				if (File.Exists(AS_dictfile)) {
+					AutoSwitchDictionaryRaw = File.ReadAllText(AS_dictfile);
+					ChangeAutoSwitchDictionaryTextBox();
+					UpdateSnippetCountLabel(AutoSwitchDictionaryRaw, lbl_AutoSwitchWordsCount, false);
+				}
 			#endregion
 			#region Snippets
 			SnippetsEnabled = chk_Snippets.Checked = MMain.MyConfs.ReadBool("Snippets", "SnippetsEnabled");
 			SnippetSpaceAfter = chk_SnippetsSpaceAfter.Checked = MMain.MyConfs.ReadBool("Snippets", "SpaceAfter");
 			SnippetsSwitchToGuessLayout = chk_SnippetsSwitchToGuessLayout.Checked = MMain.MyConfs.ReadBool("Snippets", "SwitchToGuessLayout");
-			if (File.Exists(snipfile) && SnippetsEnabled) {
-				txt_Snippets.Text = File.ReadAllText(snipfile);
-				UpdateSnippetCountLabel(txt_Snippets.Text, lbl_SnippetsCount);
-				KMHook.DoLater(KMHook.ReInitSnippets, 250);
-			}
+			if (SnippetsEnabled)
+				if (File.Exists(snipfile)) {
+					txt_Snippets.Text = File.ReadAllText(snipfile);
+					UpdateSnippetCountLabel(txt_Snippets.Text, lbl_SnippetsCount);
+					KMHook.DoLater(KMHook.ReInitSnippets, 250);
+				}
 			SnippetsExpandType = MMain.MyConfs.Read("Snippets", "SnippetExpandKey");
 			cbb_SnippetExpandKeys.SelectedIndex = cbb_SnippetExpandKeys.Items.IndexOf(SnippetsExpandType);
 			#endregion
