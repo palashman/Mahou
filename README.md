@@ -444,9 +444,8 @@ Mahou находится под GPL v2+.
 
 Кошельки:
 
-- Яндекс.Деньги: 410015057363201
-- Webmoney WMZ: Z407834572196
-- YaSoberu: http://yasobe.ru/na/mahou
+- Яндекс.Деньги: 410015057363201 или http://yasobe.ru/na/mahou
+- MasterCard: 5168 7573 3941 2985
 
 # English
 
@@ -906,6 +905,5 @@ If you think that you want to help financially, I will be very grateful :)
 
 Wallets:
 
-- Yandex.Money: 410015057363201
-- Webmoney WMZ: Z407834572196
-- YaSoberu: http://yasobe.ru/na/mahou
+- Yandex.Money: 410015057363201 or http://yasobe.ru/na/mahou
+- MasterCard: 5168 7573 3941 2985
