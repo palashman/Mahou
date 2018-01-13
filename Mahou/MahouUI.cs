@@ -1416,6 +1416,7 @@ DEL "+restartMahouPath;
 				RefreshFLAG();
 				Icon flagicon = Icon.FromHandle(FLAG.GetHicon());
 				icon.trIcon.Icon = flagicon;
+				flagicon.Dispose();
 				lastTrayFlagLayout = lcid;
 			}
 		}
@@ -2645,7 +2646,7 @@ DEL ""ExtractASD.cmd""";
 		/// Gets update info, and sets it to static [UpdInfo] string.
 		/// </summary>
 		void GetUpdateInfo() {
-			var Info = new List<string>(); // Update info
+			var Info = new string[5] {"","","","",""} ; // Update info
 			var url = "https://github.com/BladeMight/Mahou/releases/latest";
 			var beta = MMain.MyConfs.Read("Updates", "Channel") != "Stable";
 			if (beta) 
@@ -2671,22 +2672,24 @@ DEL ""ExtractASD.cmd""";
 				}
 //					Debug.WriteLine(Title);
 //					Debug.WriteLine(Description);
-				Info.Add(Title);
-				Info.Add(Regex.Replace(Description, "\n", "\r\n")); // Regex needed to properly display new lines.
-				Info.Add(Version);
-				Info.Add(Link);
+				Info[0] = Title;
+				Info[1] = Regex.Replace(Description, "\n", "\r\n"); // Regex needed to properly display new lines.
+				Info[2] = Version;
+				Info[3] = Link;
 				if (!String.IsNullOrEmpty(Commit))
-					Info.Add(Commit);
+					Info[4] = Commit;
 				Logging.Log("Check for updates succeded, GitHub "+ (beta ? ("commit:"+ Commit) : ("version: " + Version)) + ".");
 			} else {
 				Logging.Log("Check for updates failed, error above.", 1);
-				Info = new List<string>{
+				Info = new string[]{
 						MMain.Lang[Languages.Element.Error],
 						MMain.Lang[Languages.Element.NetError],
+						MMain.Lang[Languages.Element.Error],
+						MMain.Lang[Languages.Element.Error],
 						MMain.Lang[Languages.Element.Error]
 				};
 			}
-			UpdInfo = Info.ToArray();
+			UpdInfo = Info;
 		}
 		/// <summary>
 		/// Creates proxy from proxy controls(server/name/pass) text.
