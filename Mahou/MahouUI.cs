@@ -2656,7 +2656,7 @@ DEL ""ExtractASD.cmd""";
 				// I'm not kidding...
 				// They really works :)
 				var Title = Regex.Match(data,
-					            "<h1 class=\"release-title\">\n.*<a href=\".*\">(.*)</a>").Groups[1].Value;
+					            "<h1 class=\"release-title.*\n.*<a href=\".*\">(.*)</a>").Groups[1].Value;
 				var Description = Regex.Replace(Regex.Match(data,
                                        //These looks unsafe, but really they works!
 					                  "<div class=\"markdown-body\">\n\\s+(.+?)[\\n\\s]+</div>",
@@ -2675,9 +2675,9 @@ DEL ""ExtractASD.cmd""";
 				Info.Add(Regex.Replace(Description, "\n", "\r\n")); // Regex needed to properly display new lines.
 				Info.Add(Version);
 				Info.Add(Link);
-				if (Commit != "")
+				if (!String.IsNullOrEmpty(Commit))
 					Info.Add(Commit);
-				Logging.Log("Check for updates succeded, GitHub version/commit: "+ (beta ? Commit : Version) + ".");
+				Logging.Log("Check for updates succeded, GitHub "+ (beta ? ("commit:"+ Commit) : ("version: " + Version)) + ".");
 			} else {
 				Logging.Log("Check for updates failed, error above.", 1);
 				Info = new List<string>{
