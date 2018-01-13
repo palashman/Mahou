@@ -848,6 +848,7 @@ namespace Mahou {
 			RefreshLanguage();
 			#region Functions
 			Configs.CreateConfigsFile();
+			MMain.MyConfs.ReadFromDisk();
 			AutoStartAsAdmin = MMain.MyConfs.ReadBool("Functions", "AutoStartAsAdmin");
 			chk_AutoStart.Checked = AutoStartExist(AutoStartAsAdmin);
 			lbl_TaskExist.Visible = AutoStartExist(true);
