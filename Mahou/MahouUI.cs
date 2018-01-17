@@ -2471,12 +2471,12 @@ DEL "+restartMahouPath;
 				var UpdateMahou =
 					@"@ECHO OFF
 chcp 65001
-SET MAHOUDIR=" + nPath + @"
+SET MAHOUDIR=" + AppDomain.CurrentDomain.BaseDirectory + "\\" + @"
 TASKKILL /PID " + MahouPID + @" /F
 TASKKILL /IM Mahou.exe /F
-DEL /Q /F /A """ + nPath + @"" + AppDomain.CurrentDomain.FriendlyName + @"""
-DEL /Q /F /A """ + nPath + @"" + AppDomain.CurrentDomain.FriendlyName + @"""
-DEL /Q /F /A """ + nPath + @"" + AppDomain.CurrentDomain.FriendlyName + @"""
+DEL /Q /F /A """ + AppDomain.CurrentDomain.BaseDirectory + @"" + AppDomain.CurrentDomain.FriendlyName + @"""
+DEL /Q /F /A """ + AppDomain.CurrentDomain.BaseDirectory + @"" + AppDomain.CurrentDomain.FriendlyName + @"""
+DEL /Q /F /A """ + AppDomain.CurrentDomain.BaseDirectory + @"" + AppDomain.CurrentDomain.FriendlyName + @"""
 ECHO With CreateObject(""Shell.Application"") > ""%MAHOUDIR%unzip.vbs""
 ECHO    .NameSpace(WScript.Arguments(1)).CopyHere .NameSpace(WScript.Arguments(0)).items, 16 >> ""%MAHOUDIR%unzip.vbs""
 ECHO End With >> ""%MAHOUDIR%unzip.vbs""
@@ -2490,12 +2490,12 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				//Save Batch script
 				Logging.Log("Writing update script.");
 				File.WriteAllText(Path.Combine(new string[] {
-					nPath,
+					AppDomain.CurrentDomain.BaseDirectory,
 					"UpdateMahou.cmd"
 				}), UpdateMahou);
 				var piUpdateMahou = new ProcessStartInfo();
 				piUpdateMahou.FileName = Path.Combine(new string[] {
-					nPath,
+					AppDomain.CurrentDomain.BaseDirectory,
 					"UpdateMahou.cmd"
 				});
 				//Make UpdateMahou.cmd's startup hidden
@@ -3265,7 +3265,7 @@ DEL ""ExtractASD.cmd""";
 						MMain.MyConfs.WriteSave("Updates", "LatestCommit", UpdInfo[4]);
 					else MMain.MyConfs.WriteSave("Updates", "LatestCommit", "Downgraded to Stable");
 					Logging.Log("Downloading Mahou update: "+UpdInfo[3]);
-					wc.DownloadFileAsync(new Uri(UpdInfo[3]), Path.Combine(new [] { nPath, fn }));
+					wc.DownloadFileAsync(new Uri(UpdInfo[3]), Path.Combine(new [] { AppDomain.CurrentDomain.BaseDirectory, fn }));
 					btn_DownloadUpdate.Text = "Downloading " + fn;
 					animate.Tick += (_, __) => { btn_DownloadUpdate.Text += "."; };
 					animate.Start();
