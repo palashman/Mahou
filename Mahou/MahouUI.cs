@@ -1416,7 +1416,7 @@ DEL "+restartMahouPath;
 				RefreshFLAG();
 				Icon flagicon = Icon.FromHandle(FLAG.GetHicon());
 				icon.trIcon.Icon = flagicon;
-				flagicon.Dispose();
+				WinAPI.DestroyIcon(flagicon.Handle);
 				lastTrayFlagLayout = lcid;
 			}
 		}

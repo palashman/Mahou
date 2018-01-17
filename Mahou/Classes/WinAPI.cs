@@ -329,6 +329,8 @@ public static class WinAPI {
     public static extern uint EnumClipboardFormats(uint format);
     #endregion
     #region MahouForm requires
+    [DllImport("user32.dll", CharSet = CharSet.Auto)]
+	public extern static bool DestroyIcon(IntPtr handle);
 	[DllImport("user32.dll")]
 	public static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, int vk);
 	[DllImport("user32.dll")]
