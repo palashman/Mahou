@@ -67,10 +67,10 @@ namespace Mahou
 				MahouUI.latest_save_dir = Configs.filePath;
 				if (MyConfs.ReadBool("FirstStart", "First")) {
 					if (System.Globalization.CultureInfo.InstalledUICulture.TwoLetterISOLanguageName == "ru") {
-						MyConfs.Write("Appearence", "Language", "Русский");
+						MyConfs.WriteSave("Appearence", "Language", "Русский");
 						MahouUI.InitLanguage();
-						MyConfs.Write("Layouts", "SpecificLayout1", Lang[Languages.Element.SwitchBetween]);
-						MyConfs.Write("FirstStart", "First", "False");
+						MyConfs.WriteSave("Layouts", "SpecificLayout1", Lang[Languages.Element.SwitchBetween]);
+						MyConfs.WriteSave("FirstStart", "First", "False");
 					}
 				} else {
 					MahouUI.InitLanguage();
