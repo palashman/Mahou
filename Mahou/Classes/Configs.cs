@@ -173,236 +173,236 @@ namespace Mahou
         public Configs() {
         	CreateConfigsFile();
         	ReadFromDisk();
+            #region Proxy section
+            CheckString("Proxy", "Password", "");
+            CheckString("Proxy", "UserName", "");
+            CheckString("Proxy", "ServerPort", "");
+            #endregion
+			#region Updates
+			CheckString("Updates", "LatestCommit", "");
+			CheckString("Updates", "Channel", "Stable");
+			#endregion
+			#region Language Panel
+			CheckBool("LangPanel", "UpperArrow", "true");
+			CheckBool("LangPanel", "BorderAeroColor", "true");
+			CheckString("LangPanel", "BorderColor", "#8B5FFF");
+			CheckString("LangPanel", "Font", "Microsoft Sans Serif; 8,25pt");
+			CheckString("LangPanel", "BackColor", "#FFFFFF");
+			CheckString("LangPanel", "ForeColor", "#000000");
+			CheckString("LangPanel", "Position", "X0 Y0");
+			CheckInt("LangPanel", "RefreshRate", "25");
+			CheckInt("LangPanel", "Transparency", "90");
+			CheckBool("LangPanel", "Display", "false");
+			#endregion
+			#region Hotkeys section
+			CheckInt("Hotkeys", "ToggleLangPanel_Key", "120");
+			CheckString("Hotkeys", "ToggleLangPanel_Modifiers", "Shift");
+			CheckBool("Hotkeys", "ToggleLangPanel_Double", "false");
+			CheckBool("Hotkeys", "ToggleLangPanel_Enabled", "true");
+			// Toggle Language Panel hotkey
+			CheckInt("Hotkeys", "RestartMahou_Key", "33");
+			CheckString("Hotkeys", "RestartMahou_Modifiers", "Win + Shift + Alt");
+			CheckBool("Hotkeys", "RestartMahou_Enabled", "true");
+			// Restart Mahou hotkey
+			CheckInt("Hotkeys", "ExitMahou_Key", "123");
+			CheckString("Hotkeys", "ExitMahou_Modifiers", "Win + Control + Shift + Alt");
+			CheckBool("Hotkeys", "ExitMahou_Double", "false");
+			CheckBool("Hotkeys", "ExitMahou_Enabled", "true");
+			// Exit Mahou hotkey
+			CheckInt("Hotkeys", "SelectedTextTransliteration_Key", "191");
+			CheckString("Hotkeys", "SelectedTextTransliteration_Modifiers", "Win");
+			CheckBool("Hotkeys", "SelectedTextTransliteration_Double", "false");
+			CheckBool("Hotkeys", "SelectedTextTransliteration_Enabled", "false");
+			// Selected text Transliteration hotkey
+			CheckInt("Hotkeys", "SelectedTextToSwapCase_Key", "190");
+			CheckString("Hotkeys", "SelectedTextToSwapCase_Modifiers", "Win");
+			CheckBool("Hotkeys", "SelectedTextToSwapCase_Double", "false");
+			CheckBool("Hotkeys", "SelectedTextToSwapCase_Enabled", "false");
+			// Selected text to swap case hotkey
+			CheckInt("Hotkeys", "SelectedTextToRandomCase_Key", "0");
+			CheckString("Hotkeys", "SelectedTextToRandomCase_Modifiers", "Alt");
+			CheckBool("Hotkeys", "SelectedTextToRandomCase_Double", "true");
+			CheckBool("Hotkeys", "SelectedTextToRandomCase_Enabled", "false");
+			// Selected text To random case hotkey
+			CheckInt("Hotkeys", "SelectedTextToTitleCase_Key", "0");
+			CheckString("Hotkeys", "SelectedTextToTitleCase_Modifiers", "Shift");
+			CheckBool("Hotkeys", "SelectedTextToTitleCase_Double", "true");
+			CheckBool("Hotkeys", "SelectedTextToTitleCase_Enabled", "false");
+			// Selected text to title case hotkey
+			CheckInt("Hotkeys", "ToggleSymbolIgnoreMode_Key", "122");
+			CheckString("Hotkeys", "ToggleSymbolIgnoreMode_Modifiers", "Shift + Control");
+			CheckBool("Hotkeys", "ToggleSymbolIgnoreMode_Double", "false");
+			CheckBool("Hotkeys", "ToggleSymbolIgnoreMode_Enabled", "true");
+			// Toggle symbol ignore mode hotkey
+			CheckInt("Hotkeys", "ConvertLastWords_Key", "122");
+			CheckString("Hotkeys", "ConvertLastWords_Modifiers", "Shift");
+			CheckBool("Hotkeys", "ConvertLastWords_Double", "false");
+			CheckBool("Hotkeys", "ConvertLastWords_Enabled", "true");
+			// Convert last words hotkey
+			CheckInt("Hotkeys", "ConvertLastLine_Key", "19");
+			CheckString("Hotkeys", "ConvertLastLine_Modifiers", "Shift");
+			CheckBool("Hotkeys", "ConvertLastLine_Double", "false");
+			CheckBool("Hotkeys", "ConvertLastLine_Enabled", "true");
+			// Convert last line hotkey
+			CheckInt("Hotkeys", "ConvertSelectedText_Key", "145");
+			CheckString("Hotkeys", "ConvertSelectedText_Modifiers", "");
+			CheckBool("Hotkeys", "ConvertSelectedText_Double", "false");
+			CheckBool("Hotkeys", "ConvertSelectedText_Enabled", "true");
+			// Convert selected text hotkey
+			CheckInt("Hotkeys", "ConvertLastWord_Key", "19");
+			CheckString("Hotkeys", "ConvertLastWord_Modifiers", "");
+			CheckBool("Hotkeys", "ConvertLastWord_Double", "false");
+			CheckBool("Hotkeys", "ConvertLastWord_Enabled", "true");
+			// Convert last word hotkey
+			CheckInt("Hotkeys", "ToggleMainWindow_Key", "45");
+			CheckString("Hotkeys", "ToggleMainWindow_Modifiers", "Win + Control + Shift + Alt");
+			CheckBool("Hotkeys", "ToggleMainWindow_Double", "false");
+			CheckBool("Hotkeys", "ToggleMainWindow_Enabled", "true");
+			// Toggle main window hotkey
+			#endregion
+			#region AutoSwitch section
+			CheckBool("AutoSwitch", "DownloadInZip", "true");
+			CheckBool("AutoSwitch", "SwitchToGuessLayout", "true");
+			CheckBool("AutoSwitch", "SpaceAfter", "true");
+			CheckBool("AutoSwitch", "Enabled", "false");
+			#endregion
+			#region Snippets section
+			CheckString("Snippets", "SnippetExpandKey", "Space");
+			CheckBool("Snippets", "SwitchToGuessLayout", "false");
+			CheckBool("Snippets", "SpaceAfter", "false");
+			CheckBool("Snippets", "SnippetsEnabled", "false");
+			#endregion
+			#region Timings section
+			CheckInt("Timings", "LangTooltipForMouseSkipMessages", "5");
+            CheckBool("Timings", "ChangeLayoutInExcluded", "true");
+			CheckString("Timings", "ExcludedPrograms", "LA.exe SomeProg.exe");
+			CheckInt("Timings", "SelectedTextGetMoreTriesCount", "5");
+			CheckBool("Timings", "SelectedTextGetMoreTries", "false");
+			CheckInt("Timings", "CapsLockDisableRefreshRate", "100");
+			CheckInt("Timings", "ScrollLockStateRefreshRate", "100");
+			CheckInt("Timings", "FlagsInTrayRefreshRate", "100");
+			CheckInt("Timings", "DoubleHotkey2ndPressWait", "350");
+			CheckInt("Timings", "LangTooltipForCaretRefreshRate", "25");
+			CheckInt("Timings", "LangTooltipForMouseRefreshRate", "25");
+			#endregion
+			#region Appearence section
+			CheckBool("Appearence", "WindowsMessages", "true");
+			// Windows Messages instead of timers
+			CheckBool("Appearence", "CaretLTUpperArrow", "false");
+			CheckBool("Appearence", "MouseLTUpperArrow", "false");
+			// Upper arrows for lang displays
+			CheckString("Appearence", "Layout2LTText", "");
+			CheckString("Appearence", "Layout1LTText", "");
+			// Different text for layouts
+            CheckBool("Appearence", "CaretLTUseFlags", "false");
+            CheckBool("Appearence", "MouseLTUseFlags", "false");
+			// Language tooltips use flags
+			CheckInt("Appearence", "MCDS_Bottom", "45");
+			CheckInt("Appearence", "MCDS_Top", "60");
+			CheckInt("Appearence", "MCDS_Pos_Y", "13");
+			CheckInt("Appearence", "MCDS_Pos_X", "58");
+			// Language tooltip positions for Mahou Cared Display Server
+			CheckInt("Appearence", "CaretLTPositionY", "12");
+			CheckInt("Appearence", "CaretLTPositionX", "8");
+			CheckInt("Appearence", "CaretLTWidth", "26");
+			CheckInt("Appearence", "CaretLTHeight", "14");
+			CheckString("Appearence", "CaretLTFont", "Georgia; 8pt");
+            CheckBool("Appearence", "CaretLTTransparentBackColor", "false");
+            CheckBool("Appearence", "MouseLTTransparentBackColor", "false");
+			CheckString("Appearence", "CaretLTBackColor", "#FFFFFF");
+			CheckString("Appearence", "CaretLTForeColor", "#000000");
+			// Language tooltip appearence for Caret Language Tooltip
+			CheckInt("Appearence", "MouseLTPositionY", "0");
+			CheckInt("Appearence", "MouseLTPositionX", "8");
+			CheckInt("Appearence", "MouseLTWidth", "26");
+			CheckInt("Appearence", "MouseLTHeight", "14");
+			CheckString("Appearence", "MouseLTFont", "Georgia; 8pt");
+            CheckBool("Appearence", "MouseLTTransparentBackColor", "false");
+			CheckString("Appearence", "MouseLTBackColor", "#FFFFFF");
+			CheckString("Appearence", "MouseLTForeColor", "#000000");
+			// Language tooltip appearence for Mouse Language Tooltip
+			CheckInt("Appearence", "Layout2PositionY", "0");
+			CheckInt("Appearence", "Layout2PositionX", "8");
+			CheckInt("Appearence", "Layout2Width", "26");
+			CheckInt("Appearence", "Layout2Height", "14");
+			CheckString("Appearence", "Layout2Font", "Georgia; 8pt");
+            CheckBool("Appearence", "Layout2TransparentBackColor", "false");
+			CheckString("Appearence", "Layout2BackColor", "#FFFFFF");
+			CheckString("Appearence", "Layout2ForeColor", "#000000");
+			// Language tooltip appearence for Layout 2
+			CheckInt("Appearence", "Layout1PositionY", "0");
+			CheckInt("Appearence", "Layout1PositionX", "8");
+			CheckInt("Appearence", "Layout1Width", "26");
+			CheckInt("Appearence", "Layout1Height", "14");
+			CheckString("Appearence", "Layout1Font", "Georgia; 8pt");
+            CheckBool("Appearence", "Layout1TransparentBackColor", "false");
+			CheckString("Appearence", "Layout1BackColor", "#FFFFFF");
+			CheckString("Appearence", "Layout1ForeColor", "#000000");
+			// Language tooltip appearence for Layout 1
+			CheckString("Appearence", "Language", "English");
+            CheckBool("Appearence", "MouseLTAlways", "false");
+            CheckBool("Appearence", "DifferentColorsForLayouts", "false");
+            CheckBool("Appearence", "DisplayLangTooltipForCaretOnChange", "false");
+            CheckBool("Appearence", "DisplayLangTooltipForCaret", "false");
+            CheckBool("Appearence", "DisplayLangTooltipForMouseOnChange", "false");
+            CheckBool("Appearence", "DisplayLangTooltipForMouse", "false");
+			#endregion
+			#region Persistent Layout
+			CheckString("PersistentLayout", "Layout2Processes", "notepad++.exe winword.exe");
+			CheckString("PersistentLayout", "Layout1Processes", "devenv.exe wdexpress.exe");
+			CheckInt("PersistentLayout", "Layout2CheckInterval", "50");
+			CheckInt("PersistentLayout", "Layout1CheckInterval", "50");
+			CheckBool("PersistentLayout", "ActivateForLayout2", "false");
+			CheckBool("PersistentLayout", "ActivateForLayout1", "false");
+			CheckBool("PersistentLayout", "ChangeOnlyOnce", "false");
+			CheckBool("PersistentLayout", "OnlyOnWindowChange", "false");
+			#endregion
+			#region Layouts section
+			CheckBool("Layouts", "QWERTZfix", "false");
+			CheckString("Layouts", "SpecificKeySets", "set_0");
+			CheckInt("Layouts", "SpecificKeysType", "0");
+			CheckString("Layouts", "SpecificLayout4", "");
+			CheckString("Layouts", "SpecificLayout3", "");
+			CheckString("Layouts", "SpecificLayout2", "");
+			CheckString("Layouts", "SpecificLayout1", Languages.English[Languages.Element.SwitchBetween]);
+			CheckInt("Layouts", "SpecificKey4", "0");
+			CheckInt("Layouts", "SpecificKey3", "0");
+			CheckInt("Layouts", "SpecificKey2", "0");
+			CheckInt("Layouts", "SpecificKey1", "1");
+			CheckString("Layouts", "MainLayout2", "");
+			CheckString("Layouts", "MainLayout1", "");
+			CheckBool("Layouts", "ChangeToSpecificLayoutByKey", "true");
+            CheckString("Layouts", "EmulateLayoutSwitchType", "Alt+Shift");
+			CheckBool("Layouts", "EmulateLayoutSwitch", "false");
+			CheckBool("Layouts", "OneLayout", "false");
+			CheckBool("Layouts", "SwitchBetweenLayouts", "true");
+			#endregion
+            #region Functions section
+            CheckBool("Functions", "RemapCapslockAsF18", "true");
+            CheckBool("Functions", "AppDataConfigs", forceAppData.ToString());
+            CheckBool("Functions", "GuessKeyCodeFix", "false");
+            CheckBool("Functions", "OneLayoutWholeWord", "true");
+            CheckBool("Functions", "MCDServerSupport", "false");
+            CheckBool("Functions", "SymbolIgnoreModeEnabled", "false");
+            CheckBool("Functions", "BlockMahouHotkeysWithCtrl", "false");
+            CheckBool("Functions", "TrayFlags", "true");
+            CheckBool("Functions", "CapsLockTimer", "false");
+            CheckBool("Functions", "Logging", "false");
+            CheckBool("Functions", "SilentUpdate", "false");
+            CheckBool("Functions", "StartupUpdatesCheck", "false");
+            CheckBool("Functions", "ScrollTip", "false");
+            CheckBool("Functions", "ConvertSelectionLayoutSwitchingPlus", "false");
+            CheckBool("Functions", "AddOneEnterToLastWord", "false");
+            CheckBool("Functions", "AddOneSpaceToLastWord", "false");
+            CheckBool("Functions", "RePress", "false");
+            CheckBool("Functions", "ReSelect", "true");
+            CheckBool("Functions", "ConvertSelectionLayoutSwitching", "false");
+            CheckBool("Functions", "TrayIconVisible", "true");
+            CheckBool("Functions", "AutoStartAsAdmin", "false");
+            #endregion
         	#region FirstStart section
             CheckBool("FirstStart", "First", "true");
         	#endregion
-            #region Functions section
-            CheckBool("Functions", "AutoStartAsAdmin", "false");
-            CheckBool("Functions", "TrayIconVisible", "true");
-            CheckBool("Functions", "ConvertSelectionLayoutSwitching", "false");
-            CheckBool("Functions", "ReSelect", "true");
-            CheckBool("Functions", "RePress", "false");
-            CheckBool("Functions", "AddOneSpaceToLastWord", "false");
-            CheckBool("Functions", "AddOneEnterToLastWord", "false");
-            CheckBool("Functions", "ConvertSelectionLayoutSwitchingPlus", "false");
-            CheckBool("Functions", "ScrollTip", "false");
-            CheckBool("Functions", "StartupUpdatesCheck", "false");
-            CheckBool("Functions", "SilentUpdate", "false");
-            CheckBool("Functions", "Logging", "false");
-            CheckBool("Functions", "CapsLockTimer", "false");
-            CheckBool("Functions", "TrayFlags", "true");
-            CheckBool("Functions", "BlockMahouHotkeysWithCtrl", "false");
-            CheckBool("Functions", "SymbolIgnoreModeEnabled", "false");
-            CheckBool("Functions", "MCDServerSupport", "false");
-            CheckBool("Functions", "OneLayoutWholeWord", "true");
-            CheckBool("Functions", "GuessKeyCodeFix", "false");
-            CheckBool("Functions", "AppDataConfigs", forceAppData.ToString());
-            CheckBool("Functions", "RemapCapslockAsF18", "true");
-            #endregion
-			#region Layouts section
-			CheckBool("Layouts", "SwitchBetweenLayouts", "true");
-			CheckBool("Layouts", "OneLayout", "false");
-			CheckBool("Layouts", "EmulateLayoutSwitch", "false");
-            CheckString("Layouts", "EmulateLayoutSwitchType", "Alt+Shift");
-			CheckBool("Layouts", "ChangeToSpecificLayoutByKey", "true");
-			CheckString("Layouts", "MainLayout1", "");
-			CheckString("Layouts", "MainLayout2", "");
-			CheckInt("Layouts", "SpecificKey1", "1");
-			CheckInt("Layouts", "SpecificKey2", "0");
-			CheckInt("Layouts", "SpecificKey3", "0");
-			CheckInt("Layouts", "SpecificKey4", "0");
-			CheckString("Layouts", "SpecificLayout1", Languages.English[Languages.Element.SwitchBetween]);
-			CheckString("Layouts", "SpecificLayout2", "");
-			CheckString("Layouts", "SpecificLayout3", "");
-			CheckString("Layouts", "SpecificLayout4", "");
-			CheckInt("Layouts", "SpecificKeysType", "0");
-			CheckString("Layouts", "SpecificKeySets", "set_0");
-			CheckBool("Layouts", "QWERTZfix", "false");
-			#endregion
-			#region Persistent Layout
-			CheckBool("PersistentLayout", "OnlyOnWindowChange", "false");
-			CheckBool("PersistentLayout", "ChangeOnlyOnce", "false");
-			CheckBool("PersistentLayout", "ActivateForLayout1", "false");
-			CheckBool("PersistentLayout", "ActivateForLayout2", "false");
-			CheckInt("PersistentLayout", "Layout1CheckInterval", "50");
-			CheckInt("PersistentLayout", "Layout2CheckInterval", "50");
-			CheckString("PersistentLayout", "Layout1Processes", "devenv.exe wdexpress.exe");
-			CheckString("PersistentLayout", "Layout2Processes", "notepad++.exe winword.exe");
-			#endregion
-			#region Appearence section
-            CheckBool("Appearence", "DisplayLangTooltipForMouse", "false");
-            CheckBool("Appearence", "DisplayLangTooltipForMouseOnChange", "false");
-            CheckBool("Appearence", "DisplayLangTooltipForCaret", "false");
-            CheckBool("Appearence", "DisplayLangTooltipForCaretOnChange", "false");
-            CheckBool("Appearence", "DifferentColorsForLayouts", "false");
-            CheckBool("Appearence", "MouseLTAlways", "false");
-			CheckString("Appearence", "Language", "English");
-			// Language tooltip appearence for Layout 1
-			CheckString("Appearence", "Layout1ForeColor", "#000000");
-			CheckString("Appearence", "Layout1BackColor", "#FFFFFF");
-            CheckBool("Appearence", "Layout1TransparentBackColor", "false");
-			CheckString("Appearence", "Layout1Font", "Georgia; 8pt");
-			CheckInt("Appearence", "Layout1Height", "14");
-			CheckInt("Appearence", "Layout1Width", "26");
-			CheckInt("Appearence", "Layout1PositionX", "8");
-			CheckInt("Appearence", "Layout1PositionY", "0");
-			// Language tooltip appearence for Layout 2
-			CheckString("Appearence", "Layout2ForeColor", "#000000");
-			CheckString("Appearence", "Layout2BackColor", "#FFFFFF");
-            CheckBool("Appearence", "Layout2TransparentBackColor", "false");
-			CheckString("Appearence", "Layout2Font", "Georgia; 8pt");
-			CheckInt("Appearence", "Layout2Height", "14");
-			CheckInt("Appearence", "Layout2Width", "26");
-			CheckInt("Appearence", "Layout2PositionX", "8");
-			CheckInt("Appearence", "Layout2PositionY", "0");
-			// Language tooltip appearence for Mouse Language Tooltip
-			CheckString("Appearence", "MouseLTForeColor", "#000000");
-			CheckString("Appearence", "MouseLTBackColor", "#FFFFFF");
-            CheckBool("Appearence", "MouseLTTransparentBackColor", "false");
-			CheckString("Appearence", "MouseLTFont", "Georgia; 8pt");
-			CheckInt("Appearence", "MouseLTHeight", "14");
-			CheckInt("Appearence", "MouseLTWidth", "26");
-			CheckInt("Appearence", "MouseLTPositionX", "8");
-			CheckInt("Appearence", "MouseLTPositionY", "0");
-			// Language tooltip appearence for Caret Language Tooltip
-			CheckString("Appearence", "CaretLTForeColor", "#000000");
-			CheckString("Appearence", "CaretLTBackColor", "#FFFFFF");
-            CheckBool("Appearence", "MouseLTTransparentBackColor", "false");
-            CheckBool("Appearence", "CaretLTTransparentBackColor", "false");
-			CheckString("Appearence", "CaretLTFont", "Georgia; 8pt");
-			CheckInt("Appearence", "CaretLTHeight", "14");
-			CheckInt("Appearence", "CaretLTWidth", "26");
-			CheckInt("Appearence", "CaretLTPositionX", "8");
-			CheckInt("Appearence", "CaretLTPositionY", "12");
-			// Language tooltip positions for Mahou Cared Display Server
-			CheckInt("Appearence", "MCDS_Pos_X", "58");
-			CheckInt("Appearence", "MCDS_Pos_Y", "13");
-			CheckInt("Appearence", "MCDS_Top", "60");
-			CheckInt("Appearence", "MCDS_Bottom", "45");
-			// Language tooltips use flags
-            CheckBool("Appearence", "MouseLTUseFlags", "false");
-            CheckBool("Appearence", "CaretLTUseFlags", "false");
-			// Different text for layouts
-			CheckString("Appearence", "Layout1LTText", "");
-			CheckString("Appearence", "Layout2LTText", "");
-			// Upper arrows for lang displays
-			CheckBool("Appearence", "MouseLTUpperArrow", "false");
-			CheckBool("Appearence", "CaretLTUpperArrow", "false");
-			// Windows Messages instead of timers
-			CheckBool("Appearence", "WindowsMessages", "true");
-			#endregion
-			#region Timings section
-			CheckInt("Timings", "LangTooltipForMouseRefreshRate", "25");
-			CheckInt("Timings", "LangTooltipForCaretRefreshRate", "25");
-			CheckInt("Timings", "DoubleHotkey2ndPressWait", "350");
-			CheckInt("Timings", "FlagsInTrayRefreshRate", "100");
-			CheckInt("Timings", "ScrollLockStateRefreshRate", "100");
-			CheckInt("Timings", "CapsLockDisableRefreshRate", "100");
-			CheckBool("Timings", "SelectedTextGetMoreTries", "false");
-			CheckInt("Timings", "SelectedTextGetMoreTriesCount", "5");
-			CheckString("Timings", "ExcludedPrograms", "LA.exe SomeProg.exe");
-            CheckBool("Timings", "ChangeLayoutInExcluded", "true");
-			CheckInt("Timings", "LangTooltipForMouseSkipMessages", "5");
-			#endregion
-			#region Snippets section
-			CheckBool("Snippets", "SnippetsEnabled", "false");
-			CheckBool("Snippets", "SpaceAfter", "false");
-			CheckBool("Snippets", "SwitchToGuessLayout", "false");
-			CheckString("Snippets", "SnippetExpandKey", "Space");
-			#endregion
-			#region AutoSwitch section
-			CheckBool("AutoSwitch", "Enabled", "false");
-			CheckBool("AutoSwitch", "SpaceAfter", "true");
-			CheckBool("AutoSwitch", "SwitchToGuessLayout", "true");
-			CheckBool("AutoSwitch", "DownloadInZip", "true");
-			#endregion
-			#region Hotkeys section
-			// Toggle main window hotkey
-			CheckBool("Hotkeys", "ToggleMainWindow_Enabled", "true");
-			CheckBool("Hotkeys", "ToggleMainWindow_Double", "false");
-			CheckString("Hotkeys", "ToggleMainWindow_Modifiers", "Win + Control + Shift + Alt");
-			CheckInt("Hotkeys", "ToggleMainWindow_Key", "45");
-			// Convert last word hotkey
-			CheckBool("Hotkeys", "ConvertLastWord_Enabled", "true");
-			CheckBool("Hotkeys", "ConvertLastWord_Double", "false");
-			CheckString("Hotkeys", "ConvertLastWord_Modifiers", "");
-			CheckInt("Hotkeys", "ConvertLastWord_Key", "19");
-			// Convert selected text hotkey
-			CheckBool("Hotkeys", "ConvertSelectedText_Enabled", "true");
-			CheckBool("Hotkeys", "ConvertSelectedText_Double", "false");
-			CheckString("Hotkeys", "ConvertSelectedText_Modifiers", "");
-			CheckInt("Hotkeys", "ConvertSelectedText_Key", "145");
-			// Convert last line hotkey
-			CheckBool("Hotkeys", "ConvertLastLine_Enabled", "true");
-			CheckBool("Hotkeys", "ConvertLastLine_Double", "false");
-			CheckString("Hotkeys", "ConvertLastLine_Modifiers", "Shift");
-			CheckInt("Hotkeys", "ConvertLastLine_Key", "19");
-			// Convert last words hotkey
-			CheckBool("Hotkeys", "ConvertLastWords_Enabled", "true");
-			CheckBool("Hotkeys", "ConvertLastWords_Double", "false");
-			CheckString("Hotkeys", "ConvertLastWords_Modifiers", "Shift");
-			CheckInt("Hotkeys", "ConvertLastWords_Key", "122");
-			// Toggle symbol ignore mode hotkey
-			CheckBool("Hotkeys", "ToggleSymbolIgnoreMode_Enabled", "true");
-			CheckBool("Hotkeys", "ToggleSymbolIgnoreMode_Double", "false");
-			CheckString("Hotkeys", "ToggleSymbolIgnoreMode_Modifiers", "Shift + Control");
-			CheckInt("Hotkeys", "ToggleSymbolIgnoreMode_Key", "122");
-			// Selected text to title case hotkey
-			CheckBool("Hotkeys", "SelectedTextToTitleCase_Enabled", "false");
-			CheckBool("Hotkeys", "SelectedTextToTitleCase_Double", "true");
-			CheckString("Hotkeys", "SelectedTextToTitleCase_Modifiers", "Shift");
-			CheckInt("Hotkeys", "SelectedTextToTitleCase_Key", "0");
-			// Selected text To random case hotkey
-			CheckBool("Hotkeys", "SelectedTextToRandomCase_Enabled", "false");
-			CheckBool("Hotkeys", "SelectedTextToRandomCase_Double", "true");
-			CheckString("Hotkeys", "SelectedTextToRandomCase_Modifiers", "Alt");
-			CheckInt("Hotkeys", "SelectedTextToRandomCase_Key", "0");
-			// Selected text to swap case hotkey
-			CheckBool("Hotkeys", "SelectedTextToSwapCase_Enabled", "false");
-			CheckBool("Hotkeys", "SelectedTextToSwapCase_Double", "false");
-			CheckString("Hotkeys", "SelectedTextToSwapCase_Modifiers", "Win");
-			CheckInt("Hotkeys", "SelectedTextToSwapCase_Key", "190");
-			// Selected text Transliteration hotkey
-			CheckBool("Hotkeys", "SelectedTextTransliteration_Enabled", "false");
-			CheckBool("Hotkeys", "SelectedTextTransliteration_Double", "false");
-			CheckString("Hotkeys", "SelectedTextTransliteration_Modifiers", "Win");
-			CheckInt("Hotkeys", "SelectedTextTransliteration_Key", "191");
-			// Exit Mahou hotkey
-			CheckBool("Hotkeys", "ExitMahou_Enabled", "true");
-			CheckBool("Hotkeys", "ExitMahou_Double", "false");
-			CheckString("Hotkeys", "ExitMahou_Modifiers", "Win + Control + Shift + Alt");
-			CheckInt("Hotkeys", "ExitMahou_Key", "123");
-			// Restart Mahou hotkey
-			CheckBool("Hotkeys", "RestartMahou_Enabled", "true");
-			CheckString("Hotkeys", "RestartMahou_Modifiers", "Win + Shift + Alt");
-			CheckInt("Hotkeys", "RestartMahou_Key", "33");
-			// Toggle Language Panel hotkey
-			CheckBool("Hotkeys", "ToggleLangPanel_Enabled", "true");
-			CheckBool("Hotkeys", "ToggleLangPanel_Double", "false");
-			CheckString("Hotkeys", "ToggleLangPanel_Modifiers", "Shift");
-			CheckInt("Hotkeys", "ToggleLangPanel_Key", "120");
-			#endregion
-			#region Language Panel
-			CheckBool("LangPanel", "Display", "false");
-			CheckInt("LangPanel", "Transparency", "90");
-			CheckInt("LangPanel", "RefreshRate", "25");
-			CheckString("LangPanel", "Position", "X0 Y0");
-			CheckString("LangPanel", "ForeColor", "#000000");
-			CheckString("LangPanel", "BackColor", "#FFFFFF");
-			CheckString("LangPanel", "Font", "Microsoft Sans Serif; 8,25pt");
-			CheckString("LangPanel", "BorderColor", "#8B5FFF");
-			CheckBool("LangPanel", "BorderAeroColor", "true");
-			CheckBool("LangPanel", "UpperArrow", "true");
-			#endregion
-			#region Updates
-			CheckString("Updates", "Channel", "Stable");
-			CheckString("Updates", "LatestCommit", "");
-			#endregion
-            #region Proxy section
-            CheckString("Proxy", "ServerPort", "");
-            CheckString("Proxy", "UserName", "");
-            CheckString("Proxy", "Password", "");
-            #endregion
             fine = true;
         }
         void CheckBool(string section, string key, string default_value) {
