@@ -649,7 +649,7 @@ namespace Mahou {
 				if(AutoStartExist(AutoStartAsAdmin))
 					AutoStartRemove(AutoStartAsAdmin);
 			}
-			var exist = File.Exists(Configs.filePath);
+			var exist = File.Exists(Path.Combine(nPath,"Mahou.ini"));
 			if (latest_save_dir != nPath && exist) only_load = true;
 			if (!exist) {
 				Logging.Log("Creating new configs file ["+ Configs.filePath + "].");
