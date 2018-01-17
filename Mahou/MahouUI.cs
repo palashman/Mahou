@@ -847,8 +847,7 @@ namespace Mahou {
 			InitLanguage();
 			RefreshLanguage();
 			#region Functions
-			Configs.CreateConfigsFile();
-			MMain.MyConfs.ReadFromDisk();
+			MMain.MyConfs = new Configs();
 			AutoStartAsAdmin = MMain.MyConfs.ReadBool("Functions", "AutoStartAsAdmin");
 			chk_AutoStart.Checked = AutoStartExist(AutoStartAsAdmin);
 			lbl_TaskExist.Visible = AutoStartExist(true);
@@ -2471,7 +2470,7 @@ DEL "+restartMahouPath;
 				var UpdateMahou =
 					@"@ECHO OFF
 chcp 65001
-SET MAHOUDIR=" + AppDomain.CurrentDomain.BaseDirectory + "\\" + @"
+SET MAHOUDIR=" + AppDomain.CurrentDomain.BaseDirectory + @"
 TASKKILL /PID " + MahouPID + @" /F
 TASKKILL /IM Mahou.exe /F
 DEL /Q /F /A """ + AppDomain.CurrentDomain.BaseDirectory + @"" + AppDomain.CurrentDomain.FriendlyName + @"""
