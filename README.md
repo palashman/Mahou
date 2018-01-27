@@ -24,6 +24,18 @@ Mahou работает так как **Вы** хотите, настраивай
 
 ###### Возможности по версиям:
 
+**v2.5.7.6**<br/>
+
+- 🐛 Исправлено что функция настройки в AppData не читалась при запуске(после добавления нового типа чтения/сохранения настроек).
+- 🐛 Исправлена ошибка с проверкой обновлений.
+- 🐛 Исправлена ошибка глобальной/текущей(в коде) раскладки в Mahou.
+- 🐛 Исправлена утечка ресурсов иконок флагов, которое при смене раскладки увеличивало GDI обьекты в памяти.
+- 🐛 Исправлено корректное обновление при включенной функции конфигурация в AppData.
+- 🐛 Исправлена ошибка нового типа чтения/сохранения настроек возникавшая когда в файле настроек не было нужных значений.
+- 🐛 Исправлено что функция настройки в AppData не копировала настройки в AppData при первом включении.
+- 📝 Исправлено переключение на русский язык при первом запуске.
+- 🐛 Добавлена ловля ошибок при проверке исключении процесса.
+
 **v2.5.6.7**<br/>
 
 - 📝 Исправлено отпускание модификаторов для всех горячих клавиш, теперь отпускаются только для горячих клавиш конвертаций.
@@ -470,6 +482,21 @@ Even selected text switches just between **selected** layouts, though if you lik
 6. Read the [wiki](https://github.com/BladeMight/Mahou/wiki/Functions-list) or [ask me](#license).
 
 ###### By version features:
+
+**v2.5.7.6**<br/>
+
+- 🐛 Fixed AppData configs wasn't re-reading after switch, after implementing new configs type.
+- 🐛 Fixed updates info title get regex.
+- 📝 Switched to Array type info for updates.
+- 🐛 Fixed bug with wrong global/current layout load.
+- 🐛 Fixed memory leak with flag icons, causing on layout change increasing of GDI objects in memory.
+- 🐛 Fixed Mahou wasn't updating correctly with AppData configs enabled.
+- 🐛 Fixed update path error(With AppData configs).
+- 🐛 Fixed error with configs read when they missing some values.
+- 🐛 Fixed AppData configs wasn't copying default for 1-st time when enabled.
+- 📝 Fixed bug with startup language switch to russian on russian systems.
+- 📝 Inverted configs check/save order.
+- 🐛 Added error check for case when process exits too fast.
 
 **v2.5.6.7**<br/>
 
