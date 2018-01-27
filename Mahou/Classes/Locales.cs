@@ -75,7 +75,7 @@ namespace Mahou
 		public static Process ActiveWindowProcess() {
 			uint pid = 0;
 			WinAPI.GetWindowThreadProcessId(Locales.ActiveWindow(), out pid);
-			Process prc = new Process();
+			Process prc = null;
 			try { prc = Process.GetProcessById((int)pid); } catch { Logging.Log("Process with id ["+pid+"] not exist...", 1); }
 			return prc;
 			
