@@ -2293,7 +2293,7 @@ DEL "+restartMahouPath;
 					UpdateHotkeyControls(HKTitleCase_tempEnabled, HKTitleCase_tempDouble, HKTitleCase_tempMods, HKTitleCase_tempKey);
 					break;
 				case 7:
-					UpdateHotkeyControls(HKRandomCase_tempEnabled, HKRandomCase_tempDouble, HKTitleCase_tempMods, HKRandomCase_tempKey);
+					UpdateHotkeyControls(HKRandomCase_tempEnabled, HKRandomCase_tempDouble, HKRandomCase_tempMods, HKRandomCase_tempKey);
 					break;
 				case 8:
 					UpdateHotkeyControls(HKSwapCase_tempEnabled, HKSwapCase_tempDouble, HKSwapCase_tempMods, HKSwapCase_tempKey);
