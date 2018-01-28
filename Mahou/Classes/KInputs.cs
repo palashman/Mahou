@@ -57,23 +57,16 @@ static class KInputs
 			key == Keys.Snapshot || 
 			key == Keys.Divide;
     }
-    public static string GetWordByIndex(string words, int index) {
-		int left = 0, right = 0;
-		// Gets pointed min/max indexes
-		for (int i = 0; i != words.Length; i++) {
-			if (words[i] == ' ') {
-				if (i <= index) {
-					left = i+1;
-				} else {
-					right = i-1;
-					break;
-				}
-			}
-		}
-		if (right == 0)
-			right = words.Length;
-//		System.Diagnostics.Debug.WriteLine("IN:"+index+"\nWDS:"+words+"\nWD:"+(right - left)+"\nLT:"+left+"\nRT:"+right);
-		var word = words.Substring(left, right - left);
+    public static string GetWordByIndex(string LINE, int index) {
+    	var WORDS = Mahou.KMHook.SplitWords(LINE);
+    	string word = "";
+    	var len = 0;
+    	for (int i = 0; i != WORDS.Length; i++) {
+    		if (index >= len && index <= (len += WORDS[i].Length)) {
+    			word = WORDS[i];
+//    			System.Diagnostics.Debug.WriteLine("WORD AT INDEX "+index + " IS => ["+word+"]");
+    		}
+    	}
 		return word;
     }
     /// <summary>

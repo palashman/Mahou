@@ -780,6 +780,25 @@ namespace Mahou
 				}
 			}
 		}
+		public static string[] SplitWords(string LINE) {
+			var LIST = new List<string>();
+			string left = LINE;
+			int ind = left.IndexOf(' ');
+			while ((ind = left.IndexOf(' ')) != -1) {
+				ind = left.IndexOf(' ');
+				if (ind == 0)
+					ind = 1;
+				var word = left.Substring(0, ind);
+				left = left.Substring(ind, left.Length-ind);
+//				Debug.WriteLine(word + "] " + ind + " [" + left);
+				LIST.Add(word);
+			}
+			if (ind == -1 && !String.IsNullOrEmpty(left)) {
+				LIST.Add(left);
+//				Debug.WriteLine(left);
+			}
+			return LIST.ToArray();
+		}
 		/// <summary>
 		/// Converts selected text.
 		/// </summary>
@@ -883,13 +902,12 @@ namespace Mahou
 							var index = 0;
 							if (MMain.mahou.OneLayoutWholeWord) {
 								Logging.Log("Using one layout whole word convert selection mode.");
-								var allWords = ClipStr.Split(' ');
+								var allWords = SplitWords(ClipStr);
 								var word_index = 0;
 								foreach (var w in allWords) {
-									result += WordGuessLayout(w).Item1;
-									if (word_index != allWords.Length - 1)
-										result += " ";
+									result += w == " " ? w : WordGuessLayout(w).Item1;
 									word_index +=1;
+//									Debug.WriteLine("(" + w + ") ["+ result +"]");
 									index++;
 								}
 							} else {
@@ -967,7 +985,7 @@ namespace Mahou
 						int lines = 0;
 						foreach (var line in ClipStrLines) {
 							lines++;
-							string[] ClipStrWords = line.Split(' ');
+							string[] ClipStrWords = SplitWords(line);
 							int words = 0;
 							foreach (var word in ClipStrWords) {
 								words++;
@@ -978,8 +996,6 @@ namespace Mahou
 									foreach(char ch in word.Substring(1, word.Length - 1)) {
 										Tword += char.ToLower(ch);
 									}
-								if (words != ClipStrWords.Length)
-									Tword += ' ';
 								Logging.Log("Inputting word ["+Tword+"] as Title case");
 								KInputs.MakeInput(KInputs.AddString(Tword));
 							}
@@ -1005,7 +1021,7 @@ namespace Mahou
 						int lines = 0;
 						foreach (var line in ClipStrLines) {
 							lines++;
-							string[] ClipStrWords = line.Split(' ');
+							string[] ClipStrWords = SplitWords(line);
 							int words = 0;
 							foreach (var word in ClipStrWords) {
 								words++;
@@ -1018,8 +1034,6 @@ namespace Mahou
 									else
 										Sword += ch;
 								}
-								if (words != ClipStrWords.Length)
-									Sword += ' ';
 								Logging.Log("Inputting word ["+Sword+"] as sWAP case");
 								KInputs.MakeInput(KInputs.AddString(Sword));
 							}
@@ -1045,7 +1059,7 @@ namespace Mahou
 						int lines = 0;
 						foreach (var line in ClipStrLines) {
 							lines++;
-							string[] ClipStrWords = line.Split(' ');
+							string[] ClipStrWords = SplitWords(line);
 							int words = 0;
 							foreach (var word in ClipStrWords) {
 								words++;
@@ -1058,8 +1072,6 @@ namespace Mahou
 										Rword += char.ToUpper(ch);
 									}
 								}
-								if (words != ClipStrWords.Length)
-									Rword += ' ';
 								Logging.Log("Inputting word ["+Rword+"] as RaNdoM case");
 								KInputs.MakeInput(KInputs.AddString(Rword));
 							}
