@@ -2513,7 +2513,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 				if (InZip) {
 					var data = getResponce("https://github.com/BladeMight/Mahou/releases/latest-commit"); 
 					if (!String.IsNullOrEmpty(data)) {
-						var siz = Regex.Match(data, "<ul class=\"release-downloads\">.*\\n\\s+<li>.*\\n\\s+<a.*\\n\\s+<small.+>(.+)</small>").Groups[1].Value;
+						var siz = Regex.Match(data, "<small class=\"text-gray float-right\">(.+)</small>").Groups[1].Value;
 						Logging.Log("Remote size of AS_dict: " + siz);
 						return siz;
 					} else throw new Exception(MMain.Lang[Languages.Element.NetError]);
