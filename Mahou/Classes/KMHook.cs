@@ -1339,6 +1339,7 @@ namespace Mahou
 			} catch (Exception e) {
 				Logging.Log("Convert Last encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
 			}
+			MMain.mahou.UpdateLDs();
 			Memory.Flush();
 		}
 		/// <summary>

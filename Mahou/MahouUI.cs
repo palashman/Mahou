@@ -365,6 +365,7 @@ namespace Mahou {
 				Hotkey.CallHotkey(MMain.mahou.ExitHk, id, ref hkExitOK, ExitProgram);
 				if (m.WParam.ToInt32() < (int)Hotkey.HKID.TransliterateSelection)
 					KMHook.ClearModifiers();
+				UpdateLDs();
 			}
 			base.WndProc(ref m);
 		}
