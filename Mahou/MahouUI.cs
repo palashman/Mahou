@@ -959,6 +959,7 @@ namespace Mahou {
 			nud_SelectedTextGetTriesCount.Value = MMain.MyConfs.ReadInt("Timings", "SelectedTextGetMoreTriesCount");
 			ExcludedPrograms = txt_ExcludedPrograms.Text = MMain.MyConfs.Read("Timings", "ExcludedPrograms").Replace("^cr^lf", Environment.NewLine);
 			KMHook.EXCLUDED_HWNDs.Clear();
+			KMHook.NOT_EXCLUDED_HWNDs.Clear();
 			ChangeLayoutInExcluded = chk_Change1KeyL.Checked = MMain.MyConfs.ReadBool("Timings", "ChangeLayoutInExcluded");
 			SelectedTextGetMoreTriesCount = (int)nud_SelectedTextGetTriesCount.Value;
 			#endregion

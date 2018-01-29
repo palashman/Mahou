@@ -27,6 +27,7 @@ namespace Mahou
 		public static List<IntPtr> PLC_HWNDs = new List<IntPtr>();
 		/// <summary> Created for faster check if program is excluded, when checkin too many times(in hooks, timers etc.). </summary>
 		public static List<IntPtr> EXCLUDED_HWNDs = new List<IntPtr>(); 
+		public static List<IntPtr> NOT_EXCLUDED_HWNDs = new List<IntPtr>(); 
 		public static string[] snipps = new []{ "mahou", "eml" };
 		public static string[] exps = new [] {
 			"Mahou (魔法) - Magical layout switcher.",
@@ -580,9 +581,16 @@ namespace Mahou
 		}
 		public static bool ExcludedProgram() {
 			if (MMain.mahou == null) return false;
-			var hwnd = Locales.ActiveWindow();
+			var hwnd = WinAPI.GetForegroundWindow();
+		if (NOT_EXCLUDED_HWNDs.Contains(hwnd)) {
+				Logging.Log("This program was been checked already, it is not excluded hwnd: " + hwnd);
+				return false;
+			}
 			if (!EXCLUDED_HWNDs.Contains(hwnd)) {
-				var prc = Locales.ActiveWindowProcess(hwnd);
+				uint pid;
+				WinAPI.GetWindowThreadProcessId(hwnd, out pid);
+				Process prc = null;
+				try { prc = Process.GetProcessById((int)pid); } catch { Logging.Log("Process with id ["+pid+"] not exist...", 1); }
 				if (prc == null) return false;
 				if (MMain.mahou.ExcludedPrograms.Replace(Environment.NewLine, " ").ToLower().Contains(prc.ProcessName.ToLower().Replace(" ", "_") + ".exe")) {
 					Logging.Log(prc.ProcessName + ".exe->excluded");
@@ -593,6 +601,7 @@ namespace Mahou
 				Logging.Log("Excluded program by excluded program saved hwnd: " + hwnd);
 				return true;
 			}
+			NOT_EXCLUDED_HWNDs.Add(hwnd);
 			return false;
 		}
 		static void SpecificKey(Keys Key, uint MSG, int vkCode = 0) {
