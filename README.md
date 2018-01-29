@@ -14,6 +14,8 @@ Mahou работает так как **Вы** хотите, настраивай
 
 ### Возможности
 
+#### ❗️ Функция обновления из версий ранее Mahou-v2.5.7.6 не будет работать, т.к. GitHub обновился, и метод использовавшийся там для обновления больше не работает.
+
 ###### Как использовать:
 1. Для конвертации выделения нажмите <kbd>Scroll</kbd>, когда выделите текст.
 2. Для конвертации последнего введённого слова нажмите <kbd>Pause</kbd>.
@@ -480,6 +482,8 @@ Even selected text switches just between **selected** layouts, though if you lik
 ### Mahou requires [.Net 4.0 or greater](https://www.microsoft.com/en-us/download/details.aspx?id=53345) to work properly. Beginning from v1.4.3.9 error when running on .Net 4.0 were fixed.
 
 ### Features
+
+#### ❗️ Updates from lesser than Mahou-v2.5.7.6 won't work, because GitHub has updated, and method to update used in there won't work anymore.
 
 ###### How to use:
 1. To convert selection hit <kbd>Scroll</kbd> when select text.
