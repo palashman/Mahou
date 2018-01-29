@@ -24,7 +24,6 @@ namespace Mahou
 		static string lastClipText = "";
 		static List<Keys> tempNumpads = new List<Keys>();
 		static List<char> c_snip = new List<char>();
-		public static System.Windows.Forms.Timer CheckLayoutLater = new System.Windows.Forms.Timer() { Interval = 100 };
 		public static System.Windows.Forms.Timer doublekey = new System.Windows.Forms.Timer();
 		public static List<YuKey> c_word_backup = new List<YuKey>();
 		public static List<IntPtr> PLC_HWNDs = new List<IntPtr>();
@@ -138,7 +137,11 @@ namespace Mahou
 			    ((alt || ctrl || alt_r || ctrl_r) && (Key == Keys.Shift || Key == Keys.LShiftKey || Key == Keys.RShiftKey)) ||
 			     shift && (Key == Keys.Menu || Key == Keys.LMenu || Key == Keys.RMenu) ||
 			     (Environment.OSVersion.Version.Major == 10 && (win || win_r) && Key == Keys.Space))) {
-				CheckLayoutLater.Start();
+				var time = 200;
+				if (Environment.OSVersion.Version.Major == 10)
+					time = 50;
+				Thread.Sleep(time);
+				MahouUI.GlobalLayout = MahouUI.currentLayout = Locales.GetCurrentLocale();
 			}
 			#endregion
 			#region
@@ -557,6 +560,14 @@ namespace Mahou
 			                                             	act();
 			                                             });
 		}
+//		public static void SetNextLayout() {
+//			var CUR = Locales.GetCurrentLocale();
+//			var CUR_IND = MMain.locales.ToList().FindIndex(lid => lid.uId == CUR);
+//			CUR_IND++;
+//			if (CUR_IND >= MMain.locales.Length)
+//				CUR_IND = 0;
+//			Debug.WriteLine("NEXT LAYOUT: " + MMain.locales[CUR_IND].Lang + " IND " + CUR_IND  + " LEN " + MMain.locales.Length + " CUR " + CUR) ;
+//		}
 		static bool IsUpperInput() {
 			bool caps = Control.IsKeyLocked(Keys.CapsLock);
 			if (MahouUI.CapsLockDisablerTimer)
