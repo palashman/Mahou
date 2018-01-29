@@ -4,13 +4,11 @@ using System.Runtime.InteropServices;
 
 namespace Mahou
 {
-    public static class NativeClipboard
-    {
+    public static class NativeClipboard {
     	/// <summary>
     	/// Clears clipboard.
     	/// </summary>
-        public static void Clear()
-        {
+        public static void Clear() {
             WinAPI.OpenClipboard(IntPtr.Zero);
             WinAPI.EmptyClipboard();
             WinAPI.CloseClipboard();
@@ -19,22 +17,19 @@ namespace Mahou
         /// Gets clipboard text if clipboard data contains text(CF_UNICODETEXT).
         /// </summary>
         /// <returns>string</returns>
-        public static string GetText() // Gets text data from clipboard
-        {
+        public static string GetText()  { // Gets text data from clipboard
             if (!WinAPI.IsClipboardFormatAvailable(WinAPI.CF_UNICODETEXT))
                 return null;
             int Tries = 0;
             var opened = false;
             string data = null;
-            while (true)
-            {
+            while (true) {
                 ++Tries;
                 opened = WinAPI.OpenClipboard(IntPtr.Zero);
                 var hGlobal = WinAPI.GetClipboardData(WinAPI.CF_UNICODETEXT);
                 var lpwcstr = WinAPI.GlobalLock(hGlobal);
                 data = Marshal.PtrToStringUni(lpwcstr);
-                if (opened)
-                {
+                if (opened) {
                     WinAPI.GlobalUnlock(hGlobal);
                     break;
                 }

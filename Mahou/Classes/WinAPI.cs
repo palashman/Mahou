@@ -397,14 +397,12 @@ public static class WinAPI {
     #region Required structs
     #region ICheckings required structs
 	[StructLayout(LayoutKind.Sequential)]
-	public struct POINT
-	{
+	public struct POINT {
 	    public Int32 x;
 	    public Int32 y;
 	}
 	[StructLayout(LayoutKind.Sequential)]
-	public struct CURSORINFO
-	{
+	public struct CURSORINFO {
 	    public Int32 cbSize;
 	    public Int32 flags;
 	    public IntPtr hCursor; 
@@ -413,8 +411,7 @@ public static class WinAPI {
     #endregion
     #region KInputs required structs
     #pragma warning disable 649
-    public struct INPUT
-    {
+    public struct INPUT {
         public UInt32 Type;
         public KEYBOARDMOUSEHARDWARE Data;
     }
@@ -422,8 +419,7 @@ public static class WinAPI {
    	/// <summary>
    	/// This is KEYBOARD-MOUSE-HARDWARE union INPUT won't work if you remove MOUSE or HARDWARE.
    	/// </summary>
-    public struct KEYBOARDMOUSEHARDWARE
-    {
+    public struct KEYBOARDMOUSEHARDWARE {
         [FieldOffset(0)]
         public KEYBDINPUT Keyboard;
         [FieldOffset(0)]
@@ -431,16 +427,14 @@ public static class WinAPI {
         [FieldOffset(0)]
         public MOUSEINPUT Mouse;
     }
-    public struct KEYBDINPUT
-    {
+    public struct KEYBDINPUT {
         public UInt16 Vk;
         public UInt16 Scan;
         public UInt32 Flags;
         public UInt32 Time;
         public IntPtr ExtraInfo;
     }
-    public struct MOUSEINPUT
-    {
+    public struct MOUSEINPUT {
         public Int32 X;
         public Int32 Y;
         public UInt32 MouseData;
@@ -448,8 +442,7 @@ public static class WinAPI {
         public UInt32 Time;
         public IntPtr ExtraInfo;
     }
-    public struct HARDWAREINPUT
-    {
+    public struct HARDWAREINPUT {
         public UInt32 Msg;
         public UInt16 ParamL;
         public UInt16 ParamH;
@@ -461,8 +454,7 @@ public static class WinAPI {
 	/// Contains x and y positions of upper-left and lower-right corners.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
-	public struct RECT
-	{
+	public struct RECT {
 		public int Left;        // x position of upper-left corner
 		public int Top;         // y position of upper-left corner
 		public int Right;       // x position of lower-right corner
@@ -472,9 +464,7 @@ public static class WinAPI {
 			Right = rt; Bottom = btm;
 		}
 	}
-	
-	public struct GUITHREADINFO
-	{
+	public struct GUITHREADINFO {
 		public int cbSize;
 		public int flags;
 		public IntPtr hwndActive;

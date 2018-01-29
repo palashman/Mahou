@@ -30,7 +30,8 @@ namespace Mahou {
 		}
 		public static IntPtr Callback(int nCode, IntPtr wParam, IntPtr lParam) {
 			if (MMain.mahou == null || nCode < 0) return WinAPI.CallNextHookEx(_LLHook_ID, nCode, wParam, lParam);
-			if (KMHook.ExcludedProgram() && !MMain.mahou.ChangeLayoutInExcluded) return WinAPI.CallNextHookEx(_LLHook_ID, nCode, wParam, lParam);
+			if (KMHook.ExcludedProgram() && !MMain.mahou.ChangeLayoutInExcluded) 
+				return WinAPI.CallNextHookEx(_LLHook_ID, nCode, wParam, lParam);
 			var vk = Marshal.ReadInt32(lParam);
 			var Key = (Keys)vk;
 			SetModifs(Key, wParam);

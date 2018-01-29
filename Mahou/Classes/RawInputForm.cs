@@ -15,7 +15,8 @@ namespace Mahou {
 				WinAPI.RAWINPUT input = new WinAPI.RAWINPUT();
 	            int outSize = 0;
 	            int size = Marshal.SizeOf(typeof(WinAPI.RAWINPUT));
-	            outSize = WinAPI.GetRawInputData(m.LParam, WinAPI.RawInputCommand.Input, out input, ref size, Marshal.SizeOf(typeof(WinAPI.RAWINPUTHEADER)));
+	            outSize = WinAPI.GetRawInputData(m.LParam, WinAPI.RawInputCommand.Input, out input, ref size,
+	                                             Marshal.SizeOf(typeof(WinAPI.RAWINPUTHEADER)));
 	            if (outSize != -1) {
 	                if (input.Header.Type == WinAPI.RawInputType.Mouse)
 	            		if (input.Data.Mouse.Data.ButtonFlags != WinAPI.RawMouseButtons.None)

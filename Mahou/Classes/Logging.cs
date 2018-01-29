@@ -6,8 +6,7 @@ using System.IO;
 
 namespace Mahou
 {
-	public static class Logging
-	{
+	public static class Logging {
 		public static string logdir = Path.Combine(MahouUI.nPath, "Logs");
 		public static string log = Path.Combine(logdir, DateTime.Today.ToString("yyyy.MM.dd") + ".txt");
 		static object locky = new Object(); // To prevent `file in use` error in multi-threads
@@ -23,14 +22,14 @@ namespace Mahou
 				MMain.MyConfs = new Configs();	
 			if (!Directory.Exists(Path.Combine(MahouUI.nPath, "Logs")))
 				Directory.CreateDirectory(logdir);
-			var messagetype = "Info";
+			var messagetype = "I";
 			var msgtime = DateTime.Now.ToString("hh:mm:ss.fff");
 			switch (msgtype) {
 				case 1:
-					messagetype = "Error";
+					messagetype = "E";
 					break;
 				case 2:
-					messagetype = "Warning";
+					messagetype = "W";
 					break;
 			}
 			var tologmsg = msgtime + " [" + messagetype + "]\r\n                    " + logmsg + "\r\n";

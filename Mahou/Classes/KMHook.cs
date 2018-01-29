@@ -9,9 +9,7 @@ using System.Windows.Forms;
 
 namespace Mahou
 {
-	class KMHook // Keyboard & Mouse Listeners & Event hook
-	{
-		#region Variables
+	class KMHook  { // Keyboard & Mouse Listeners & Event hook		#region Variables
 		public static bool win, alt, ctrl, shift,
 			win_r, alt_r, ctrl_r, shift_r,
 			shiftRP, ctrlRP, altRP, winRP, //RP = Re-Press
@@ -588,8 +586,7 @@ namespace Mahou
 			}
 			return false;
 		}
-		static void SpecificKey(Keys Key, uint MSG, int vkCode = 0)
-		{
+		static void SpecificKey(Keys Key, uint MSG, int vkCode = 0) {
 //			Debug.WriteLine("SPK:" + skip_spec_keys);
 			if (skip_spec_keys > 0) {
 				skip_spec_keys--;
@@ -813,8 +810,7 @@ namespace Mahou
 		/// <summary>
 		/// Converts selected text.
 		/// </summary>
-		public static void ConvertSelection()
-		{
+		public static void ConvertSelection() {
 			try { //Used to catch errors
 				DoSelf(() => {
 					Logging.Log("Starting Convert selection.");
@@ -1189,8 +1185,7 @@ namespace Mahou
 		/// Sends RCtrl + Insert to selected get text, and returns that text by using WinAPI.GetText().
 		/// </summary>
 		/// <returns>string</returns>
-		static string MakeCopy() 
-		{
+		static string MakeCopy()  {
 			KInputs.MakeInput(new [] {
 				KInputs.AddKey(Keys.RControlKey, true),
 				KInputs.AddKey(Keys.Insert, true),
@@ -1282,8 +1277,7 @@ namespace Mahou
 		/// Converts last word/line/words.
 		/// </summary>
 		/// <param name="c_">List of YuKeys to be converted.</param>
-		public static void ConvertLast(List<YuKey> c_)
-		{
+		public static void ConvertLast(List<YuKey> c_) {
 			try { //Used to catch errors, since it called as Task
 				Locales.IfLessThan2();
 				YuKey[] YuKeys = c_.ToArray();
@@ -1349,8 +1343,7 @@ namespace Mahou
 		/// <param name="upper">State of key to be checked.</param>
 		/// <param name="wasLocale">Last layout id.</param>
 		/// <returns></returns>
-		static bool SymbolIgnoreRules(Keys key, bool upper, uint wasLocale)
-		{
+		static bool SymbolIgnoreRules(Keys key, bool upper, uint wasLocale) {
 			Logging.Log("Passing Key = ["+key+"]+["+(upper ? "UPPER" : "lower") + "] with WasLayoutID = ["+wasLocale+"] through symbol ignore rules.");
 			if (MMain.mahou.HKSymIgn.Enabled &&
 			    MMain.mahou.SymIgnEnabled &&
@@ -1412,8 +1405,7 @@ namespace Mahou
 		/// <summary>
 		/// Changes current layout.
 		/// </summary>
-		public static void ChangeLayout()
-		{
+		public static void ChangeLayout() {
 			if (Locales.ActiveWindowProcess().ProcessName.ToLower() == "HD-Frontend".ToLower()) {
 				KInputs.MakeInput(new [] { 
 				                  	KInputs.AddKey(Keys.LControlKey, true),
@@ -1557,9 +1549,7 @@ namespace Mahou
 		/// <param name="uID1">Layout id 1(from).</param>
 		/// <param name="uID2">Layout id 2(to)</param>
 		/// <returns></returns>
-		static string InAnother(char c, uint uID1, uint uID2) //Remakes c from uID1  to uID2
-		{
-			var cc = c;
+		static string InAnother(char c, uint uID1, uint uID2)  { //Remakes c from uID1  to uID2			var cc = c;
 			var chsc = WinAPI.VkKeyScanEx(cc, uID1);
 			var state = (chsc >> 8) & 0xff;
 			var byt = new byte[256];
@@ -1578,14 +1568,11 @@ namespace Mahou
 		/// </summary>
 		/// <param name="key">Key to be inputted.</param>
 		/// <param name="flags">Flags(state) of key.</param>
-		public static void KeybdEvent(Keys key, int flags) // 
-		{
-			//Do not remove this line, it needed for "Left Control Switch Layout" to work properly
+		public static void KeybdEvent(Keys key, int flags)  { // 			//Do not remove this line, it needed for "Left Control Switch Layout" to work properly
 //			Thread.Sleep(15);
 			WinAPI.keybd_event((byte)key, 0, flags | (KInputs.IsExtended(key) ? 1 : 0), 0);
 		}
-		public static void RePressAfter(int mods)
-		{
+		public static void RePressAfter(int mods) {
 			ctrlRP = Hotkey.ContainsModifier(mods, (int)WinAPI.MOD_CONTROL);
 			shiftRP = Hotkey.ContainsModifier(mods, (int)WinAPI.MOD_SHIFT);
 			altRP = Hotkey.ContainsModifier(mods, (int)WinAPI.MOD_ALT);
@@ -1595,9 +1582,7 @@ namespace Mahou
 		/// Sends modifiers up by modstoup array. 
 		/// </summary>
 		/// <param name="modstoup">Array of modifiers which will be send up. 0 = ctrl, 1 = shift, 2 = alt.</param>
-		public static void SendModsUp(int modstoup) //
-		{
-			//These three below are needed to release all modifiers, so even if you will still hold any of it
+		public static void SendModsUp(int modstoup)  { //			//These three below are needed to release all modifiers, so even if you will still hold any of it
 			//it will skip them and do as it must.
 			DoSelf(() => {
 				if (Hotkey.ContainsModifier(modstoup, (int)WinAPI.MOD_WIN)) {
@@ -1623,8 +1608,7 @@ namespace Mahou
 		/// Checks if key is modifier, and calls SendModsUp() if it is.
 		/// </summary>
 		/// <param name="key">Key to be checked.</param>
-		public static void IfKeyIsMod(Keys key)
-		{
+		public static void IfKeyIsMod(Keys key) {
 			uint mods = 0;
 			switch (key) {
 				case Keys.LControlKey:
@@ -1787,8 +1771,7 @@ namespace Mahou
 		/// <summary>
 		/// Re-Initializes snippets.
 		/// </summary>
-		public static void ReInitSnippets()
-		{
+		public static void ReInitSnippets() {
 			if (System.IO.File.Exists(MahouUI.snipfile)) {
 				var snippets = System.IO.File.ReadAllText(MahouUI.snipfile);
 				Stopwatch watch = null;
@@ -1819,8 +1802,7 @@ namespace Mahou
 		/// <summary>
 		///  Contains key(Keys key), it state(bool upper), if it is Alt+[NumPad](bool altnum) and array of numpads(list of numpad keys).
 		/// </summary>
-		public struct YuKey
-		{
+		public struct YuKey {
 			public Keys key;
 			public bool upper;
 			public bool altnum;

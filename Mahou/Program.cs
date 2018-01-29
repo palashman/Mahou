@@ -6,8 +6,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 namespace Mahou
 {
-	class MMain
-	{
+	class MMain {
 		#region DLLs
 		[DllImport("user32.dll")]
 		public static extern uint RegisterWindowMessage(string message);
@@ -34,8 +33,7 @@ namespace Mahou
 		public static List<string> lcnmid = new List<string>();
 		#endregion
 		[STAThread] //DO NOT REMOVE THIS
-        public static void Main(string[] args)
-		{
+        public static void Main(string[] args) {
 			Application.EnableVisualStyles(); // at first enable styles.
 			//Catch any error during program runtime
 			AppDomain.CurrentDomain.UnhandledException += (obj, arg) => {
@@ -59,7 +57,8 @@ namespace Mahou
 					if (!Directory.Exists(mahou_folder_appd))
 						Directory.CreateDirectory(mahou_folder_appd);
 					if (!File.Exists(Path.Combine(mahou_folder_appd, "Mahou.ini"))) // Copy main configs to appdata
-						File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Mahou.ini"), Path.Combine(mahou_folder_appd, "Mahou.ini"), true);
+						File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Mahou.ini"),
+						          Path.Combine(mahou_folder_appd, "Mahou.ini"), true);
 					Configs.filePath = Path.Combine(mahou_folder_appd, "Mahou.ini");
 					MyConfs = new Configs();
 				} else 
@@ -97,7 +96,8 @@ namespace Mahou
 					if (args[0] == "_!_updated_!_") {
 						Logging.Log("Mahou updated.");
 						mahou.ToggleVisibility();
-						MessageBox.Show(Lang[Languages.Element.UpdateComplete], Lang[Languages.Element.UpdateComplete], MessageBoxButtons.OK, MessageBoxIcon.Information);
+						MessageBox.Show(Lang[Languages.Element.UpdateComplete], Lang[Languages.Element.UpdateComplete],
+						                MessageBoxButtons.OK, MessageBoxIcon.Information);
 					}
 					if (args[0] == "_!_silent_updated_!_") {
 						Logging.Log("Mahou silently updated.");

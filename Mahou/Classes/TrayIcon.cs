@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace Mahou
-{
-    public class TrayIcon
-    {
+namespace Mahou {
+    public class TrayIcon {
         public event EventHandler<EventArgs> Exit;
         public event EventHandler<EventArgs> ShowHide;
         public NotifyIcon trIcon;
@@ -14,8 +12,7 @@ namespace Mahou
         /// Initializes new tray icon.
         /// </summary>
         /// <param name="visible">State of tray icon's visibility on initialize.</param>
-        public TrayIcon(bool? visible = true)
-        {
+        public TrayIcon(bool? visible = true) {
             trIcon = new NotifyIcon();
             cMenu = new ContextMenu();
             trIcon.Icon = Properties.Resources.MahouTrayHD;
@@ -31,28 +28,21 @@ namespace Mahou
         /// <summary>
         /// Exit event handler..
         /// </summary>
-        void ExitHandler(object sender, EventArgs e)
-        {
+        void ExitHandler(object sender, EventArgs e) {
             if (Exit != null)
-            {
                 Exit(this, null);
-            }
         }
         /// <summary>
         /// ShowHide event handler..
         /// </summary>
-        void ShowHideHandler(object sender, EventArgs e)
-        {
+        void ShowHideHandler(object sender, EventArgs e) {
             if (ShowHide != null)
-            {
                 ShowHide(this, null);
-            }
         }
         /// <summary>
         /// Hides tray icon.
         /// </summary>
-        public void Hide()
-        {
+        public void Hide() {
         	if (MMain.mahou.TrayFlags)
         		MMain.mahou.flagsCheck.Stop();
             trIcon.Visible = false;
@@ -60,8 +50,7 @@ namespace Mahou
         /// <summary>
         /// Shows tray icon.
         /// </summary>
-        public void Show()
-        {
+        public void Show() {
         	if (MMain.mahou.TrayFlags)
         		MMain.mahou.flagsCheck.Start();
             trIcon.Visible = true;
@@ -72,8 +61,7 @@ namespace Mahou
         /// <param name="TrText">Tray icon hover text.</param>
         /// <param name="ShHiText">Show/Hide tray icon menu item's text.</param>
         /// <param name="ExiText">Exit tray icon menu item's text.</param>
-        public void RefreshText(string TrText, string ShHiText, string ExiText)
-        {
+        public void RefreshText(string TrText, string ShHiText, string ExiText) {
             trIcon.Text = TrText;
             ShHi.Text = ShHiText;
             Exi.Text = ExiText;

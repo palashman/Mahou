@@ -1,9 +1,7 @@
 ﻿using System;
 
-namespace Mahou
-{
-	public class Hotkey
-	{
+namespace Mahou {
+	public class Hotkey {
 		public readonly int ID;
 		public readonly uint VirtualKeyCode;
 		public readonly uint Modifiers;
@@ -137,7 +135,7 @@ namespace Mahou
 					hkOK = true;
 					KMHook.doublekey.Interval = MMain.mahou.DoubleHKInterval;
 					KMHook.doublekey.Start();
-			}
+				}
 			}
 		}
 		

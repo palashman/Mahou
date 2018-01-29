@@ -2,26 +2,24 @@
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-static class KInputs
-{
+
+static class KInputs {
 	/// <summary>
 	/// Creates INPUT from key and state.
 	/// </summary>
 	/// <param name="key">Key to be converted to INPUT.</param>
 	/// <param name="down">State of key(down=true, up=false)</param>
 	/// <returns>WinAPI.INPUT</returns>
-    public static WinAPI.INPUT AddKey(Keys key, bool down)
-    {
+    public static WinAPI.INPUT AddKey(Keys key, bool down) {
         var vk = (UInt16)key;
-        var input = new WinAPI.INPUT
-        {
+        var input = new WinAPI.INPUT {
             Type = WinAPI.INPUT_KEYBOARD,
-            Data =
-            {
-                Keyboard = new WinAPI.KEYBDINPUT
-                {
+            Data = {
+                Keyboard = new WinAPI.KEYBDINPUT {
                     Vk = vk,
-                    Flags = IsExtended(key) ? (down ? (WinAPI.KEYEVENTF_EXTENDEDKEY) : (WinAPI.KEYEVENTF_KEYUP | WinAPI.KEYEVENTF_EXTENDEDKEY)) : (down ? 0 : WinAPI.KEYEVENTF_KEYUP),
+                    Flags = IsExtended(key) ? (down ? (WinAPI.KEYEVENTF_EXTENDEDKEY) :
+                                               (WinAPI.KEYEVENTF_KEYUP | WinAPI.KEYEVENTF_EXTENDEDKEY)) : 
+                    							(down ? 0 : WinAPI.KEYEVENTF_KEYUP),
                     Scan = (ushort)WinAPI.MapVirtualKey(vk, 0),
                     ExtraInfo = IntPtr.Zero,
                     Time = 0
@@ -35,8 +33,7 @@ static class KInputs
     /// </summary>
     /// <param name="key">Key to be checked.</param>
     /// <returns>bool</returns>
-    public static bool IsExtended(Keys key) //Check for extended keys
-    {
+    public static bool IsExtended(Keys key) { //Check for extended keys
 		return key == Keys.Menu ||
 			key == Keys.LMenu ||
 			key == Keys.RMenu ||
@@ -74,12 +71,10 @@ static class KInputs
     /// </summary>
     /// <param name="str">String to be converted into INPUT[].</param>
     /// <returns>INPUT[]</returns>
-    public static WinAPI.INPUT[] AddString(string str)
-    {
+    public static WinAPI.INPUT[] AddString(string str) {
         var result = new List<WinAPI.INPUT>();
         var index = 0;
-        foreach (var s in str)
-        {
+        foreach (var s in str) {
         	bool uselt1_vk, uselt2_vk;
         	ushort resultvk = 0;
         	short lt1_vk = WinAPI.VkKeyScanEx(s, Mahou.MahouUI.MAIN_LAYOUT1);
@@ -98,13 +93,10 @@ static class KInputs
         	bool resultvk_state = ((resultvk >> 8) & 0xff) == 1;
         	if (resultvk_state)
         		result.Add(KInputs.AddKey(Keys.RShiftKey, true));
-            var down = new WinAPI.INPUT
-            {
+            var down = new WinAPI.INPUT {
                 Type = WinAPI.INPUT_KEYBOARD,
-                Data =
-                {
-                    Keyboard = new WinAPI.KEYBDINPUT
-                    {
+                Data = {
+                    Keyboard = new WinAPI.KEYBDINPUT {
                     	Vk = Mahou.MMain.mahou.GuessKeyCodeFix ? resultvk : (ushort)0,
                         Flags = (UInt32)(WinAPI.KEYEVENTF_UNICODE),
                         Scan = (UInt16)s,
@@ -113,13 +105,10 @@ static class KInputs
                     }
                 }
             };
-            var up = new WinAPI.INPUT
-            {
+            var up = new WinAPI.INPUT {
                 Type = WinAPI.INPUT_KEYBOARD,
-                Data =
-                {
-                    Keyboard = new WinAPI.KEYBDINPUT
-                    {
+                Data = {
+                    Keyboard = new WinAPI.KEYBDINPUT {
                     	Vk = Mahou.MMain.mahou.GuessKeyCodeFix ? resultvk : (ushort)0,
                         Flags = (UInt32)(WinAPI.KEYEVENTF_UNICODE | WinAPI.KEYEVENTF_KEYUP),
                         Scan = (UInt16)s,
@@ -128,8 +117,7 @@ static class KInputs
                     }
                 }
             };
-            if (s == '\n')
-            {
+            if (s == '\n') {
                 down = AddKey(Keys.Return, true);
                 up = AddKey(Keys.Return, false);
             }
@@ -145,8 +133,7 @@ static class KInputs
     /// Makes input INPUT's in "inputs" variable.
     /// </summary>
     /// <param name="inputs">Array of INPUT to be inputted.</param>
-    public static void MakeInput(WinAPI.INPUT[] inputs) //Simply, sends input
-    {
+    public static void MakeInput(WinAPI.INPUT[] inputs) { //Simply, sends input
     	var done = WinAPI.SendInput((UInt32)inputs.Length, inputs, Marshal.SizeOf(typeof(WinAPI.INPUT)));
     	if (done != inputs.Length)
     		Mahou.Logging.Log("ERROR during send input, lenght: " +done+ ", Win32ERR: " + Marshal.GetLastWin32Error());

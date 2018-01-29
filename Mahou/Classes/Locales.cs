@@ -8,8 +8,7 @@ using System.Diagnostics;
 
 namespace Mahou
 {
-	static class Locales
-	{
+	static class Locales {
 		[DllImport("getconkbl.dll")]
 		public static extern uint GetConsoleAppKbLayout(uint ActiveConsolePID);
 		[DllImport("getconkbl.dll")]
@@ -18,8 +17,7 @@ namespace Mahou
 		/// Returns current layout id in foreground window.
 		/// </summary>
 		/// <returns>uint</returns>
-		public static uint GetCurrentLocale(IntPtr byHwnd = default(IntPtr)) //Gets current locale in active window, or in specified hwnd.
-		{
+		public static uint GetCurrentLocale(IntPtr byHwnd = default(IntPtr)) { //Gets current locale in active window, or in specified hwnd.
 			IntPtr actv = IntPtr.Zero;
 			if (byHwnd == IntPtr.Zero)
 				actv = ActiveWindow();
@@ -59,8 +57,7 @@ namespace Mahou
 		/// Returns focused or foreground window.
 		/// </summary>
 		/// <returns>IntPtr(HWND)</returns>
-		public static IntPtr ActiveWindow()
-		{
+		public static IntPtr ActiveWindow() {
 			IntPtr awHandle = IntPtr.Zero;
 			var gui = new WinAPI.GUITHREADINFO();
 			gui.cbSize = Marshal.SizeOf(gui);
@@ -84,8 +81,7 @@ namespace Mahou
 		/// Returns all installed in system layouts. 
 		/// </summary>
 		/// <returns></returns>
-		public static Locale[] AllList()
-		{
+		public static Locale[] AllList() {
 			int count = 0;
 			var locs = new List<Locale>();
 			foreach (InputLanguage lang in InputLanguage.InstalledInputLanguages) {
@@ -115,8 +111,7 @@ namespace Mahou
 		/// <summary>
 		/// Check if you have enough layouts(>2).
 		/// </summary>
-		public static void IfLessThan2()
-		{
+		public static void IfLessThan2() {
 			if (AllList().Length < 2) {
             	MMain.mahou.icon.trIcon.BalloonTipClicked += (_, __) => Process.Start(@"C:\Windows\system32\rundll32.exe", "shell32.dll,Control_RunDLL input.dll");
 				MMain.mahou.icon.trIcon.ShowBalloonTip(4500, "You have too less layouts(locales/languages)!!", "This program switches texts by system's layouts(locales/languages), please add at least 2!", ToolTipIcon.Warning);
@@ -125,8 +120,7 @@ namespace Mahou
 		/// <summary>
 		/// Contains layout name [Lang], and layout id [uId].  
 		/// </summary>
-		public struct Locale
-		{
+		public struct Locale {
 			public string Lang { get; set; }
 			public uint uId { get; set; }
 		}

@@ -6,12 +6,10 @@ public static class Memory {
 	                    ExactSpelling = true, CharSet = CharSet.Ansi, SetLastError = true)] 
 	static extern int SetProcessWorkingSetSize(IntPtr process, int minimumWorkingSetSize, int
     maximumWorkingSetSize); 
-	public static void Flush()
-    {
+	public static void Flush() {
         GC.Collect();
         GC.WaitForPendingFinalizers();
-        if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-        {
+        if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
             SetProcessWorkingSetSize(System.Diagnostics.Process.GetCurrentProcess().Handle, -1, -1);
         }
     }

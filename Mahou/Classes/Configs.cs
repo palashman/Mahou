@@ -3,8 +3,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Mahou
-{
+namespace Mahou {
 	/// <summary>Ini settings writer/reader in memory, not from disk.</summary>
 	class INI {
 		#region Variables

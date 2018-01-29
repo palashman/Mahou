@@ -4,10 +4,9 @@ using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-namespace Mahou
-{
-	public static class CaretPos
-	{
+
+namespace Mahou {
+	public static class CaretPos {
 		public static Point _CaretST3 = new Point(0,0);
 		public static int SidebarWidth = 0, viewID = 0;
 		
@@ -33,7 +32,8 @@ namespace Mahou
 		}
 		public static bool GetGuiInfo(uint thread_id, ref WinAPI.GUITHREADINFO gui_info) {
 			if (!WinAPI.GetGUIThreadInfo(thread_id, ref gui_info)) {
-				Logging.Log("Error getting GUI info for thread id: [" + thread_id +"], L-W32Err: [" + Marshal.GetLastWin32Error() + "].", 2);
+				Logging.Log("Error getting GUI info for thread id: [" + thread_id +
+				            "], L-W32Err: [" + Marshal.GetLastWin32Error() + "].", 2);
 				return false;
 			}
 			return true;
@@ -42,8 +42,7 @@ namespace Mahou
 		/// Gets caret position from focused window or from focused control in window.
 		/// </summary>
 		/// <returns>Point</returns>
-		public static Point GetCaretPointToScreen(out Point caretOnlyPos)
-		{
+		public static Point GetCaretPointToScreen(out Point caretOnlyPos) {
 			var LuckyNone = new Point(77777,77777);
 			caretOnlyPos = LuckyNone;
 			var _cThr_id = WinAPI.GetCurrentThreadId();
@@ -55,7 +54,8 @@ namespace Mahou
 			IntPtr _fwFCS = IntPtr.Zero;
 			var _clsNMb = new StringBuilder(256);
 			string _clsNMfw = "";
-			Logging.Log("_c HWND: [" +MMain.mahou.Handle+ "], _c ThrId: ["+_cThr_id+"], "+"_fw HWND: ["+_fw+"]"+", _fw ThrId: "+_fwThr_id+".");
+			Logging.Log("_c HWND: [" +MMain.mahou.Handle+ "], _c ThrId: ["+_cThr_id+
+			            "], "+"_fw HWND: ["+_fw+"]"+", _fw ThrId: "+_fwThr_id+".");
 			if (_fwThr_id != _cThr_id) {
 				var gti = new WinAPI.GUITHREADINFO();
 				gti.cbSize = Marshal.SizeOf(gti);
