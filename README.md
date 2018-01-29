@@ -26,6 +26,17 @@ Mahou работает так как **Вы** хотите, настраивай
 
 ###### Возможности по версиям:
 
+**v2.5.8.8**<br/>
+
+- 📝 Лучшее исправление при смены раскладки Alt+Shift/Win+Space для обновлении флагов.
+- 🐛 Исправлелно что подсказки языков не обновлялись по горячим клавишам конвертаций.
+- 💎 Абсолютно новые 15 флагов полностью перерисованные от BladeMight!
+- 📝 Рефактор кода.
+- 💎🚀 Сильно оптимизирована функция программы исключения.
+  Из-за нее раньше очень сильно нагружался ЦП при вводе символов, т.к. в хуке каждый раз делались сильно ЦП затратные проверки, 
+  теперь же все стало потреблять в 50~60 раз меньше, до оптимизации: ЦП: 6-8%  => ЦП: 0,12-0,41.
+- 📝 Добавлена информация о том что обновление из Mahou версий ранее 2.5.7.6 больше не работает т.к. обновился GitHub.
+
 **v2.5.8.0**<br/>
 
 - 🐛 Исправлена ошибка с программами исключениями, происходящяя из-за того что некий процесс завершил работу слишком быстро.
@@ -494,6 +505,18 @@ Even selected text switches just between **selected** layouts, though if you lik
 6. Read the [wiki](https://github.com/BladeMight/Mahou/wiki/Functions-list) or [ask me](#license).
 
 ###### By version features:
+
+**v2.5.8.8**<br/>
+
+📝 Better fix for alt+shift layout switching.
+🐛 Fixed language tooltips wasn't updating on convert last, etc. hotkeys.
+💎 Fully 15 new flag icons, all drawn by BladeMight!
+📝 Code refactor.
+💎🚀 Highly optimized excluded programs functions.
+  Its caused high slowdown with hooks due to too consistent check for current window's process name, now it does it only for first time, and stores the handles of windows which are excluded. Before 6-8% CPU Ater: 0,12-0,41 CPU, 40-60x times faster.
+🐛 Fixed latest speed-up fix wasn't working properly without another list:
+  List that stores windows handles that are not excluded, so it will faster check them throug list rather than finding process's name.
+📝 Added note about GitHub update and not working updates from Mahou version less than 2.5.7.6 in GitHub repository's Readme.md.
 
 **v2.5.8.0**<br/>
 
