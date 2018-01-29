@@ -140,8 +140,8 @@ namespace Mahou
 				var time = 200;
 				if (Environment.OSVersion.Version.Major == 10)
 					time = 50;
-				Thread.Sleep(time);
-				MahouUI.GlobalLayout = MahouUI.currentLayout = Locales.GetCurrentLocale();
+				MahouUI.currentLayout = 0;
+				DoLater(() => { MahouUI.GlobalLayout = MahouUI.currentLayout = Locales.GetCurrentLocale(); }, time);
 			}
 			#endregion
 			#region
