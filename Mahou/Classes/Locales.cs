@@ -69,9 +69,11 @@ namespace Mahou
 			} 
 			return awHandle;
 		}
-		public static Process ActiveWindowProcess() {
+		public static Process ActiveWindowProcess(IntPtr hwnd = default(IntPtr)) {
 			uint pid = 0;
-			WinAPI.GetWindowThreadProcessId(Locales.ActiveWindow(), out pid);
+			if (hwnd != default(IntPtr))
+				hwnd = Locales.ActiveWindow();
+			WinAPI.GetWindowThreadProcessId(hwnd, out pid);
 			Process prc = null;
 			try { prc = Process.GetProcessById((int)pid); } catch { Logging.Log("Process with id ["+pid+"] not exist...", 1); }
 			return prc;
