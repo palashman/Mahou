@@ -160,6 +160,10 @@ namespace Mahou {
 		public static Point LDC_lp = new Point(0,0);
 		public static int LD_MouseSkipMessagesCount = 0;
 		System.Threading.Thread uche;
+		public static List<IntPtr> PERSISTENT_LAYOUT1_HWNDs = new List<IntPtr>(); 
+		public static List<IntPtr> NOT_PERSISTENT_LAYOUT1_HWNDs = new List<IntPtr>(); 
+		public static List<IntPtr> PERSISTENT_LAYOUT2_HWNDs = new List<IntPtr>(); 
+		public static List<IntPtr> NOT_PERSISTENT_LAYOUT2_HWNDs = new List<IntPtr>(); 
 		#endregion
 		public MahouUI() {
 			InitializeComponent();
@@ -917,6 +921,10 @@ namespace Mahou {
 			PersistentLayoutOnWindowChange = chk_OnlyOnWindowChange.Checked = MMain.MyConfs.ReadBool("PersistentLayout", "OnlyOnWindowChange");
 			PersistentLayoutOnlyOnce = chk_ChangeLayoutOnlyOnce.Checked = MMain.MyConfs.ReadBool("PersistentLayout", "ChangeOnlyOnce");
 			KMHook.PLC_HWNDs.Clear();
+			PERSISTENT_LAYOUT1_HWNDs.Clear();
+			NOT_PERSISTENT_LAYOUT1_HWNDs.Clear();
+			PERSISTENT_LAYOUT2_HWNDs.Clear();
+			NOT_PERSISTENT_LAYOUT2_HWNDs.Clear();
 			PersistentLayoutForLayout1 = chk_PersistentLayout1Active.Checked = MMain.MyConfs.ReadBool("PersistentLayout", "ActivateForLayout1");
 			PersistentLayoutForLayout2 = chk_PersistentLayout2Active.Checked = MMain.MyConfs.ReadBool("PersistentLayout", "ActivateForLayout2");
 			nud_PersistentLayout1Interval.Value = MMain.MyConfs.ReadInt("PersistentLayout", "Layout1CheckInterval");
@@ -1740,21 +1748,43 @@ DEL "+restartMahouPath;
 		public void PersistentLayoutCheck(string ProcessNames, uint Layout, string ProcName = "") {
 			try {
 				var actProcName = "";
-				if (!String.IsNullOrEmpty(ProcName))
-					actProcName = ProcName;
-				else 
-					actProcName = Locales.ActiveWindowProcess().ProcessName;
-				actProcName = actProcName.ToLower().Replace(" ", "_") + ".exe";
-				Logging.Log("Checking active window's process name: ["+actProcName+"] with processes: ["+ProcessNames+"], for layout: ["+Layout+"].");
-				if (ProcessNames.ToLower().Replace(Environment.NewLine, " ").Contains(actProcName)) {
-					uint CurrentLayout = Locales.GetCurrentLocale();
-					Logging.Log("Checking current layout: ["+CurrentLayout+"] with selected persistent layout: ["+Layout+"].");
-					if (CurrentLayout != Layout) {
-						KMHook.ChangeToLayout(Locales.ActiveWindow(), Layout);
-						Logging.Log("Layout was different, changing to: ["+Layout+"].");
+				var plh = PERSISTENT_LAYOUT1_HWNDs;
+				var nplh = NOT_PERSISTENT_LAYOUT1_HWNDs;
+				if (Layout == MAIN_LAYOUT2) {
+					plh = PERSISTENT_LAYOUT2_HWNDs;
+					nplh = NOT_PERSISTENT_LAYOUT2_HWNDs;
+				}
+				var hwnd = WinAPI.GetForegroundWindow();
+				if (nplh.Contains(hwnd)) {
+					Logging.Log("Already known hwnd which shouldn't have persistent layout.");
+					return;
+			    }
+				if (!plh.Contains(hwnd)) {
+					if (!String.IsNullOrEmpty(ProcName))
+						actProcName = ProcName;
+					else 
+						actProcName = Locales.ActiveWindowProcess().ProcessName;
+					actProcName = actProcName.ToLower().Replace(" ", "_") + ".exe";
+					Logging.Log("Checking active window's process name: ["+actProcName+"] with processes: ["+ProcessNames+"], for layout: ["+Layout+"].");
+					if (ProcessNames.ToLower().Replace(Environment.NewLine, " ").Contains(actProcName)) {
+						SetPersistentLayout(Layout);
+						plh.Add(hwnd);
+					} else {
+						nplh.Add(hwnd);
 					}
+				} else {
+					Logging.Log("Already known hwnd which needs to have persistent layout, setting layout " + Layout);
+					SetPersistentLayout(Layout);
 				}
 			} catch(Exception e) { Logging.Log("Exception in Persistent layout("+Layout+") check, error messages & stack:\r\n"+e.Message+"+\r\n"+e.StackTrace, 1); }
+		}
+		void SetPersistentLayout(uint layout) {
+			uint CurrentLayout = Locales.GetCurrentLocale();
+			Logging.Log("Checking current layout: ["+CurrentLayout+"] with selected persistent layout: ["+layout+"].");
+			if (CurrentLayout != layout) {
+				KMHook.ChangeToLayout(Locales.ActiveWindow(), layout);
+				Logging.Log("Layout was different, changing to: ["+layout+"].");
+			}
 		}
 		/// <summary>
 		/// Toggles timers state.
