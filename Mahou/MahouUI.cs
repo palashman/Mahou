@@ -53,7 +53,7 @@ namespace Mahou {
 		public string SnippetsExpandType = "";
 		int titlebar = 12;
 		public static int AtUpdateShow, SpecKeySetCount;
-		public int DoubleHKInterval = 200, SelectedTextGetMoreTriesCount, SnippetsCount, AutoSwitchCount;
+		public int DoubleHKInterval = 200, SelectedTextGetMoreTriesCount, SnippetsCount, AutoSwitchCount, DelayAfterBackspaces;
 		#region Temporary variables
 		/// <summary> In memory settings, for timers/hooks.</summary>
 		public bool DiffAppearenceForLayouts, LDForCaretOnChange, LDForMouseOnChange, ScrollTip, AddOneSpace,
@@ -64,7 +64,7 @@ namespace Mahou {
 					ChangeLayoutInExcluded, SnippetSpaceAfter, SnippetsSwitchToGuessLayout, AutoSwitchEnabled,
 					AutoSwitchSpaceAfter, AutoSwitchSwitchToGuessLayout, GuessKeyCodeFix, Dowload_ASD_InZip, 
 					LDForCaret, LDForMouse, LDUseWindowsMessages, RemapCapslockAsF18, Add1NL, PersistentLayoutOnWindowChange, PersistentLayoutOnlyOnce,
-					PersistentLayoutForLayout1, PersistentLayoutForLayout2;
+					PersistentLayoutForLayout1, PersistentLayoutForLayout2, UseDelayAfterBackspaces;
 		/// <summary> Temporary modifiers of hotkeys. </summary>
 		string Mainhk_tempMods, ExitHk_tempMods, HKCLast_tempMods, HKCSelection_tempMods, 
 			    HKCLine_tempMods, HKSymIgn_tempMods, HKConMorWor_tempMods, HKTitleCase_tempMods,
@@ -752,8 +752,12 @@ namespace Mahou {
 				MMain.MyConfs.Write("Timings", "ScrollLockStateRefreshRate", nud_ScrollLockRefreshRate.Value.ToString());
 				MMain.MyConfs.Write("Timings", "SelectedTextGetMoreTries", chk_SelectedTextGetMoreTries.Checked.ToString());
 				MMain.MyConfs.Write("Timings", "SelectedTextGetMoreTriesCount", nud_SelectedTextGetTriesCount.Value.ToString());
+				MMain.MyConfs.Write("Timings", "DelayAfterBackspaces", nud_DelayAfterBackspaces.Value.ToString());
+				MMain.MyConfs.Write("Timings", "UseDelayAfterBackspaces", chk_UseDelayAfterBackspaces.Checked.ToString());
+				#region Excluded
 				MMain.MyConfs.Write("Timings", "ExcludedPrograms", txt_ExcludedPrograms.Text.Replace(Environment.NewLine, "^cr^lf"));
 				MMain.MyConfs.Write("Timings", "ChangeLayoutInExcluded", chk_Change1KeyL.Checked.ToString());
+				#endregion
 				#endregion
 				#region Snippets
 				MMain.MyConfs.Write("Snippets", "SnippetsEnabled", chk_Snippets.Checked.ToString());
@@ -965,10 +969,14 @@ namespace Mahou {
 			nud_ScrollLockRefreshRate.Value = MMain.MyConfs.ReadInt("Timings", "ScrollLockStateRefreshRate");
 			SelectedTextGetMoreTries = chk_SelectedTextGetMoreTries.Checked = MMain.MyConfs.ReadBool("Timings", "SelectedTextGetMoreTries");
 			nud_SelectedTextGetTriesCount.Value = MMain.MyConfs.ReadInt("Timings", "SelectedTextGetMoreTriesCount");
+			nud_DelayAfterBackspaces.Value = DelayAfterBackspaces = MMain.MyConfs.ReadInt("Timings", "DelayAfterBackspaces");
+			UseDelayAfterBackspaces = chk_UseDelayAfterBackspaces.Checked = MMain.MyConfs.ReadBool("Timings", "UseDelayAfterBackspaces");
+			#region Excluded
 			ExcludedPrograms = txt_ExcludedPrograms.Text = MMain.MyConfs.Read("Timings", "ExcludedPrograms").Replace("^cr^lf", Environment.NewLine);
 			KMHook.EXCLUDED_HWNDs.Clear();
 			KMHook.NOT_EXCLUDED_HWNDs.Clear();
 			ChangeLayoutInExcluded = chk_Change1KeyL.Checked = MMain.MyConfs.ReadBool("Timings", "ChangeLayoutInExcluded");
+			#endregion
 			SelectedTextGetMoreTriesCount = (int)nud_SelectedTextGetTriesCount.Value;
 			#endregion
 			#region LangPanel
@@ -1244,6 +1252,7 @@ namespace Mahou {
 			chk_DoubleHotkey.Enabled = chk_WinInHotKey.Enabled = txt_Hotkey.Enabled = chk_HotKeyEnabled.Checked;
 			chk_DoubleHotkey.Enabled = lsb_Hotkeys.SelectedIndex != 11;
 			// Timings tab
+			nud_DelayAfterBackspaces.Enabled = chk_UseDelayAfterBackspaces.Checked;
 			nud_SelectedTextGetTriesCount.Enabled = chk_SelectedTextGetMoreTries.Checked;
 			lbl_ScrollLockRefreshRate.Enabled = nud_ScrollLockRefreshRate.Enabled = chk_HighlightScroll.Checked;
 			lbl_CapsLockRefreshRate.Enabled = nud_CapsLockRefreshRate.Enabled = chk_CapsLockDTimer.Checked;
@@ -2809,6 +2818,7 @@ DEL ""ExtractASD.cmd""";
 			tab_layouts.Text = MMain.Lang[Languages.Element.tab_Layouts];
 			tab_appearence.Text = MMain.Lang[Languages.Element.tab_Appearence];
 			tab_timings.Text = MMain.Lang[Languages.Element.tab_Timings];
+			tab_excluded.Text = MMain.Lang[Languages.Element.tab_Excluded];
 			tab_snippets.Text = MMain.Lang[Languages.Element.tab_Snippets];
 			tab_autoswitch.Text = MMain.Lang[Languages.Element.tab_AutoSwitch];
 			tab_hotkeys.Text = MMain.Lang[Languages.Element.tab_Hotkeys];
@@ -2903,6 +2913,9 @@ DEL ""ExtractASD.cmd""";
 			lbl_ScrollLockRefreshRate.Text = MMain.Lang[Languages.Element.ScrollLockRefreshRate];
 			lbl_CapsLockRefreshRate.Text = MMain.Lang[Languages.Element.CapsLockRefreshRate];
 			chk_SelectedTextGetMoreTries.Text = MMain.Lang[Languages.Element.MoreTriesToGetSelectedText];
+			chk_UseDelayAfterBackspaces.Text = MMain.Lang[Languages.Element.UseDelayAfterBackspaces];
+			#endregion
+			#region Excluded
 			lbl_ExcludedPrograms.Text =  MMain.Lang[Languages.Element.ExcludedPrograms];
 			chk_Change1KeyL.Text =  MMain.Lang[Languages.Element.Change1KeyLayoutInExcluded];
 			#endregion
@@ -3039,6 +3052,7 @@ DEL ""ExtractASD.cmd""";
 			HelpMeUnderstand.SetToolTip(chk_RemapCapsLockAsF18, MMain.Lang[Languages.Element.TT_RemapCapslockAsF18]);
 			HelpMeUnderstand.SetToolTip(chk_OnlyOnWindowChange, MMain.Lang[Languages.Element.TT_SwitchOnlyOnWindowChange]);
 			HelpMeUnderstand.SetToolTip(chk_ChangeLayoutOnlyOnce, MMain.Lang[Languages.Element.TT_SwitchOnlyOnce]);
+			HelpMeUnderstand.SetToolTip(chk_UseDelayAfterBackspaces, MMain.Lang[Languages.Element.TT_UseDelayAfterBackspaces]);
 		}
 		void HelpMeUnderstandPopup(object sender, PopupEventArgs e) {
 			HelpMeUnderstand.ToolTipTitle = e.AssociatedControl.Text;

@@ -1316,6 +1316,8 @@ namespace Mahou
 							KInputs.AddKey(Keys.Back, false) 
 						});
 					}
+					if (MMain.mahou.UseDelayAfterBackspaces)
+						Thread.Sleep(MMain.mahou.DelayAfterBackspaces);
 					c_snip.Clear();
 					for (int i = 0; i < YuKeys.Length; i++) {
 						if (YuKeys[i].altnum) {

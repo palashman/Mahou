@@ -7,6 +7,7 @@ public class Languages
 		tab_Layouts,
 		tab_Appearence,
 		tab_Timings,
+		tab_Excluded,
 		tab_Snippets,
 		tab_AutoSwitch,
 		tab_Hotkeys,
@@ -89,9 +90,12 @@ public class Languages
 		ScrollLockRefreshRate,
 		CapsLockRefreshRate,
 		MoreTriesToGetSelectedText,
+		LD_MouseSkipMessages,
+		UseDelayAfterBackspaces,
+		#endregion
+		#region Excluded
 		ExcludedPrograms,
 		Change1KeyLayoutInExcluded,
-		LD_MouseSkipMessages,
 		#endregion
 		#region Snippets
 		SnippetsEnabled,
@@ -219,6 +223,7 @@ public class Languages
 		TT_SnippetExpandKey,
 		TT_LDUseWinMessages,
 		TT_RemapCapslockAsF18,
+		TT_UseDelayAfterBackspaces,
 		#endregion
 		#region Messages
 		MSG_SnippetsError
@@ -230,6 +235,7 @@ public class Languages
 		{ Element.tab_Layouts, "Layouts" }, 
 		{ Element.tab_Appearence, "Appearence" }, 
 		{ Element.tab_Timings, "Timings" }, 
+		{ Element.tab_Excluded, "Excluded" }, 
 		{ Element.tab_Snippets, "Snippets" }, 
 		{ Element.tab_AutoSwitch, "Auto switch" },
 		{ Element.tab_Hotkeys, "Hotkeys" }, 
@@ -312,9 +318,12 @@ public class Languages
 		{ Element.ScrollLockRefreshRate, "Scroll Lock refresh rate(ms):" }, 
 		{ Element.CapsLockRefreshRate, "Caps Lock update rate(ms):" }, 
 		{ Element.MoreTriesToGetSelectedText, "Use more tries to get selected text:" }, 
+		{ Element.LD_MouseSkipMessages, "Mouse movement Messages to skip before updating language tooltips:" },
+		{ Element.UseDelayAfterBackspaces, "Use delay after backspaces in convert last word(ms):" },
+		#endregion
+		#region Excluded
 		{ Element.ExcludedPrograms, "Excluded programs:" }, 
 		{ Element.Change1KeyLayoutInExcluded, "Change layout by 1 key even in excluded." }, 
-		{ Element.LD_MouseSkipMessages, "Mouse movement Messages to skip before updating language tooltips:" }, 
 		#endregion
 		#region Snippets
 		{ Element.SnippetsEnabled, "Enable snippets." }, 
@@ -460,6 +469,7 @@ public class Languages
 		{ Element.TT_SnippetExpandKey, "Select custom snippet expand key,\r\nworks only for snippets, auto-switch will still expand only on space." },
 		{ Element.TT_LDUseWinMessages, "If enabled, timers will not be used to update language tooltips,\r\ninstead they will be updated on appropriate Windows Messages.\r\nLess CPU hungry than timers.\r\nMost CPU hungry is mouse tooltip with always enabled,\r\nconsumes CPU only on mouse move/clicks,\r\nto decrease its CPU usage, there will be 1 new config in Timings tab.\r\nSkip x Windows Messages(mouse movement) before updating tooltip." },
 		{ Element.TT_RemapCapslockAsF18, "Remaps Caps Lock as F18, after this CapsLock will be disabled.\r\nTo toggle its state use Ctrl/Alt/Shift/Win + Caps Lock key.\r\n! Mahou window excluded from remap!\r\nIn Mahou you should set hotkeys as Caps Lock key, in other programs they will be remapped as F18.\r\nAfter changing hotkey don't forget to press Apply or OK." }, 
+		{ Element.TT_UseDelayAfterBackspaces, "If enabled Mahou will wait some time after deleting old word and before inputting converted word.\r\nUseful if in some apps Mahou's function to convert last word doesn't work properly." },
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Snippets contains error in syntax, check if there are errors, details on snippets syntax you can find on Wiki." }
@@ -474,6 +484,7 @@ public class Languages
 		{ Element.tab_Layouts, "Раскладки" }, 
 		{ Element.tab_Appearence, "Вид" }, 
 		{ Element.tab_Timings, "Тайминги" }, 
+		{ Element.tab_Excluded, "Исключения" }, 
 		{ Element.tab_Snippets, "Сниппеты" }, 
 		{ Element.tab_AutoSwitch, "Автозамена" }, 
 		{ Element.tab_Hotkeys, "Горячие клавиши" }, 
@@ -556,9 +567,12 @@ public class Languages
 		{ Element.ScrollLockRefreshRate, "Скорость обновления Scroll Lock(мс):" }, 
 		{ Element.CapsLockRefreshRate, "Скорость обновления Caps Lock(мс):" }, 
 		{ Element.MoreTriesToGetSelectedText, "Использовать больше попыток взятия текста:" }, 
+		{ Element.LD_MouseSkipMessages, "Сообщений движения мыши пропускается перед обновлением подсказок:" },
+		{ Element.UseDelayAfterBackspaces, "Использовать задержку после удаления слова в конвертации слов(мс):" },
+		#endregion
+		#region Excluded
 		{ Element.ExcludedPrograms, "Программы исключения:" }, 
 		{ Element.Change1KeyLayoutInExcluded, "Менять раскладку 1 клавишей даже в исключениях." }, 
-		{ Element.LD_MouseSkipMessages, "Сообщений движения мыши пропускается перед обновлением подсказок:" },
 		#endregion
 		#region Snippets
 		{ Element.SnippetsEnabled, "Включить сниппеты." }, 
@@ -702,6 +716,7 @@ public class Languages
 		{ Element.TT_SnippetExpandKey, "Выберите какой клавишей развертывать(увеличивать/превращать) сниппеты,\r\nработает толкьо для сниппетов, автозамена как и раньше будет работать только при Space." },
 		{ Element.TT_LDUseWinMessages, "Если включено, подсказки будут обновлятся не через таймеры,\r\nвместо этого они будут обновлятся на соответствующих Сообщениях Windows.\r\nПотребляет меньше ЦП.\r\nСамая требовательная к ЦП функция - подсказка возле мыши при всегда включенной,\r\nпотребляет ЦП только при движении/кликах мыши,\r\nчтобы уменьшить ее потребление ЦП, есть новая конфигурация во вкладке Тайминги.\r\nПропуск х Сообщений Windows(движения мыши) перед обновлением подсказки." },
 		{ Element.TT_RemapCapslockAsF18, "Переопределет клавишу Caps Lock как F18, после этого функция клавиши CapsLock будет отключена.\r\nЧтобы переключить состояние Caps Lock нажмите вместе с одной из клавиш модификаторов: Ctrl/Alt/Shift/Win.\r\n! Окно Mahou исключено из переопределения!\r\nВ Mahou назначайте гор. клавиши на Caps Lock, в других программах она будет переопределена как F18.\r\nПосле смены гор. клавиш не забудьте нажать Применить или ОК." },
+		{ Element.TT_UseDelayAfterBackspaces, "Если включено Mahou будет ждать некоторое время после удаления старого слова и перед вводом конвертированного слова.\r\nПолезно если в некоторых программах функция Mahou Конверт последнего слова не работает нормально." },
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Сниппеты содержат ошибки в синтаксисе, проверьте ваши сниппеты, детали синтаксиса можете найти на Wiki." }

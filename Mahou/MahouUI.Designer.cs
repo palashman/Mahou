@@ -199,6 +199,9 @@ namespace Mahou
 		private System.Windows.Forms.CheckBox chk_SilentUpdate;
 		private System.Windows.Forms.CheckBox chk_OnlyOnWindowChange;
 		private System.Windows.Forms.CheckBox chk_ChangeLayoutOnlyOnce;
+		private System.Windows.Forms.NumericUpDown nud_DelayAfterBackspaces;
+		private System.Windows.Forms.CheckBox chk_UseDelayAfterBackspaces;
+		private System.Windows.Forms.TabPage tab_excluded;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -325,9 +328,9 @@ namespace Mahou
 			this.chk_LangTooltipCaret = new System.Windows.Forms.CheckBox();
 			this.chk_LangTooltipMouse = new System.Windows.Forms.CheckBox();
 			this.tab_timings = new System.Windows.Forms.TabPage();
-			this.txt_ExcludedPrograms = new Mahou.MahouUI.TextBoxCA();
+			this.nud_DelayAfterBackspaces = new System.Windows.Forms.NumericUpDown();
+			this.chk_UseDelayAfterBackspaces = new System.Windows.Forms.CheckBox();
 			this.nud_SelectedTextGetTriesCount = new System.Windows.Forms.NumericUpDown();
-			this.lbl_ExcludedPrograms = new System.Windows.Forms.Label();
 			this.chk_SelectedTextGetMoreTries = new System.Windows.Forms.CheckBox();
 			this.nud_CapsLockRefreshRate = new System.Windows.Forms.NumericUpDown();
 			this.lbl_CapsLockRefreshRate = new System.Windows.Forms.Label();
@@ -341,6 +344,9 @@ namespace Mahou
 			this.lbl_LangTTCaretRefreshRate = new System.Windows.Forms.Label();
 			this.nud_LangTTMouseRefreshRate = new System.Windows.Forms.NumericUpDown();
 			this.lbl_LangTTMouseRefreshRate = new System.Windows.Forms.Label();
+			this.tab_excluded = new System.Windows.Forms.TabPage();
+			this.txt_ExcludedPrograms = new Mahou.MahouUI.TextBoxCA();
+			this.lbl_ExcludedPrograms = new System.Windows.Forms.Label();
 			this.chk_Change1KeyL = new System.Windows.Forms.CheckBox();
 			this.tab_snippets = new System.Windows.Forms.TabPage();
 			this.cbb_SnippetExpandKeys = new System.Windows.Forms.ComboBox();
@@ -431,6 +437,7 @@ namespace Mahou
 			((System.ComponentModel.ISupportInitialize)(this.nud_LangTTWidth)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nud_LangTTHeight)).BeginInit();
 			this.tab_timings.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.nud_DelayAfterBackspaces)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nud_SelectedTextGetTriesCount)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nud_CapsLockRefreshRate)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nud_ScrollLockRefreshRate)).BeginInit();
@@ -438,6 +445,7 @@ namespace Mahou
 			((System.ComponentModel.ISupportInitialize)(this.nud_DoubleHK2ndPressWaitTime)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nud_LangTTCaretRefreshRate)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nud_LangTTMouseRefreshRate)).BeginInit();
+			this.tab_excluded.SuspendLayout();
 			this.tab_snippets.SuspendLayout();
 			this.tab_autoswitch.SuspendLayout();
 			this.tab_hotkeys.SuspendLayout();
@@ -460,6 +468,7 @@ namespace Mahou
 			this.tabs.Controls.Add(this.tab_persistent);
 			this.tabs.Controls.Add(this.tab_appearence);
 			this.tabs.Controls.Add(this.tab_timings);
+			this.tabs.Controls.Add(this.tab_excluded);
 			this.tabs.Controls.Add(this.tab_snippets);
 			this.tabs.Controls.Add(this.tab_autoswitch);
 			this.tabs.Controls.Add(this.tab_hotkeys);
@@ -1645,9 +1654,9 @@ namespace Mahou
 			// 
 			// tab_timings
 			// 
-			this.tab_timings.Controls.Add(this.txt_ExcludedPrograms);
+			this.tab_timings.Controls.Add(this.nud_DelayAfterBackspaces);
+			this.tab_timings.Controls.Add(this.chk_UseDelayAfterBackspaces);
 			this.tab_timings.Controls.Add(this.nud_SelectedTextGetTriesCount);
-			this.tab_timings.Controls.Add(this.lbl_ExcludedPrograms);
 			this.tab_timings.Controls.Add(this.chk_SelectedTextGetMoreTries);
 			this.tab_timings.Controls.Add(this.nud_CapsLockRefreshRate);
 			this.tab_timings.Controls.Add(this.lbl_CapsLockRefreshRate);
@@ -1661,7 +1670,6 @@ namespace Mahou
 			this.tab_timings.Controls.Add(this.lbl_LangTTCaretRefreshRate);
 			this.tab_timings.Controls.Add(this.nud_LangTTMouseRefreshRate);
 			this.tab_timings.Controls.Add(this.lbl_LangTTMouseRefreshRate);
-			this.tab_timings.Controls.Add(this.chk_Change1KeyL);
 			this.tab_timings.Location = new System.Drawing.Point(4, 44);
 			this.tab_timings.Name = "tab_timings";
 			this.tab_timings.Padding = new System.Windows.Forms.Padding(3);
@@ -1670,15 +1678,43 @@ namespace Mahou
 			this.tab_timings.Text = "Timings";
 			this.tab_timings.UseVisualStyleBackColor = true;
 			// 
-			// txt_ExcludedPrograms
+			// nud_DelayAfterBackspaces
 			// 
-			this.txt_ExcludedPrograms.Location = new System.Drawing.Point(8, 222);
-			this.txt_ExcludedPrograms.Multiline = true;
-			this.txt_ExcludedPrograms.Name = "txt_ExcludedPrograms";
-			this.txt_ExcludedPrograms.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.txt_ExcludedPrograms.Size = new System.Drawing.Size(541, 42);
-			this.txt_ExcludedPrograms.TabIndex = 21;
-			this.txt_ExcludedPrograms.Text = "LA.exe SomeProgram.exe";
+			this.nud_DelayAfterBackspaces.Increment = new decimal(new int[] {
+			5,
+			0,
+			0,
+			0});
+			this.nud_DelayAfterBackspaces.Location = new System.Drawing.Point(429, 210);
+			this.nud_DelayAfterBackspaces.Maximum = new decimal(new int[] {
+			900,
+			0,
+			0,
+			0});
+			this.nud_DelayAfterBackspaces.Minimum = new decimal(new int[] {
+			1,
+			0,
+			0,
+			0});
+			this.nud_DelayAfterBackspaces.Name = "nud_DelayAfterBackspaces";
+			this.nud_DelayAfterBackspaces.Size = new System.Drawing.Size(120, 23);
+			this.nud_DelayAfterBackspaces.TabIndex = 19;
+			this.nud_DelayAfterBackspaces.Value = new decimal(new int[] {
+			100,
+			0,
+			0,
+			0});
+			// 
+			// chk_UseDelayAfterBackspaces
+			// 
+			this.chk_UseDelayAfterBackspaces.AutoSize = true;
+			this.chk_UseDelayAfterBackspaces.Location = new System.Drawing.Point(8, 213);
+			this.chk_UseDelayAfterBackspaces.Name = "chk_UseDelayAfterBackspaces";
+			this.chk_UseDelayAfterBackspaces.Size = new System.Drawing.Size(276, 19);
+			this.chk_UseDelayAfterBackspaces.TabIndex = 18;
+			this.chk_UseDelayAfterBackspaces.Text = "Use delay after backspaces in convert last word:";
+			this.chk_UseDelayAfterBackspaces.UseVisualStyleBackColor = true;
+			this.chk_UseDelayAfterBackspaces.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
 			// 
 			// nud_SelectedTextGetTriesCount
 			// 
@@ -1701,15 +1737,6 @@ namespace Mahou
 			0,
 			0,
 			0});
-			// 
-			// lbl_ExcludedPrograms
-			// 
-			this.lbl_ExcludedPrograms.AutoSize = true;
-			this.lbl_ExcludedPrograms.Location = new System.Drawing.Point(22, 203);
-			this.lbl_ExcludedPrograms.Name = "lbl_ExcludedPrograms";
-			this.lbl_ExcludedPrograms.Size = new System.Drawing.Size(111, 15);
-			this.lbl_ExcludedPrograms.TabIndex = 22;
-			this.lbl_ExcludedPrograms.Text = "Excluded programs:";
 			// 
 			// chk_SelectedTextGetMoreTries
 			// 
@@ -1878,13 +1905,45 @@ namespace Mahou
 			this.lbl_LangTTMouseRefreshRate.TabIndex = 0;
 			this.lbl_LangTTMouseRefreshRate.Text = "Language tooltip around mouse refresh rate(ms):";
 			// 
+			// tab_excluded
+			// 
+			this.tab_excluded.Controls.Add(this.txt_ExcludedPrograms);
+			this.tab_excluded.Controls.Add(this.lbl_ExcludedPrograms);
+			this.tab_excluded.Controls.Add(this.chk_Change1KeyL);
+			this.tab_excluded.Location = new System.Drawing.Point(4, 44);
+			this.tab_excluded.Name = "tab_excluded";
+			this.tab_excluded.Padding = new System.Windows.Forms.Padding(3);
+			this.tab_excluded.Size = new System.Drawing.Size(559, 268);
+			this.tab_excluded.TabIndex = 11;
+			this.tab_excluded.Text = "Excluded";
+			this.tab_excluded.UseVisualStyleBackColor = true;
+			// 
+			// txt_ExcludedPrograms
+			// 
+			this.txt_ExcludedPrograms.Location = new System.Drawing.Point(8, 26);
+			this.txt_ExcludedPrograms.Multiline = true;
+			this.txt_ExcludedPrograms.Name = "txt_ExcludedPrograms";
+			this.txt_ExcludedPrograms.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+			this.txt_ExcludedPrograms.Size = new System.Drawing.Size(541, 236);
+			this.txt_ExcludedPrograms.TabIndex = 24;
+			this.txt_ExcludedPrograms.Text = "LA.exe SomeProgram.exe";
+			// 
+			// lbl_ExcludedPrograms
+			// 
+			this.lbl_ExcludedPrograms.AutoSize = true;
+			this.lbl_ExcludedPrograms.Location = new System.Drawing.Point(20, 8);
+			this.lbl_ExcludedPrograms.Name = "lbl_ExcludedPrograms";
+			this.lbl_ExcludedPrograms.Size = new System.Drawing.Size(111, 15);
+			this.lbl_ExcludedPrograms.TabIndex = 25;
+			this.lbl_ExcludedPrograms.Text = "Excluded programs:";
+			// 
 			// chk_Change1KeyL
 			// 
 			this.chk_Change1KeyL.AutoSize = true;
-			this.chk_Change1KeyL.Location = new System.Drawing.Point(187, 201);
+			this.chk_Change1KeyL.Location = new System.Drawing.Point(185, 6);
 			this.chk_Change1KeyL.Name = "chk_Change1KeyL";
 			this.chk_Change1KeyL.Size = new System.Drawing.Size(243, 19);
-			this.chk_Change1KeyL.TabIndex = 23;
+			this.chk_Change1KeyL.TabIndex = 26;
 			this.chk_Change1KeyL.Text = "Change layout by 1 key even in excluded.";
 			this.chk_Change1KeyL.UseVisualStyleBackColor = true;
 			// 
@@ -2738,6 +2797,7 @@ namespace Mahou
 			((System.ComponentModel.ISupportInitialize)(this.nud_LangTTHeight)).EndInit();
 			this.tab_timings.ResumeLayout(false);
 			this.tab_timings.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.nud_DelayAfterBackspaces)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nud_SelectedTextGetTriesCount)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nud_CapsLockRefreshRate)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nud_ScrollLockRefreshRate)).EndInit();
@@ -2745,6 +2805,8 @@ namespace Mahou
 			((System.ComponentModel.ISupportInitialize)(this.nud_DoubleHK2ndPressWaitTime)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nud_LangTTCaretRefreshRate)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nud_LangTTMouseRefreshRate)).EndInit();
+			this.tab_excluded.ResumeLayout(false);
+			this.tab_excluded.PerformLayout();
 			this.tab_snippets.ResumeLayout(false);
 			this.tab_snippets.PerformLayout();
 			this.tab_autoswitch.ResumeLayout(false);

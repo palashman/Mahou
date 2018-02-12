@@ -273,8 +273,10 @@ namespace Mahou {
 			#endregion
 			#region Timings section
 			CheckInt("Timings", "LangTooltipForMouseSkipMessages", "5");
+			#region Excluded
             CheckBool("Timings", "ChangeLayoutInExcluded", "true");
 			CheckString("Timings", "ExcludedPrograms", "LA.exe SomeProg.exe");
+			#endregion
 			CheckInt("Timings", "SelectedTextGetMoreTriesCount", "5");
 			CheckBool("Timings", "SelectedTextGetMoreTries", "false");
 			CheckInt("Timings", "CapsLockDisableRefreshRate", "100");
@@ -283,6 +285,9 @@ namespace Mahou {
 			CheckInt("Timings", "DoubleHotkey2ndPressWait", "350");
 			CheckInt("Timings", "LangTooltipForCaretRefreshRate", "25");
 			CheckInt("Timings", "LangTooltipForMouseRefreshRate", "25");
+			CheckBool("Timings", "UseDelayAfterBackspaces", "false");
+			CheckInt("Timings", "DelayAfterBackspaces", "100");
+			
 			#endregion
 			#region Appearence section
 			CheckBool("Appearence", "WindowsMessages", "true");
