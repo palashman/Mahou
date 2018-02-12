@@ -590,13 +590,15 @@ namespace Mahou
 				uint pid;
 				WinAPI.GetWindowThreadProcessId(hwnd, out pid);
 				Process prc = null;
-				try { prc = Process.GetProcessById((int)pid); } catch { Logging.Log("Process with id ["+pid+"] not exist...", 1); }
-				if (prc == null) return false;
-				if (MMain.mahou.ExcludedPrograms.Replace(Environment.NewLine, " ").ToLower().Contains(prc.ProcessName.ToLower().Replace(" ", "_") + ".exe")) {
-					Logging.Log(prc.ProcessName + ".exe->excluded");
-					EXCLUDED_HWNDs.Add(hwnd);
-					return true;
-				}
+				try { 
+					prc = Process.GetProcessById((int)pid);
+					if (prc == null) return false;
+					if (MMain.mahou.ExcludedPrograms.Replace(Environment.NewLine, " ").ToLower().Contains(prc.ProcessName.ToLower().Replace(" ", "_") + ".exe")) {
+						Logging.Log(prc.ProcessName + ".exe->excluded");
+						EXCLUDED_HWNDs.Add(hwnd);
+						return true;
+					}
+				} catch { Logging.Log("Process with id ["+pid+"] not exist...", 1); }
 			} else {
 				Logging.Log("Excluded program by excluded program saved hwnd: " + hwnd);
 				return true;
