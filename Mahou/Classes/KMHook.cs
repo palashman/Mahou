@@ -637,6 +637,13 @@ namespace Mahou
 						    return;
 					    }
 						if (speclayout == MMain.Lang[Languages.Element.SwitchBetween]) {
+							if (specificKey == 11 && (
+								(Key == Keys.LShiftKey && ctrl) || (Key == Keys.RShiftKey && ctrl_r) ||
+								(Key == Keys.LControlKey && shift) || (Key == Keys.RControlKey && shift_r)) && !win && !win_r && !alt && !alt_r) {
+								Logging.Log("Changing layout by Ctrl+Shift key.");
+								ChangeLayout();
+						    	return;
+							}
 							if (specificKey == 10 && (
 								(Key == Keys.LShiftKey && alt) || (Key == Keys.RShiftKey && alt_r) ||
 								(Key == Keys.LMenu && shift) || (Key == Keys.RMenu && shift_r)) && !win && !win_r && !ctrl && !ctrl_r) {
