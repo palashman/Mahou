@@ -1,4 +1,7 @@
-[![AppVeyor build](https://ci.appveyor.com/api/projects/status/aw3qf8bevpqdidjh?svg=true)](https://ci.appveyor.com/project/BladeMight/mahou) [![HitCount](http://hits.dwyl.io/BladeMight/Mahou.svg)](http://hits.dwyl.io/BladeMight/Mahou)
+[![GitHub release](https://img.shields.io/github/release/BladeMight/Mahou.svg?style=flat-square)]()
+[![AppVeyor build](https://img.shields.io/appveyor/ci/BladeMight/Mahou.svg?style=flat-square)](https://ci.appveyor.com/project/BladeMight/mahou) [![HitCount](http://hits.dwyl.io/BladeMight/Mahou.svg)](http://hits.dwyl.io/BladeMight/Mahou) 
+[![GitHub latest release downloads](https://img.shields.io/github/downloads/BladeMight/Mahou/latest/total.svg?style=flat-square)](https://github.com/BladeMight/Mahou/releases/latest)
+[![GitHub downloads](https://img.shields.io/github/downloads/BladeMight/Mahou/total.svg?style=flat-square)](https://github.com/BladeMight/Mahou/releases)
 
 # Русский [read in English](#english)
 
