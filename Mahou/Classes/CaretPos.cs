@@ -97,7 +97,6 @@ namespace Mahou {
 						return LuckyNone;
 					Logging.Log("CaretPos = x["+_pntCR.X+"], y["+_pntCR.Y+"].");	
 					var _clsNM = _clsNMb.ToString().ToLower();
-					System.Diagnostics.Debug.WriteLine("LPS: " + _pntCR + " C" + _clsNM);
 					// Do not display caret for these classes:
 					if (_clsNM.Contains("listbox") || _clsNM.Contains("button") || 
 						_clsNM.Contains("checkbox") || _clsNM.Contains("combobox") || 

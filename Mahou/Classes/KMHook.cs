@@ -17,7 +17,7 @@ namespace Mahou
 			keyAfterCTRL, keyAfterALT, keyAfterSHIFT,
 			clickAfterCTRL, clickAfterALT, clickAfterSHIFT,
 			hotkeywithmodsfired, csdoing, incapt, waitfornum, 
-			IsHotkey, ff_wheeled, preSnip, LMB_down, RMB_down, MMB_down;
+			IsHotkey, ff_chr_wheeled, preSnip, LMB_down, RMB_down, MMB_down;
 		public static int skip_mouse_events, skip_spec_keys;
 		static string lastClipText = "";
 		static List<Keys> tempNumpads = new List<Keys>();
@@ -56,7 +56,7 @@ namespace Mahou
 		#region Keyboard, Mouse & Event hooks callbacks
 		public static void ListenKeyboard(int vkCode, uint MSG, short Flags = 0) {
 			if (MMain.mahou.CaretLangTooltipEnabled)
-				ff_wheeled = false;
+				ff_chr_wheeled = false;
 			if (vkCode > 254) return;
 			var Key = (Keys)vkCode; // "Key" will further be used instead of "(Keys)vkCode"
 			if (MMain.c_words.Count == 0) {
@@ -435,8 +435,9 @@ namespace Mahou
 					var _fw = WinAPI.GetForegroundWindow();
 					var _clsNMb = new StringBuilder(40);
 					WinAPI.GetClassName(_fw, _clsNMb, _clsNMb.Capacity);
-					if (_clsNMb.ToString() == "MozillaWindowClass")
-						ff_wheeled = true;
+					var clsNM = _clsNMb.ToString();
+					if (clsNM == "MozillaWindowClass" || clsNM.Contains("mozilla") || clsNM.Contains("Chrome_WidgetWin"))
+						ff_chr_wheeled = true;
 				}
 			}
 			if (MSG == (ushort)WinAPI.RawMouseButtons.LeftDown || MSG == (ushort)WinAPI.RawMouseButtons.RightDown) {
@@ -470,6 +471,11 @@ namespace Mahou
 						MMain.mahou.UpdateCaredLD();
 					}
 				}
+				if (MSG == (ushort)WinAPI.RawMouseButtons.LeftUp ||
+					MSG == (ushort)WinAPI.RawMouseButtons.RightUp ||
+					MSG == (ushort)WinAPI.RawMouseButtons.MiddleUp)
+					if (MMain.mahou.CaretLangTooltipEnabled)
+						ff_chr_wheeled = false;
 				if (skip_mouse_events-- == 0 || skip_mouse_events == 0) {
 					skip_mouse_events = MahouUI.LD_MouseSkipMessagesCount;
 					if (MSG == (ushort)WinAPI.RawMouseFlags.MoveRelative) {

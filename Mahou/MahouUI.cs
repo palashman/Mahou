@@ -1721,7 +1721,7 @@ DEL "+restartMahouPath;
 					res.Start();
 				}
 			} else {
-				if (KMHook.ff_wheeled || caretLangDisplay.Empty)
+				if (KMHook.ff_chr_wheeled || caretLangDisplay.Empty)
 					caretLangDisplay.HideWnd();
 				else if (crtOnly.X != 77777 && crtOnly.Y != 77777) // 77777x77777 is null/none point
 					caretLangDisplay.ShowInactiveTopmost();
