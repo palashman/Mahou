@@ -97,11 +97,12 @@ namespace Mahou {
 						return LuckyNone;
 					Logging.Log("CaretPos = x["+_pntCR.X+"], y["+_pntCR.Y+"].");	
 					var _clsNM = _clsNMb.ToString().ToLower();
+					System.Diagnostics.Debug.WriteLine("LPS: " + _pntCR + " C" + _clsNM);
 					// Do not display caret for these classes:
 					if (_clsNM.Contains("listbox") || _clsNM.Contains("button") || 
 						_clsNM.Contains("checkbox") || _clsNM.Contains("combobox") || 
 						_clsNM.Contains("listview") || _clsNM.Contains("pagecontrol") || 
-						_clsNM.Contains("window") || _clsNM.Contains("syslink") || 
+						(_clsNM.Contains("window") && !_clsNM.Contains("mozilla")) || _clsNM.Contains("syslink") ||
 						_clsNM.Contains("tree") || _clsNM.Contains("helpform") || 
 						_clsNM.Contains("tmainform") || _clsNM.Contains("btn") ||  
 						_clsNM.Contains("удалить") || _clsNM.Contains("delete") ||
