@@ -1554,7 +1554,7 @@ namespace Mahou
 				});
 				Thread.Sleep(70); //Important!
 			}
-			MahouUI.currentLayout = MahouUI.GlobalLayout = Locales.GetCurrentLocale();
+			DoLater(() => { MahouUI.currentLayout = MahouUI.GlobalLayout = Locales.GetCurrentLocale(); }, 10);
 		}
 		/// <summary>
 		/// Changing layout to next with PostMessage and WM_INPUTLANGCHANGEREQUEST and LParam HKL_NEXT.
