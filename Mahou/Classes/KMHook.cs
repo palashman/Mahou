@@ -862,10 +862,15 @@ namespace Mahou
 							Logging.Log("Using CS-Switch mode.");
 							var wasLocale = Locales.GetCurrentLocale() & 0xffff;
 							var wawasLocale = wasLocale & 0xffff;
-							var nowLocale = wasLocale == (MahouUI.MAIN_LAYOUT1 & 0xffff)
-								? MahouUI.MAIN_LAYOUT2 & 0xffff
-								: MahouUI.MAIN_LAYOUT1 & 0xffff;
 							ChangeLayout();
+							uint nowLocale = 0;
+							if(MMain.mahou.SwitchBetweenLayouts)
+								nowLocale = wasLocale == (MahouUI.MAIN_LAYOUT1 & 0xffff)
+									? MahouUI.MAIN_LAYOUT2 & 0xffff
+									: MahouUI.MAIN_LAYOUT1 & 0xffff;
+							else {
+								Thread.Sleep(10); nowLocale = Locales.GetCurrentLocale() & 0xffff;
+							}
 							var index = 0;
 							foreach (char c in ClipStr) {
 								items++;
