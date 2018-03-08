@@ -28,7 +28,7 @@ namespace Mahou {
 		/// </summary>
 		public static string nPath = AppDomain.CurrentDomain.BaseDirectory;
 		public static bool LoggingEnabled, dummy, CapsLockDisablerTimer, LangPanelUpperArrow, mouseLTUpperArrow, caretLTUpperArrow,
-						   ShiftInHotkey, AltInHotkey, CtrlInHotkey, WinInHotkey, AutoStartAsAdmin;
+						   ShiftInHotkey, AltInHotkey, CtrlInHotkey, WinInHotkey, AutoStartAsAdmin, GetLayoutFromTaskbar;
 		static string[] UpdInfo;
 		static bool updating, was, isold = true, checking, snip_checking, as_checking, check_ASD_size = true;
 		#region Timers
@@ -685,6 +685,7 @@ namespace Mahou {
 				MMain.MyConfs.Write("Appearence", "MouseLTAlways", chk_MouseTTAlways.Checked.ToString());
 				MMain.MyConfs.Write("Functions", "GuessKeyCodeFix", chk_GuessKeyCodeFix.Checked.ToString());
 				MMain.MyConfs.Write("Functions", "RemapCapslockAsF18", chk_RemapCapsLockAsF18.Checked.ToString());
+				MMain.MyConfs.Write("Functions", "GetLayoutFromTaskbar", chk_GetLayoutFromTaskbar.Checked.ToString());
 				#endregion
 				#region Layouts
 				MMain.MyConfs.Write("Layouts", "SwitchBetweenLayouts", chk_SwitchBetweenLayouts.Checked.ToString());
@@ -887,6 +888,7 @@ namespace Mahou {
 			CaretLangTooltipEnabled = MMain.MyConfs.ReadBool("Appearence", "DisplayLangTooltipForCaret");
 			GuessKeyCodeFix = chk_GuessKeyCodeFix.Checked = MMain.MyConfs.ReadBool("Functions", "GuessKeyCodeFix");
 			RemapCapslockAsF18 = chk_RemapCapsLockAsF18.Checked = MMain.MyConfs.ReadBool("Functions", "RemapCapslockAsF18");
+			GetLayoutFromTaskbar = chk_GetLayoutFromTaskbar.Checked = MMain.MyConfs.ReadBool("Functions", "GetLayoutFromTaskbar");
 			if (RemapCapslockAsF18)
 				LLHook.Set();
 			else
@@ -2853,6 +2855,7 @@ DEL ""ExtractASD.cmd""";
 			chk_GuessKeyCodeFix.Text = MMain.Lang[Languages.Element.GuessKeyCodeFix];
 			chk_AppDataConfigs.Text = MMain.Lang[Languages.Element.ConfigsInAppData];
 			chk_RemapCapsLockAsF18.Text = MMain.Lang[Languages.Element.RemapCapslockAsF18];
+			chk_GetLayoutFromTaskbar.Text = MMain.Lang[Languages.Element.GetLayoutFromTaskbar];
 			#endregion
 			#region Layouts
 			chk_SwitchBetweenLayouts.Text = MMain.Lang[Languages.Element.SwitchBetween]+":";
@@ -3053,6 +3056,7 @@ DEL ""ExtractASD.cmd""";
 			HelpMeUnderstand.SetToolTip(chk_OnlyOnWindowChange, MMain.Lang[Languages.Element.TT_SwitchOnlyOnWindowChange]);
 			HelpMeUnderstand.SetToolTip(chk_ChangeLayoutOnlyOnce, MMain.Lang[Languages.Element.TT_SwitchOnlyOnce]);
 			HelpMeUnderstand.SetToolTip(chk_UseDelayAfterBackspaces, MMain.Lang[Languages.Element.TT_UseDelayAfterBackspaces]);
+			HelpMeUnderstand.SetToolTip(chk_GetLayoutFromTaskbar, MMain.Lang[Languages.Element.TT_GetLayoutFromTaskbar]);
 		}
 		void HelpMeUnderstandPopup(object sender, PopupEventArgs e) {
 			HelpMeUnderstand.ToolTipTitle = e.AssociatedControl.Text;

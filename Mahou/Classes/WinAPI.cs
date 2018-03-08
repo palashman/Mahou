@@ -291,6 +291,8 @@ public static class WinAPI {
 	public static extern short VkKeyScanEx(char ch, uint dwhkl);
     #endregion
 	#region Locales/CaretPos requires
+	[DllImport("user32.dll", SetLastError = true)]
+	public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 	[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 	public static extern IntPtr GetKeyboardLayout(uint WindowsThreadProcessID);
 	

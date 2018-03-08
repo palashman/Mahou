@@ -202,6 +202,7 @@ namespace Mahou
 		private System.Windows.Forms.NumericUpDown nud_DelayAfterBackspaces;
 		private System.Windows.Forms.CheckBox chk_UseDelayAfterBackspaces;
 		private System.Windows.Forms.TabPage tab_excluded;
+		private System.Windows.Forms.CheckBox chk_GetLayoutFromTaskbar;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -418,6 +419,7 @@ namespace Mahou
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
 			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
+			this.chk_GetLayoutFromTaskbar = new System.Windows.Forms.CheckBox();
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -485,6 +487,7 @@ namespace Mahou
 			// 
 			// tab_functions
 			// 
+			this.tab_functions.Controls.Add(this.chk_GetLayoutFromTaskbar);
 			this.tab_functions.Controls.Add(this.chk_SilentUpdate);
 			this.tab_functions.Controls.Add(this.chk_Logging);
 			this.tab_functions.Controls.Add(this.chk_Add1NL);
@@ -2752,6 +2755,16 @@ namespace Mahou
 			this.HelpMeUnderstand.ShowAlways = true;
 			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.HelpMeUnderstand.Popup += new System.Windows.Forms.PopupEventHandler(this.HelpMeUnderstandPopup);
+			// 
+			// chk_GetLayoutFromTaskbar
+			// 
+			this.chk_GetLayoutFromTaskbar.AutoSize = true;
+			this.chk_GetLayoutFromTaskbar.Location = new System.Drawing.Point(302, 174);
+			this.chk_GetLayoutFromTaskbar.Name = "chk_GetLayoutFromTaskbar";
+			this.chk_GetLayoutFromTaskbar.Size = new System.Drawing.Size(180, 19);
+			this.chk_GetLayoutFromTaskbar.TabIndex = 25;
+			this.chk_GetLayoutFromTaskbar.Text = "Retrieve layout from TaskBar.";
+			this.chk_GetLayoutFromTaskbar.UseVisualStyleBackColor = true;
 			// 
 			// MahouUI
 			// 

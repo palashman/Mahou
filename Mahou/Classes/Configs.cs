@@ -382,6 +382,7 @@ namespace Mahou {
 			CheckBool("Layouts", "SwitchBetweenLayouts", "true");
 			#endregion
             #region Functions section
+            CheckBool("Functions", "GetLayoutFromTaskbar", "false");
             CheckBool("Functions", "RemapCapslockAsF18", "true");
             CheckBool("Functions", "AppDataConfigs", forceAppData.ToString());
             CheckBool("Functions", "GuessKeyCodeFix", "false");

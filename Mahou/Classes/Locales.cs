@@ -23,6 +23,8 @@ namespace Mahou
 				actv = ActiveWindow();
 			else 
 				actv = byHwnd;
+			if (MahouUI.GetLayoutFromTaskbar)
+				actv = WinAPI.FindWindow("Shell_TrayWnd", "");
 			uint pid = 0;
 			uint tid = WinAPI.GetWindowThreadProcessId(actv, out pid);
 			IntPtr layout = WinAPI.GetKeyboardLayout(tid);
