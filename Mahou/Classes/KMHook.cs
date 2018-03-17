@@ -314,7 +314,7 @@ namespace Mahou
 				}
 				//Pressing any of these Keys will empty current word, and snippet
 				if (Key == Keys.Home || Key == Keys.End ||
-				   Key == Keys.Tab || Key == Keys.PageDown || Key == Keys.PageUp ||
+				    (Key == Keys.Tab && MMain.mahou.SnippetsExpandType != "Tab" && snipps.Length > 0) || Key == Keys.PageDown || Key == Keys.PageUp ||
 				   Key == Keys.Left || Key == Keys.Right || Key == Keys.Down || Key == Keys.Up ||
 				   Key == Keys.BrowserSearch || 
 				   ((ctrl||win||alt||ctrl_r||win_r||alt_r) && (Key != Keys.Menu  && //Ctrl modifier and key which is not modifier
@@ -535,7 +535,7 @@ namespace Mahou
 						ChangeToLayout(Locales.ActiveWindow(), guess.Item2);
 					}
 					if (!ignoreExpand) {
-		       			for (int e = -1; e < snip.Length; e++) {
+			       			for (int e = -1 + (MMain.mahou.SnippetsExpandType == "Tab" ? 1 : 0); e < snip.Length; e++) {
 							KInputs.MakeInput(new [] { KInputs.AddKey(Keys.Back, true),
 								KInputs.AddKey(Keys.Back, false) 
 							});
