@@ -168,6 +168,8 @@ namespace Mahou {
 		public MahouUI() {
 			InitializeComponent();
 			InitializeTrayIcon();
+			// Switch to more secure connection.
+			ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
 			LoadConfigs();
 			InitializeListBoxes();
 			// Set minnimum values because they're ALWAYS restores to 0 after Form Editor is used.
@@ -2591,8 +2593,7 @@ DEL ""%MAHOUDIR%UpdateMahou.cmd""";
 					request.Proxy = MakeProxy();
 				}
 				request.ServicePoint.SetTcpKeepAlive(true, 5000, 1000);
-                var response = (HttpWebResponse)System.Threading.Tasks.Task.Factory
-                    .FromAsync<WebResponse>(request.BeginGetResponse,request.EndGetResponse, null).Result;
+				var response = (HttpWebResponse)request.GetResponse();
                 if (response.StatusCode == HttpStatusCode.OK) {
 					var data = new StreamReader(response.GetResponseStream(), true).ReadToEnd();
 					response.Close();
