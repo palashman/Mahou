@@ -29,6 +29,22 @@ Mahou работает так как **Вы** хотите, настраивай
 
 ###### Возможности по версиям:
 
+**v2.5.9.3**<br/>
+
+- 📝 Исправлены ошибка соединения с GitHub при обновлении. (#170)
+
+    Произошло из-за того что GitHub поменял свой сертификат доступа к сайту на более безопасный...
+
+- 🐛 Исправлена работа Tab как клавиша развертываня сниппета, происходящая из-за его очистки ранее. (#169)
+- 💎 Добавлена функция "Получать раскладку с панели задач". (#168) 
+- 🐛 Добавлено исправление неправильного флага при включенной функции эмуляции переключения раскладки.
+- 💎 Исправлено что конвертация выделенного не работала для более чем 2 раскладках.
+- 🐛 Исправлено исправление позиции подсказки языка возле каретки в Firefox.
+- 💎 Добавлено исправление позиции подсказки языка возле каретки в Firefox для браузеров основаных на Chromium/Electron.
+- 🐛 Исправлено что подсказка языка возле каретки не отображалась в Firefox(57+).
+- 💎 Добавлен метод Ctrl+Shift для функции "Менять раскладку 1 клавишей".
+- 📝 Исправлена ошибка возникающая при получении имени процесса, который уже не существует.
+
 **v2.5.9.0**<br/>
 
 - 📝 Обновлен RegEx по которому берется размер AS-Dict в zip.
@@ -521,6 +537,24 @@ Even selected text switches just between **selected** layouts, though if you lik
 6. Read the [wiki](https://github.com/BladeMight/Mahou/wiki/Functions-list) or [ask me](#license).
 
 ###### By version features:
+
+**v2.5.9.3**<br/>
+
+- 📝 Fixed updates connection to GitHub error. (#170)
+
+    Happens due to GitHub's switch to more secure protocol...
+
+- 🐛 Fixed Tab wasn't working properly for expand snippet due to snippet clear. (#169)
+- 💎 Added Get layout from Taskbar feature. (#168) 
+- 🐛 Added fix for wrong country flag detection on emulate layout switching.
+- 💎 Fixed convert selection wasn't switching for more than 2 layouts.
+- 🐛 Fixed caret langauge tooltip Firefox scroll fix.
+- 💎 Added Firefox caret language tooltip scroll fix for Chrome-alike browsers.
+- 🐛 Fixed caret language tooltip wasn't displaying in new Firefox(57+).
+- 💎 Added Ctrl+Shift to switch layout by 1 key.
+- 📝 Process instance seems can't get process name after process exit.
+
+    It should just contain data, but even so it sometimes can't get it name because process exited, that means it should catch each exception on whole manipulation of process instance to determine if process really exists.
 
 **v2.5.9.0**<br/>
 
