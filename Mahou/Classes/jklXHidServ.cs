@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Runtime.InteropServices;
 
 namespace Mahou {
@@ -15,25 +16,27 @@ namespace Mahou {
 		        HWND = IntPtr.Zero;
 			}
 	    }
-	    static public void Init() {
-	        WNDPROC_DELEGATE = jklWndProc;
-	        var wnd_class = new WinAPI.WNDCLASS();
-	        wnd_class.lpszClassName = "_XHIDDEN_HWND_SERVER";
-	        wnd_class.lpfnWndProc = Marshal.GetFunctionPointerForDelegate(WNDPROC_DELEGATE);
-	        UInt16 cls_reg = WinAPI.RegisterClassW(ref wnd_class);
-	        int last_error = Marshal.GetLastWin32Error();
-	        if (cls_reg == 0 && last_error != WinAPI.ERROR_CLASS_ALREADY_EXISTS) {
-	            Logging.Log("Could not register window class, for jkl Hidden Server, err: " + last_error, 1);
-	        }
-	        HWND = WinAPI.CreateWindowExW(0, "_XHIDDEN_HWND_SERVER", String.Empty, 0, 0, 0, 0, 0,
-	                                      IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
-			try {
-				System.Diagnostics.Process.Start("jkl.exe");
-			} catch { Logging.Log("jkl.exe not found!", 1); }
-			System.Threading.Thread.Sleep(250);
-			try {
-				jkluMSG = Convert.ToInt32(System.IO.File.ReadAllText("umsg.id"));
-			} catch (Exception e) { Logging.Log("Error with umsg.id, details:\r\n" + e.Message + "\r\n" + e.StackTrace, 1); }
+	    public static void Init() {
+			if (HWND == IntPtr.Zero) {
+		        WNDPROC_DELEGATE = jklWndProc;
+		        var wnd_class = new WinAPI.WNDCLASS();
+		        wnd_class.lpszClassName = "_XHIDDEN_HWND_SERVER";
+		        wnd_class.lpfnWndProc = Marshal.GetFunctionPointerForDelegate(WNDPROC_DELEGATE);
+		        UInt16 cls_reg = WinAPI.RegisterClassW(ref wnd_class);
+		        int last_error = Marshal.GetLastWin32Error();
+		        if (cls_reg == 0 && last_error != WinAPI.ERROR_CLASS_ALREADY_EXISTS) {
+		            Logging.Log("Could not register window class, for jkl Hidden Server, err: " + last_error, 1);
+		        }
+		        HWND = WinAPI.CreateWindowExW(0, "_XHIDDEN_HWND_SERVER", "_XHIDDEN_HWND_SERVER", 0, 0, 0, 0, 0,
+		                                      IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
+				try {
+					System.Diagnostics.Process.Start("jkl.exe");
+				} catch { Logging.Log("jkl.exe not found!", 1); }
+				Thread.Sleep(250);
+				try {
+					jkluMSG = Convert.ToInt32(System.IO.File.ReadAllText("umsg.id"));
+				} catch (Exception e) { Logging.Log("Error with umsg.id, details:\r\n" + e.Message + "\r\n" + e.StackTrace, 1); }
+			}
 	    }	
 	    static IntPtr jklWndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)  {
 			if (msg == jkluMSG) {
