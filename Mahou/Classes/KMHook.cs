@@ -1464,15 +1464,19 @@ namespace Mahou
 				                  	KInputs.AddKey(Keys.LControlKey, false)});
 				Thread.Sleep(13);
 			} else {
-				var nowLocale = Locales.GetCurrentLocale();
-				if (MahouUI.UseJKL)
-					if (nowLocale == 0)
-						nowLocale = MahouUI.currentLayout;
-				uint notnowLocale = nowLocale == MahouUI.MAIN_LAYOUT1
-	                ? MahouUI.MAIN_LAYOUT2
-	                : MahouUI.MAIN_LAYOUT1;
 				if (MMain.mahou.SwitchBetweenLayouts) {
-					ChangeToLayout(Locales.ActiveWindow(), notnowLocale);
+					uint last = 0;
+					for (int i=2; i!=0; i--) {
+						var nowLocale = Locales.GetCurrentLocale();
+						if (MahouUI.UseJKL)
+							if (nowLocale == 0 || last == nowLocale)
+								nowLocale = MahouUI.currentLayout;
+						uint notnowLocale = nowLocale == MahouUI.MAIN_LAYOUT1
+			                ? MahouUI.MAIN_LAYOUT2
+			                : MahouUI.MAIN_LAYOUT1;
+						last = nowLocale;
+						ChangeToLayout(Locales.ActiveWindow(), notnowLocale);
+					}
 				} else {
 					if (MMain.mahou.EmulateLS) {
 						CycleEmulateLayoutSwitch();
@@ -1501,14 +1505,20 @@ namespace Mahou
 		static void NormalChangeToLayout(IntPtr hwnd, uint LayoutId) {
 			Logging.Log("Changing layout using normal mode, WinAPI.PostMessage [WinAPI.WM_INPUTLANGCHANGEREQUEST] with LParam ["+LayoutId+"].");
 			int tries = 0;
+			uint last = 0;
+			var loc = Locales.GetCurrentLocale();
 			//Cycles while layout not changed
-			while (Locales.GetCurrentLocale() != LayoutId) {
+			do {
+				if (MahouUI.UseJKL)
+					if (loc == last)
+						loc = MahouUI.currentLayout;
 				WinAPI.PostMessage(hwnd, WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, LayoutId);
 				Thread.Sleep(10);//Give some time to switch layout
 				tries++;
-				if (tries == 3)
+				if (tries == MMain.locales.Length)
 					break;
-			}
+				last = loc;
+			} while (loc != LayoutId);
 			if (!MahouUI.UseJKL)
 				MahouUI.currentLayout = MahouUI.GlobalLayout = LayoutId;
 		}
@@ -1522,9 +1532,10 @@ namespace Mahou
 			Logging.Log("Changing to specific layout ["+LayoutId+"] by emulating layout switch.");
 			for (int i = MMain.locales.Length; i != 0; i --) {
 				uint loc = Locales.GetCurrentLocale();
-				if (MahouUI.UseJKL && loc == 0) {
+				if (MahouUI.UseJKL && (loc == 0 || loc == last)) {
 					jklXHidServ.start_cyclEmuSwitch = true;
 					jklXHidServ.cycleEmuDesiredLayout = LayoutId;
+					Debug.WriteLine("LI: " + LayoutId);
 					CycleEmulateLayoutSwitch();
 					break;
 				} else {
@@ -1536,6 +1547,7 @@ namespace Mahou
 					CycleEmulateLayoutSwitch();
 					Thread.Sleep(30);
 				}
+				last = loc;
 				if (!failed)
 					break;
 			}
@@ -1588,27 +1600,31 @@ namespace Mahou
 		static void CycleLayoutSwitch() {
 			Logging.Log("Changing layout using cycle mode by sending Message [WinAPI.WM_INPUTLANGCHANGEREQUEST] with LParam [HKL_NEXT] using WinAPI.PostMessage to ActiveWindow");
 			//Use WinAPI.PostMessage to switch to next layout
-			var cur = Locales.GetCurrentLocale(); 
-			if (MahouUI.UseJKL)
-				if (cur == 0)
-					cur = MahouUI.currentLayout;
-			Thread.Sleep(5);
-			var curind = MMain.locales.ToList().FindIndex(lid => lid.uId == cur);
-			int lidc = 0;
-			foreach (var l in MMain.locales) {
-				if (curind == MMain.locales.Length - 1) {
-					Logging.Log("Locales BREAK!");
-					ChangeToLayout(Locales.ActiveWindow(), MMain.locales[0].uId);
-					break;
-				}
-				Logging.Log("LIDC = "+lidc +" curid = "+curind + " Lidle = " +(MMain.locales.Length - 1));
-				if (lidc > curind)
-					if (l.uId != cur) {
-						Logging.Log("Locales +1 Next BREAK!");
-						ChangeToLayout(Locales.ActiveWindow(), l.uId);
+			uint last = 0;
+			for (int i=MMain.locales.Length; i!=0; i--) {
+				var cur = Locales.GetCurrentLocale(); 
+				if (MahouUI.UseJKL)
+					if (cur == 0 || cur == last)
+						cur = MahouUI.currentLayout;
+				Thread.Sleep(5);
+				var curind = MMain.locales.ToList().FindIndex(lid => lid.uId == cur);
+				int lidc = 0;
+				foreach (var l in MMain.locales) {
+					if (curind == MMain.locales.Length - 1) {
+						Logging.Log("Locales BREAK!");
+						ChangeToLayout(Locales.ActiveWindow(), MMain.locales[0].uId);
 						break;
+					}
+					Logging.Log("LIDC = "+lidc +" curid = "+curind + " Lidle = " +(MMain.locales.Length - 1));
+					if (lidc > curind)
+						if (l.uId != cur) {
+							Logging.Log("Locales +1 Next BREAK!");
+							ChangeToLayout(Locales.ActiveWindow(), l.uId);
+							break;
+					}
+					lidc++;
 				}
-				lidc++;
+				last = cur;
 			}
 		}
 		/// <summary>
