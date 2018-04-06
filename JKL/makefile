@@ -6,7 +6,7 @@ all: ./bin/ ./obj/ objx64 objx86 dllDEL
 	gcc ./obj/$(name).o $(dllflg) ./bin/$(name).dll
 	$(gcc32) ./obj/$(name)x86.o $(dllflg) ./bin/$(name)x86.dll
 	gcc ./obj/$(name).exe.o $(exeflg) ./bin/$(name).exe
-	$(gcc32) ./obj/$(name)x86.exe.o -lpthread $(exeflg) ./bin/$(name)x86.exe
+	$(gcc32) ./obj/$(name)x86.exe.o -Wl,-Bstatic -lpthread $(exeflg) ./bin/$(name)x86.exe
 	
 x86o: ./obj/ dllDEL
 	$(gcc32) $(name).cxx -c $(dllflg) ./obj/$(name).o
@@ -20,7 +20,7 @@ x64o: ./obj/ objx64 dllDEL
 
 objx86:
 	$(gcc32) ./$(name).cxx -c $(dllflg) ./obj/$(name)x86.o
-	$(gcc32) ./$(name)x86.c -c -lpthread $(exeflg) ./obj/$(name)x86.exe.o
+	$(gcc32) ./$(name)x86.c -c -Wl,-Bstatic -lpthread $(exeflg) ./obj/$(name)x86.exe.o
 
 objx64:
 	gcc ./$(name).cxx -c $(dllflg) ./obj/$(name).o
