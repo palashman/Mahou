@@ -1,11 +1,11 @@
 name=jkl
-dllflg=-s -Os -shared -o
-exeflg=-s -Os -mwindows -o
+dllflg=$(INDIR) -s -Os -shared -o
+exeflg=$(INDIR) -s -Os -mwindows -o
 all: ./bin/ ./obj/ objx64 objx86 dllDEL
 	gcc ./obj/$(name).o $(dllflg) ./bin/$(name).dll
 	gcc ./obj/$(name)x86.o -m32 $(dllflg) ./bin/$(name)x86.dll
 	gcc ./obj/$(name).exe.o $(exeflg) ./bin/$(name).exe
-	gcc ./obj/$(name)x86.exe.o -m32 $(exeflg) ./bin/$(name)x86.exe
+	gcc ./obj/$(name)x86.exe.o -lpthread -m32 $(exeflg) ./bin/$(name)x86.exe
 	
 x86o: ./obj/ dllDEL
 	gcc $(name).cxx -c -m32 $(dllflg) ./obj/$(name).o
@@ -19,7 +19,7 @@ x64o: ./obj/ objx64 dllDEL
 
 objx86:
 	gcc ./$(name).cxx -c -m32 $(dllflg) ./obj/$(name)x86.o
-	gcc ./$(name)x86.c -c -m32 $(exeflg) ./obj/$(name)x86.exe.o
+	gcc ./$(name)x86.c -c -lpthread -m32 $(exeflg) ./obj/$(name)x86.exe.o
 
 objx64:
 	gcc ./$(name).cxx -c $(dllflg) ./obj/$(name).o
