@@ -28,6 +28,7 @@ namespace Mahou
 		/// <summary> Created for faster check if program is excluded, when checkin too many times(in hooks, timers etc.). </summary>
 		public static List<IntPtr> EXCLUDED_HWNDs = new List<IntPtr>(); 
 		public static List<IntPtr> NOT_EXCLUDED_HWNDs = new List<IntPtr>(); 
+		public static List<IntPtr> ConHost_HWNDs = new List<IntPtr>();
 		public static string[] snipps = new []{ "mahou", "eml" };
 		public static string[] exps = new [] {
 			"Mahou (魔法) - Magical layout switcher.",
@@ -516,6 +517,18 @@ namespace Mahou
 				}
 				if (MMain.mahou.PersistentLayoutOnlyOnce && !cont)
 					PLC_HWNDs.Add(hwnd);
+			}
+			if (MahouUI.UseJKL) {
+				if (!ConHost_HWNDs.Contains(hwnd)) {
+					var strb = new StringBuilder(350);
+					WinAPI.GetClassName(hwnd, strb, strb.Capacity);
+					if (strb.ToString() == "ConsoleWindowClass") {
+						ConHost_HWNDs.Add(hwnd);
+					}
+				} else {
+					Debug.WriteLine("Known ConHost window: " + hwnd);
+					jklXHidServ.CycleAllLayouts(hwnd);
+				}
 			}
 			uint hwndLayout = Locales.GetCurrentLocale(hwnd);
 			Logging.Log("Hwnd " + hwnd + ", layout: " + hwndLayout + ", Mahou layout: " + MahouUI.GlobalLayout);			
@@ -1600,7 +1613,7 @@ namespace Mahou
 		/// <summary>
 		/// Changing layout to next with PostMessage and WM_INPUTLANGCHANGEREQUEST and LParam HKL_NEXT.
 		/// </summary>
-		static void CycleLayoutSwitch() {
+		public static void CycleLayoutSwitch() {
 			Logging.Log("Changing layout using cycle mode by sending Message [WinAPI.WM_INPUTLANGCHANGEREQUEST] with LParam [HKL_NEXT] using WinAPI.PostMessage to ActiveWindow");
 			//Use WinAPI.PostMessage to switch to next layout
 			uint last = 0;

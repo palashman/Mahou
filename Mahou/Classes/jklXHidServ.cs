@@ -38,12 +38,14 @@ namespace Mahou {
 				try {
 					jkluMSG = Convert.ToInt32(System.IO.File.ReadAllText(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "umsg.id")));
 				} catch (Exception e) { Logging.Log("Error with umsg.id, details:\r\n" + e.Message + "\r\n" + e.StackTrace, 1); }
-				KMHook.DoLater(() => {
-				               	for (int i = MMain.locales.Length; i != 0; i--)
-				               		KMHook.CycleEmulateLayoutSwitch();
-				               }, 350);
+				KMHook.DoLater(() => CycleAllLayouts(Locales.ActiveWindow()), 350);
 			}
-	    }	
+	    }
+		public static void CycleAllLayouts(IntPtr hwnd) {
+			for (int i = MMain.locales.Length; i != 0; i--) {
+				WinAPI.SendMessage(hwnd, (int)WinAPI.WM_INPUTLANGCHANGEREQUEST, (int)WinAPI.HKL_NEXT, 0);
+			}
+		}
 	    static IntPtr jklWndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)  {
 			if (msg == jkluMSG) {
 				uint layout = (uint)lParam;

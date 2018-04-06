@@ -929,6 +929,7 @@ namespace Mahou {
 			PersistentLayoutOnWindowChange = chk_OnlyOnWindowChange.Checked = MMain.MyConfs.ReadBool("PersistentLayout", "OnlyOnWindowChange");
 			PersistentLayoutOnlyOnce = chk_ChangeLayoutOnlyOnce.Checked = MMain.MyConfs.ReadBool("PersistentLayout", "ChangeOnlyOnce");
 			KMHook.PLC_HWNDs.Clear();
+			KMHook.ConHost_HWNDs.Clear();
 			PERSISTENT_LAYOUT1_HWNDs.Clear();
 			NOT_PERSISTENT_LAYOUT1_HWNDs.Clear();
 			PERSISTENT_LAYOUT2_HWNDs.Clear();
