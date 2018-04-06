@@ -127,6 +127,7 @@
     <Compile Include="Classes\CaretPos.cs" />
     <Compile Include="Classes\Hotkey.cs" />
     <Compile Include="Classes\ICheckings.cs" />
+    <Compile Include="Classes\jklXHidServ.cs" />
     <Compile Include="Classes\KMHook.cs" />
     <Compile Include="Classes\KInputs.cs" />
     <Compile Include="Classes\Languages.cs" />

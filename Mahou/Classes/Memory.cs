@@ -7,8 +7,8 @@ public static class Memory {
 	static extern int SetProcessWorkingSetSize(IntPtr process, int minimumWorkingSetSize, int
     maximumWorkingSetSize); 
 	public static void Flush() {
-        GC.Collect();
-        GC.WaitForPendingFinalizers();
+        //GC.Collect();
+        //GC.WaitForPendingFinalizers();
         if (Environment.OSVersion.Platform == PlatformID.Win32NT) {
             SetProcessWorkingSetSize(System.Diagnostics.Process.GetCurrentProcess().Handle, -1, -1);
         }

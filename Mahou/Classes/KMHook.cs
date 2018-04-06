@@ -21,7 +21,7 @@ namespace Mahou
 		public static int skip_mouse_events, skip_spec_keys;
 		static string lastClipText = "";
 		static List<Keys> tempNumpads = new List<Keys>();
-		static List<char> c_snip = new List<char>();
+		public static List<char> c_snip = new List<char>();
 		public static System.Windows.Forms.Timer doublekey = new System.Windows.Forms.Timer();
 		public static List<YuKey> c_word_backup = new List<YuKey>();
 		public static List<IntPtr> PLC_HWNDs = new List<IntPtr>();
@@ -129,20 +129,23 @@ namespace Mahou
 					win_r = false;
 			}
 			// Clear currentLayout in MMain.mahou rule
-			if (((win || alt || ctrl || win_r || alt_r || ctrl_r) && Key == Keys.Tab) ||
-			    win && (Key != Keys.None && 
-			            Key != Keys.LWin && 
-			            Key != Keys.RWin)) // On any Win+[AnyKey] hotkey
-				MahouUI.currentLayout = 0;
+			if (!MahouUI.UseJKL)
+				if (((win || alt || ctrl || win_r || alt_r || ctrl_r) && Key == Keys.Tab) ||
+				    win && (Key != Keys.None && 
+				            Key != Keys.LWin && 
+				            Key != Keys.RWin)) // On any Win+[AnyKey] hotkey
+					MahouUI.currentLayout = 0;
 			if ((MSG == WinAPI.WM_KEYUP || MSG == WinAPI.WM_SYSKEYUP) && (
 			    ((alt || ctrl || alt_r || ctrl_r) && (Key == Keys.Shift || Key == Keys.LShiftKey || Key == Keys.RShiftKey)) ||
 			     shift && (Key == Keys.Menu || Key == Keys.LMenu || Key == Keys.RMenu) ||
 			     (Environment.OSVersion.Version.Major == 10 && (win || win_r) && Key == Keys.Space))) {
-				var time = 200;
-				if (Environment.OSVersion.Version.Major == 10)
-					time = 50;
-				MahouUI.currentLayout = 0;
-				DoLater(() => { MahouUI.GlobalLayout = MahouUI.currentLayout = Locales.GetCurrentLocale(); }, time);
+				if (!MahouUI.UseJKL) {
+					var time = 200;
+					if (Environment.OSVersion.Version.Major == 10)
+						time = 50;
+					MahouUI.currentLayout = 0;
+					DoLater(() => { MahouUI.GlobalLayout = MahouUI.currentLayout = Locales.GetCurrentLocale(); }, time);
+				}
 			}
 			#endregion
 			#region
@@ -175,9 +178,9 @@ namespace Mahou
 				}
 				var seKey = Keys.Space;
 				if (MMain.mahou.SnippetsExpandType == "Tab")
-					seKey = Keys.Tab;
-				Logging.Log("Snippet expand key: " +seKey);
-				if (Key == seKey)
+					seKey = Keys.F14;
+				Logging.Log("Snippet expand key: " + MMain.mahou.SnippetsExpandType);
+				if (Key == seKey || seKey == Keys.F14)
 					preSnip = true;
 				if (MSG == WinAPI.WM_KEYUP) {
 					var snip = "";
@@ -447,7 +450,8 @@ namespace Mahou
 					clickAfterSHIFT = true;
 				if (alt || alt_r)
 					clickAfterALT = true;
-				MahouUI.currentLayout = 0;
+				if (!MahouUI.UseJKL)
+					MahouUI.currentLayout = 0;
 				ClearWord(true, true, true, "Mouse click");
 			}
 			if (MMain.mahou.LDUseWindowsMessages) {
@@ -864,11 +868,17 @@ namespace Mahou
 							var wawasLocale = wasLocale & 0xffff;
 							ChangeLayout();
 							uint nowLocale = 0;
-							if(MMain.mahou.SwitchBetweenLayouts)
+							if(MMain.mahou.SwitchBetweenLayouts) {
 								nowLocale = wasLocale == (MahouUI.MAIN_LAYOUT1 & 0xffff)
 									? MahouUI.MAIN_LAYOUT2 & 0xffff
 									: MahouUI.MAIN_LAYOUT1 & 0xffff;
-							else {
+								if (nowLocale == wasLocale && 
+								    (MahouUI.currentLayout == MahouUI.MAIN_LAYOUT1 || 
+								     MahouUI.currentLayout == MahouUI.MAIN_LAYOUT2)) {
+									if (wasLocale != MahouUI.currentLayout)
+										nowLocale = MahouUI.currentLayout;
+								}
+							} else {
 								Thread.Sleep(10); nowLocale = Locales.GetCurrentLocale() & 0xffff;
 							}
 							var index = 0;
@@ -1455,9 +1465,12 @@ namespace Mahou
 				Thread.Sleep(13);
 			} else {
 				var nowLocale = Locales.GetCurrentLocale();
+				if (nowLocale == 0)
+					nowLocale = MahouUI.currentLayout;
 				uint notnowLocale = nowLocale == MahouUI.MAIN_LAYOUT1
 	                ? MahouUI.MAIN_LAYOUT2
 	                : MahouUI.MAIN_LAYOUT1;
+				Debug.WriteLine(nowLocale + "/ " + notnowLocale);
 				if (MMain.mahou.SwitchBetweenLayouts) {
 					ChangeToLayout(Locales.ActiveWindow(), notnowLocale);
 				} else {
@@ -1496,7 +1509,8 @@ namespace Mahou
 				if (tries == 3)
 					break;
 			}
-			MahouUI.currentLayout = MahouUI.GlobalLayout = LayoutId;
+			if (!MahouUI.UseJKL)
+				MahouUI.currentLayout = MahouUI.GlobalLayout = LayoutId;
 		}
 		/// <summary>
 		/// Changing layout to LayoutId by emulating windows layout switch hotkey. 
@@ -1517,7 +1531,6 @@ namespace Mahou
 			}
 			if (!failed) {
 				MahouUI.currentLayout = MahouUI.GlobalLayout = LayoutId;
-				
 			} else
 				Logging.Log("Changing to layout [" + LayoutId + "] using emulation failed after 16 tries,\r\nmaybe you have more that 16 layouts, disabled change layout hotkey in windows, or working in console window(use getconkbl.dll)?", 1);
 		}
@@ -1552,9 +1565,10 @@ namespace Mahou
 					KInputs.AddKey(Keys.Space, false),
 					KInputs.AddKey(Keys.LWin, false)
 				});
-				Thread.Sleep(70); //Important!
+				Thread.Sleep(20); //Important!
 			}
-			DoLater(() => { MahouUI.currentLayout = MahouUI.GlobalLayout = Locales.GetCurrentLocale(); }, 10);
+			if (!MahouUI.UseJKL)
+				DoLater(() => { MahouUI.currentLayout = MahouUI.GlobalLayout = Locales.GetCurrentLocale(); }, 10);
 		}
 		/// <summary>
 		/// Changing layout to next with PostMessage and WM_INPUTLANGCHANGEREQUEST and LParam HKL_NEXT.

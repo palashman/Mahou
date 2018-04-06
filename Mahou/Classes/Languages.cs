@@ -38,7 +38,7 @@ public class Languages
 		GuessKeyCodeFix,
 		ConfigsInAppData,
 		RemapCapslockAsF18,
-		GetLayoutFromTaskbar,
+		UseJKL,
 		#endregion
 		#region Layouts
 		SwitchBetween,
@@ -225,7 +225,7 @@ public class Languages
 		TT_LDUseWinMessages,
 		TT_RemapCapslockAsF18,
 		TT_UseDelayAfterBackspaces,
-		TT_GetLayoutFromTaskbar,
+		TT_UseJKL,
 		#endregion
 		#region Messages
 		MSG_SnippetsError
@@ -268,7 +268,7 @@ public class Languages
 		{ Element.GuessKeyCodeFix, "Use guess key code fix." }, 
 		{ Element.ConfigsInAppData, "Configs in AppData." }, 
 		{ Element.RemapCapslockAsF18, "Remap Caps Lock as F18." }, 
-		{ Element.GetLayoutFromTaskbar, "Retrieve layout from TaskBar." },
+		{ Element.UseJKL, "Retrieve layout from JKL." },
 		#endregion
 		#region Layouts
 		{ Element.SwitchBetween, "Switch between layouts" }, 
@@ -472,7 +472,7 @@ public class Languages
 		{ Element.TT_SnippetExpandKey, "Select custom snippet expand key,\r\nworks only for snippets, auto-switch will still expand only on space." },
 		{ Element.TT_LDUseWinMessages, "If enabled, timers will not be used to update language tooltips,\r\ninstead they will be updated on appropriate Windows Messages.\r\nLess CPU hungry than timers.\r\nMost CPU hungry is mouse tooltip with always enabled,\r\nconsumes CPU only on mouse move/clicks,\r\nto decrease its CPU usage, there will be 1 new config in Timings tab.\r\nSkip x Windows Messages(mouse movement) before updating tooltip." },
 		{ Element.TT_RemapCapslockAsF18, "Remaps Caps Lock as F18, after this CapsLock will be disabled.\r\nTo toggle its state use Ctrl/Alt/Shift/Win + Caps Lock key.\r\n! Mahou window excluded from remap!\r\nIn Mahou you should set hotkeys as Caps Lock key, in other programs they will be remapped as F18.\r\nAfter changing hotkey don't forget to press Apply or OK." },
-		{ Element.TT_GetLayoutFromTaskbar, "Allows Mahou to retrieve layout !ONLY! from taskbar.\r\nMay cause layout determine problem in Windows Vista/7.\r\nCan be useful in Windows 8.1+, because there are global layout for all programs,\r\nwhich in result may get even right layout in console applications without getconkbl.dll." },		
+		{ Element.TT_UseJKL, "Allows Mahou to retrieve layout from jkl.exe.\r\nAllows always to get right keyboard layout.(Highly recommended)\r\nWorks better with one layout for all programs.(Windows 8.1+ or Mahou function \"One layout\")" },		
 		{ Element.TT_UseDelayAfterBackspaces, "If enabled Mahou will wait some time after deleting old word and before inputting converted word.\r\nUseful if in some apps Mahou's function to convert last word doesn't work properly." },
 		#endregion
 		#region Messages
@@ -519,7 +519,7 @@ public class Languages
 		{ Element.GuessKeyCodeFix, "Исправление кодов клавиш." }, 
 		{ Element.ConfigsInAppData, "Конфигурация в AppData." }, 
 		{ Element.RemapCapslockAsF18, "Переопределить Caps Lock как F18." }, 
-		{ Element.GetLayoutFromTaskbar, "Получать раскладку с панели задач." },
+		{ Element.UseJKL, "Получать раскладку с JKL." },
 		#endregion
 		#region Layouts
 		{ Element.SwitchBetween, "Переключать между раскладками" }, 
@@ -721,7 +721,7 @@ public class Languages
 		{ Element.TT_SnippetExpandKey, "Выберите какой клавишей развертывать(увеличивать/превращать) сниппеты,\r\nработает толкьо для сниппетов, автозамена как и раньше будет работать только при Space." },
 		{ Element.TT_LDUseWinMessages, "Если включено, подсказки будут обновлятся не через таймеры,\r\nвместо этого они будут обновлятся на соответствующих Сообщениях Windows.\r\nПотребляет меньше ЦП.\r\nСамая требовательная к ЦП функция - подсказка возле мыши при всегда включенной,\r\nпотребляет ЦП только при движении/кликах мыши,\r\nчтобы уменьшить ее потребление ЦП, есть новая конфигурация во вкладке Тайминги.\r\nПропуск х Сообщений Windows(движения мыши) перед обновлением подсказки." },
 		{ Element.TT_RemapCapslockAsF18, "Переопределет клавишу Caps Lock как F18, после этого функция клавиши CapsLock будет отключена.\r\nЧтобы переключить состояние Caps Lock нажмите вместе с одной из клавиш модификаторов: Ctrl/Alt/Shift/Win.\r\n! Окно Mahou исключено из переопределения!\r\nВ Mahou назначайте гор. клавиши на Caps Lock, в других программах она будет переопределена как F18.\r\nПосле смены гор. клавиш не забудьте нажать Применить или ОК." },
-		{ Element.TT_GetLayoutFromTaskbar, "Позволяет Mahou получать раскладку !ТОЛЬКО! с панели задач.\r\nМожет создать проблему получения неправильной раскладки в Windows Vista/7.\r\nМожет быть полезно в Windows 8.1+, т.к. там стоит общая раскладка для всех приложений,\r\nчто в итоге может дать даже правильное получение раскладки в консольных приложения без getconkbl.dll." },
+		{ Element.TT_UseJKL, "Позволяет Mahou получать раскладку с jkl.exe.\r\nПозволяет всегда получать правильную раскладку.(Очень рекомендуется)\r\nРаботает лучше при единой раскладке для всех приложений.(Windows 8.1+ или функция Mahou)" },
 		{ Element.TT_UseDelayAfterBackspaces, "Если включено Mahou будет ждать некоторое время после удаления старого слова и перед вводом конвертированного слова.\r\nПолезно если в некоторых программах функция Mahou Конверт последнего слова не работает нормально." },
 		#endregion
 		#region Messages

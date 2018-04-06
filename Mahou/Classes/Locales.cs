@@ -23,8 +23,6 @@ namespace Mahou
 				actv = ActiveWindow();
 			else 
 				actv = byHwnd;
-			if (MahouUI.GetLayoutFromTaskbar)
-				actv = WinAPI.FindWindow("Shell_TrayWnd", "");
 			uint pid = 0;
 			uint tid = WinAPI.GetWindowThreadProcessId(actv, out pid);
 			IntPtr layout = WinAPI.GetKeyboardLayout(tid);
@@ -35,6 +33,7 @@ namespace Mahou
 			} catch (Exception e) { Logging.Log("Error in IfCmdExe (getconkbl.dll), details: \r\n" + e.Message + e.StackTrace +"\r\n", 1); }
 			//Produces TOO much logging, disabled.
             //Logging.Log("Current locale id is [" + (uint)(layout.ToInt32() & 0xFFFF) + "].");
+            //Debug.WriteLine(layout + " A " + actv);
 			return (uint)layout;
 		}
 		public static void IfCmdExe(IntPtr hwnd, out uint layoutId) {
