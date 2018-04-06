@@ -1523,20 +1523,10 @@ namespace Mahou
 			for (int i = MMain.locales.Length; i != 0; i --) {
 				uint loc = Locales.GetCurrentLocale();
 				if (MahouUI.UseJKL && loc == 0) {
-					DoLater(() => {
-			        	if (failed) {
-								if (loc == 0 || loc == last)
-									loc = MahouUI.currentLayout;
-							Debug.WriteLine(i+".LayoutID: " + LayoutId + ", loc: " +loc);
-							if (loc == LayoutId)
-								failed = false;
-							else 
-								CycleEmulateLayoutSwitch();
-							last = loc;
-							Thread.Sleep(15);
-			        	}
-				        }, 30);
-	        		Thread.Sleep(15);
+					jklXHidServ.start_cyclEmuSwitch = true;
+					jklXHidServ.cycleEmuDesiredLayout = LayoutId;
+					CycleEmulateLayoutSwitch();
+					break;
 				} else {
 					Debug.WriteLine(i+".LayoutID: " + LayoutId + ", loc: " +loc);
 					if (loc == LayoutId) {
@@ -1552,14 +1542,14 @@ namespace Mahou
 			if (!MahouUI.UseJKL)
 				if (!failed) {
 					MahouUI.currentLayout = MahouUI.GlobalLayout = LayoutId;
-			} else
-				Logging.Log("Changing to layout [" + LayoutId + "] using emulation failed after 16 tries,\r\nmaybe you have more that 16 layouts, disabled change layout hotkey in windows, or working in console window(use getconkbl.dll)?", 1);
+				} else
+					Logging.Log("Changing to layout [" + LayoutId + "] using emulation failed after # of layouts tries,\r\nmaybe you have more that 16 layouts, disabled change layout hotkey in windows, or working in console window(use getconkbl.dll)?", 1);
 			failed = true;
 		}
 		/// <summary>
 		/// Changing layout by emulating windows layout switch hotkey
 		/// </summary>
-		static void CycleEmulateLayoutSwitch() {
+		public static void CycleEmulateLayoutSwitch() {
 			if (MMain.mahou.EmulateLSType == "Alt+Shift") {
 				Logging.Log("Changing layout using cycle mode by simulating key press [Alt+Shift].");
 				//Emulate Alt+Shift

@@ -4,6 +4,8 @@ using System.Runtime.InteropServices;
 
 namespace Mahou {
 	static class jklXHidServ {
+		public static uint cycleEmuDesiredLayout = 0;
+		public static bool start_cyclEmuSwitch = false;
 		public static int jkluMSG = -1;
 		static IntPtr HWND = IntPtr.Zero;
 		static WinAPI.WndProc WNDPROC_DELEGATE;
@@ -43,7 +45,13 @@ namespace Mahou {
 				uint layout = (uint)lParam;
 				MahouUI.GlobalLayout = MahouUI.currentLayout = layout;
 				Logging.Log("Layout changed to " + layout);
-				System.Diagnostics.Debug.WriteLine("Layout changed to " + layout);
+				System.Diagnostics.Debug.WriteLine(start_cyclEmuSwitch+"." + cycleEmuDesiredLayout +".Layout changed to " + layout);
+				if (start_cyclEmuSwitch) {
+					if (layout != cycleEmuDesiredLayout)
+						KMHook.CycleEmulateLayoutSwitch();
+					else
+						start_cyclEmuSwitch = false;
+				}
 			}
 	        return WinAPI.DefWindowProcW(hWnd, msg, wParam, lParam);
 	    }
