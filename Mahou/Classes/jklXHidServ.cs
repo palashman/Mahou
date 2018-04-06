@@ -34,10 +34,14 @@ namespace Mahou {
 				try {
 					System.Diagnostics.Process.Start("jkl.exe");
 				} catch { Logging.Log("jkl.exe not found!", 1); }
-				Thread.Sleep(250);
+				Thread.Sleep(50);
 				try {
 					jkluMSG = Convert.ToInt32(System.IO.File.ReadAllText("umsg.id"));
 				} catch (Exception e) { Logging.Log("Error with umsg.id, details:\r\n" + e.Message + "\r\n" + e.StackTrace, 1); }
+				KMHook.DoLater(() => {
+				               	for (int i = MMain.locales.Length; i != 0; i--)
+				               		KMHook.CycleEmulateLayoutSwitch();
+				               }, 350);
 			}
 	    }	
 	    static IntPtr jklWndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)  {
