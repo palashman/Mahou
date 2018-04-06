@@ -5,7 +5,11 @@
 HWND MAIN;
 HMODULE lib;
 UINT uMSG; 
-
+void PostQuit() {
+	FUNC unHook = (FUNC)GetProcAddress(lib, "unHook");
+	unHook();
+    FreeLibrary(lib);
+}
 LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
 	// if (Msg == uMSG) // MEOW!
 		// printf("MEOW, MEOW! W: %i, L: %i\n", wParam, lParam);
@@ -14,11 +18,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
 	if (Msg == WM_DESTROY || Msg == WM_QUIT) {
 		// printf("POST QUIT PASSED");
 		HWND X86 = FindWindow("_HIDDEN_X86_HELPER", NULL);
+		PostQuit();
 		PostMessage(X86, WM_QUIT, 0, 0);
 	}
 	return DefWindowProc(hWnd, Msg, wParam, lParam);
 }
- 
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR nCmdLine, int nCmdShow) {
 	if (FindWindow("_HIDDEN_HWND_SERVER", NULL))
 		exit(0); // Already exist
@@ -52,9 +57,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR nCmdLine,
 			}
 		}
 	}
-	FUNC unHook = (FUNC)GetProcAddress(lib, "unHook");
-	unHook();
-    FreeLibrary(lib);
-	
+	PostQuit();
 	return(0);
 }
