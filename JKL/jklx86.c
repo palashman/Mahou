@@ -23,10 +23,15 @@ void *Is64Alive() {
 	while(1) {
 		sleep(2);
 		HWND X64 = FindWindow("_HIDDEN_HWND_SERVER", NULL);
-		printf("I'm sleepy... %i ", X64);
-		if (!X64) {
-			printf("Gone sleeping...");
-			PostMessage(MAIN, WM_QUIT, 0, 0);
+		HWND Mahou = FindWindow("_XHIDDEN_HWND_SERVER", NULL);
+		if (!Mahou) {
+			printf("Mahou is not with us...");
+			PostMessage(X64, WM_QUIT, 0, 0);
+			printf("I'm sleepy... %i ", X64);
+			if (!X64) {
+				printf("Gone sleeping...");
+				PostMessage(MAIN, WM_QUIT, 0, 0);
+			}
 		}
 	}
 }
