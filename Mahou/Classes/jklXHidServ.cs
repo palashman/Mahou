@@ -32,11 +32,11 @@ namespace Mahou {
 		        HWND = WinAPI.CreateWindowExW(0, "_XHIDDEN_HWND_SERVER", "_XHIDDEN_HWND_SERVER", 0, 0, 0, 0, 0,
 		                                      IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
 				try {
-					System.Diagnostics.Process.Start("jkl.exe");
+		        	System.Diagnostics.Process.Start(System.IO.Path.Combine(MahouUI.nPath,"jkl.exe"));
 				} catch { Logging.Log("jkl.exe not found!", 1); }
 				Thread.Sleep(50);
 				try {
-					jkluMSG = Convert.ToInt32(System.IO.File.ReadAllText("umsg.id"));
+					jkluMSG = Convert.ToInt32(System.IO.File.ReadAllText(System.IO.Path.Combine(MahouUI.nPath,"umsg.id")));
 				} catch (Exception e) { Logging.Log("Error with umsg.id, details:\r\n" + e.Message + "\r\n" + e.StackTrace, 1); }
 				KMHook.DoLater(() => {
 				               	for (int i = MMain.locales.Length; i != 0; i--)
