@@ -45,6 +45,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR nCmdLine,
 	FUNC setHook32 = (FUNC)GetProcAddress(lib32, "setHook");
 	setHook32();
 	MSG Msg;
+	SetProcessWorkingSetSize(GetCurrentProcess(), -1, -1);
 	if(MAIN) {
 		while (GetMessage(&Msg, MAIN, 0, 0) > 0) {
 			if(!IsDialogMessage(MAIN, &Msg)) {

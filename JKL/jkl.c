@@ -11,7 +11,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
 		// printf("MEOW, MEOW! W: %i, L: %i\n", wParam, lParam);
 	// else 
 		// printf("MSG: %i, %i\n", Msg, uMSG);
-	if (Msg == WM_DESTROY) {
+	if (Msg == WM_DESTROY || Msg == WM_QUIT) {
 		// printf("POST QUIT PASSED");
 		HWND X86 = FindWindow("_HIDDEN_X86_HELPER", NULL);
 		PostMessage(X86, WM_QUIT, 0, 0);
@@ -43,6 +43,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR nCmdLine,
 	// ShowWindow(MAIN, nCmdShow);
 	// SetForegroundWindow(MAIN);
 	// printf("MAIN: %i\n", MAIN);
+	SetProcessWorkingSetSize(GetCurrentProcess(), -1, -1);
 	if(MAIN) {
 		while (GetMessage(&Msg, MAIN, 0, 0) > 0) {
 			if(!IsDialogMessage(MAIN, &Msg)) {
