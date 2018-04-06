@@ -1476,6 +1476,8 @@ namespace Mahou
 			                : MahouUI.MAIN_LAYOUT1;
 						last = nowLocale;
 						ChangeToLayout(Locales.ActiveWindow(), notnowLocale);
+						if (MMain.mahou.EmulateLS)
+							break;
 					}
 				} else {
 					if (MMain.mahou.EmulateLS) {
@@ -1530,8 +1532,9 @@ namespace Mahou
 		static void EmulateChangeToLayout(uint LayoutId) {
 			var last = MahouUI.currentLayout;
 			Logging.Log("Changing to specific layout ["+LayoutId+"] by emulating layout switch.");
-			for (int i = MMain.locales.Length; i != 0; i --) {
+			for (int i = MMain.locales.Length; i != 0; i--) {
 				uint loc = Locales.GetCurrentLocale();
+				Debug.WriteLine(loc + " " + last);
 				if (MahouUI.UseJKL && (loc == 0 || loc == last)) {
 					jklXHidServ.start_cyclEmuSwitch = true;
 					jklXHidServ.cycleEmuDesiredLayout = LayoutId;
