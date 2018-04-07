@@ -14,7 +14,7 @@ void PostQuit() {
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
-	if (Msg == WM_QUIT)
+	if (Msg == WM_QUIT || Msg == WM_DESTROY)
 		PostQuit();
 	return DefWindowProc(hWnd, Msg, wParam, lParam);
 }
@@ -44,6 +44,8 @@ void SetTimerThread() {
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR nCmdLine, int nCmdShow) {
+	if (FindWindow("_HIDDEN_X86_HELPER", NULL))
+		exit(0); 
 	MAIN = CreateHWND(hInstance, "_HIDDEN_X86_HELPER", (WNDPROC)WndProc);
     lib32 = LoadLibrary("jklx86.dll");
 	SetTimerThread();

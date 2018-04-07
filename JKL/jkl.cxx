@@ -9,7 +9,7 @@ static LRESULT CALLBACK procedure(int nCode, WPARAM wParam, LPARAM lParam){
     if (nCode == HC_ACTION){
         CWPSTRUCT *data = (CWPSTRUCT*)lParam;
         if (data->message == WM_INPUTLANGCHANGE) {
-			HWND Server = FindWindow( "_XHIDDEN_HWND_SERVER", NULL);
+			HWND Server = FindWindow("_XHIDDEN_HWND_SERVER", NULL);
 			PostMessage(Server, uMSG, data->wParam, data->lParam);
         }
     }
