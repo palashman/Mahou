@@ -892,10 +892,6 @@ namespace Mahou {
 			GuessKeyCodeFix = chk_GuessKeyCodeFix.Checked = MMain.MyConfs.ReadBool("Functions", "GuessKeyCodeFix");
 			RemapCapslockAsF18 = chk_RemapCapsLockAsF18.Checked = MMain.MyConfs.ReadBool("Functions", "RemapCapslockAsF18");
 			UseJKL = chk_GetLayoutFromJKL.Checked = MMain.MyConfs.ReadBool("Functions", "UseJKL");
-			if (UseJKL)
-				jklXHidServ.Init();
-			else 	
-				jklXHidServ.Destroy();
 			#endregion
 			#region Layouts
 			SwitchBetweenLayouts = chk_SwitchBetweenLayouts.Checked = MMain.MyConfs.ReadBool("Layouts", "SwitchBetweenLayouts");
@@ -1060,6 +1056,21 @@ namespace Mahou {
 			// Restore last positon
 			lsb_LangTTAppearenceForList.SelectedIndex = tmpLangTTAppearenceIndex;
 			lsb_Hotkeys.SelectedIndex = tmpHotkeysIndex;
+			if (UseJKL) {
+				if (!jklXHidServ.jklExist()) {
+					chk_GetLayoutFromJKL.ForeColor = Color.Red;
+					HelpMeUnderstand.SetToolTip(chk_GetLayoutFromJKL, jklXHidServ.jklInfoStr);
+				} else {
+					chk_GetLayoutFromJKL.ForeColor = Color.FromKnownColor(KnownColor.WindowText);
+					HelpMeUnderstand.SetToolTip(chk_GetLayoutFromJKL, MMain.Lang[Languages.Element.TT_UseJKL]);
+				}
+				jklXHidServ.Init();
+			}
+			else {
+				jklXHidServ.Destroy();
+				chk_GetLayoutFromJKL.ForeColor = Color.FromKnownColor(KnownColor.WindowText);
+				HelpMeUnderstand.SetToolTip(chk_GetLayoutFromJKL, MMain.Lang[Languages.Element.TT_UseJKL]);
+			}
 			Memory.Flush();
 			Logging.Log("All configurations loaded.");
 		}

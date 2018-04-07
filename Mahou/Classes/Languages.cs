@@ -163,6 +163,8 @@ public class Languages
 		About,
 		#endregion
 		#region Misc
+		Not,
+		Exist,
 		Keys,
 		Key_Left,
 		Key_Right,
@@ -399,6 +401,8 @@ public class Languages
 			"\r\nRead the wiki, or ask me if you have any questions about Mahou(email and links are below)!\r\n\r\nRegards." },
 		#endregion
 		#region Misc
+		{ Element.Not, "Not" },
+		{ Element.Exist, "exist" },
 		{ Element.Checking, "Checking..." }, 
 		{ Element.Keys, "Keys" }, 
 		{ Element.Key_Left, "Left" }, 
@@ -649,6 +653,8 @@ public class Languages
 			"\r\nПочитайте wiki, или спросите меня если у Вас есть вопросы по поводу Mahou(эл. почта и ссылка на wiki ниже).\r\nУдачи."}, 
 		#endregion
 		#region Misc
+		{ Element.Not, "Не"},
+		{ Element.Exist, "существует" },
 		{ Element.Keys, "Клавиши" }, 
 		{ Element.Key_Left, "Левый" }, 
 		{ Element.Key_Right, "Правый" }, 

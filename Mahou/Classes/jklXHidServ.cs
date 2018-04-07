@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace Mahou {
@@ -8,6 +9,9 @@ namespace Mahou {
 		public static uint cycleEmuDesiredLayout = 0;
 		public static bool start_cyclEmuSwitch = false;
 		public static int jkluMSG = -1;
+		/// <summary>0=exe, 1=dll, 2=x86.exe, 3=x86.dll</summary>
+		public static bool[] jklFEX = new bool[5];
+		public static string jklInfoStr = "";
 		static IntPtr HWND = IntPtr.Zero;
 		static WinAPI.WndProc WNDPROC_DELEGATE;
 	    static public void Destroy() {
@@ -21,6 +25,20 @@ namespace Mahou {
 //		        HWND = IntPtr.Zero;
 			}
 	    }
+		public static bool jklExist() {
+			var pth = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "jkl");
+			jklFEX[0] = File.Exists(pth+".exe");
+			jklFEX[1] = File.Exists(pth+".dll");
+			jklFEX[2] = File.Exists(pth+"x86.exe");
+			jklFEX[3] = File.Exists(pth+"x86.dll");
+			if (jklFEX[0] && jklFEX[1] && jklFEX[2] && jklFEX[3])
+				return true;
+			jklInfoStr = "jkl.exe " + (jklFEX[0] ? "" : MMain.Lang[Languages.Element.Not] + " ") + MMain.Lang[Languages.Element.Exist] + "\r\n";
+			jklInfoStr += "jkl.dll " + (jklFEX[1] ? "" : MMain.Lang[Languages.Element.Not] + " ") + MMain.Lang[Languages.Element.Exist] + "\r\n";
+			jklInfoStr += "jklx86.exe " + (jklFEX[2] ? "" : MMain.Lang[Languages.Element.Not] + " ") + MMain.Lang[Languages.Element.Exist] + "\r\n";
+			jklInfoStr += "jklx86.dll " + (jklFEX[3] ? "" : MMain.Lang[Languages.Element.Not] + " ") + MMain.Lang[Languages.Element.Exist] + "\r\n";
+			return false;
+		}
 	    public static void Init() {
 			if (HWND == IntPtr.Zero) {
 		        WNDPROC_DELEGATE = jklWndProc;
@@ -35,14 +53,14 @@ namespace Mahou {
 		        HWND = WinAPI.CreateWindowExW(0, "_XHIDDEN_HWND_SERVER", "_XHIDDEN_HWND_SERVER", 0, 0, 0, 0, 0,
 		                                      IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
 			}
-			try {
-	        	Process.Start(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "jkl.exe"));
-			} catch { Logging.Log("jkl.exe not found!", 1); }
-			Thread.Sleep(50);
-			try {
-				jkluMSG = Convert.ToInt32(System.IO.File.ReadAllText(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "umsg.id")));
-			} catch (Exception e) { Logging.Log("Error with umsg.id, details:\r\n" + e.Message + "\r\n" + e.StackTrace, 1); }
-			KMHook.DoLater(() => CycleAllLayouts(Locales.ActiveWindow()), 350);
+			if (jklExist()) {
+	        	Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "jkl.exe"));
+				Thread.Sleep(50);
+				jkluMSG = Convert.ToInt32(File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "umsg.id")));
+				KMHook.DoLater(() => CycleAllLayouts(Locales.ActiveWindow()), 350);
+			} else {
+				Logging.Log(jklInfoStr, 1);
+			}
 	    }
 		public static void CycleAllLayouts(IntPtr hwnd) {
 			for (int i = MMain.locales.Length; i != 0; i--) {
