@@ -1622,6 +1622,7 @@ namespace Mahou
 			//Use WinAPI.PostMessage to switch to next layout
 			uint last = 0;
 			for (int i=MMain.locales.Length; i!=0; i--) {
+				var br = false;
 				var cur = Locales.GetCurrentLocale(); 
 				if (MahouUI.UseJKL)
 					if (cur == 0 || cur == last)
@@ -1633,6 +1634,7 @@ namespace Mahou
 					if (curind == MMain.locales.Length - 1) {
 						Logging.Log("Locales BREAK!");
 						ChangeToLayout(Locales.ActiveWindow(), MMain.locales[0].uId);
+						br = true;
 						break;
 					}
 					Logging.Log("LIDC = "+lidc +" curid = "+curind + " Lidle = " +(MMain.locales.Length - 1));
@@ -1640,11 +1642,14 @@ namespace Mahou
 						if (l.uId != cur) {
 							Logging.Log("Locales +1 Next BREAK!");
 							ChangeToLayout(Locales.ActiveWindow(), l.uId);
+							br = true;
 							break;
 					}
 					lidc++;
 				}
 				last = cur;
+				if (br)
+					break;
 			}
 		}
 		/// <summary>
