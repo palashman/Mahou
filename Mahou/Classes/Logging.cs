@@ -32,16 +32,16 @@ namespace Mahou
 					messagetype = "W";
 					break;
 			}
-			var tologmsg = msgtime + " [" + messagetype + "]\r\n                    " + logmsg + "\r\n";
+			var tologmsg = msgtime + " [" + messagetype + "]: " + logmsg + "\r\n";
 			_logMessages.Add(tologmsg);
 			}
 		public static void UpdateLog() {
 			lock (locky) {
 				foreach (var msg in _logMessages.GetConsumingEnumerable()) {
 					#if VSCDEBUG
-						Console.WriteLine(msg);
+						Console.Write(msg);
 					#elif DEBUG 
-						Debug.WriteLine(msg);
+						Debug.Write(msg);
 					#else
 						File.AppendAllText(log, msg);
 					#endif

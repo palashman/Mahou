@@ -107,5 +107,15 @@ namespace Mahou {
 		public static void ClearModifiers() {
 			alt = shift = ctrl = win = false;
 		}
+		public static void SetModifier(uint Mod, bool down) {
+			if (Mod == WinAPI.MOD_WIN)
+				win = down;
+			if (Mod == WinAPI.MOD_SHIFT)
+				shift = down;
+			if (Mod == WinAPI.MOD_ALT)
+				alt = down;
+			if (Mod == WinAPI.MOD_CONTROL)
+				ctrl = down;
+		}
 	}
 }

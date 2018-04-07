@@ -41,6 +41,7 @@ namespace Mahou {
 		}
 	    public static void Init() {
 			if (HWND == IntPtr.Zero) {
+				Logging.Log("[JKL] > Initializing JKL HWND server...");
 		        WNDPROC_DELEGATE = jklWndProc;
 		        var wnd_class = new WinAPI.WNDCLASS();
 		        wnd_class.lpszClassName = "_XHIDDEN_HWND_SERVER";
@@ -48,19 +49,35 @@ namespace Mahou {
 		        UInt16 cls_reg = WinAPI.RegisterClassW(ref wnd_class);
 		        int last_error = Marshal.GetLastWin32Error();
 		        if (cls_reg == 0 && last_error != 0) {
-		            Logging.Log("Could not register window class, for jkl Hidden Server, err: " + last_error, 1);
+		            Logging.Log("[JKL] > Could not register window class, for jkl Hidden Server, err: " + last_error, 1);
 		        }
 		        HWND = WinAPI.CreateWindowExW(0, "_XHIDDEN_HWND_SERVER", "_XHIDDEN_HWND_SERVER", 0, 0, 0, 0, 0,
 		                                      IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
 			}
 			if (jklExist()) {
+				Logging.Log("[JKL] > Starting jkl.exe...");
 	        	Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "jkl.exe"));
-				Thread.Sleep(50);
-				jkluMSG = Convert.ToInt32(File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "umsg.id")));
-				KMHook.DoLater(() => CycleAllLayouts(Locales.ActiveWindow()), 350);
+				var umsgID = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "umsg.id");
+				var tries = 0;
+				while (!File.Exists(umsgID)) {
+					Thread.Sleep(50);
+					tries++;
+					if (tries > 20) {
+						Logging.Log("[JKL] > Error, umsg.id not found after 20 tries by 50 ms timeout.", 1);
+						Destroy();
+						break;
+					}
+				}
+				if (tries < 20) {
+					Logging.Log("[JKL] > Retrieving umsg.id...");
+					jkluMSG = Convert.ToInt32(File.ReadAllText(umsgID));
+					File.Delete(umsgID);
+					KMHook.DoLater(() => CycleAllLayouts(Locales.ActiveWindow()), 350);
+				}
 			} else {
-				Logging.Log(jklInfoStr, 1);
+				Logging.Log("[JKL] > " + jklInfoStr, 1);
 			}
+			Logging.Log("[JKL] > Init done, umsg: ["+jkluMSG+"], JKLXServ: ["+HWND+"].");
 	    }
 		public static void CycleAllLayouts(IntPtr hwnd) {
 			for (int i = MMain.locales.Length; i != 0; i--) {
@@ -71,8 +88,7 @@ namespace Mahou {
 			if (msg == jkluMSG) {
 				uint layout = (uint)lParam;
 				MahouUI.GlobalLayout = MahouUI.currentLayout = layout;
-				Logging.Log("Layout changed to " + layout);
-				System.Diagnostics.Debug.WriteLine(start_cyclEmuSwitch+"." + cycleEmuDesiredLayout +".Layout changed to " + layout);
+				Logging.Log("[JKL] > Layout changed to [" + layout + "] / [0x"+layout.ToString("X") +"].");
 				if (start_cyclEmuSwitch) {
 					if (layout != cycleEmuDesiredLayout)
 						KMHook.CycleEmulateLayoutSwitch();

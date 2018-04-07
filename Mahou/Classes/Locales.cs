@@ -48,7 +48,7 @@ namespace Mahou
 					Logging.Log("INIT: "+init);
 					lid = GetConsoleAppKbLayout(pid);
 				} catch {
-					Logging.Log("getconkbl.dll not found, console layout get will not be right.", 2); 
+					Logging.Log("getconkbl.dll not found, console layout get will not be right.", 2);
 				}
 				Logging.Log("Tried to get console layout id, return ["+lid+"], pid ["+pid+"].");
 				layoutId = lid;

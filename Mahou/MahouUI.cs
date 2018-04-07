@@ -370,8 +370,8 @@ namespace Mahou {
 				Hotkey.CallHotkey(MMain.mahou.Mainhk, id, ref hkShWndOK, ToggleVisibility);
 				Hotkey.CallHotkey(MMain.mahou.HKToggleLP, id, ref hkToglLPOK, ToggleLangPanel);
 				Hotkey.CallHotkey(MMain.mahou.ExitHk, id, ref hkExitOK, ExitProgram);
-				if (m.WParam.ToInt32() < (int)Hotkey.HKID.TransliterateSelection)
-					KMHook.ClearModifiers();
+//				if (m.WParam.ToInt32() <= (int)Hotkey.HKID.TransliterateSelection)
+//					KMHook.ClearModifiers();
 				UpdateLDs();
 			}
 			base.WndProc(ref m);

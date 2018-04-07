@@ -519,15 +519,17 @@ namespace Mahou
 					PLC_HWNDs.Add(hwnd);
 			}
 			if (MahouUI.UseJKL) {
-				if (!ConHost_HWNDs.Contains(hwnd)) {
+				if (ConHost_HWNDs.Contains(hwnd)) {
+					Logging.Log("[JKL] > Known ConHost window: " + hwnd);
+					jklXHidServ.CycleAllLayouts(hwnd);
+				} else {
 					var strb = new StringBuilder(350);
 					WinAPI.GetClassName(hwnd, strb, strb.Capacity);
 					if (strb.ToString() == "ConsoleWindowClass") {
+						Logging.Log("[JKL] > ["+hwnd+"] = ConHost window, remembering...");
 						ConHost_HWNDs.Add(hwnd);
+						jklXHidServ.CycleAllLayouts(hwnd);
 					}
-				} else {
-					Logging.Log("Known ConHost window: " + hwnd);
-					jklXHidServ.CycleAllLayouts(hwnd);
 				}
 			}
 			uint hwndLayout = Locales.GetCurrentLocale(hwnd);
@@ -1551,15 +1553,15 @@ namespace Mahou
 			Logging.Log("Changing to specific layout ["+LayoutId+"] by emulating layout switch.");
 			for (int i = MMain.locales.Length; i != 0; i--) {
 				uint loc = Locales.GetCurrentLocale();
-				Debug.WriteLine(loc + " " + last);
+//				Debug.WriteLine(loc + " " + last);
 				if (MahouUI.UseJKL && (loc == 0 || loc == last)) {
 					jklXHidServ.start_cyclEmuSwitch = true;
 					jklXHidServ.cycleEmuDesiredLayout = LayoutId;
-					Debug.WriteLine("LI: " + LayoutId);
+//					Debug.WriteLine("LI: " + LayoutId);
 					CycleEmulateLayoutSwitch();
 					break;
 				} else {
-					Debug.WriteLine(i+".LayoutID: " + LayoutId + ", loc: " +loc);
+//					Debug.WriteLine(i+".LayoutID: " + LayoutId + ", loc: " +loc);
 					if (loc == LayoutId) {
 						failed = false;
 						break;
@@ -1698,18 +1700,26 @@ namespace Mahou
 				if (Hotkey.ContainsModifier(modstoup, (int)WinAPI.MOD_WIN)) {
 					KMHook.KeybdEvent(Keys.LWin, 2); // Right Win Up
 					KMHook.KeybdEvent(Keys.RWin, 2); // Left Win Up
+					win = win_r = false;
+					LLHook.SetModifier(WinAPI.MOD_WIN, false);
 				}
 				if (Hotkey.ContainsModifier(modstoup, (int)WinAPI.MOD_SHIFT)) {
 					KMHook.KeybdEvent(Keys.RShiftKey, 2); // Right Shift Up
 					KMHook.KeybdEvent(Keys.LShiftKey, 2); // Left Shift Up
+					shift = shift_r = false;
+					LLHook.SetModifier(WinAPI.MOD_SHIFT, false);
 				}
 				if (Hotkey.ContainsModifier(modstoup, (int)WinAPI.MOD_CONTROL)) {
 					KMHook.KeybdEvent(Keys.RControlKey, 2); // Right Control Up
 					KMHook.KeybdEvent(Keys.LControlKey, 2); // Left Control Up
+					ctrl = ctrl_r = false;
+					LLHook.SetModifier(WinAPI.MOD_CONTROL, false);
 				}
 				if (Hotkey.ContainsModifier(modstoup, (int)WinAPI.MOD_ALT)) {
 					KMHook.KeybdEvent(Keys.RMenu, 2); // Right Alt Up
 					KMHook.KeybdEvent(Keys.LMenu, 2); // Left Alt Up
+					alt = alt_r = false;
+					LLHook.SetModifier(WinAPI.MOD_ALT, false);
 				}
 				Logging.Log("Modifiers ["+modstoup+ "] sent up.");
               });
