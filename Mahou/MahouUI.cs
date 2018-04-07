@@ -166,6 +166,7 @@ namespace Mahou {
 		public static List<IntPtr> NOT_PERSISTENT_LAYOUT2_HWNDs = new List<IntPtr>(); 
 		#endregion
 		public MahouUI() {
+			MMain.MAHOU_HANDLE = Handle;
 			InitializeComponent();
 			InitializeTrayIcon();
 			// Switch to more secure connection.

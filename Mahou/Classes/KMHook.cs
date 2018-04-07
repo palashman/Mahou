@@ -526,7 +526,7 @@ namespace Mahou
 						ConHost_HWNDs.Add(hwnd);
 					}
 				} else {
-					Debug.WriteLine("Known ConHost window: " + hwnd);
+					Logging.Log("Known ConHost window: " + hwnd);
 					jklXHidServ.CycleAllLayouts(hwnd);
 				}
 			}

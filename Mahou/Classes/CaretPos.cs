@@ -54,7 +54,7 @@ namespace Mahou {
 			IntPtr _fwFCS = IntPtr.Zero;
 			var _clsNMb = new StringBuilder(256);
 			string _clsNMfw = "";
-			Logging.Log("_c HWND: [" +MMain.mahou.Handle+ "], _c ThrId: ["+_cThr_id+
+			Logging.Log("_c HWND: [" +MMain.MAHOU_HANDLE+ "], _c ThrId: ["+_cThr_id+
 			            "], "+"_fw HWND: ["+_fw+"]"+", _fw ThrId: "+_fwThr_id+".");
 			if (_fwThr_id != _cThr_id) {
 				var gti = new WinAPI.GUITHREADINFO();
