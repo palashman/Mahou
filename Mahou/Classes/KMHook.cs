@@ -1479,16 +1479,20 @@ namespace Mahou
 			} else {
 				if (MMain.mahou.SwitchBetweenLayouts) {
 					uint last = 0;
-					for (int i=2; i!=0; i--) {
+					uint desired = 0;
+					for (int i=MMain.locales.Length; i!=0; i--) {
 						var nowLocale = Locales.GetCurrentLocale();
 						if (MahouUI.UseJKL)
 							if (nowLocale == 0 || last == nowLocale)
 								nowLocale = MahouUI.currentLayout;
+						if (nowLocale == desired)
+							break;
 						uint notnowLocale = nowLocale == MahouUI.MAIN_LAYOUT1
 			                ? MahouUI.MAIN_LAYOUT2
 			                : MahouUI.MAIN_LAYOUT1;
 						last = nowLocale;
 						ChangeToLayout(Locales.ActiveWindow(), notnowLocale);
+						desired = notnowLocale;
 						if (MMain.mahou.EmulateLS)
 							break;
 					}
