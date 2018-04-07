@@ -9,6 +9,7 @@ namespace Mahou {
 		public static uint cycleEmuDesiredLayout = 0;
 		public static bool start_cyclEmuSwitch = false;
 		public static int jkluMSG = -1;
+		public static bool running = false;
 		/// <summary>0=exe, 1=dll, 2=x86.exe, 3=x86.dll</summary>
 		public static bool[] jklFEX = new bool[5];
 		public static string jklInfoStr = "";
@@ -17,8 +18,12 @@ namespace Mahou {
 	    static public void Destroy() {
 			if (HWND != IntPtr.Zero) {
 				var serv = WinAPI.FindWindow("_HIDDEN_HWND_SERVER", "_HIDDEN_HWND_SERVER");
+				var x86help = WinAPI.FindWindow("_HIDDEN_X86_HELPER", "_HIDDEN_X86_HELPER");
 				if (serv != IntPtr.Zero)
 					WinAPI.PostMessage(serv, WinAPI.WM_QUIT, 0, 0);
+				if (x86help != IntPtr.Zero)
+					WinAPI.PostMessage(x86help, WinAPI.WM_QUIT, 0, 0);
+				running = false;
 				// Multiple CreateWindowEx & WM_DESTROY causes NullReference exception in NATIVE CODE!!
 				// So its disabled for now... Create window 1 time and not destroy it.
 //				WinAPI.PostMessage(HWND, WinAPI.WM_DESTROY, 0, 0); 
@@ -40,6 +45,14 @@ namespace Mahou {
 			return false;
 		}
 	    public static void Init() {
+			if (running) {
+				if (Process.GetProcessesByName("jkl").Length > 0)
+					Logging.Log("[JKL] > JKL already running.");
+				else {
+					Logging.Log("[JKL] > JKL seems closed, restarting...");
+					running = false;
+				}
+			}
 			if (HWND == IntPtr.Zero) {
 				Logging.Log("[JKL] > Initializing JKL HWND server...");
 		        WNDPROC_DELEGATE = jklWndProc;
@@ -54,30 +67,33 @@ namespace Mahou {
 		        HWND = WinAPI.CreateWindowExW(0, "_XHIDDEN_HWND_SERVER", "_XHIDDEN_HWND_SERVER", 0, 0, 0, 0, 0,
 		                                      IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
 			}
-			if (jklExist()) {
-				Logging.Log("[JKL] > Starting jkl.exe...");
-	        	Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "jkl.exe"));
-				var umsgID = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "umsg.id");
-				var tries = 0;
-				while (!File.Exists(umsgID)) {
-					Thread.Sleep(50);
-					tries++;
-					if (tries > 20) {
-						Logging.Log("[JKL] > Error, umsg.id not found after 20 tries by 50 ms timeout.", 1);
-						Destroy();
-						break;
+			if (!running) {
+				if (jklExist()) {
+					Logging.Log("[JKL] > Starting jkl.exe...");
+		        	Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "jkl.exe"));
+					var umsgID = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "umsg.id");
+					var tries = 0;
+					while (!File.Exists(umsgID)) {
+						Thread.Sleep(50);
+						tries++;
+						if (tries > 20) {
+							Logging.Log("[JKL] > Error, umsg.id not found after 20 tries by 50 ms timeout.", 1);
+							Destroy();
+							break;
+						}
 					}
+					if (tries <= 20) {
+						Logging.Log("[JKL] > Retrieving umsg.id...");
+						jkluMSG = Convert.ToInt32(File.ReadAllText(umsgID));
+						File.Delete(umsgID);
+						KMHook.DoLater(() => CycleAllLayouts(Locales.ActiveWindow()), 350);
+						running = true;
+					}
+				} else {
+					Logging.Log("[JKL] > " + jklInfoStr, 1);
 				}
-				if (tries < 20) {
-					Logging.Log("[JKL] > Retrieving umsg.id...");
-					jkluMSG = Convert.ToInt32(File.ReadAllText(umsgID));
-					File.Delete(umsgID);
-					KMHook.DoLater(() => CycleAllLayouts(Locales.ActiveWindow()), 350);
-				}
-			} else {
-				Logging.Log("[JKL] > " + jklInfoStr, 1);
+				Logging.Log("[JKL] > Init done, umsg: ["+jkluMSG+"], JKLXServ: ["+HWND+"].");
 			}
-			Logging.Log("[JKL] > Init done, umsg: ["+jkluMSG+"], JKLXServ: ["+HWND+"].");
 	    }
 		public static void CycleAllLayouts(IntPtr hwnd) {
 			for (int i = MMain.locales.Length; i != 0; i--) {
