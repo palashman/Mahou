@@ -74,15 +74,16 @@ namespace Mahou {
 					var umsgID = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "umsg.id");
 					var tries = 0;
 					while (!File.Exists(umsgID)) {
-						Thread.Sleep(50);
+						Thread.Sleep(350);
 						tries++;
 						if (tries > 20) {
-							Logging.Log("[JKL] > Error, umsg.id not found after 20 tries by 50 ms timeout.", 1);
+							Logging.Log("[JKL] > Error, umsg.id not found after 20 tries by 350 ms timeout.", 1);
 							Destroy();
 							break;
 						}
 					}
 					if (tries <= 20) {
+						Logging.Log("[JKL] > umsg.id found, after " + tries + " tries * 350ms timeout.");
 						Logging.Log("[JKL] > Retrieving umsg.id...");
 						jkluMSG = Convert.ToInt32(File.ReadAllText(umsgID));
 						File.Delete(umsgID);

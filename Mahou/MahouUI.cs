@@ -220,6 +220,11 @@ namespace Mahou {
 						showUpdWnd.Stop();
 						showUpdWnd.Dispose();
 					}
+					if (AtUpdateShow == 3) {
+						Logging.Log("Network error.", 1);
+						showUpdWnd.Stop();
+						showUpdWnd.Dispose();
+					}
 				};
 				showUpdWnd.Interval = 1000;
 				showUpdWnd.Start();
@@ -2809,6 +2814,7 @@ DEL ""ExtractASD.cmd""";
 					AtUpdateShow = 2; // No Updates
 			} catch(Exception e) {
 				Logging.Log("Unexpected error: \n" + e.Message +"\n" + e.StackTrace);
+				AtUpdateShow = 3;
 			}
 		}
 		/// <summary>
