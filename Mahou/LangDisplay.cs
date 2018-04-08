@@ -78,6 +78,8 @@ namespace Mahou
 			if (!Visible || Empty) return;
 			if (cLid == 0)
 				cLid = MahouUI.currentLayout;
+			if (MahouUI.UseJKL)
+				cLid = MahouUI.currentLayout;
 			if (MMain.mahou.OneLayout)
 				cLid = MahouUI.GlobalLayout;
 			if (MMain.mahou.LDCaretTransparentBack_temp && caretDisplay)
