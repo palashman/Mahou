@@ -2531,7 +2531,7 @@ DEL "+restartMahouPath;
 				File.Delete(file);
 				Logging.Log("Deleting file ["+file+"] succeeded.");
 			} catch {
-				Logging.Log("Deleting file [" + file + "] not succeded, trying to move.", 2);
+				Logging.Log("Deleting file [" + file + "] not succeeded, trying to move.", 2);
 				try {
 					var name = Guid.NewGuid().ToString("n").Substring(0, 8);
 					var d = Path.GetDirectoryName(file);
@@ -2550,8 +2550,10 @@ DEL "+restartMahouPath;
 			try {
 				if (Directory.Exists(trash)) {
 					Directory.Delete(trash, true);
+					Logging.Log("Deleting ["+trash+"] directory succeeded.");
+				} else {
+					Logging.Log("No trash found. ("+trash+")");
 				}
-				Logging.Log("Deleting ["+trash+"] directory succeeded.");
 			} catch (Exception e) { 
 				Logging.Log("Error deleting trash directory, details:\r\n" + e.Message + "\r\n" + e.StackTrace, 2);
 			}
