@@ -166,6 +166,7 @@ namespace Mahou {
 		public static List<IntPtr> NOT_PERSISTENT_LAYOUT2_HWNDs = new List<IntPtr>(); 
 		#endregion
 		public MahouUI() {
+			DeleteTrash();
 			MMain.MAHOU_HANDLE = Handle;
 			InitializeComponent();
 			InitializeTrayIcon();
@@ -2525,6 +2526,47 @@ DEL "+restartMahouPath;
 			                                            @"Win\s?\+?\s?|\s?\+?\s?None\s?\+?\s?|^[ +]+|\s?\+\s?$", "", RegexOptions.Multiline);
 			(_set.Controls["chk_win"+setIndex] as CheckBox).Checked = modifiers.Contains("Win");
 		}
+		void DeleteOrMove(string file) {
+			try {
+				File.Delete(file);
+			} catch {
+				Logging.Log("Deleting file [" + file + "] not succeded, trying to move.");
+				try {
+					var name = Guid.NewGuid().ToString("n").Substring(0, 8);
+					var d = Path.GetDirectoryName(file);
+					var trash = Path.Combine(d, "trash");
+					if (!Directory.Exists(trash))
+						Directory.CreateDirectory(trash);
+					var f = Path.Combine(trash, name);
+					File.Move(file, f);
+				} catch (Exception e) {
+					Logging.Log("Unexpected error happened when trying to move file, details:\r\n" + e.Message + "\r\n" + e.StackTrace);
+				}
+			}
+		}
+		void DeleteTrash() {
+			var trash = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "trash");
+			try {
+				if (Directory.Exists(trash)) {
+					Directory.Delete(trash, true);
+				}
+			} catch (Exception e) { 
+				Logging.Log("Error deleting trash directory, details:\r\n" + e.Message + "\r\n" + e.StackTrace);
+			}
+		}
+		void  DeleteOldJKL() {
+			if (jklXHidServ.jklExist()) {
+				var jkl = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "jkl");
+				if (jklXHidServ.jklFEX[0])
+					DeleteOrMove(jkl+".exe");
+				if (jklXHidServ.jklFEX[1])
+					DeleteOrMove(jkl+".dll");
+				if (jklXHidServ.jklFEX[2])
+					DeleteOrMove(jkl+"x86.exe");
+				if (jklXHidServ.jklFEX[3])
+					DeleteOrMove(jkl+"x86.dll");
+			}
+		}
 		#region Updates functions
 		void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
 			if (isold)
@@ -2536,8 +2578,8 @@ DEL "+restartMahouPath;
 				int MahouPID = Process.GetCurrentProcess().Id;
 				//Downloaded archive
 				var arch = Regex.Match(UpdInfo[3], @"[^\\\/]+$").Groups[0].Value;
-				//This prevent Mahou icon from stucking in tray
-				MMain.mahou.icon.Hide();
+				PreExit();
+				DeleteOldJKL();
 				//Batch script to create other script o.0,
 				//which shutdown running Mahou,
 				//delete old version,
