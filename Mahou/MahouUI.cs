@@ -2529,8 +2529,9 @@ DEL "+restartMahouPath;
 		void DeleteOrMove(string file) {
 			try {
 				File.Delete(file);
+				Logging.Log("Deleting file ["+file+"] succeeded.");
 			} catch {
-				Logging.Log("Deleting file [" + file + "] not succeded, trying to move.");
+				Logging.Log("Deleting file [" + file + "] not succeded, trying to move.", 2);
 				try {
 					var name = Guid.NewGuid().ToString("n").Substring(0, 8);
 					var d = Path.GetDirectoryName(file);
@@ -2540,7 +2541,7 @@ DEL "+restartMahouPath;
 					var f = Path.Combine(trash, name);
 					File.Move(file, f);
 				} catch (Exception e) {
-					Logging.Log("Unexpected error happened when trying to move file, details:\r\n" + e.Message + "\r\n" + e.StackTrace);
+					Logging.Log("Unexpected error happened when trying to move file, details:\r\n" + e.Message + "\r\n" + e.StackTrace, 1);
 				}
 			}
 		}
@@ -2550,8 +2551,9 @@ DEL "+restartMahouPath;
 				if (Directory.Exists(trash)) {
 					Directory.Delete(trash, true);
 				}
+				Logging.Log("Deleting ["+trash+"] directory succeeded.");
 			} catch (Exception e) { 
-				Logging.Log("Error deleting trash directory, details:\r\n" + e.Message + "\r\n" + e.StackTrace);
+				Logging.Log("Error deleting trash directory, details:\r\n" + e.Message + "\r\n" + e.StackTrace, 2);
 			}
 		}
 		void  DeleteOldJKL() {
