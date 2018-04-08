@@ -36,6 +36,10 @@ namespace Mahou {
 			jklFEX[1] = File.Exists(pth+".dll");
 			jklFEX[2] = File.Exists(pth+"x86.exe");
 			jklFEX[3] = File.Exists(pth+"x86.dll");
+			if (!Environment.Is64BitOperatingSystem) {
+				if (jklFEX[2] && jklFEX[3])
+					return true;
+			}
 			if (jklFEX[0] && jklFEX[1] && jklFEX[2] && jklFEX[3])
 				return true;
 			jklInfoStr = "jkl.exe " + (jklFEX[0] ? "" : MMain.Lang[Languages.Element.Not] + " ") + MMain.Lang[Languages.Element.Exist] + "\r\n";
@@ -46,9 +50,19 @@ namespace Mahou {
 		}
 	    public static void Init() {
 			if (running) {
-				if (Process.GetProcessesByName("jkl").Length > 0)
-					Logging.Log("[JKL] > JKL already running.");
-				else {
+				bool exist = true;
+				if (Environment.Is64BitOperatingSystem) {
+					if (Process.GetProcessesByName("jkl").Length > 0) {
+						Logging.Log("[JKL] > JKL already running.");
+					} else 
+						exist = false;
+				} else 	{
+					if (Process.GetProcessesByName("jklx86").Length > 0) {
+						Logging.Log("[JKL] > JKLx86 already running.");
+					} else 
+						exist = false;
+				}
+				if (!exist) {
 					Logging.Log("[JKL] > JKL seems closed, restarting...");
 					running = false;
 				}
@@ -69,8 +83,13 @@ namespace Mahou {
 			}
 			if (!running) {
 				if (jklExist()) {
-					Logging.Log("[JKL] > Starting jkl.exe...");
-		        	Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "jkl.exe"));
+					if (Environment.Is64BitOperatingSystem) {
+						Logging.Log("[JKL] > Starting jkl.exe...");
+			        	Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "jkl.exe"));
+					} else {
+						Logging.Log("[JKL] > Starting \"jklx86.exe -msg\"...");
+			        	Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "jklx86.exe"), "-msg");
+					}
 					var umsgID = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "umsg.id");
 					var tries = 0;
 					while (!File.Exists(umsgID)) {
