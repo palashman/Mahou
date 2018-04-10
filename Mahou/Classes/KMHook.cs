@@ -167,7 +167,7 @@ namespace Mahou
 			if (MMain.mahou.SnippetsEnabled && !ExcludedProgram()) {
 				if (((Key >= Keys.D0 && Key <= Keys.Z) || // This is 0-9 & A-Z
 				   Key >= Keys.Oem1 && Key <= Keys.OemBackslash // All other printable
-				  ) && !win && !win_r && !alt && !alt_r && !ctrl && !ctrl_r && MSG == WinAPI.WM_KEYUP) {
+				  ) && !win && !win_r && !alt && !alt_r && !ctrl && !ctrl_r && MSG == WinAPI.WM_KEYDOWN) {
 					var stb = new StringBuilder(10);
 					var byt = new byte[256];
 					if (shift || shift_r) {
