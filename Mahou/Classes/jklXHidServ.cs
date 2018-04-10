@@ -85,10 +85,19 @@ namespace Mahou {
 				if (jklExist()) {
 					if (Environment.Is64BitOperatingSystem) {
 						Logging.Log("[JKL] > Starting jkl.exe...");
-			        	Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "jkl.exe"));
+						var jkl = new ProcessStartInfo();
+						jkl.UseShellExecute = true;
+						jkl.FileName = "jkl.exe";
+						jkl.WorkingDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory);
+			        	Process.Start(jkl);
 					} else {
 						Logging.Log("[JKL] > Starting \"jklx86.exe -msg\"...");
-			        	Process.Start(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "jklx86.exe"), "-msg");
+						var jkl = new ProcessStartInfo();
+						jkl.UseShellExecute = true;
+						jkl.FileName = "jklx86.exe";
+						jkl.Arguments = "-msg";
+						jkl.WorkingDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory);
+			        	Process.Start(jkl);
 					}
 					var umsgID = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "umsg.id");
 					var tries = 0;
