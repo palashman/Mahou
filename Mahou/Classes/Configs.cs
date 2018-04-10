@@ -382,7 +382,7 @@ namespace Mahou {
 			CheckBool("Layouts", "SwitchBetweenLayouts", "true");
 			#endregion
             #region Functions section
-            CheckBool("Functions", "UseJKL", "false");
+            CheckBool("Functions", "UseJKL", "true");
             CheckBool("Functions", "RemapCapslockAsF18", "true");
             CheckBool("Functions", "AppDataConfigs", forceAppData.ToString());
             CheckBool("Functions", "GuessKeyCodeFix", "false");
