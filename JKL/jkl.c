@@ -24,6 +24,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam) {
 	return DefWindowProc(hWnd, Msg, wParam, lParam);
 }
 
+void getdir(char* fullPath) { 
+    char *dir = &fullPath[strlen(fullPath)];
+    while (dir > fullPath && *dir != '\\')
+        dir--;
+    if (*dir ==  '\\')
+        *dir = '\0';
+    return;
+}
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR nCmdLine, int nCmdShow) {
 	if (FindWindow("_HIDDEN_HWND_SERVER", NULL))
 		exit(0); // Already exist
@@ -40,8 +49,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR nCmdLine,
 		exit(-1);
 	fprintf(fp, "%i", uMSG);
 	fclose(fp);
-	if (FileExist("jklx86.exe"))
-		ShellExecute(0, "open", "jklx86.exe", NULL, ".\\", SW_HIDE);
+	char dir[1536];
+	GetModuleFileName(NULL, dir, sizeof(dir)-1);
+	char jklx86[2048];
+	getdir(dir);
+	strcat(jklx86, dir);
+	strcat(jklx86, "\\jklx86.exe");
+	if (FileExist(jklx86))
+		ShellExecute(0, "open", "jklx86.exe", NULL, dir, SW_HIDE);
 	// else
 		// printf("%s support won't be available...\n", ARCH);
 	MSG Msg;
