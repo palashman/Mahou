@@ -80,7 +80,8 @@ namespace Mahou
 				if (MyConfs.Read("Layouts", "MainLayout1") == "" && MyConfs.Read("Layouts", "MainLayout2") == "") {
 					Logging.Log("Initializing locales.");
 					MyConfs.Write("Layouts", "MainLayout1", lcnmid[0]);
-					MyConfs.Write("Layouts", "MainLayout2", lcnmid[1]);
+					if (lcnmid.Count > 1)
+						MyConfs.Write("Layouts", "MainLayout2", lcnmid[1]);
 					MyConfs.WriteToDisk();
 				}
 				mahou = new MahouUI();
