@@ -81,6 +81,7 @@ namespace Mahou
 					Logging.Log("Initializing locales.");
 					MyConfs.Write("Layouts", "MainLayout1", lcnmid[0]);
 					MyConfs.Write("Layouts", "MainLayout2", lcnmid[1]);
+					MyConfs.WriteToDisk();
 				}
 				mahou = new MahouUI();
 				rif = new RawInputForm();
