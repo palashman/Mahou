@@ -99,7 +99,7 @@ namespace Mahou {
 						jkl.WorkingDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory);
 			        	Process.Start(jkl);
 					}
-					var umsgID = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "umsg.id");
+					var umsgID = Path.Combine(Path.GetTempPath(), "umsg.id");
 					var tries = 0;
 					while (!File.Exists(umsgID)) {
 						Thread.Sleep(350);
