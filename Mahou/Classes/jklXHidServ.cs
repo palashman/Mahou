@@ -88,7 +88,7 @@ namespace Mahou {
 						var jkl = new ProcessStartInfo();
 						jkl.UseShellExecute = true;
 						jkl.FileName = "jkl.exe";
-						jkl.WorkingDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory);
+						jkl.WorkingDirectory = Path.Combine(Path.GetTempPath());
 			        	Process.Start(jkl);
 					} else {
 						Logging.Log("[JKL] > Starting \"jklx86.exe -msg\"...");
@@ -96,7 +96,7 @@ namespace Mahou {
 						jkl.UseShellExecute = true;
 						jkl.FileName = "jklx86.exe";
 						jkl.Arguments = "-msg";
-						jkl.WorkingDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory);
+						jkl.WorkingDirectory = Path.Combine(Path.GetTempPath());
 			        	Process.Start(jkl);
 					}
 					var umsgID = Path.Combine(Path.GetTempPath(), "umsg.id");
