@@ -1484,9 +1484,14 @@ namespace Mahou
 					uint desired = 0;
 					for (int i=MMain.locales.Length; i!=0; i--) {
 						var nowLocale = Locales.GetCurrentLocale();
-						if (MahouUI.UseJKL)
-							if (nowLocale == 0 || last == nowLocale)
+						if (MahouUI.UseJKL) {
+							if (nowLocale == 0)
 								nowLocale = MahouUI.currentLayout;
+							if (last == nowLocale && nowLocale != 0) {
+								nowLocale = MahouUI.currentLayout;
+								desired = 0;
+							}
+						}
 						if (nowLocale == desired)
 							break;
 						uint notnowLocale = nowLocale == MahouUI.MAIN_LAYOUT1
@@ -1531,7 +1536,7 @@ namespace Mahou
 			//Cycles while layout not changed
 			do {
 				if (MahouUI.UseJKL)
-					if (loc == last)
+					if (loc == last && loc != 0)
 						loc = MahouUI.currentLayout;
 				WinAPI.PostMessage(hwnd, WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, LayoutId);
 				Thread.Sleep(10);//Give some time to switch layout
@@ -1626,6 +1631,8 @@ namespace Mahou
 			for (int i=MMain.locales.Length; i!=0; i--) {
 				var br = false;
 				var cur = Locales.GetCurrentLocale(); 
+				if (last != 0 && cur != last)
+					break;
 				if (MahouUI.UseJKL)
 					if (cur == 0 || cur == last)
 						cur = MahouUI.currentLayout;
@@ -1642,9 +1649,10 @@ namespace Mahou
 					Logging.Log("LIDC = "+lidc +" curid = "+curind + " Lidle = " +(MMain.locales.Length - 1));
 					if (lidc > curind)
 						if (l.uId != cur) {
-							Logging.Log("Locales +1 Next BREAK!");
+							Logging.Log("Locales +1 Next BREAK on " + l.uId);
 							ChangeToLayout(Locales.ActiveWindow(), l.uId);
-							br = true;
+							if (last !=0) // ensure its checked at least twice
+								br = true;
 							break;
 					}
 					lidc++;
