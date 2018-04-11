@@ -89,7 +89,8 @@ namespace Mahou
 				Locales.IfLessThan2();
 				if (MyConfs.Read("Layouts", "MainLayout1") == "" && MyConfs.Read("Layouts", "MainLayout2") == "") {
 					mahou.cbb_MainLayout1.SelectedIndex = 0;
-					mahou.cbb_MainLayout2.SelectedIndex = 1;
+					if (lcnmid.Count > 1)
+						mahou.cbb_MainLayout2.SelectedIndex = 1;
 				}
 				_evt_hookID = WinAPI.SetWinEventHook(WinAPI.EVENT_SYSTEM_FOREGROUND, WinAPI.EVENT_SYSTEM_FOREGROUND,
 				                                     IntPtr.Zero, _evt_proc, 0, 0, WinAPI.WINEVENT_OUTOFCONTEXT);

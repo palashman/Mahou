@@ -139,6 +139,7 @@ namespace Mahou {
         	try {
 	        	if (!File.Exists(filePath)) { //Create an UTF-16 configuration file
 	                File.WriteAllText(filePath, "!Unicode(✔), Mahou settings file", Encoding.Unicode);
+	                create = false;
         		} else { 
 			    	using (var sr = new StreamReader(filePath)) {
 			    				sr.Read();
@@ -147,16 +148,21 @@ namespace Mahou {
         		fine = true;
         	} catch(Exception e) {
         		fine = false;
-        		if (MessageBox.Show(MMain.Lang[Languages.Element.ConfigsCannot]+(create ? MMain.Lang[Languages.Element.Created] : MMain.Lang[Languages.Element.Readen])+", "+ MMain.Lang[Languages.Element.Error].ToLower() + ":\r\n" + e.Message + "\r\n" + MMain.Lang[Languages.Element.RetryInAppData],
+        		if (!SwitchToAppData(create, e)) 
+        			System.Diagnostics.Process.GetCurrentProcess().Kill();
+        	}
+        }
+        public static bool SwitchToAppData(bool create, Exception e) {
+         if (MessageBox.Show(MMain.Lang[Languages.Element.ConfigsCannot]+(create ? MMain.Lang[Languages.Element.Created] : MMain.Lang[Languages.Element.Readen])+", "+ MMain.Lang[Languages.Element.Error].ToLower() + ":\r\n" + e.Message + "\r\n" + MMain.Lang[Languages.Element.RetryInAppData],
         		                    MMain.Lang[Languages.Element.Error], MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes) {
         			if (!Directory.Exists(MahouUI.mahou_folder_appd))
         				Directory.CreateDirectory(MahouUI.mahou_folder_appd);
         			filePath = Path.Combine(MahouUI.mahou_folder_appd, "Mahou.ini");
         			File.Create(Path.Combine(MahouUI.mahou_folder_appd,".force"));
         			MMain.MyConfs = new Configs();
-        		} else 
-        		System.Diagnostics.Process.GetCurrentProcess().Kill();
-        	}
+        			return true;
+        		}
+        	return false;
         }
         /// <summary> Check if configs file readable. </summary>
         /// <returns>Read access.</returns>
@@ -451,7 +457,14 @@ namespace Mahou {
         	_INI = new INI(File.ReadAllText(filePath));
         }
         public void WriteToDisk() {
-        	File.WriteAllText(filePath, _INI.Raw);
+        	try {
+        		File.WriteAllText(filePath, _INI.Raw);
+        	} catch (Exception e) {
+        		Logging.Log("Can't write configs file by path: ["+filePath+"].", 1);
+        		SwitchToAppData(true, e);
+        		_INI.SetValue("Functions", "AppDataConfigs", "true");
+        		File.WriteAllText(filePath, _INI.Raw);
+        	}
         }
     }
 }
