@@ -1482,10 +1482,16 @@ namespace Mahou
 				if (MMain.mahou.SwitchBetweenLayouts) {
 					uint last = 0;
 					uint desired = 0;
+					bool conhost = false;
+					if (MahouUI.UseJKL) {
+						var strb = new StringBuilder(256);
+						WinAPI.GetClassName(WinAPI.GetForegroundWindow(), strb, strb.Capacity);
+						conhost = strb.ToString() == "ConsoleWindowClass";
+					}
 					for (int i=MMain.locales.Length; i!=0; i--) {
 						var nowLocale = Locales.GetCurrentLocale();
 						if (MahouUI.UseJKL) {
-							if (nowLocale == 0)
+							if (nowLocale == 0 || conhost)
 								nowLocale = MahouUI.currentLayout;
 							if (last == nowLocale && nowLocale != 0) {
 								nowLocale = MahouUI.currentLayout;
@@ -1498,7 +1504,7 @@ namespace Mahou
 			                ? MahouUI.MAIN_LAYOUT2
 			                : MahouUI.MAIN_LAYOUT1;
 						last = nowLocale;
-						ChangeToLayout(Locales.ActiveWindow(), notnowLocale);
+						ChangeToLayout(Locales.ActiveWindow(), notnowLocale, conhost);
 						desired = notnowLocale;
 						if (MMain.mahou.EmulateLS)
 							break;
@@ -1517,18 +1523,18 @@ namespace Mahou
 		/// </summary>
 		/// <param name="hwnd">Target window to change its layout.</param>
 		/// <param name="LayoutId">Desired layout to switch to.</param>
-		public static void ChangeToLayout(IntPtr hwnd, uint LayoutId) {
+		public static void ChangeToLayout(IntPtr hwnd, uint LayoutId, bool conhost = false) {
 			if (MMain.mahou.EmulateLS) 
-				EmulateChangeToLayout(LayoutId);
+				EmulateChangeToLayout(LayoutId, conhost);
 			 else
-			 	NormalChangeToLayout(hwnd, LayoutId);
+			 	NormalChangeToLayout(hwnd, LayoutId, conhost);
 		}
 		/// <summary>
 		/// Changing layout to LayoutId in hwnd with PostMessage and WM_INPUTLANGCHANGEREQUEST.
 		/// </summary>
 		/// <param name="hwnd">Target window to change its layout.</param>
 		/// <param name="LayoutId">Desired layout to switch to.</param>
-		static void NormalChangeToLayout(IntPtr hwnd, uint LayoutId) {
+		static void NormalChangeToLayout(IntPtr hwnd, uint LayoutId, bool conhost = false) {
 			Logging.Log("Changing layout using normal mode, WinAPI.PostMessage [WinAPI.WM_INPUTLANGCHANGEREQUEST] with LParam ["+LayoutId+"].");
 			int tries = 0;
 			uint last = 0;
@@ -1536,7 +1542,7 @@ namespace Mahou
 			//Cycles while layout not changed
 			do {
 				if (MahouUI.UseJKL)
-					if (loc == last && loc != 0)
+					if ((loc == last && loc != 0) || conhost)
 						loc = MahouUI.currentLayout;
 				WinAPI.PostMessage(hwnd, WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, LayoutId);
 				Thread.Sleep(10);//Give some time to switch layout
@@ -1553,13 +1559,13 @@ namespace Mahou
 		/// Changing layout to LayoutId by emulating windows layout switch hotkey. 
 		/// </summary>
 		/// <param name="LayoutId">Desired layout to switch to.</param>
-		static void EmulateChangeToLayout(uint LayoutId) {
+		static void EmulateChangeToLayout(uint LayoutId, bool conhost = false) {
 			var last = MahouUI.currentLayout;
 			Logging.Log("Changing to specific layout ["+LayoutId+"] by emulating layout switch.");
 			for (int i = MMain.locales.Length; i != 0; i--) {
 				uint loc = Locales.GetCurrentLocale();
 //				Debug.WriteLine(loc + " " + last);
-				if (MahouUI.UseJKL && (loc == 0 || loc == last)) {
+				if (MahouUI.UseJKL && ((loc == 0 || loc == last) || conhost)) {
 					jklXHidServ.start_cyclEmuSwitch = true;
 					jklXHidServ.cycleEmuDesiredLayout = LayoutId;
 //					Debug.WriteLine("LI: " + LayoutId);
