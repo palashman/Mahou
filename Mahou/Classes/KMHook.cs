@@ -525,7 +525,7 @@ namespace Mahou
 				} else {
 					var strb = new StringBuilder(350);
 					WinAPI.GetClassName(hwnd, strb, strb.Capacity);
-					if (strb.ToString() == "ConsoleWindowClass") {
+					if (strb.ToString() == "ConsoleWindowClass" || strb.ToString() == "Chrome_WidgetWin_1") {
 						Logging.Log("[JKL] > ["+hwnd+"] = ConHost window, remembering...");
 						ConHost_HWNDs.Add(hwnd);
 						jklXHidServ.CycleAllLayouts(hwnd);
