@@ -139,8 +139,11 @@ namespace Mahou {
 						KMHook.CycleEmulateLayoutSwitch();
 					else
 						start_cyclEmuSwitch = false;
-				} else
+				} else {
+					MahouUI.RefreshFLAG();
+					MMain.mahou.RefreshAllIcons();
 					MMain.mahou.UpdateLDs();
+				}
 			}
 	        return WinAPI.DefWindowProcW(hWnd, msg, wParam, lParam);
 	    }
