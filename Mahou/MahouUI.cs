@@ -28,7 +28,7 @@ namespace Mahou {
 		/// </summary>
 		public static string nPath = AppDomain.CurrentDomain.BaseDirectory;
 		public static bool LoggingEnabled, dummy, CapsLockDisablerTimer, LangPanelUpperArrow, mouseLTUpperArrow, caretLTUpperArrow,
-						   ShiftInHotkey, AltInHotkey, CtrlInHotkey, WinInHotkey, AutoStartAsAdmin, UseJKL;
+						   ShiftInHotkey, AltInHotkey, CtrlInHotkey, WinInHotkey, AutoStartAsAdmin, UseJKL, AutoSwitchEnabled;
 		static string[] UpdInfo;
 		static bool updating, was, isold = true, checking, snip_checking, as_checking, check_ASD_size = true;
 		#region Timers
@@ -52,8 +52,8 @@ namespace Mahou {
 		static int progress = 0, _progress = 0;
 		public string SnippetsExpandType = "";
 		int titlebar = 12;
-		public static int AtUpdateShow, SpecKeySetCount;
-		public int DoubleHKInterval = 200, SelectedTextGetMoreTriesCount, SnippetsCount, AutoSwitchCount, DelayAfterBackspaces;
+		public static int AtUpdateShow, SpecKeySetCount, SnippetsCount, AutoSwitchCount;
+		public int DoubleHKInterval = 200, SelectedTextGetMoreTriesCount, DelayAfterBackspaces;
 		#region Temporary variables
 		/// <summary> In memory settings, for timers/hooks.</summary>
 		public bool DiffAppearenceForLayouts, LDForCaretOnChange, LDForMouseOnChange, ScrollTip, AddOneSpace,
@@ -61,7 +61,7 @@ namespace Mahou {
 					RePress, BlockHKWithCtrl, blueIcon, SwitchBetweenLayouts, SelectedTextGetMoreTries, ReSelect,
 					ConvertSelectionLS, ConvertSelectionLSPlus, MCDSSupport, OneLayoutWholeWord,
 					MouseTTAlways, OneLayout, MouseLangTooltipEnabled, CaretLangTooltipEnabled, QWERTZ_fix, 
-					ChangeLayoutInExcluded, SnippetSpaceAfter, SnippetsSwitchToGuessLayout, AutoSwitchEnabled,
+					ChangeLayoutInExcluded, SnippetSpaceAfter, SnippetsSwitchToGuessLayout,
 					AutoSwitchSpaceAfter, AutoSwitchSwitchToGuessLayout, GuessKeyCodeFix, Dowload_ASD_InZip, 
 					LDForCaret, LDForMouse, LDUseWindowsMessages, RemapCapslockAsF18, Add1NL, PersistentLayoutOnWindowChange, PersistentLayoutOnlyOnce,
 					PersistentLayoutForLayout1, PersistentLayoutForLayout2, UseDelayAfterBackspaces;
@@ -1010,7 +1010,12 @@ namespace Mahou {
 				if (File.Exists(snipfile)) {
 					txt_Snippets.Text = File.ReadAllText(snipfile);
 					UpdateSnippetCountLabel(txt_Snippets.Text, lbl_SnippetsCount);
-					KMHook.DoLater(KMHook.ReInitSnippets, 250);
+					KMHook.ReInitSnippets();
+					Debug.WriteLine(SnippetsCount);
+					KMHook.DoLater( () => {
+					               	if (KMHook.snipps.Length != SnippetsCount || KMHook.as_corrects.Length != AutoSwitchCount)
+					               		KMHook.ReInitSnippets();
+					               }, 650);
 				}
 			SnippetsExpandType = MMain.MyConfs.Read("Snippets", "SnippetExpandKey");
 			cbb_SnippetExpandKeys.SelectedIndex = cbb_SnippetExpandKeys.Items.IndexOf(SnippetsExpandType);

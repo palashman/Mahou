@@ -207,7 +207,7 @@ namespace Mahou
 						if (matched || preSnip)
 							c_snip.Clear();
 					}
-					if (MMain.mahou.AutoSwitchEnabled && !matched && as_wrongs != null && Key == Keys.Space) {
+					if (MahouUI.AutoSwitchEnabled && !matched && as_wrongs != null && Key == Keys.Space) {
 		            	var snil = snip.ToLowerInvariant();
 						for (int i = 0; i < as_wrongs.Length; i++) {
 							if (as_corrects.Length > i) {
@@ -1836,9 +1836,9 @@ namespace Mahou
 		public static void GetSnippetsData(string snippets, bool isSnip = true) {
 			var leng = 0;
 			if (isSnip)
-				leng = MMain.mahou.SnippetsCount;
+				leng = MahouUI.SnippetsCount;
 			else
-				leng = MMain.mahou.AutoSwitchCount;
+				leng = MahouUI.AutoSwitchCount;
 			string[] smalls = new string[leng];
 			string[]  bigs = new string[leng];
 			if (String.IsNullOrEmpty(snippets)) return;
@@ -1916,17 +1916,17 @@ namespace Mahou
 				GetSnippetsData(snippets);
 				if (MahouUI.LoggingEnabled) {
 					watch.Stop();
-					Logging.Log("Snippet init finished, elapsed ["+watch.Elapsed.TotalMilliseconds+"] ms.");
+					Logging.Log("Snippets init finished, elapsed ["+watch.Elapsed.TotalMilliseconds+"] ms.");
 					watch.Reset();
 					watch.Start();
 				}
-				if (MMain.mahou.AutoSwitchEnabled)
+				if (MahouUI.AutoSwitchEnabled)
 					GetSnippetsData(MahouUI.AutoSwitchDictionaryRaw, false);
 				else {
 					as_wrongs = as_corrects = null;
 					Memory.Flush();
 				}
-				if (MahouUI.LoggingEnabled) {
+				if (MahouUI.LoggingEnabled && MahouUI.AutoSwitchEnabled) {
 					watch.Stop();
 					Logging.Log("AutoSwitch dictionary init finished, elapsed ["+watch.Elapsed.TotalMilliseconds+"] ms.");
 				}
