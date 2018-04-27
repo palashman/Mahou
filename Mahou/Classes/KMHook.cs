@@ -173,7 +173,10 @@ namespace Mahou
 					if (shift || shift_r) {
 						byt[(int)Keys.ShiftKey] = 0xFF;
 					}
-					WinAPI.ToUnicodeEx((uint)vkCode, (uint)vkCode, byt, stb, stb.Capacity, 0, (IntPtr)(Locales.GetCurrentLocale() & 0xffff));
+					uint layout = Locales.GetCurrentLocale() & 0xffff;
+					if (MahouUI.UseJKL)
+						layout = MahouUI.currentLayout & 0xffff;
+					WinAPI.ToUnicodeEx((uint)vkCode, (uint)vkCode, byt, stb, stb.Capacity, 0, (IntPtr)layout);
 					c_snip.Add(stb.ToString()[0]);
 					Logging.Log("Added ["+ stb.ToString()[0] + "] to current snippet.");
 				}
