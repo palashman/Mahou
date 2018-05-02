@@ -227,6 +227,7 @@ namespace Mahou
 			this.components = new System.ComponentModel.Container();
 			this.tabs = new System.Windows.Forms.TabControl();
 			this.tab_functions = new System.Windows.Forms.TabPage();
+			this.chk_ReadOnlyNA = new System.Windows.Forms.CheckBox();
 			this.chk_GetLayoutFromJKL = new System.Windows.Forms.CheckBox();
 			this.chk_SilentUpdate = new System.Windows.Forms.CheckBox();
 			this.chk_Logging = new System.Windows.Forms.CheckBox();
@@ -421,7 +422,6 @@ namespace Mahou
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
 			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
-			this.chk_ReadOnlyNA = new System.Windows.Forms.CheckBox();
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -523,6 +523,16 @@ namespace Mahou
 			this.tab_functions.TabIndex = 0;
 			this.tab_functions.Text = "Functions";
 			this.tab_functions.UseVisualStyleBackColor = true;
+			// 
+			// chk_ReadOnlyNA
+			// 
+			this.chk_ReadOnlyNA.AutoSize = true;
+			this.chk_ReadOnlyNA.Location = new System.Drawing.Point(302, 194);
+			this.chk_ReadOnlyNA.Name = "chk_ReadOnlyNA";
+			this.chk_ReadOnlyNA.Size = new System.Drawing.Size(145, 19);
+			this.chk_ReadOnlyNA.TabIndex = 26;
+			this.chk_ReadOnlyNA.Text = "Read only if no access.";
+			this.chk_ReadOnlyNA.UseVisualStyleBackColor = true;
 			// 
 			// chk_GetLayoutFromJKL
 			// 
@@ -2768,16 +2778,6 @@ namespace Mahou
 			this.HelpMeUnderstand.ShowAlways = true;
 			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.HelpMeUnderstand.Popup += new System.Windows.Forms.PopupEventHandler(this.HelpMeUnderstandPopup);
-			// 
-			// chk_ReadOnlyNA
-			// 
-			this.chk_ReadOnlyNA.AutoSize = true;
-			this.chk_ReadOnlyNA.Location = new System.Drawing.Point(302, 194);
-			this.chk_ReadOnlyNA.Name = "chk_ReadOnlyNA";
-			this.chk_ReadOnlyNA.Size = new System.Drawing.Size(147, 19);
-			this.chk_ReadOnlyNA.TabIndex = 26;
-			this.chk_ReadOnlyNA.Text = "Read Only if no access.";
-			this.chk_ReadOnlyNA.UseVisualStyleBackColor = true;
 			// 
 			// MahouUI
 			// 
