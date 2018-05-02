@@ -170,7 +170,7 @@ namespace Mahou
 				  ) && !win && !win_r && !alt && !alt_r && !ctrl && !ctrl_r && MSG == WinAPI.WM_KEYDOWN) {
 					var stb = new StringBuilder(10);
 					var byt = new byte[256];
-					if (shift || shift_r) {
+					if (shift || shift_r || Control.IsKeyLocked(Keys.CapsLock)) {
 						byt[(int)Keys.ShiftKey] = 0xFF;
 					}
 					uint layout = Locales.GetCurrentLocale() & 0xffff;
@@ -378,7 +378,7 @@ namespace Mahou
 						ClearWord(true, false, false, "Clear last word after 1 enter");
 						afterEOL = false;
 					}
-					if (!shift && !shift_r) {
+					if (!shift && !shift_r && !Control.IsKeyLocked(Keys.CapsLock)) {
 						MMain.c_word.Add(new YuKey() {
 							key = Key,
 							upper = false
@@ -532,19 +532,23 @@ namespace Mahou
 						Logging.Log("[JKL] > ["+hwnd+"] = ConHost window, remembering...");
 						ConHost_HWNDs.Add(hwnd);
 						jklXHidServ.CycleAllLayouts(hwnd);
+					} else {
+						MahouUI.currentLayout = MahouUI.GlobalLayout = Locales.GetCurrentLocale();
+						Logging.Log("[JKL] > Updating currentLayout on window activate to ["+MahouUI.currentLayout+"]...");
 					}
 				}
 			}
 			uint hwndLayout = Locales.GetCurrentLocale(hwnd);
-			Logging.Log("Hwnd " + hwnd + ", layout: " + hwndLayout + ", Mahou layout: " + MahouUI.GlobalLayout);			
-			if (hwndLayout != MahouUI.GlobalLayout && MMain.mahou.OneLayout) {
-				var title = new StringBuilder(128);
-				WinAPI.GetWindowText(hwnd, title, 127);
-				DoLater(() => {
-					Logging.Log("Layout in this window ["+title+"] was different, changing layout to Mahou global layout.");
-					ChangeToLayout(Locales.ActiveWindow(), MahouUI.GlobalLayout);
-		       	 }, 100);
-			}
+			Logging.Log("Hwnd " + hwnd + ", layout: " + hwndLayout + ", Mahou layout: " + MahouUI.GlobalLayout);		
+			if (MMain.mahou.OneLayout)
+				if (hwndLayout != MahouUI.GlobalLayout) {
+					var title = new StringBuilder(128);
+					WinAPI.GetWindowText(hwnd, title, 127);
+					DoLater(() => {
+						Logging.Log("Layout in this window ["+title+"] was different, changing layout to Mahou global layout.");
+						ChangeToLayout(Locales.ActiveWindow(), MahouUI.GlobalLayout);
+			       	 }, 100);
+				}
 		}
 		#endregion
 		#region Functions/Struct
@@ -1379,14 +1383,13 @@ namespace Mahou
 							KInputs.MakeInput(new [] { KInputs.AddKey(Keys.LMenu, false) });
 						} else {
 							Logging.Log("An YuKey with state passed, key = {" + YuKeys[i].key + "}, upper = [" + YuKeys[i].upper + "].");
-							if (YuKeys[i].upper)
-								KInputs.MakeInput(new [] { KInputs.AddKey(Keys.LShiftKey, true) });
+							var upp = YuKeys[i].upper && !Control.IsKeyLocked(Keys.CapsLock);
+							if (upp) KInputs.MakeInput(new [] { KInputs.AddKey(Keys.LShiftKey, true) });
 							if (!SymbolIgnoreRules(YuKeys[i].key, YuKeys[i].upper, wasLocale)) {
 								KInputs.MakeInput(new [] { KInputs.AddKey(YuKeys[i].key, true) });
 								KInputs.MakeInput(new [] { KInputs.AddKey(YuKeys[i].key, false) });
 							}
-							if (YuKeys[i].upper)
-								KInputs.MakeInput(new [] { KInputs.AddKey(Keys.LShiftKey, false) });
+							if (upp) KInputs.MakeInput(new [] { KInputs.AddKey(Keys.LShiftKey, false) });
 							var c = new StringBuilder();
 							var byu = new byte[256];
 							if (YuKeys[i].upper) {
@@ -1827,10 +1830,10 @@ namespace Mahou
 				var end = snippets.IndexOf('\n', k);
 				if (end==-1)
 					end=snippets.Length;
-				var line = snippets.Substring(k, end - k);
+				var line = snippets.Substring(k, end - k-1);
 				if (line.Length > 0) // Ingore empty lines
 					if (line[0] == '#' || (line[0] == '/' && (line.Length > 1 && line[1] == '/'))) {
-						Logging.Log("Ignored commented line in snippets:\r\n" + line);
+						Logging.Log("Ignored commented line in snippets:[" + line + "].");
 						return new Tuple<bool, int>(true, line.Length-1);
 					}
 			}

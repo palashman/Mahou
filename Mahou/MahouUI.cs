@@ -1029,7 +1029,6 @@ namespace Mahou {
 					txt_Snippets.Text = File.ReadAllText(snipfile);
 					UpdateSnippetCountLabel(txt_Snippets.Text, lbl_SnippetsCount);
 					KMHook.ReInitSnippets();
-					Debug.WriteLine(SnippetsCount);
 					KMHook.DoLater( () => {
 					               	if (KMHook.snipps.Length != SnippetsCount || KMHook.as_corrects.Length != AutoSwitchCount)
 					               		KMHook.ReInitSnippets();
@@ -1119,6 +1118,7 @@ namespace Mahou {
 		}
 		Tuple<int, Color, int> GetSnippetsCount(string snippets) {
 			if (String.IsNullOrEmpty(snippets)) return new Tuple<int, Color, int>(0, Color.Black, 0);
+			Logging.Log("Starting counting snippets...");
 			Stopwatch watch = null;
 			if (MahouUI.LoggingEnabled) {
 				watch = new Stopwatch();
