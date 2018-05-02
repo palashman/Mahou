@@ -1833,6 +1833,8 @@ namespace Mahou
 				var l = end-k-1;
 				if (end==-1)
 					l = end-k;
+				if (end == k)
+					l = 0;
 				var line = snippets.Substring(k, l);
 				if (line.Length > 0) // Ingore empty lines
 					if (line[0] == '#' || (line[0] == '/' && (line.Length > 1 && line[1] == '/'))) {
