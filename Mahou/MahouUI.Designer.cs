@@ -203,6 +203,7 @@ namespace Mahou
 		private System.Windows.Forms.CheckBox chk_UseDelayAfterBackspaces;
 		private System.Windows.Forms.TabPage tab_excluded;
 		private System.Windows.Forms.CheckBox chk_GetLayoutFromJKL;
+		private System.Windows.Forms.CheckBox chk_ReadOnlyNA;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -420,6 +421,7 @@ namespace Mahou
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
 			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
+			this.chk_ReadOnlyNA = new System.Windows.Forms.CheckBox();
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -487,6 +489,7 @@ namespace Mahou
 			// 
 			// tab_functions
 			// 
+			this.tab_functions.Controls.Add(this.chk_ReadOnlyNA);
 			this.tab_functions.Controls.Add(this.chk_GetLayoutFromJKL);
 			this.tab_functions.Controls.Add(this.chk_SilentUpdate);
 			this.tab_functions.Controls.Add(this.chk_Logging);
@@ -1157,7 +1160,7 @@ namespace Mahou
 			this.chk_qwertz.AutoSize = true;
 			this.chk_qwertz.Location = new System.Drawing.Point(8, 74);
 			this.chk_qwertz.Name = "chk_qwertz";
-			this.chk_qwertz.Size = new System.Drawing.Size(139, 19);
+			this.chk_qwertz.Size = new System.Drawing.Size(140, 19);
 			this.chk_qwertz.TabIndex = 18;
 			this.chk_qwertz.Text = "QWERTZ keyboard fix";
 			this.chk_qwertz.UseVisualStyleBackColor = true;
@@ -1413,7 +1416,7 @@ namespace Mahou
 			this.lbl_LangTTText.AutoSize = true;
 			this.lbl_LangTTText.Location = new System.Drawing.Point(210, 82);
 			this.lbl_LangTTText.Name = "lbl_LangTTText";
-			this.lbl_LangTTText.Size = new System.Drawing.Size(73, 15);
+			this.lbl_LangTTText.Size = new System.Drawing.Size(74, 15);
 			this.lbl_LangTTText.TabIndex = 9;
 			this.lbl_LangTTText.Text = "Tootltip text:";
 			// 
@@ -1544,7 +1547,7 @@ namespace Mahou
 			this.chk_LangTTTransparentColor.AutoSize = true;
 			this.chk_LangTTTransparentColor.Location = new System.Drawing.Point(406, 52);
 			this.chk_LangTTTransparentColor.Name = "chk_LangTTTransparentColor";
-			this.chk_LangTTTransparentColor.Size = new System.Drawing.Size(118, 19);
+			this.chk_LangTTTransparentColor.Size = new System.Drawing.Size(119, 19);
 			this.chk_LangTTTransparentColor.TabIndex = 3;
 			this.chk_LangTTTransparentColor.Text = "Transparent color";
 			this.chk_LangTTTransparentColor.UseVisualStyleBackColor = true;
@@ -2416,7 +2419,7 @@ namespace Mahou
 			this.lbl_LPTrasparency.AutoSize = true;
 			this.lbl_LPTrasparency.Location = new System.Drawing.Point(17, 58);
 			this.lbl_LPTrasparency.Name = "lbl_LPTrasparency";
-			this.lbl_LPTrasparency.Size = new System.Drawing.Size(80, 15);
+			this.lbl_LPTrasparency.Size = new System.Drawing.Size(81, 15);
 			this.lbl_LPTrasparency.TabIndex = 26;
 			this.lbl_LPTrasparency.Text = "Transparency:";
 			// 
@@ -2765,6 +2768,16 @@ namespace Mahou
 			this.HelpMeUnderstand.ShowAlways = true;
 			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.HelpMeUnderstand.Popup += new System.Windows.Forms.PopupEventHandler(this.HelpMeUnderstandPopup);
+			// 
+			// chk_ReadOnlyNA
+			// 
+			this.chk_ReadOnlyNA.AutoSize = true;
+			this.chk_ReadOnlyNA.Location = new System.Drawing.Point(302, 194);
+			this.chk_ReadOnlyNA.Name = "chk_ReadOnlyNA";
+			this.chk_ReadOnlyNA.Size = new System.Drawing.Size(147, 19);
+			this.chk_ReadOnlyNA.TabIndex = 26;
+			this.chk_ReadOnlyNA.Text = "Read Only if no access.";
+			this.chk_ReadOnlyNA.UseVisualStyleBackColor = true;
 			// 
 			// MahouUI
 			// 

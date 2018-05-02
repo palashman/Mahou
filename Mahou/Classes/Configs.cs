@@ -388,6 +388,7 @@ namespace Mahou {
 			CheckBool("Layouts", "SwitchBetweenLayouts", "true");
 			#endregion
             #region Functions section
+            CheckBool("Functions", "ReadOnlyNA", "false");
             CheckBool("Functions", "UseJKL", "true");
             CheckBool("Functions", "RemapCapslockAsF18", "true");
             CheckBool("Functions", "AppDataConfigs", forceAppData.ToString());
@@ -461,9 +462,11 @@ namespace Mahou {
         		File.WriteAllText(filePath, _INI.Raw);
         	} catch (Exception e) {
         		Logging.Log("Can't write configs file by path: ["+filePath+"].", 1);
-        		SwitchToAppData(true, e);
-        		_INI.SetValue("Functions", "AppDataConfigs", "true");
-        		File.WriteAllText(filePath, _INI.Raw);
+        		if (!MahouUI.ReadOnlyNA) {
+        			SwitchToAppData(true, e);
+	        		_INI.SetValue("Functions", "AppDataConfigs", "true");
+	        		File.WriteAllText(filePath, _INI.Raw);
+        		}
         	}
         }
     }
