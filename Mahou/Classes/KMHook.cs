@@ -1828,12 +1828,12 @@ namespace Mahou
 		public static Tuple<bool, int> SnippetsLineCommented(string snippets, int k) {
 			if (k == 0 || (k-1 >= 0 && snippets[k-1].Equals('\n'))) { // only at every new line
 				var end = snippets.IndexOf('\n', k);
-				var l = k-1;
-				if (end==-1) {
+				if (end==-1)
 					end=snippets.Length;
-					l = k;
-				}
-				var line = snippets.Substring(k, end - l);
+				var l = end-k-1;
+				if (end==-1)
+					l = end-k;
+				var line = snippets.Substring(k, l);
 				if (line.Length > 0) // Ingore empty lines
 					if (line[0] == '#' || (line[0] == '/' && (line.Length > 1 && line[1] == '/'))) {
 						Logging.Log("Ignored commented line in snippets:[" + line + "].");
