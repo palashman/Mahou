@@ -1008,17 +1008,6 @@ namespace Mahou {
 			SnippetsEnabled = chk_Snippets.Checked = MMain.MyConfs.ReadBool("Snippets", "SnippetsEnabled");
 			SnippetSpaceAfter = chk_SnippetsSpaceAfter.Checked = MMain.MyConfs.ReadBool("Snippets", "SpaceAfter");
 			SnippetsSwitchToGuessLayout = chk_SnippetsSwitchToGuessLayout.Checked = MMain.MyConfs.ReadBool("Snippets", "SwitchToGuessLayout");
-			if (SnippetsEnabled)
-				if (File.Exists(snipfile)) {
-					txt_Snippets.Text = File.ReadAllText(snipfile);
-					UpdateSnippetCountLabel(txt_Snippets.Text, lbl_SnippetsCount);
-					KMHook.ReInitSnippets();
-					Debug.WriteLine(SnippetsCount);
-					KMHook.DoLater( () => {
-					               	if (KMHook.snipps.Length != SnippetsCount || KMHook.as_corrects.Length != AutoSwitchCount)
-					               		KMHook.ReInitSnippets();
-					               }, 650);
-				}
 			SnippetsExpandType = MMain.MyConfs.Read("Snippets", "SnippetExpandKey");
 			cbb_SnippetExpandKeys.SelectedIndex = cbb_SnippetExpandKeys.Items.IndexOf(SnippetsExpandType);
 			#endregion
@@ -1035,6 +1024,17 @@ namespace Mahou {
 					UpdateSnippetCountLabel(AutoSwitchDictionaryRaw, lbl_AutoSwitchWordsCount, false);
 				}
 			MahouUIActivated((object)1, new EventArgs());
+			if (SnippetsEnabled)
+				if (File.Exists(snipfile)) {
+					txt_Snippets.Text = File.ReadAllText(snipfile);
+					UpdateSnippetCountLabel(txt_Snippets.Text, lbl_SnippetsCount);
+					KMHook.ReInitSnippets();
+					Debug.WriteLine(SnippetsCount);
+					KMHook.DoLater( () => {
+					               	if (KMHook.snipps.Length != SnippetsCount || KMHook.as_corrects.Length != AutoSwitchCount)
+					               		KMHook.ReInitSnippets();
+					               }, 650);
+				}
 			#endregion
 			#region Appearence & Hotkeys
 			LoadTemps();
