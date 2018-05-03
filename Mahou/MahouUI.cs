@@ -2600,38 +2600,41 @@ DEL "+restartMahouPath;
 					@"@ECHO OFF
 chcp 65001
 SET MAHOUDIR=" + AppDomain.CurrentDomain.BaseDirectory + @"
+SET Mahou=" + AppDomain.CurrentDomain.FriendlyName + @"
 TASKKILL /PID " + MahouPID + @" /F
-TASKKILL /IM Mahou.exe /F
-DEL /Q /F /A """ + AppDomain.CurrentDomain.BaseDirectory + @"" + AppDomain.CurrentDomain.FriendlyName + @"""
-DEL /Q /F /A """ + AppDomain.CurrentDomain.BaseDirectory + @"" + AppDomain.CurrentDomain.FriendlyName + @"""
-DEL /Q /F /A """ + AppDomain.CurrentDomain.BaseDirectory + @"" + AppDomain.CurrentDomain.FriendlyName + @"""
-ECHO With CreateObject(""Shell.Application"") > ""%MAHOUDIR%unzip.vbs""
-ECHO    .NameSpace(WScript.Arguments(1)).CopyHere .NameSpace(WScript.Arguments(0)).items, 16 >> ""%MAHOUDIR%unzip.vbs""
-ECHO End With >> ""%MAHOUDIR%unzip.vbs""
+TASKKILL /IM %Mahou% /F
+set i=1
+:loop
+DEL /Q /F /A ""%MAHOUDIR%%Mahou%""
+set /a i=%i%+1
+if %i% == 333 goto continue
+if not exist ""%MAHOUDIR%%Mahou%"" goto continue
+goto loop
+:continue
+echo %i%
+ECHO With CreateObject(""Shell.Application"") > ""%TEMP%\unzip.vbs""
+ECHO    .NameSpace(WScript.Arguments(1)).CopyHere .NameSpace(WScript.Arguments(0)).items, 20 >> ""%TEMP%\unzip.vbs""
+ECHO End With >> ""%TEMP%\unzip.vbs""
 
-CSCRIPT ""%MAHOUDIR%unzip.vbs"" ""%MAHOUDIR%" + arch + @""" ""%MAHOUDIR%""
+CSCRIPT ""%TEMP%\unzip.vbs"" ""%TEMP%\" + arch + @""" ""%MAHOUDIR%""
 
 START """" ""%MAHOUDIR%Mahou.exe"" "+ (!silent ? "\"_!_updated_!_\"" : "\"_!_silent_updated_!_\"") + @"
-DEL ""%MAHOUDIR%" + arch + @"""
-DEL ""%MAHOUDIR%unzip.vbs""
-DEL ""%MAHOUDIR%UpdateMahou.cmd""";
+DEL /Q /F /A ""%TEMP%\" + arch + @"""
+DEL /Q /F /A ""%TEMP%\unzip.vbs""
+DEL /Q /F /A ""%TEMP%\UpdateMahou.cmd""";
 				//Save Batch script
 				Logging.Log("Writing update script.");
-				File.WriteAllText(Path.Combine(new string[] {
-					AppDomain.CurrentDomain.BaseDirectory,
-					"UpdateMahou.cmd"
-				}), UpdateMahou);
+				var fn = Path.Combine(Path.GetTempPath(), "UpdateMahou.cmd");
+				File.WriteAllText(fn, UpdateMahou);
 				var piUpdateMahou = new ProcessStartInfo();
-				piUpdateMahou.FileName = Path.Combine(new string[] {
-					AppDomain.CurrentDomain.BaseDirectory,
-					"UpdateMahou.cmd"
-				});
+				piUpdateMahou.FileName = fn;
 				//Make UpdateMahou.cmd's startup hidden
 				piUpdateMahou.WindowStyle = ProcessWindowStyle.Hidden;
 				//Start updating(unzipping)
 				Logging.Log("Starting update script.");
 				Process.Start(piUpdateMahou);
 				was = true;
+				ExitProgram();
 			}
 		}
 		string getASD_RemoteSize(bool InZip = false) {
@@ -3402,7 +3405,7 @@ DEL ""ExtractASD.cmd""";
 						MMain.MyConfs.WriteSave("Updates", "LatestCommit", UpdInfo[4]);
 					else MMain.MyConfs.WriteSave("Updates", "LatestCommit", "Downgraded to Stable");
 					Logging.Log("Downloading Mahou update: "+UpdInfo[3]);
-					wc.DownloadFileAsync(new Uri(UpdInfo[3]), Path.Combine(new [] { AppDomain.CurrentDomain.BaseDirectory, fn }));
+					wc.DownloadFileAsync(new Uri(UpdInfo[3]), Path.Combine(Path.GetTempPath(), fn));
 					btn_DownloadUpdate.Text = "Downloading " + fn;
 					animate.Tick += (_, __) => { btn_DownloadUpdate.Text += "."; };
 					animate.Start();
