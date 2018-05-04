@@ -178,6 +178,14 @@ namespace Mahou {
         public Configs() {
         	CreateConfigsFile();
         	ReadFromDisk();
+            #region Sounds
+            CheckBool("Sounds", "Enabled", "False");
+            CheckBool("Sounds", "OnAutoSwitch", "True");
+            CheckBool("Sounds", "OnSnippets", "False");
+            CheckBool("Sounds", "OnConvertLast", "True");
+            CheckBool("Sounds", "UseCustomSound", "False");
+            CheckString("Sounds", "CustomSound", "");
+            #endregion
             #region Proxy section
             CheckString("Proxy", "Password", "");
             CheckString("Proxy", "UserName", "");

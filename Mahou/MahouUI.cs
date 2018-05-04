@@ -23,12 +23,10 @@ namespace Mahou {
 		/// </summary>
 		public bool hksTTCOK, hksTRCOK, hksTSCOK, hksTrslOK, hkShWndOK, hkcwdsOK, hklOK, 
 					hksOK, hklineOK, hkSIOK, hkExitOK, hkToglLPOK;
-		/// <summary>
-		/// Directory where Mahou.exe is.
-		/// </summary>
-		public static string nPath = AppDomain.CurrentDomain.BaseDirectory;
+		public static string nPath = AppDomain.CurrentDomain.BaseDirectory, CustomSound;
 		public static bool LoggingEnabled, dummy, CapsLockDisablerTimer, LangPanelUpperArrow, mouseLTUpperArrow, caretLTUpperArrow,
-						   ShiftInHotkey, AltInHotkey, CtrlInHotkey, WinInHotkey, AutoStartAsAdmin, UseJKL, AutoSwitchEnabled, ReadOnlyNA;
+						   ShiftInHotkey, AltInHotkey, CtrlInHotkey, WinInHotkey, AutoStartAsAdmin, UseJKL, AutoSwitchEnabled, ReadOnlyNA,
+						   SoundEnabled, UseCustomSound, SoundOnAutoSwitch, SoundOnConvLast, SoundOnSnippets;
 		static string[] UpdInfo;
 		static bool updating, was, isold = true, checking, snip_checking, as_checking, check_ASD_size = true;
 		#region Timers
@@ -805,6 +803,14 @@ namespace Mahou {
 				MMain.MyConfs.Write("Proxy", "UserName", txt_ProxyLogin.Text);
 				MMain.MyConfs.Write("Proxy", "Password", Convert.ToBase64String(Encoding.Unicode.GetBytes(txt_ProxyPassword.Text)));
 				#endregion
+				#region Sounds
+				MMain.MyConfs.Write("Sounds", "Enabled", chk_EnableSnd.Checked.ToString());
+				MMain.MyConfs.Write("Sounds", "OnAutoSwitch", chk_SndAutoSwitch.Checked.ToString());
+				MMain.MyConfs.Write("Sounds", "OnSnippets", chk_SndSnippets.Checked.ToString());
+				MMain.MyConfs.Write("Sounds", "OnConvertLast", chk_SndLast.Checked.ToString());
+				MMain.MyConfs.Write("Sounds", "UseCustomSound", chk_UseCustomSnd.Checked.ToString());
+				MMain.MyConfs.Write("Sounds", "CustomSound", lbl_CustomSound.Text);
+				#endregion
 				MMain.MyConfs.WriteToDisk();
 				Logging.Log("All configurations saved.");
 			}
@@ -1046,6 +1052,14 @@ namespace Mahou {
 			try {
 				txt_ProxyPassword.Text = Encoding.Unicode.GetString(Convert.FromBase64String(MMain.MyConfs.Read("Proxy", "Password")));
 			} catch { Logging.Log("Password invalidly encoded, reset to none.", 2); }
+			#endregion
+			#region Sounds
+			SoundEnabled = chk_EnableSnd.Checked = MMain.MyConfs.ReadBool("Sounds", "Enabled");
+			SoundOnAutoSwitch = chk_SndAutoSwitch.Checked = MMain.MyConfs.ReadBool("Sounds", "OnAutoSwitch");
+			SoundOnSnippets = chk_SndSnippets.Checked = MMain.MyConfs.ReadBool("Sounds", "OnSnippets");
+			SoundOnConvLast = chk_SndLast.Checked = MMain.MyConfs.ReadBool("Sounds", "OnConvertLast");
+			UseCustomSound = chk_UseCustomSnd.Checked = MMain.MyConfs.ReadBool("Sounds", "UseCustomSound");
+			CustomSound = lbl_CustomSound.Text = MMain.MyConfs.Read("Sounds", "CustomSound");
 			#endregion
 			if (RemapCapslockAsF18 || SnippetsExpandType == "Tab")
 				LLHook.Set();
@@ -1294,6 +1308,10 @@ namespace Mahou {
 			lbl_LangTTCaretRefreshRate.Enabled = nud_LangTTCaretRefreshRate.Enabled = chk_LangTooltipCaret.Checked;
 			lbl_LangTTMouseRefreshRate.Enabled = nud_LangTTMouseRefreshRate.Enabled = LDUseWindowsMessages || chk_LangTooltipMouse.Checked;
 			lbl_LangTTCaretRefreshRate.Enabled = nud_LangTTCaretRefreshRate.Enabled = !chk_LDMessages.Checked;
+			// Sounds tab
+			grb_SoundOn.Enabled = chk_UseCustomSnd.Enabled = lbl_CustomSound.Enabled = btn_SelectSnd.Enabled = chk_EnableSnd.Checked;
+			if (chk_EnableSnd.Checked)
+				lbl_CustomSound.Enabled = btn_SelectSnd.Enabled = chk_UseCustomSnd.Checked;
 		}
 		/// <summary>
 		/// Toggles visibility of main window.
@@ -1919,7 +1937,7 @@ DEL "+restartMahouPath;
     </Exec>
   </Actions>
 </Task>";
-			var xml_path = Path.GetTempPath() + "MahouStartup+.xml";
+			var xml_path = Path.Combine(Path.GetTempPath(), "MahouStartup+.xml");
 			System.Threading.Tasks.Task.Factory.StartNew(() => File.WriteAllText(xml_path, xml)).Wait();
 			var pif = new ProcessStartInfo { 
 				FileName = "schtasks.exe",
@@ -1934,6 +1952,15 @@ DEL "+restartMahouPath;
 				Process.Start(pif).WaitForExit();
 			}
 			File.Delete(xml_path);
+		}
+		public static void SoundPlay() {
+			if (SoundEnabled) {
+				var sp = new System.Media.SoundPlayer(new MemoryStream(Properties.Resources.snd));
+				if (UseCustomSound) 
+					if (File.Exists(CustomSound))
+						sp = new System.Media.SoundPlayer(CustomSound);
+				sp.Play();
+			}
 		}
 		/// <summary>
 		/// Creates startup shortcut/task v3.0+v2.0.
@@ -3570,6 +3597,16 @@ DEL ""ExtractASD.cmd""";
 			var old = cbb_SpecKeysType.SelectedIndex == 0;
 			lbl_Arrow1.Visible = lbl_Arrow2.Visible = lbl_Arrow3.Visible = lbl_Arrow4.Visible = grb_Layouts.Visible = grb_Keys.Visible = old;
 			lbl_SetsCount.Visible = pan_KeySets.Visible = btn_SubSet.Visible = btn_AddSet.Visible = !old;
+		}
+		void Btn_SelectSndClick(object sender, EventArgs e) {
+			var ofd = new  OpenFileDialog();
+			ofd.DefaultExt = ".wav";
+			ofd.Filter = "Wave sound|*.wav";
+			ofd.Multiselect = false;
+			if (ofd.ShowDialog() == DialogResult.OK) {
+				lbl_CustomSound.Text = ofd.FileName;
+			}
+			ofd.Dispose();
 		}
 		#endregion
 	}

@@ -204,6 +204,15 @@ namespace Mahou
 		private System.Windows.Forms.TabPage tab_excluded;
 		private System.Windows.Forms.CheckBox chk_GetLayoutFromJKL;
 		private System.Windows.Forms.CheckBox chk_ReadOnlyNA;
+		private System.Windows.Forms.TabPage tab_sounds;
+		private System.Windows.Forms.GroupBox grb_SoundOn;
+		private System.Windows.Forms.CheckBox chk_EnableSnd;
+		private System.Windows.Forms.CheckBox chk_SndLast;
+		private System.Windows.Forms.CheckBox chk_SndSnippets;
+		private System.Windows.Forms.CheckBox chk_SndAutoSwitch;
+		private System.Windows.Forms.Label lbl_CustomSound;
+		private System.Windows.Forms.Button btn_SelectSnd;
+		private System.Windows.Forms.CheckBox chk_UseCustomSnd;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -377,6 +386,15 @@ namespace Mahou
 			this.txt_Hotkey = new System.Windows.Forms.TextBox();
 			this.chk_WinInHotKey = new System.Windows.Forms.CheckBox();
 			this.lsb_Hotkeys = new System.Windows.Forms.ListBox();
+			this.tab_sounds = new System.Windows.Forms.TabPage();
+			this.lbl_CustomSound = new System.Windows.Forms.Label();
+			this.btn_SelectSnd = new System.Windows.Forms.Button();
+			this.chk_UseCustomSnd = new System.Windows.Forms.CheckBox();
+			this.grb_SoundOn = new System.Windows.Forms.GroupBox();
+			this.chk_SndLast = new System.Windows.Forms.CheckBox();
+			this.chk_SndSnippets = new System.Windows.Forms.CheckBox();
+			this.chk_SndAutoSwitch = new System.Windows.Forms.CheckBox();
+			this.chk_EnableSnd = new System.Windows.Forms.CheckBox();
 			this.tab_LangPanel = new System.Windows.Forms.TabPage();
 			this.grb_LPConfig = new System.Windows.Forms.GroupBox();
 			this.chk_LPUpperArrow = new System.Windows.Forms.CheckBox();
@@ -454,6 +472,8 @@ namespace Mahou
 			this.tab_autoswitch.SuspendLayout();
 			this.tab_hotkeys.SuspendLayout();
 			this.grb_Hotkey.SuspendLayout();
+			this.tab_sounds.SuspendLayout();
+			this.grb_SoundOn.SuspendLayout();
 			this.tab_LangPanel.SuspendLayout();
 			this.grb_LPConfig.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.nud_LPTransparency)).BeginInit();
@@ -476,6 +496,7 @@ namespace Mahou
 			this.tabs.Controls.Add(this.tab_snippets);
 			this.tabs.Controls.Add(this.tab_autoswitch);
 			this.tabs.Controls.Add(this.tab_hotkeys);
+			this.tabs.Controls.Add(this.tab_sounds);
 			this.tabs.Controls.Add(this.tab_LangPanel);
 			this.tabs.Controls.Add(this.tab_updates);
 			this.tabs.Controls.Add(this.tab_about);
@@ -2273,6 +2294,103 @@ namespace Mahou
 			this.lsb_Hotkeys.TabIndex = 0;
 			this.lsb_Hotkeys.SelectedIndexChanged += new System.EventHandler(this.Lsb_HotkeysSelectedIndexChanged);
 			// 
+			// tab_sounds
+			// 
+			this.tab_sounds.Controls.Add(this.lbl_CustomSound);
+			this.tab_sounds.Controls.Add(this.btn_SelectSnd);
+			this.tab_sounds.Controls.Add(this.chk_UseCustomSnd);
+			this.tab_sounds.Controls.Add(this.grb_SoundOn);
+			this.tab_sounds.Controls.Add(this.chk_EnableSnd);
+			this.tab_sounds.Location = new System.Drawing.Point(4, 44);
+			this.tab_sounds.Name = "tab_sounds";
+			this.tab_sounds.Padding = new System.Windows.Forms.Padding(3);
+			this.tab_sounds.Size = new System.Drawing.Size(559, 268);
+			this.tab_sounds.TabIndex = 12;
+			this.tab_sounds.Text = "Sounds";
+			this.tab_sounds.UseVisualStyleBackColor = true;
+			// 
+			// lbl_CustomSound
+			// 
+			this.lbl_CustomSound.AutoEllipsis = true;
+			this.lbl_CustomSound.Location = new System.Drawing.Point(141, 114);
+			this.lbl_CustomSound.Name = "lbl_CustomSound";
+			this.lbl_CustomSound.Size = new System.Drawing.Size(284, 17);
+			this.lbl_CustomSound.TabIndex = 5;
+			// 
+			// btn_SelectSnd
+			// 
+			this.btn_SelectSnd.Location = new System.Drawing.Point(431, 111);
+			this.btn_SelectSnd.Name = "btn_SelectSnd";
+			this.btn_SelectSnd.Size = new System.Drawing.Size(116, 23);
+			this.btn_SelectSnd.TabIndex = 4;
+			this.btn_SelectSnd.Text = "Select";
+			this.btn_SelectSnd.UseVisualStyleBackColor = true;
+			this.btn_SelectSnd.Click += new System.EventHandler(this.Btn_SelectSndClick);
+			// 
+			// chk_UseCustomSnd
+			// 
+			this.chk_UseCustomSnd.AutoSize = true;
+			this.chk_UseCustomSnd.Location = new System.Drawing.Point(8, 113);
+			this.chk_UseCustomSnd.Name = "chk_UseCustomSnd";
+			this.chk_UseCustomSnd.Size = new System.Drawing.Size(127, 19);
+			this.chk_UseCustomSnd.TabIndex = 3;
+			this.chk_UseCustomSnd.Text = "Use custom sound:";
+			this.chk_UseCustomSnd.UseVisualStyleBackColor = true;
+			this.chk_UseCustomSnd.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
+			// 
+			// grb_SoundOn
+			// 
+			this.grb_SoundOn.Controls.Add(this.chk_SndLast);
+			this.grb_SoundOn.Controls.Add(this.chk_SndSnippets);
+			this.grb_SoundOn.Controls.Add(this.chk_SndAutoSwitch);
+			this.grb_SoundOn.Location = new System.Drawing.Point(6, 22);
+			this.grb_SoundOn.Name = "grb_SoundOn";
+			this.grb_SoundOn.Size = new System.Drawing.Size(541, 85);
+			this.grb_SoundOn.TabIndex = 2;
+			this.grb_SoundOn.TabStop = false;
+			this.grb_SoundOn.Text = "Play sound when:";
+			// 
+			// chk_SndLast
+			// 
+			this.chk_SndLast.AutoSize = true;
+			this.chk_SndLast.Location = new System.Drawing.Point(6, 60);
+			this.chk_SndLast.Name = "chk_SndLast";
+			this.chk_SndLast.Size = new System.Drawing.Size(162, 19);
+			this.chk_SndLast.TabIndex = 4;
+			this.chk_SndLast.Text = "On Last Word conversion.";
+			this.chk_SndLast.UseVisualStyleBackColor = true;
+			// 
+			// chk_SndSnippets
+			// 
+			this.chk_SndSnippets.AutoSize = true;
+			this.chk_SndSnippets.Location = new System.Drawing.Point(6, 40);
+			this.chk_SndSnippets.Name = "chk_SndSnippets";
+			this.chk_SndSnippets.Size = new System.Drawing.Size(149, 19);
+			this.chk_SndSnippets.TabIndex = 3;
+			this.chk_SndSnippets.Text = "On Snippets expansion.";
+			this.chk_SndSnippets.UseVisualStyleBackColor = true;
+			// 
+			// chk_SndAutoSwitch
+			// 
+			this.chk_SndAutoSwitch.AutoSize = true;
+			this.chk_SndAutoSwitch.Location = new System.Drawing.Point(6, 20);
+			this.chk_SndAutoSwitch.Name = "chk_SndAutoSwitch";
+			this.chk_SndAutoSwitch.Size = new System.Drawing.Size(175, 19);
+			this.chk_SndAutoSwitch.TabIndex = 2;
+			this.chk_SndAutoSwitch.Text = "On Auto-Switch conversion.";
+			this.chk_SndAutoSwitch.UseVisualStyleBackColor = true;
+			// 
+			// chk_EnableSnd
+			// 
+			this.chk_EnableSnd.AutoSize = true;
+			this.chk_EnableSnd.Location = new System.Drawing.Point(8, 0);
+			this.chk_EnableSnd.Name = "chk_EnableSnd";
+			this.chk_EnableSnd.Size = new System.Drawing.Size(105, 19);
+			this.chk_EnableSnd.TabIndex = 1;
+			this.chk_EnableSnd.Text = "Enable sounds.";
+			this.chk_EnableSnd.UseVisualStyleBackColor = true;
+			this.chk_EnableSnd.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
+			// 
 			// tab_LangPanel
 			// 
 			this.tab_LangPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -2844,6 +2962,10 @@ namespace Mahou
 			this.tab_hotkeys.ResumeLayout(false);
 			this.grb_Hotkey.ResumeLayout(false);
 			this.grb_Hotkey.PerformLayout();
+			this.tab_sounds.ResumeLayout(false);
+			this.tab_sounds.PerformLayout();
+			this.grb_SoundOn.ResumeLayout(false);
+			this.grb_SoundOn.PerformLayout();
 			this.tab_LangPanel.ResumeLayout(false);
 			this.tab_LangPanel.PerformLayout();
 			this.grb_LPConfig.ResumeLayout(false);

@@ -198,6 +198,8 @@ namespace Mahou
 						for (int i = 0; i < snipps.Length; i++) {
 							if (snip == snipps[i]) {
 								if (exps.Length > i) {
+	            					if (MahouUI.SoundOnSnippets)
+	            						MahouUI.SoundPlay();
 									Logging.Log("Current snippet [" + snip + "] matched existing snippet [" + exps[i] + "].");
 									ExpandSnippet(snip, exps[i], MMain.mahou.SnippetSpaceAfter, MMain.mahou.SnippetsSwitchToGuessLayout);
 									matched = true;
@@ -220,6 +222,8 @@ namespace Mahou
 //								} else {
 									if (snip.Length == as_wrongs[i].Length) {
 										if (snil == as_wrongs[i].ToLowerInvariant()) {
+			            					if (MahouUI.SoundOnAutoSwitch)
+			            						MahouUI.SoundPlay();
 		            						DoSelf(() => KInputs.MakeInput(new [] { 
 		            					                               	KInputs.AddKey(Keys.Back, true), 
 		            					                               	KInputs.AddKey(Keys.Back, false)}));
@@ -1353,6 +1357,8 @@ namespace Mahou
 				YuKey[] YuKeys = c_.ToArray();
 				Logging.Log("Starting to convert word.");
 				DoSelf(() => {
+					if (MahouUI.SoundOnConvLast)
+						MahouUI.SoundPlay();
 					var backs = YuKeys.Length;
 					// Fix for cmd exe pause hotkey leaving one char. 
 					var clsNM = new StringBuilder(256);
