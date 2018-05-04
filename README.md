@@ -29,6 +29,22 @@ Mahou работает так как **Вы** хотите, настраивай
 
 ###### Возможности по версиям:
 
+**v2.6.7.7**<br/>
+
+- 🐛 Исправлено что jkl не запускал jklx86 когда стартовая папка не папка jkl.
+- 🐛 Добавлена проверка на консольных окон перед сменой раскладки при JKL включенном.
+	Это исправляет переключения раскладки в консольных программах с JKL интеграцией включенной когда в системе установлено 3 и более раскладок.
+- 📝 Добавлено обновление всех иконок(флагов) при поимке переключения раскладки с JKL.
+- 📝 Исправлена иницализация сниппетов/автозамены.
+- 🐛 Добавлена поддержка раскадки JKL в сниппетах.
+- 📝 Добавлена функция "Только чтение если нет доступа".
+- 🐛 Исправлен верхний регистр в вводе/сниппеты/автозамена с CapsLock вкл./выкл…
+- 📝 Изменена папка скачивания обновлений на %TEMP%.
+- 📝 Добавлены звуки в репозиторий.
+	Они могут быть использованы в новой функции "Звуки" в Mahou.
+	Звуки в репозиторие в папке snd.
+- 💎 Добавлена функция "Звуки".
+
 **v2.6.2.5**<br/>
 
 - 📝 Добавлена информаци о версии, создателе и т.д. в бинарные файлы JKL (#172).
@@ -576,6 +592,23 @@ Even selected text switches just between **selected** layouts, though if you lik
 6. Read the [wiki](https://github.com/BladeMight/Mahou/wiki/Functions-list) or [ask me](#license).
 
 ###### By version features:
+
+**v2.6.7.7**<br/>
+
+- 🐛 Fixed jkl wasn’t starting jklx86 when started with working directory not set to jkl’s directory.
+- 🐛 Added checking for conhost windows before switching layout with JKL support enabled.
+	This fixes switching layouts in console programs with JKL integration enabled when installed 3+ layouts.
+- 📝 Added refresh all icons after layout change in JKL.
+- 📝 Added instant snippets initialization, and changed to static variables for init function.
+- 🐛 Added JKL layout detection support for snippets.
+- 📝 Added read-only if no access function.
+- 🐛 Fixed initialization of autoswitch dictionary at start.
+- 🐛 Fixed input/snippets/autoswitch with CapsLock on/off.
+- 📝 Changed updates download directory to temp.
+- 📝 Added Hi-Quality sounds to repository.
+	They will can used in Mahou sounds.
+	More sounds can be found in repository folder snd.
+- 💎 Added sounds feature.
 
 **v2.6.2.5**<br/>
 
