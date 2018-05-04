@@ -14,6 +14,7 @@ public class Languages
 		tab_Updates,
 		tab_About,
 		tab_LangPanel,
+		tab_Sounds,
 		#endregion
 		#region Functions
 		AutoStart,
@@ -156,6 +157,15 @@ public class Languages
 		NetError,
 		UpdatesChannel,
 		#endregion
+		#region Sounds
+		EnableSounds,
+		PlaySoundWhen,
+		SoundOnAutoSwitch,
+		SoundOnSnippets,
+		SoundOnConvertLast,
+		UseCustomSound,
+		Select,
+		#endregion
 		#region About
 		DbgInf,
 		DbgInf_Copied,
@@ -248,6 +258,7 @@ public class Languages
 		{ Element.tab_LangPanel, "Language panel" }, 
 		{ Element.tab_Updates, "Updates" }, 
 		{ Element.tab_About, "About" }, 
+		{ Element.tab_Sounds, "Sounds" }, 
 		#endregion
 		#region Functions
 		{ Element.AutoStart, "Start with Windows." }, 
@@ -403,6 +414,15 @@ public class Languages
 			"***If you have problems with selection conversion try inreasing tries to get selected text in Timings tab." +
 			"\r\nRead the wiki, or ask me if you have any questions about Mahou(email and links are below)!\r\n\r\nRegards." },
 		#endregion
+		#region Sounds
+		{ Element.EnableSounds, "Enable sounds." }, 
+		{ Element.PlaySoundWhen, "Play sound when:" }, 
+		{ Element.SoundOnAutoSwitch, "On Auto-Switch conversion." }, 
+		{ Element.SoundOnSnippets, "On Snippets expansion." }, 
+		{ Element.SoundOnConvertLast, "On Last Word conversion." }, 
+		{ Element.UseCustomSound, "Use custom sound:" }, 
+		{ Element.Select, "Select" }, 
+		#endregion
 		#region Misc
 		{ Element.Not, "Not" },
 		{ Element.Exist, "exist" },
@@ -502,7 +522,8 @@ public class Languages
 		{ Element.tab_Hotkeys, "Горячие клавиши" }, 
 		{ Element.tab_LangPanel, "Языковая панель" }, 
 		{ Element.tab_Updates, "Обновления" }, 
-		{ Element.tab_About, "О..." }, 
+		{ Element.tab_About, "О..." },  
+		{ Element.tab_Sounds, "Звуки" }, 
 		#endregion
 		#region Functions
 		{ Element.AutoStart, "Запускать с Windows" }, 
@@ -656,6 +677,15 @@ public class Languages
             "**Если у Вас проблемы с символами при Конвертации выделения, включите функцию(рекомендуется) \"Считать раскладку для всего слова в КВ\", еще можете попробовать \"переключить языки местами (1=>2 & 2=>1)\" или включите \"Смена раскладки в конверт выделенния\" или плюс.\r\n"+
 			"***Если у Вас проблемы при Конвертации выделения попробуйте увеличить количество попыток взятия текста во вкладке Тайминги." +
 			"\r\nПочитайте wiki, или спросите меня если у Вас есть вопросы по поводу Mahou(эл. почта и ссылка на wiki ниже).\r\nУдачи."}, 
+		#endregion
+		#region Sounds
+		{ Element.EnableSounds, "Включить звуки." }, 
+		{ Element.PlaySoundWhen, "Играть звук при:" }, 
+		{ Element.SoundOnAutoSwitch, "Конвертации автозамены." }, 
+		{ Element.SoundOnSnippets, "Развертывании сниппетов." }, 
+		{ Element.SoundOnConvertLast, "Конвертации последнего слова." }, 
+		{ Element.UseCustomSound, "Свой звук:" }, 
+		{ Element.Select, "Выбрать" }, 
 		#endregion
 		#region Misc
 		{ Element.Not, "Не"},

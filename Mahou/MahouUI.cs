@@ -2942,6 +2942,7 @@ DEL ""ExtractASD.cmd""";
 			tab_updates.Text = MMain.Lang[Languages.Element.tab_Updates];
 			tab_LangPanel.Text =  MMain.Lang[Languages.Element.tab_LangPanel];
 			tab_about.Text = MMain.Lang[Languages.Element.tab_About];
+			tab_sounds.Text = MMain.Lang[Languages.Element.tab_Sounds];
 			lnk_plugin.Text = "ST3 " + MMain.Lang[Languages.Element.Plugin];
 			chk_OneLayoutWholeWord.Text = MMain.Lang[Languages.Element.OneLayoutWholeWord];
 			#endregion
@@ -3102,6 +3103,15 @@ DEL ""ExtractASD.cmd""";
 			lnk_Site.Text = MMain.Lang[Languages.Element.Site];
 			lnk_Releases.Text = MMain.Lang[Languages.Element.Releases];
 			txt_Help.Text = MMain.Lang[Languages.Element.Mahou] + "\r\n" + MMain.Lang[Languages.Element.About];
+			#endregion
+			#region Sounds
+			chk_EnableSnd.Text = MMain.Lang[Languages.Element.EnableSounds];
+			grb_SoundOn.Text = MMain.Lang[Languages.Element.PlaySoundWhen];
+			chk_SndAutoSwitch.Text = MMain.Lang[Languages.Element.SoundOnAutoSwitch];
+			chk_SndSnippets.Text = MMain.Lang[Languages.Element.SoundOnSnippets];
+			chk_SndLast.Text = MMain.Lang[Languages.Element.SoundOnConvertLast];
+			chk_UseCustomSnd.Text = MMain.Lang[Languages.Element.UseCustomSound];
+			btn_SelectSnd.Text = MMain.Lang[Languages.Element.Select];
 			#endregion
 			#region Buttons
 			btn_Apply.Text = MMain.Lang[Languages.Element.ButtonApply];
