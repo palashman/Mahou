@@ -183,8 +183,15 @@ namespace Mahou {
             CheckBool("Sounds", "OnAutoSwitch", "True");
             CheckBool("Sounds", "OnSnippets", "False");
             CheckBool("Sounds", "OnConvertLast", "True");
+            CheckBool("Sounds", "OnLayoutSwitch", "False");
             CheckBool("Sounds", "UseCustomSound", "False");
             CheckString("Sounds", "CustomSound", "");
+            CheckBool("Sounds", "OnAutoSwitch2", "False");
+            CheckBool("Sounds", "OnSnippets2", "True");
+            CheckBool("Sounds", "OnConvertLast2", "False");
+            CheckBool("Sounds", "OnLayoutSwitch2", "True");
+            CheckBool("Sounds", "UseCustomSound2", "False");
+            CheckString("Sounds", "CustomSound2", "");
             #endregion
             #region Proxy section
             CheckString("Proxy", "Password", "");

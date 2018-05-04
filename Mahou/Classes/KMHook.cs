@@ -200,6 +200,8 @@ namespace Mahou
 								if (exps.Length > i) {
 	            					if (MahouUI.SoundOnSnippets)
 	            						MahouUI.SoundPlay();
+	            					if (MahouUI.SoundOnSnippets2)
+	            						MahouUI.Sound2Play();
 									Logging.Log("Current snippet [" + snip + "] matched existing snippet [" + exps[i] + "].");
 									ExpandSnippet(snip, exps[i], MMain.mahou.SnippetSpaceAfter, MMain.mahou.SnippetsSwitchToGuessLayout);
 									matched = true;
@@ -224,6 +226,8 @@ namespace Mahou
 										if (snil == as_wrongs[i].ToLowerInvariant()) {
 			            					if (MahouUI.SoundOnAutoSwitch)
 			            						MahouUI.SoundPlay();
+			            					if (MahouUI.SoundOnAutoSwitch2)
+			            						MahouUI.Sound2Play();
 		            						DoSelf(() => KInputs.MakeInput(new [] { 
 		            					                               	KInputs.AddKey(Keys.Back, true), 
 		            					                               	KInputs.AddKey(Keys.Back, false)}));
@@ -892,7 +896,7 @@ namespace Mahou
 							Logging.Log("Using CS-Switch mode.");
 							var wasLocale = Locales.GetCurrentLocale() & 0xffff;
 							var wawasLocale = wasLocale & 0xffff;
-							ChangeLayout();
+							ChangeLayout(true);
 							uint nowLocale = 0;
 							if(MMain.mahou.SwitchBetweenLayouts) {
 								nowLocale = wasLocale == (MahouUI.MAIN_LAYOUT1 & 0xffff)
@@ -1359,6 +1363,8 @@ namespace Mahou
 				DoSelf(() => {
 					if (MahouUI.SoundOnConvLast)
 						MahouUI.SoundPlay();
+					if (MahouUI.SoundOnConvLast2)
+						MahouUI.Sound2Play();
 					var backs = YuKeys.Length;
 					// Fix for cmd exe pause hotkey leaving one char. 
 					var clsNM = new StringBuilder(256);
@@ -1367,7 +1373,7 @@ namespace Mahou
 						MMain.mahou.HKCLast.VirtualKeyCode == (int)Keys.Pause))
 						backs++;
 					var wasLocale = Locales.GetCurrentLocale() & 0xFFFF;
-					ChangeLayout();
+					ChangeLayout(true);
 					Logging.Log("Deleting old word, with lenght of [" + YuKeys.Length + "].");
 					for (int e = 0; e < backs; e++) {
 						KInputs.MakeInput(new [] { KInputs.AddKey(Keys.Back, true),
@@ -1482,7 +1488,13 @@ namespace Mahou
 		/// <summary>
 		/// Changes current layout.
 		/// </summary>
-		public static void ChangeLayout() {
+		public static void ChangeLayout(bool quiet = false) {
+			if (!quiet) {
+				if (MahouUI.SoundOnLayoutSwitch)
+					MahouUI.SoundPlay();
+				if (MahouUI.SoundOnLayoutSwitch2)
+					MahouUI.Sound2Play();
+			}
 			if (Locales.ActiveWindowProcess().ProcessName.ToLower() == "HD-Frontend".ToLower()) {
 				KInputs.MakeInput(new [] { 
 				                  	KInputs.AddKey(Keys.LControlKey, true),

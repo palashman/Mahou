@@ -163,6 +163,7 @@ public class Languages
 		SoundOnAutoSwitch,
 		SoundOnSnippets,
 		SoundOnConvertLast,
+		SoundOnLayoutSwitching,
 		UseCustomSound,
 		Select,
 		#endregion
@@ -192,6 +193,7 @@ public class Languages
 		Created,
 		Readen,
 		RetryInAppData,
+		Sound,
 		#endregion
 		#region Buttons
 		ButtonOK,
@@ -420,6 +422,7 @@ public class Languages
 		{ Element.SoundOnAutoSwitch, "On Auto-Switch conversion." }, 
 		{ Element.SoundOnSnippets, "On Snippets expansion." }, 
 		{ Element.SoundOnConvertLast, "On Last Word conversion." }, 
+		{ Element.SoundOnLayoutSwitching, "Layout switching." }, 
 		{ Element.UseCustomSound, "Use custom sound:" }, 
 		{ Element.Select, "Select" }, 
 		#endregion
@@ -443,6 +446,7 @@ public class Languages
 		{ Element.Created, "created" },
 		{ Element.Readen, "readen" },
 		{ Element.RetryInAppData, "Retry creating/switching to configs in %AppData%?" },
+		{ Element.Sound, "Sound" },
 		#endregion
 		#region Buttons
 		{ Element.ButtonOK, "OK" }, 
@@ -684,6 +688,7 @@ public class Languages
 		{ Element.SoundOnAutoSwitch, "Конвертации автозамены." }, 
 		{ Element.SoundOnSnippets, "Развертывании сниппетов." }, 
 		{ Element.SoundOnConvertLast, "Конвертации последнего слова." }, 
+		{ Element.SoundOnLayoutSwitching, "Смене раскладки." }, 
 		{ Element.UseCustomSound, "Свой звук:" }, 
 		{ Element.Select, "Выбрать" }, 
 		#endregion
@@ -706,6 +711,7 @@ public class Languages
 		{ Element.Created, "создан" },
 		{ Element.Readen, "прочитан" },
 		{ Element.RetryInAppData, "Попробовать создать/переключится на настройки в %AppData%?" },
+		{ Element.Sound, "Звук" },
 		#endregion
 		#region Buttons
 		{ Element.ButtonOK, "ОК" }, 

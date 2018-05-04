@@ -23,10 +23,11 @@ namespace Mahou {
 		/// </summary>
 		public bool hksTTCOK, hksTRCOK, hksTSCOK, hksTrslOK, hkShWndOK, hkcwdsOK, hklOK, 
 					hksOK, hklineOK, hkSIOK, hkExitOK, hkToglLPOK;
-		public static string nPath = AppDomain.CurrentDomain.BaseDirectory, CustomSound;
+		public static string nPath = AppDomain.CurrentDomain.BaseDirectory, CustomSound, CustomSound2;
 		public static bool LoggingEnabled, dummy, CapsLockDisablerTimer, LangPanelUpperArrow, mouseLTUpperArrow, caretLTUpperArrow,
 						   ShiftInHotkey, AltInHotkey, CtrlInHotkey, WinInHotkey, AutoStartAsAdmin, UseJKL, AutoSwitchEnabled, ReadOnlyNA,
-						   SoundEnabled, UseCustomSound, SoundOnAutoSwitch, SoundOnConvLast, SoundOnSnippets;
+						   SoundEnabled, UseCustomSound, SoundOnAutoSwitch, SoundOnConvLast, SoundOnSnippets, SoundOnLayoutSwitch,
+						   UseCustomSound2, SoundOnAutoSwitch2, SoundOnConvLast2, SoundOnSnippets2, SoundOnLayoutSwitch2;
 		static string[] UpdInfo;
 		static bool updating, was, isold = true, checking, snip_checking, as_checking, check_ASD_size = true;
 		#region Timers
@@ -808,8 +809,14 @@ namespace Mahou {
 				MMain.MyConfs.Write("Sounds", "OnAutoSwitch", chk_SndAutoSwitch.Checked.ToString());
 				MMain.MyConfs.Write("Sounds", "OnSnippets", chk_SndSnippets.Checked.ToString());
 				MMain.MyConfs.Write("Sounds", "OnConvertLast", chk_SndLast.Checked.ToString());
+				MMain.MyConfs.Write("Sounds", "OnLayoutSwitch", chk_SndLayoutSwitch.Checked.ToString());
 				MMain.MyConfs.Write("Sounds", "UseCustomSound", chk_UseCustomSnd.Checked.ToString());
-				MMain.MyConfs.Write("Sounds", "CustomSound", lbl_CustomSound.Text);
+				MMain.MyConfs.Write("Sounds", "OnAutoSwitch2", chk_SndAutoSwitch2.Checked.ToString());
+				MMain.MyConfs.Write("Sounds", "OnSnippets2", chk_SndSnippets2.Checked.ToString());
+				MMain.MyConfs.Write("Sounds", "OnConvertLast2", chk_SndLast2.Checked.ToString());
+				MMain.MyConfs.Write("Sounds", "OnLayoutSwitch2", chk_SndLayoutSwitch2.Checked.ToString());
+				MMain.MyConfs.Write("Sounds", "UseCustomSound2", chk_UseCustomSnd2.Checked.ToString());
+				MMain.MyConfs.Write("Sounds", "CustomSound2", lbl_CustomSound2.Text);
 				#endregion
 				MMain.MyConfs.WriteToDisk();
 				Logging.Log("All configurations saved.");
@@ -1058,8 +1065,15 @@ namespace Mahou {
 			SoundOnAutoSwitch = chk_SndAutoSwitch.Checked = MMain.MyConfs.ReadBool("Sounds", "OnAutoSwitch");
 			SoundOnSnippets = chk_SndSnippets.Checked = MMain.MyConfs.ReadBool("Sounds", "OnSnippets");
 			SoundOnConvLast = chk_SndLast.Checked = MMain.MyConfs.ReadBool("Sounds", "OnConvertLast");
+			SoundOnLayoutSwitch = chk_SndLayoutSwitch.Checked = MMain.MyConfs.ReadBool("Sounds", "OnLayoutSwitch");
 			UseCustomSound = chk_UseCustomSnd.Checked = MMain.MyConfs.ReadBool("Sounds", "UseCustomSound");
 			CustomSound = lbl_CustomSound.Text = MMain.MyConfs.Read("Sounds", "CustomSound");
+			SoundOnAutoSwitch2 = chk_SndAutoSwitch2.Checked = MMain.MyConfs.ReadBool("Sounds", "OnAutoSwitch2");
+			SoundOnSnippets2 = chk_SndSnippets2.Checked = MMain.MyConfs.ReadBool("Sounds", "OnSnippets2");
+			SoundOnConvLast2 = chk_SndLast2.Checked = MMain.MyConfs.ReadBool("Sounds", "OnConvertLast2");
+			SoundOnLayoutSwitch2 = chk_SndLayoutSwitch2.Checked = MMain.MyConfs.ReadBool("Sounds", "OnLayoutSwitch2");
+			UseCustomSound2 = chk_UseCustomSnd2.Checked = MMain.MyConfs.ReadBool("Sounds", "UseCustomSound2");
+			CustomSound2 = lbl_CustomSound2.Text = MMain.MyConfs.Read("Sounds", "CustomSound2");
 			#endregion
 			if (RemapCapslockAsF18 || SnippetsExpandType == "Tab")
 				LLHook.Set();
@@ -1309,9 +1323,9 @@ namespace Mahou {
 			lbl_LangTTMouseRefreshRate.Enabled = nud_LangTTMouseRefreshRate.Enabled = LDUseWindowsMessages || chk_LangTooltipMouse.Checked;
 			lbl_LangTTCaretRefreshRate.Enabled = nud_LangTTCaretRefreshRate.Enabled = !chk_LDMessages.Checked;
 			// Sounds tab
-			grb_SoundOn.Enabled = chk_UseCustomSnd.Enabled = lbl_CustomSound.Enabled = btn_SelectSnd.Enabled = chk_EnableSnd.Checked;
-			if (chk_EnableSnd.Checked)
-				lbl_CustomSound.Enabled = btn_SelectSnd.Enabled = chk_UseCustomSnd.Checked;
+			lbl_CustomSound.Enabled = btn_SelectSnd.Enabled = chk_UseCustomSnd.Checked;
+			lbl_CustomSound2.Enabled = btn_SelectSnd2.Enabled = chk_UseCustomSnd2.Checked;
+			grb_Sound1.Enabled = grb_Sound2.Enabled = chk_EnableSnd.Checked;
 		}
 		/// <summary>
 		/// Toggles visibility of main window.
@@ -1961,6 +1975,27 @@ DEL "+restartMahouPath;
 						sp = new System.Media.SoundPlayer(CustomSound);
 				sp.Play();
 			}
+		}
+		public static void Sound2Play() {
+			if (SoundEnabled) {
+				var sp2 = new System.Media.SoundPlayer(new MemoryStream(Properties.Resources.snd2));
+				if (UseCustomSound2) 
+					if (File.Exists(CustomSound2))
+						sp2 = new System.Media.SoundPlayer(CustomSound2);
+				sp2.Play();
+			}
+		}
+		public string SelectGetWavFile() {
+			var fp = "";
+			var ofd = new  OpenFileDialog();
+			ofd.DefaultExt = ".wav";
+			ofd.Filter = "Wave sound|*.wav";
+			ofd.Multiselect = false;
+			if (ofd.ShowDialog() == DialogResult.OK) {
+				fp = ofd.FileName;
+			}
+			ofd.Dispose();
+			return fp;
 		}
 		/// <summary>
 		/// Creates startup shortcut/task v3.0+v2.0.
@@ -3106,12 +3141,15 @@ DEL ""ExtractASD.cmd""";
 			#endregion
 			#region Sounds
 			chk_EnableSnd.Text = MMain.Lang[Languages.Element.EnableSounds];
-			grb_SoundOn.Text = MMain.Lang[Languages.Element.PlaySoundWhen];
-			chk_SndAutoSwitch.Text = MMain.Lang[Languages.Element.SoundOnAutoSwitch];
-			chk_SndSnippets.Text = MMain.Lang[Languages.Element.SoundOnSnippets];
-			chk_SndLast.Text = MMain.Lang[Languages.Element.SoundOnConvertLast];
-			chk_UseCustomSnd.Text = MMain.Lang[Languages.Element.UseCustomSound];
-			btn_SelectSnd.Text = MMain.Lang[Languages.Element.Select];
+			grb_Sound1.Text = MMain.Lang[Languages.Element.Sound] + " #1";
+			grb_Sound2.Text = MMain.Lang[Languages.Element.Sound] + " #2";
+			grb_SoundOn2.Text = grb_SoundOn.Text = MMain.Lang[Languages.Element.PlaySoundWhen];
+			chk_SndAutoSwitch2.Text = chk_SndAutoSwitch.Text = MMain.Lang[Languages.Element.SoundOnAutoSwitch];
+			chk_SndSnippets2.Text = chk_SndSnippets.Text = MMain.Lang[Languages.Element.SoundOnSnippets];
+			chk_SndLast2.Text = chk_SndLast.Text = MMain.Lang[Languages.Element.SoundOnConvertLast];
+			chk_SndLayoutSwitch2.Text = chk_SndLayoutSwitch.Text = MMain.Lang[Languages.Element.SoundOnLayoutSwitching];
+			chk_UseCustomSnd2.Text = chk_UseCustomSnd.Text = MMain.Lang[Languages.Element.UseCustomSound];
+			btn_SelectSnd2.Text = btn_SelectSnd.Text = MMain.Lang[Languages.Element.Select];
 			#endregion
 			#region Buttons
 			btn_Apply.Text = MMain.Lang[Languages.Element.ButtonApply];
@@ -3609,14 +3647,10 @@ DEL ""ExtractASD.cmd""";
 			lbl_SetsCount.Visible = pan_KeySets.Visible = btn_SubSet.Visible = btn_AddSet.Visible = !old;
 		}
 		void Btn_SelectSndClick(object sender, EventArgs e) {
-			var ofd = new  OpenFileDialog();
-			ofd.DefaultExt = ".wav";
-			ofd.Filter = "Wave sound|*.wav";
-			ofd.Multiselect = false;
-			if (ofd.ShowDialog() == DialogResult.OK) {
-				lbl_CustomSound.Text = ofd.FileName;
-			}
-			ofd.Dispose();
+			lbl_CustomSound.Text = SelectGetWavFile();
+		}
+		void Btn_SelectSnd2Click(object sender, EventArgs e) {
+			lbl_CustomSound2.Text = SelectGetWavFile();
 		}
 		#endregion
 	}
