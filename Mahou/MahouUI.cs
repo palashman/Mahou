@@ -811,6 +811,7 @@ namespace Mahou {
 				MMain.MyConfs.Write("Sounds", "OnConvertLast", chk_SndLast.Checked.ToString());
 				MMain.MyConfs.Write("Sounds", "OnLayoutSwitch", chk_SndLayoutSwitch.Checked.ToString());
 				MMain.MyConfs.Write("Sounds", "UseCustomSound", chk_UseCustomSnd.Checked.ToString());
+				MMain.MyConfs.Write("Sounds", "CustomSound", lbl_CustomSound.Text);
 				MMain.MyConfs.Write("Sounds", "OnAutoSwitch2", chk_SndAutoSwitch2.Checked.ToString());
 				MMain.MyConfs.Write("Sounds", "OnSnippets2", chk_SndSnippets2.Checked.ToString());
 				MMain.MyConfs.Write("Sounds", "OnConvertLast2", chk_SndLast2.Checked.ToString());
