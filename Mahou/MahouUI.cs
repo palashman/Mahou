@@ -1075,8 +1075,20 @@ namespace Mahou {
 			SoundOnLayoutSwitch2 = chk_SndLayoutSwitch2.Checked = MMain.MyConfs.ReadBool("Sounds", "OnLayoutSwitch2");
 			UseCustomSound2 = chk_UseCustomSnd2.Checked = MMain.MyConfs.ReadBool("Sounds", "UseCustomSound2");
 			CustomSound2 = lbl_CustomSound2.Text = MMain.MyConfs.Read("Sounds", "CustomSound2");
-			HelpMeUnderstand.SetToolTip(lbl_CustomSound, lbl_CustomSound.Text);
-			HelpMeUnderstand.SetToolTip(lbl_CustomSound2, lbl_CustomSound2.Text);
+			var lbCSh = lbl_CustomSound.Text;
+			var lbCSh2 = lbl_CustomSound2.Text;
+			if (!File.Exists(CustomSound)) {
+				lbl_CustomSound.ForeColor = Color.Red;
+				lbCSh = MMain.Lang[Languages.Element.Not] + " " + MMain.Lang[Languages.Element.Exist] + ":\r\n["+lbl_CustomSound.Text+"]";
+			} else
+				lbl_CustomSound.ForeColor = Color.FromKnownColor(KnownColor.WindowText);
+			if (!File.Exists(CustomSound2)) {
+				lbl_CustomSound2.ForeColor = Color.Red;
+				lbCSh2 = MMain.Lang[Languages.Element.Not] + " " + MMain.Lang[Languages.Element.Exist] + ":\r\n["+lbl_CustomSound2.Text+"]";
+			} else
+				lbl_CustomSound2.ForeColor = Color.FromKnownColor(KnownColor.WindowText);
+			HelpMeUnderstand.SetToolTip(lbl_CustomSound, lbCSh);
+			HelpMeUnderstand.SetToolTip(lbl_CustomSound2, lbCSh2);
 			#endregion
 			if (RemapCapslockAsF18 || SnippetsExpandType == "Tab")
 				LLHook.Set();
