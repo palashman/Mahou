@@ -1075,6 +1075,8 @@ namespace Mahou {
 			SoundOnLayoutSwitch2 = chk_SndLayoutSwitch2.Checked = MMain.MyConfs.ReadBool("Sounds", "OnLayoutSwitch2");
 			UseCustomSound2 = chk_UseCustomSnd2.Checked = MMain.MyConfs.ReadBool("Sounds", "UseCustomSound2");
 			CustomSound2 = lbl_CustomSound2.Text = MMain.MyConfs.Read("Sounds", "CustomSound2");
+			HelpMeUnderstand.SetToolTip(lbl_CustomSound, lbl_CustomSound.Text);
+			HelpMeUnderstand.SetToolTip(lbl_CustomSound2, lbl_CustomSound2.Text);
 			#endregion
 			if (RemapCapslockAsF18 || SnippetsExpandType == "Tab")
 				LLHook.Set();
@@ -3649,9 +3651,11 @@ DEL ""ExtractASD.cmd""";
 		}
 		void Btn_SelectSndClick(object sender, EventArgs e) {
 			lbl_CustomSound.Text = SelectGetWavFile();
+			HelpMeUnderstand.SetToolTip(lbl_CustomSound, lbl_CustomSound.Text);
 		}
 		void Btn_SelectSnd2Click(object sender, EventArgs e) {
 			lbl_CustomSound2.Text = SelectGetWavFile();
+			HelpMeUnderstand.SetToolTip(lbl_CustomSound2, lbl_CustomSound2.Text);
 		}
 		#endregion
 	}

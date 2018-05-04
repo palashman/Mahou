@@ -2348,9 +2348,9 @@ namespace Mahou
 			// lbl_CustomSound2
 			// 
 			this.lbl_CustomSound2.AutoEllipsis = true;
-			this.lbl_CustomSound2.Location = new System.Drawing.Point(135, 85);
+			this.lbl_CustomSound2.Location = new System.Drawing.Point(134, 90);
 			this.lbl_CustomSound2.Name = "lbl_CustomSound2";
-			this.lbl_CustomSound2.Size = new System.Drawing.Size(284, 17);
+			this.lbl_CustomSound2.Size = new System.Drawing.Size(279, 17);
 			this.lbl_CustomSound2.TabIndex = 9;
 			// 
 			// btn_SelectSnd2
@@ -2445,7 +2445,7 @@ namespace Mahou
 			this.lbl_CustomSound.AutoEllipsis = true;
 			this.lbl_CustomSound.Location = new System.Drawing.Point(135, 89);
 			this.lbl_CustomSound.Name = "lbl_CustomSound";
-			this.lbl_CustomSound.Size = new System.Drawing.Size(284, 17);
+			this.lbl_CustomSound.Size = new System.Drawing.Size(278, 17);
 			this.lbl_CustomSound.TabIndex = 9;
 			// 
 			// btn_SelectSnd
