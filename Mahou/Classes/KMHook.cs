@@ -222,6 +222,8 @@ namespace Mahou
 //									ExpandSnippet(snip, as_corrects[i], MMain.mahou.AutoSwitchSpaceAfter, MMain.mahou.AutoSwitchSwitchToGuessLayout);
 //									break;
 //								} else {
+		            			if (as_wrongs[i] == null)
+		            				break;
 									if (snip.Length == as_wrongs[i].Length) {
 										if (snil == as_wrongs[i].ToLowerInvariant()) {
 			            					if (MahouUI.SoundOnAutoSwitch)
