@@ -2071,7 +2071,8 @@ namespace Mahou
 			this.txt_Snippets.Size = new System.Drawing.Size(541, 206);
 			this.txt_Snippets.TabIndex = 1;
 			this.txt_Snippets.Text = "->mahou\r\n====>Mahou (魔法) - Magical layout switcher.<====\r\n->eml\r\n====>BladeMight@" +
-	"gmail.com<====";
+	"gmail.com<====\r\n->nowtime====>__date(HH:mm:ss)<====\r\n->nowdate====>__date(dd/MM/yyyy)<====\r\n->datepretty====>__date(dd, ddd MMM)<===="+
+	"\r\n->mahouver====>__version()<====\r\n->mahoutitle====>__title()<====\r\n->env_system====>__system()<====\r\n->date_esc====>\\__date(HH:mm:ss)<====";
 			this.txt_Snippets.TextChanged += new System.EventHandler(this.Txt_SnippetsTextChanged);
 			// 
 			// chk_Snippets

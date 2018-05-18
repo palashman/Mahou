@@ -1038,7 +1038,9 @@ namespace Mahou {
 					UpdateSnippetCountLabel(AutoSwitchDictionaryRaw, lbl_AutoSwitchWordsCount, false);
 				}
 			MahouUIActivated((object)1, new EventArgs());
-			if (SnippetsEnabled)
+			if (SnippetsEnabled) {
+				if (!File.Exists(snipfile))
+					File.WriteAllText(snipfile, txt_Snippets.Text, Encoding.UTF8);
 				if (File.Exists(snipfile)) {
 					txt_Snippets.Text = File.ReadAllText(snipfile);
 					UpdateSnippetCountLabel(txt_Snippets.Text, lbl_SnippetsCount);
@@ -1048,6 +1050,7 @@ namespace Mahou {
 					               		KMHook.ReInitSnippets();
 					               }, 650);
 				}
+			}
 			#endregion
 			#region Appearence & Hotkeys
 			LoadTemps();

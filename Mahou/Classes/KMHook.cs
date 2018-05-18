@@ -569,11 +569,12 @@ namespace Mahou
 						ChangeToLayout(Locales.ActiveWindow(), guess.Item2);
 					}
 					if (!ignoreExpand) {
-			       			for (int e = -1 + (MMain.mahou.SnippetsExpandType == "Tab" ? 1 : 0); e < snip.Length; e++) {
+       					for (int e = -1 + (MMain.mahou.SnippetsExpandType == "Tab" ? 1 : 0); e < snip.Length; e++) {
 							KInputs.MakeInput(new [] { KInputs.AddKey(Keys.Back, true),
 								KInputs.AddKey(Keys.Back, false) 
 							});
 						}
+		       			expand = ReplaceAllExpressions(expand, true);
 						Logging.Log("Expanding snippet [" + snip + "] to [" + expand + "].");
 						ClearWord(true, true, false, "Cleared due to snippet expansion");
 						KInputs.MakeInput(KInputs.AddString(expand));
@@ -583,8 +584,8 @@ namespace Mahou
 					DoLater(() => MMain.mahou.Invoke((MethodInvoker)delegate {
 						MMain.mahou.UpdateLDs();
 					}), 500);
-				} catch {
-					Logging.Log("Some snippets configured wrong, check them.", 1);
+		       	} catch(Exception e) {
+					Logging.Log("Some snippets configured wrong, check them, error:\r\n" + e.Message +"\r\n" + e.StackTrace+"\r\n", 1);
 					// If not use TASK, form(MessageBox) won't accept the keys(Enter/Escape/Alt+F4).
 					var msg = new [] {"", ""};
 					msg[0] = MMain.Lang[Languages.Element.MSG_SnippetsError];
@@ -1962,6 +1963,85 @@ namespace Mahou
 			}
 			Memory.Flush();
 		}
+		#region in Snippets expressions  
+		static readonly string[] search_types = new []{ "__date(", "__time(", "__version(", "__system(", "__title(" };
+		static string ReadUntil(string source, string search, string ending, bool include_search = false) {
+			var result = "";
+			var ind = source.IndexOf(search);
+			var ind_aft = ind + search.Length;
+			if (ind == -1) return "";
+			if (!include_search) ind = ind_aft;
+			for (;;ind++) {
+				if (ind >= source.Length-1) return "";
+				if (ind >= ind_aft) {
+					var end = "";
+					if (ending.Length-1>1) {
+						for (int i = 0; i != ending.Length-1; i++) {
+							end += source[ind+i];
+						}
+					} else end += source[ind];
+					if (end == ending) break;
+				}
+				result += source[ind];
+			}
+			return result;
+		}
+		static string ReplaceAllExpressions(string source, bool use_escape = false) {
+			var ru = "";
+			int ind = 0;
+			var ustr = source;
+			var ending = ")";
+			foreach (var search in search_types) {
+				do {
+					ind = ustr.IndexOf(search);
+					ru = ReadUntil(ustr, search, ending);
+					var replt = search+ru+ending;
+					if (ustr.IndexOf(replt) == -1) {
+						Logging.Log("Maybe unfinished expression in: [" + source + "].", 2);
+						break;
+					}
+					if (use_escape) 
+						if (ind > 0)
+							if (ustr[ind-1] == '\\') {
+								ustr = ustr.Replace('\\'+replt, (ReverseStr(search)+ru+ending));
+								continue;
+							}
+					switch (search) {
+						case "__date(":
+						case "__time(":
+							var now = DateTime.Now;
+							ustr = ustr.Replace(replt, now.ToString(ru));
+							break;
+						case "__version(":
+							ustr = ustr.Replace(replt, System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
+							break;
+						 case "__title(":
+							 ustr = ustr.Replace(replt, MMain.mahou.Text);
+							 break;
+						case "__system(":
+							ustr = ustr.Replace(replt, Environment.OSVersion.ToString());
+							break;
+					}
+				} while (ind != -1);
+			}
+			if (use_escape) 
+				foreach (var search in search_types) {
+					do {
+						var rsearch = ReverseStr(search);
+						ind = ustr.IndexOf(rsearch);
+						ru = ReadUntil(ustr, rsearch, ending);
+						var replt = rsearch+ru+ending;
+						ustr = ustr.Replace(replt, search+ru+ending);
+					} while (ru != "");
+				}
+			return ustr;
+		}
+		static string ReverseStr(string input) {
+			var chars = input.ToCharArray();
+			Array.Reverse(chars);
+			return new string(chars);
+		}
+		#endregion
 		/// <summary>
 		///  Contains key(Keys key), it state(bool upper), if it is Alt+[NumPad](bool altnum) and array of numpads(list of numpad keys).
 		/// </summary>
