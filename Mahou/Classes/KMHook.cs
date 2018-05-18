@@ -1869,11 +1869,11 @@ namespace Mahou
 				leng = MahouUI.SnippetsCount;
 			else
 				leng = MahouUI.AutoSwitchCount;
-			string[] smalls = new string[leng];
-			string[]  bigs = new string[leng];
+			string[] smalls = new string[leng+1024];
+			string[]  bigs = new string[leng+1024];
 			if (String.IsNullOrEmpty(snippets)) return;
 			snippets = snippets.Replace("\r", "");
-			int last_exp_len = 0, ids = 0, idb = 0;
+			int last_exp_len = 0, ids = 0, idb = 0, add_alias = 0;
 			for (int k = 0; k < snippets.Length-6; k++) {
 				var com = SnippetsLineCommented(snippets, k);
 				if (com.Item1) {
@@ -1897,8 +1897,19 @@ namespace Mahou
 						len = cool.Length;
 					if (len == -1)
 						len = endl-(k+2);
-					smalls[ids] = (snippets.Substring(k+2, len).Replace("\r", ""));
-					ids++;
+					var sm = snippets.Substring(k+2, len).Replace("\r", "");
+					if (sm.Contains("|")) {
+						var esm = sm.Replace("||", pipe_esc);
+						foreach (var n in esm.Split('|')) {
+							smalls[ids] = n.Replace(pipe_esc , "|");
+//							Debug.WriteLine("ADded sm alias: " +ids + ", ++ " + smalls[ids]);
+							ids++;
+							add_alias++;
+						}
+					} else {
+						smalls[ids] = sm;
+						ids++;
+					}
 				}
 				if (snippets[k].Equals('=') && snippets[k+1].Equals('=') && snippets[k+2].Equals('=') && snippets[k+3].Equals('=') && snippets[k+4].Equals('>')) {
 					var endl = snippets.IndexOf('\n', k+2);
@@ -1914,8 +1925,17 @@ namespace Mahou
 						pyust.Append(pool[g]);
 					}
 					last_exp_len = pyust.Length;
-					bigs[idb] = (pyust.ToString());
-					idb++;
+					if (add_alias != 0) {
+						while (add_alias != 0) {
+//							Debug.WriteLine("ADded exp alias: " +idb + ", ++ " + pyust);
+							bigs[idb] = (pyust.ToString());
+							idb++;
+							add_alias--;
+						}
+					} else {
+						bigs[idb] = (pyust.ToString());
+						idb++;
+					}
 					k+=5;
 				}
 			}
@@ -1972,7 +1992,7 @@ namespace Mahou
 			if (ind == -1) return "";
 			if (!include_search) ind = ind_aft;
 			for (;;ind++) {
-				if (ind >= source.Length-1) return "";
+				if (ind >= source.Length) return "";
 				if (ind >= ind_aft) {
 					var end = "";
 					if (ending.Length-1>1) {
@@ -1996,10 +2016,11 @@ namespace Mahou
 					ind = ustr.IndexOf(search);
 					ru = ReadUntil(ustr, search, ending);
 					var replt = search+ru+ending;
-					if (ustr.IndexOf(replt) == -1) {
-						Logging.Log("Maybe unfinished expression in: [" + source + "].", 2);
-						break;
-					}
+					if (ind != -1)
+						if (ustr.IndexOf(replt) == -1) {
+							Logging.Log("Maybe unfinished expression [" + replt + "] in: [" + source + "].", 2);
+							break;
+						}
 					if (use_escape) 
 						if (ind > 0)
 							if (ustr[ind-1] == '\\') {
@@ -2041,6 +2062,9 @@ namespace Mahou
 			Array.Reverse(chars);
 			return new string(chars);
 		}
+		#endregion
+		#region Snippets Aliases
+		static readonly string pipe_esc = "__pipeEscape::";
 		#endregion
 		/// <summary>
 		///  Contains key(Keys key), it state(bool upper), if it is Alt+[NumPad](bool altnum) and array of numpads(list of numpad keys).
