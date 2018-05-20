@@ -402,7 +402,7 @@ namespace Mahou {
 //				pos = Cursor.Position;
 			var pos = Cursor.Position;
 			pos.Y += 10;
-			var str = KMHook.GetClipStr();
+			var str = KMHook.GetClipStr().Replace('\n', ' ');
 			Debug.WriteLine(str);
 			if (!string.IsNullOrEmpty(str)) {
 				if (!TranslatePanel.running)
