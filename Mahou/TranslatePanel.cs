@@ -123,12 +123,15 @@ namespace Mahou {
 			for (int i = 0; i != tls.Length; i++) {
 	     		qs[i] = str;
 		    }
+			if (tls.Length == 0)
+				txt_Source.Text = str;
 			Debug.WriteLine("UPDATING TRANSLATION::");
 			var multi = HttpUtility.UrlEncode(TranslatePanel.getMultiParams(tls, qs, sls));
 //			var multi_resp = getRespContent(TranslatePanel.GTLink+"?multi="+multi);
 			var multi_resp = "";
-			try { multi_resp = Encoding.UTF8.GetString(Encoding.Default.GetBytes(client.DownloadString(TranslatePanel.GTLink+"?multi="+multi)));
-				} catch(Exception e) { GTRespError(e.Message); }
+			if (multi != "%5b%5d")
+				try { multi_resp = Encoding.UTF8.GetString(Encoding.Default.GetBytes(client.DownloadString(TranslatePanel.GTLink+"?multi="+multi)));
+					} catch(Exception e) { GTRespError(e.Message); }
 			Debug.WriteLine(multi);
 			Debug.WriteLine(multi_resp);
 			var gtrs = multi_resp.Split(new [] {"_!_!_!_SEPARATOR_!_!_!_"}, StringSplitOptions.None);

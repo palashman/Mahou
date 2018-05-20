@@ -937,6 +937,7 @@ namespace Mahou {
 		/// Refresh all controls state from configs.
 		/// </summary>
 		void LoadConfigs() {
+			TrSetsValues = new Dictionary<string, string>();
 			chk_AppDataConfigs.Checked = (bool)DoInMainConfigs(() => MMain.MyConfs.ReadBool("Functions", "AppDataConfigs"));
 			UpdateSaveLoadPaths(chk_AppDataConfigs.Checked);
 			InitLanguage();
@@ -3782,8 +3783,8 @@ DEL ""ExtractASD.cmd""";
 			if (TrSetCount < 1) return;
 			pan_TrSets.Controls["set_"+TrSetCount].Dispose();
 			TrSetCount--;
-			lbl_SetsCount.ForeColor = Color.Black;
-			lbl_SetsCount.Text = "#"+TrSetCount;
+			lbl_TrSetsCount.ForeColor = Color.Black;
+			lbl_TrSetsCount.Text = "#"+TrSetCount;
 			if (TrSetCount < 1)
 				lbl_TrSetsCount.ForeColor = Color.LightGray;
 	
