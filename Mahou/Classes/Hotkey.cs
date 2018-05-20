@@ -120,7 +120,7 @@ namespace Mahou {
 			if (!hotkey.Double) once = true;
 			if (hotkey.ID == (int)hkID && hotkey.Enabled) {
 				if (hkOK || once) {
-					Logging.Log("Hotkey [" + Enum.GetName(typeof(HKID), hkID) + "] fired.");
+					System.Diagnostics.Debug.WriteLine("Hotkey [" + Enum.GetName(typeof(HKID), hkID) + "] fired.");
 					if (MMain.mahou.BlockHKWithCtrl && ContainsModifier((int)hotkey.Modifiers, (int)WinAPI.MOD_CONTROL)) { } else {
 						if (hotkey.Modifiers > 0 && MMain.mahou.RePress) {
 							KMHook.hotkeywithmodsfired = true;
@@ -134,7 +134,7 @@ namespace Mahou {
 					hkAction();
 					KMHook.RePress();
 				} else if (hotkey.Double) {
-					Logging.Log("Waiting for second hotkey ["+Enum.GetName(typeof(HKID), hkID) +"] press.");
+					System.Diagnostics.Debug.WriteLine("Waiting for second hotkey ["+Enum.GetName(typeof(HKID), hkID) +"] press.");
 					hkOK = true;
 					KMHook.doublekey.Interval = MMain.mahou.DoubleHKInterval;
 					KMHook.doublekey.Start();

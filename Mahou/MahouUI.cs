@@ -1215,7 +1215,7 @@ namespace Mahou {
 			Logging.Log("All configurations loaded.");
 		}
 		List<string[]> ParseSets(string raw_sets) {
-			if (raw_sets.Contains("set_0")) return new List<string[]>();
+			if (raw_sets.Contains("set_0") || raw_sets.Contains("set0")) return new List<string[]>();
 			var sets = raw_sets.Split('|');
 			var last_set = sets[sets.Length-1];
 			Debug.WriteLine(last_set);
@@ -1863,6 +1863,8 @@ DEL "+restartMahouPath;
 					hksTTCOK = false;
 				if (hksTSCOK)
 					hksTSCOK = false;
+				if (hkShowTSOK)
+					hkShowTSOK = false;
 				KMHook.doublekey.Stop();
 			};
 			flagsCheck.Interval = MMain.MyConfs.ReadInt("Timings", "FlagsInTrayRefreshRate");
