@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.InteropServices.ComTypes;
 public class Languages
 {
 	public enum Element { 
@@ -15,6 +16,7 @@ public class Languages
 		tab_About,
 		tab_LangPanel,
 		tab_Sounds,
+		tab_Translator,
 		#endregion
 		#region Functions
 		AutoStart,
@@ -133,6 +135,7 @@ public class Languages
 		Enabled,
 		DoubleHK,
 		ToggleLangPanel,
+		TranslateSelection,
 		#endregion
 		#region LangPanel
 		DisplayLangPanel,
@@ -141,6 +144,12 @@ public class Languages
 		BorderColor,
 		UseAeroColor,
 		DisplayUpperArrow,
+		#endregion
+		#region TranslatePanel
+		EnableTranslatePanel,
+		ShowTranslationOnDoubleClick,
+		TranslateLanguages,
+		Translation,
 		#endregion
 		#region Updates
 		CheckForUpdates,
@@ -242,6 +251,7 @@ public class Languages
 		TT_UseDelayAfterBackspaces,
 		TT_UseJKL,
 		TT_ReadOnlyNA,
+		TT_ShowSelectionTranslationHotkey,
 		#endregion
 		#region Messages
 		MSG_SnippetsError
@@ -261,6 +271,7 @@ public class Languages
 		{ Element.tab_Updates, "Updates" }, 
 		{ Element.tab_About, "About" }, 
 		{ Element.tab_Sounds, "Sounds" }, 
+		{ Element.tab_Translator, "Translator" }, 
 		#endregion
 		#region Functions
 		{ Element.AutoStart, "Start with Windows." }, 
@@ -379,6 +390,7 @@ public class Languages
 		{ Element.Enabled, "Enabled" }, 
 		{ Element.DoubleHK, "Double hotkey" }, 
 		{ Element.ToggleLangPanel, "Toggle language panel" }, 
+		{ Element.TranslateSelection, "Show selected text translation" }, 
 		#endregion
 		#region LangPanel
 		{ Element.DisplayLangPanel, "Display language panel." },
@@ -387,6 +399,12 @@ public class Languages
 		{ Element.BorderColor, "Border color:" },
 		{ Element.UseAeroColor, "Use Aero/Accent color." },
 		{ Element.DisplayUpperArrow, "Display up arrow icon when input is upper case." },
+		#endregion
+		#region TranslatePanel
+		{ Element.EnableTranslatePanel, "Enable Translator." }, 
+		{ Element.ShowTranslationOnDoubleClick, "Show on Double Click." }, 
+		{ Element.TranslateLanguages, "Translate languages:" }, 
+		{ Element.Translation, "Translation" }, 
 		#endregion
 		#region Updates
 		{ Element.CheckForUpdates, "Check for updates:" }, 
@@ -506,6 +524,7 @@ public class Languages
 		{ Element.TT_UseJKL, "Allows Mahou to retrieve layout from jkl.exe.\r\nAllows always to get right keyboard layout.(Highly recommended)\r\n" },	
 		{ Element.TT_ReadOnlyNA, "Switches to read-only mode when no write access to Mahou.ini.\r\nUseful for Administrators." },	
 		{ Element.TT_UseDelayAfterBackspaces, "If enabled Mahou will wait some time after deleting old word and before inputting converted word.\r\nUseful if in some apps Mahou's function to convert last word doesn't work properly." },
+		{ Element.TT_ShowSelectionTranslationHotkey, "Enable the translator in [Translator] tab in order this hotkey to work." },
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Snippets contains error in syntax, check if there are errors, details on snippets syntax you can find on Wiki." }
@@ -528,6 +547,7 @@ public class Languages
 		{ Element.tab_Updates, "Обновления" }, 
 		{ Element.tab_About, "О..." },  
 		{ Element.tab_Sounds, "Звуки" }, 
+		{ Element.tab_Translator, "Переводчик" }, 
 		#endregion
 		#region Functions
 		{ Element.AutoStart, "Запускать с Windows" }, 
@@ -646,6 +666,7 @@ public class Languages
 		{ Element.Enabled, "Включена" }, 
 		{ Element.DoubleHK, "Двойная горячая клавиша" }, 
 		{ Element.ToggleLangPanel, "Переключить видимость панели языка" }, 
+		{ Element.TranslateSelection, "Показать перевод выделенного текста" }, 
 		#endregion
 		#region LangPanel
 		{ Element.DisplayLangPanel, "Отображать языковую панель." },
@@ -654,6 +675,12 @@ public class Languages
 		{ Element.BorderColor, "Цвет рамки:" },
 		{ Element.UseAeroColor, "Использовать Аэро/Главный цвет." },
 		{ Element.DisplayUpperArrow, "Отображать стрелку когда ввод верхнего регистра." },
+		#endregion
+		#region TranslatePanel
+		{ Element.EnableTranslatePanel, "Включить переводчик." }, 
+		{ Element.ShowTranslationOnDoubleClick, "Показывать при двойном клике." }, 
+		{ Element.TranslateLanguages, "Языки перевода:" }, 
+		{ Element.Translation, "Перевод" }, 
 		#endregion
 		#region Updates
 		{ Element.CheckForUpdates, "Проверить обновления:" }, 
@@ -771,6 +798,7 @@ public class Languages
 		{ Element.TT_UseJKL, "Позволяет Mahou получать раскладку с jkl.exe.\r\nПозволяет всегда получать правильную раскладку.(Очень рекомендуется)\r\n" },
 		{ Element.TT_ReadOnlyNA, "Переключается в режим только-чтение когда нет прав на запись Mahou.ini.\r\nПолезно для Администраторов." },	
 		{ Element.TT_UseDelayAfterBackspaces, "Если включено Mahou будет ждать некоторое время после удаления старого слова и перед вводом конвертированного слова.\r\nПолезно если в некоторых программах функция Mahou Конверт последнего слова не работает нормально." },
+		{ Element.TT_ShowSelectionTranslationHotkey, "Включите переводчик на вкладке [Переводчик], чтобы эта горячая клавиша работала." },
 		#endregion
 		#region Messages
 		{ Element.MSG_SnippetsError, "Сниппеты содержат ошибки в синтаксисе, проверьте ваши сниппеты, детали синтаксиса можете найти на Wiki." }

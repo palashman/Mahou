@@ -16,18 +16,19 @@ namespace Mahou {
 		#region Variables
 		// Hotkeys, HKC => HotKey Convert
 		public Hotkey Mainhk, ExitHk, HKCLast, HKCSelection, HKCLine, HKSymIgn, HKConMorWor,
-			  	      HKTitleCase, HKRandomCase, HKSwapCase, HKTransliteration, HKRestart, HKToggleLP;
+			  	      HKTitleCase, HKRandomCase, HKSwapCase, HKTransliteration, HKRestart, HKToggleLP, HKShowST;
 		public List<Hotkey> SpecificSwitchHotkeys = new List<Hotkey>();
 		/// <summary>
 		/// Hotkey OK to fire action bools.
 		/// </summary>
 		public bool hksTTCOK, hksTRCOK, hksTSCOK, hksTrslOK, hkShWndOK, hkcwdsOK, hklOK, 
-					hksOK, hklineOK, hkSIOK, hkExitOK, hkToglLPOK;
+					hksOK, hklineOK, hkSIOK, hkExitOK, hkToglLPOK, hkShowTSOK;
 		public static string nPath = AppDomain.CurrentDomain.BaseDirectory, CustomSound, CustomSound2;
 		public static bool LoggingEnabled, dummy, CapsLockDisablerTimer, LangPanelUpperArrow, mouseLTUpperArrow, caretLTUpperArrow,
 						   ShiftInHotkey, AltInHotkey, CtrlInHotkey, WinInHotkey, AutoStartAsAdmin, UseJKL, AutoSwitchEnabled, ReadOnlyNA,
 						   SoundEnabled, UseCustomSound, SoundOnAutoSwitch, SoundOnConvLast, SoundOnSnippets, SoundOnLayoutSwitch,
-						   UseCustomSound2, SoundOnAutoSwitch2, SoundOnConvLast2, SoundOnSnippets2, SoundOnLayoutSwitch2;
+						   UseCustomSound2, SoundOnAutoSwitch2, SoundOnConvLast2, SoundOnSnippets2, SoundOnLayoutSwitch2, TrOnDoubleClick,
+						   TrEnabled, TrBorderAero;
 		static string[] UpdInfo;
 		static bool updating, was, isold = true, checking, snip_checking, as_checking, check_ASD_size = true;
 		#region Timers
@@ -51,9 +52,12 @@ namespace Mahou {
 		static int progress = 0, _progress = 0;
 		public string SnippetsExpandType = "";
 		int titlebar = 12;
-		public static int AtUpdateShow, SpecKeySetCount, SnippetsCount, AutoSwitchCount;
+		public static int AtUpdateShow, SpecKeySetCount, SnippetsCount, AutoSwitchCount, TrSetCount;
 		public int DoubleHKInterval = 200, SelectedTextGetMoreTriesCount, DelayAfterBackspaces;
 		#region Temporary variables
+		/// <summary> Translate Panel Colors</summary>
+		public Color TrFore, TrBack, TrBorder;
+		public int TrTransparency;
 		/// <summary> In memory settings, for timers/hooks.</summary>
 		public bool DiffAppearenceForLayouts, LDForCaretOnChange, LDForMouseOnChange, ScrollTip, AddOneSpace,
 					TrayFlags, SymIgnEnabled, TrayIconVisible, SnippetsEnabled, ChangeLayouByKey, EmulateLS,
@@ -68,22 +72,22 @@ namespace Mahou {
 		string Mainhk_tempMods, ExitHk_tempMods, HKCLast_tempMods, HKCSelection_tempMods, 
 			    HKCLine_tempMods, HKSymIgn_tempMods, HKConMorWor_tempMods, HKTitleCase_tempMods,
  				HKRandomCase_tempMods, HKSwapCase_tempMods, HKTransliteration_tempMods, HKRestart_tempMods,
- 				HKToggleLangPanel_tempMods;
+ 				HKToggleLangPanel_tempMods, HKShowSelectionTranslate_tempMods;
 		/// <summary> Temporary key of hotkeys. </summary>
 		int Mainhk_tempKey, ExitHk_tempKey, HKCLast_tempKey, HKCSelection_tempKey,
 			    HKCLine_tempKey, HKSymIgn_tempKey, HKConMorWor_tempKey, HKTitleCase_tempKey,
  				HKRandomCase_tempKey, HKSwapCase_tempKey, HKTransliteration_tempKey, HKRestart_tempKey,
- 				HKToggleLangPanel_tempKey;
+ 				HKToggleLangPanel_tempKey, HKShowSelectionTranslate_tempKey;
 		/// <summary> Temporary Enabled of hotkeys. </summary>
 		bool Mainhk_tempEnabled, ExitHk_tempEnabled, HKCLast_tempEnabled, HKCSelection_tempEnabled,
 			    HKCLine_tempEnabled, HKSymIgn_tempEnabled, HKConMorWor_tempEnabled, HKTitleCase_tempEnabled,
  				HKRandomCase_tempEnabled, HKSwapCase_tempEnabled, HKTransliteration_tempEnabled, HKRestart_tempEnabled,
- 				HKToggleLangPanel_tempEnabled;
+ 				HKToggleLangPanel_tempEnabled, HKShowSelectionTranslate_tempEnabled;
 		/// <summary> Temporary Double of hotkeys. </summary>
 		bool Mainhk_tempDouble, ExitHk_tempDouble, HKCLast_tempDouble, HKCSelection_tempDouble,
 			    HKCLine_tempDouble, HKSymIgn_tempDouble, HKConMorWor_tempDouble, HKTitleCase_tempDouble,
  				HKRandomCase_tempDouble, HKSwapCase_tempDouble, HKTransliteration_tempDouble,
- 				HKToggleLangPanel_tempDouble;
+ 				HKToggleLangPanel_tempDouble, HKShowSelectionTranslate_tempDouble;
 		/// <summary> Temporary colors of LangDisplays appearece. </summary>
 		public Color LDMouseFore_temp, LDCaretFore_temp, LDMouseBack_temp, LDCaretBack_temp, 
 		 	  Layout1Fore_temp, Layout2Fore_temp, Layout1Back_temp, Layout2Back_temp;
@@ -133,6 +137,7 @@ namespace Mahou {
 		public LangDisplay mouseLangDisplay = new LangDisplay();
 		public LangDisplay caretLangDisplay = new LangDisplay();
 		public LangPanel _langPanel;
+		public TranslatePanel _TranslatePanel;
 		uint latestL = 0, latestCL = 0;
 		public static uint currentLayout, GlobalLayout;
 		public static uint MAIN_LAYOUT1, MAIN_LAYOUT2;
@@ -146,6 +151,7 @@ namespace Mahou {
 		/// cbb_typN - Switch type(To specific layout or switch between).
 		/// </summary>
 		public Dictionary<string, string> SpecKeySetsValues = new Dictionary<string, string>();
+		public Dictionary<string, string> TrSetsValues = new Dictionary<string, string>();
 		static string latestSwitch = "null";
 		// From more configs
 		ColorDialog clrd = new ColorDialog();
@@ -168,6 +174,10 @@ namespace Mahou {
 			DeleteTrash();
 			MMain.MAHOU_HANDLE = Handle;
 			InitializeComponent();
+			// Visual designer always wants to put that string into resources, blast it!
+			txt_Snippets.Text = "->mahou\r\n====>Mahou (魔法) - Magical layout switcher.<====\r\n->eml\r\n====>BladeMight@" +
+	"gmail.com<====\r\n->nowtime====>__date(HH:mm:ss)<====\r\n->nowdate====>__date(dd/MM/yyyy)<====\r\n->datepretty====>__date(dd, ddd MMM)<===="+
+	"\r\n->mahouver====>__version()<====\r\n->mahoutitle====>__title()<====\r\n->env_system====>__system()<====\r\n->date_esc====>\\__date(HH:mm:ss)<====";
 			InitializeTrayIcon();
 			// Switch to more secure connection.
 			ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
@@ -180,9 +190,9 @@ namespace Mahou {
 		    	nud_PersistentLayout1Interval.Minimum = nud_PersistentLayout2Interval.Minimum =	1;
 			nud_LangTTPositionX.Minimum = nud_LangTTPositionY.Minimum = -100;
 			// Disable horizontal scroll
-			pan_KeySets.AutoScroll = false;
-			pan_KeySets.HorizontalScroll.Maximum = 0;
-			pan_KeySets.AutoScroll = true;
+			pan_TrSets.AutoScroll = pan_KeySets.AutoScroll = false;
+			pan_TrSets.HorizontalScroll.Maximum = pan_KeySets.HorizontalScroll.Maximum = 0;
+			pan_TrSets.AutoScroll = pan_KeySets.AutoScroll = true;
 			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version;
 			Text += "-dev";
 			var commit = MMain.MyConfs.Read("Updates", "LatestCommit");
@@ -375,11 +385,31 @@ namespace Mahou {
 				Hotkey.CallHotkey(MMain.mahou.Mainhk, id, ref hkShWndOK, ToggleVisibility);
 				Hotkey.CallHotkey(MMain.mahou.HKToggleLP, id, ref hkToglLPOK, ToggleLangPanel);
 				Hotkey.CallHotkey(MMain.mahou.ExitHk, id, ref hkExitOK, ExitProgram);
+				Hotkey.CallHotkey(MMain.mahou.HKShowST, id, ref hkShowTSOK, () => ShowSelectionTranslation());
 //				if (m.WParam.ToInt32() <= (int)Hotkey.HKID.TransliterateSelection)
 //					KMHook.ClearModifiers();
 				UpdateLDs();
 			}
 			base.WndProc(ref m);
+		}
+		public static Point last_CR = new Point(0, 0);
+		public static void ShowSelectionTranslation(bool mouse = false) {
+			if (!TrEnabled) return;
+//			var dum = new Point(0,0);
+//			var pos = CaretPos.GetCaretPointToScreen(out dum);
+//			Debug.WriteLine(pos.X);
+//			if (mouse || pos.Equals(new Point(77777,77777)) || pos == last_CR)
+//				pos = Cursor.Position;
+			var pos = Cursor.Position;
+			pos.Y += 10;
+			var str = KMHook.GetClipStr();
+			Debug.WriteLine(str);
+			if (!string.IsNullOrEmpty(str)) {
+				if (!TranslatePanel.running)
+					MMain.mahou._TranslatePanel.ShowTranslation(str, pos);
+			}
+			KMHook.RestoreClipBoard();
+			if (!mouse) last_CR = pos;
 		}
 		/// <summary>
 		/// Restores temporary variables from settings.
@@ -401,6 +431,7 @@ namespace Mahou {
 			ExitHk_tempEnabled = MMain.MyConfs.ReadBool("Hotkeys", "ExitMahou_Enabled");
 			HKRestart_tempEnabled = MMain.MyConfs.ReadBool("Hotkeys", "RestartMahou_Enabled");
 			HKToggleLangPanel_tempEnabled = MMain.MyConfs.ReadBool("Hotkeys", "ToggleLangPanel_Enabled");
+			HKShowSelectionTranslate_tempEnabled = MMain.MyConfs.ReadBool("Hotkeys", "ShowSelectionTranslate_Enabled");
 			#endregion
 			#region Hotkey doubles
 			Mainhk_tempDouble = MMain.MyConfs.ReadBool("Hotkeys", "ToggleMainWindow_Double");
@@ -415,6 +446,7 @@ namespace Mahou {
 			HKTransliteration_tempDouble = MMain.MyConfs.ReadBool("Hotkeys", "SelectedTextTransliteration_Double");
 			ExitHk_tempDouble = MMain.MyConfs.ReadBool("Hotkeys", "ExitMahou_Double");
 			HKToggleLangPanel_tempDouble = MMain.MyConfs.ReadBool("Hotkeys", "ToggleLangPanel_Double");
+			HKShowSelectionTranslate_tempDouble = MMain.MyConfs.ReadBool("Hotkeys", "ShowSelectionTranslate_Double");
 			#endregion
 			#region Hotkey modifiers
 			Mainhk_tempMods = MMain.MyConfs.Read("Hotkeys", "ToggleMainWindow_Modifiers");
@@ -430,6 +462,7 @@ namespace Mahou {
 			ExitHk_tempMods = MMain.MyConfs.Read("Hotkeys", "ExitMahou_Modifiers");
 			HKRestart_tempMods = MMain.MyConfs.Read("Hotkeys", "RestartMahou_Modifiers");
 			HKToggleLangPanel_tempMods = MMain.MyConfs.Read("Hotkeys", "ToggleLangPanel_Modifiers");
+			HKShowSelectionTranslate_tempMods = MMain.MyConfs.Read("Hotkeys", "ShowSelectionTranslate_Modifiers");
 			#endregion
 			#region Hotkey keys
 			Mainhk_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "ToggleMainWindow_Key");
@@ -445,6 +478,7 @@ namespace Mahou {
 			ExitHk_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "ExitMahou_Key");
 			HKRestart_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "RestartMahou_Key");
 			HKToggleLangPanel_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "ToggleLangPanel_Key");
+			HKShowSelectionTranslate_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "ShowSelectionTranslate_Key");
 			#endregion
 			#region Lang Display colors
 			try { LDMouseFore_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "MouseLTForeColor")); 
@@ -524,6 +558,7 @@ namespace Mahou {
 			MMain.MyConfs.Write("Hotkeys", "ExitMahou_Enabled", ExitHk_tempEnabled.ToString());
 			MMain.MyConfs.Write("Hotkeys", "RestartMahou_Enabled", HKRestart_tempEnabled.ToString());
 			MMain.MyConfs.Write("Hotkeys", "ToggleLangPanel_Enabled", HKToggleLangPanel_tempEnabled.ToString());
+			MMain.MyConfs.Write("Hotkeys", "ShowSelectionTranslate_Enabled", HKShowSelectionTranslate_tempEnabled.ToString());
 			#endregion
 			#region Hotkey doubles
 			MMain.MyConfs.Write("Hotkeys", "ToggleMainWindow_Double", Mainhk_tempDouble.ToString());
@@ -538,6 +573,7 @@ namespace Mahou {
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextTransliteration_Double", HKTransliteration_tempDouble.ToString());
 			MMain.MyConfs.Write("Hotkeys", "ExitMahou_Double", ExitHk_tempDouble.ToString());
 			MMain.MyConfs.Write("Hotkeys", "ToggleLangPanel_Double", HKToggleLangPanel_tempDouble.ToString());
+			MMain.MyConfs.Write("Hotkeys", "ShowSelectionTranslate_Double", HKShowSelectionTranslate_tempDouble.ToString());
 			#endregion
 			#region Hotkey modifiers
 			MMain.MyConfs.Write("Hotkeys", "ToggleMainWindow_Modifiers", Mainhk_tempMods);
@@ -553,6 +589,7 @@ namespace Mahou {
 			MMain.MyConfs.Write("Hotkeys", "ExitMahou_Modifiers", ExitHk_tempMods);
 			MMain.MyConfs.Write("Hotkeys", "RestartMahou_Modifiers", HKRestart_tempMods);
 			MMain.MyConfs.Write("Hotkeys", "ToggleLangPanel_Modifiers", HKToggleLangPanel_tempMods);
+			MMain.MyConfs.Write("Hotkeys", "ShowSelectionTranslate_Modifiers", HKShowSelectionTranslate_tempMods);
 			#endregion
 			#region Hotkey keys
 			MMain.MyConfs.Write("Hotkeys", "ToggleMainWindow_Key", Mainhk_tempKey.ToString());
@@ -568,6 +605,7 @@ namespace Mahou {
 			MMain.MyConfs.Write("Hotkeys", "ExitMahou_Key", ExitHk_tempKey.ToString());
 			MMain.MyConfs.Write("Hotkeys", "RestartMahou_Key", HKRestart_tempKey.ToString());
 			MMain.MyConfs.Write("Hotkeys", "ToggleLangPanel_Key", HKToggleLangPanel_tempKey.ToString());
+			MMain.MyConfs.Write("Hotkeys", "ShowSelectionTranslate_Key", HKShowSelectionTranslate_tempKey.ToString());
 			#endregion
 			UpdateLangDisplayTemps();
 			#region Lang Display colors
@@ -799,6 +837,16 @@ namespace Mahou {
 				MMain.MyConfs.Write("LangPanel", "Font", fcv.ConvertToString(btn_LPFont.Font));
 				MMain.MyConfs.Write("LangPanel", "UpperArrow", chk_LPUpperArrow.Checked.ToString());
 				#endregion
+				#region Translate Panel
+				MMain.MyConfs.Write("TranslatePanel", "Enabled", chk_TrEnable.Checked.ToString());
+				MMain.MyConfs.Write("TranslatePanel", "Transparency", nud_TrTransparency.Value.ToString());
+				MMain.MyConfs.Write("TranslatePanel", "OnDoubleClick", chk_TrOnDoubleClick.Checked.ToString());
+				MMain.MyConfs.Write("TranslatePanel", "FG", ColorTranslator.ToHtml(btn_TrFG.BackColor));
+				MMain.MyConfs.Write("TranslatePanel", "BG", ColorTranslator.ToHtml(btn_TrBG.BackColor));
+				MMain.MyConfs.Write("TranslatePanel", "BorderC", ColorTranslator.ToHtml(btn_TrBorderC.BackColor));
+				MMain.MyConfs.Write("TranslatePanel", "BorderAero", chk_TrUseAccent.Checked.ToString());
+				SaveTrSets();
+				#endregion
 				#region Proxy
 				MMain.MyConfs.Write("Proxy", "ServerPort", txt_ProxyServerPort.Text);
 				MMain.MyConfs.Write("Proxy", "UserName", txt_ProxyLogin.Text);
@@ -824,6 +872,19 @@ namespace Mahou {
 			}
 			LoadConfigs();
 		}
+		void SaveTrSets() {
+			var sets = "";
+			for (int i = 1; i <= TrSetCount; i++) {
+				sets += "set_"+i+"/";
+				sets += TrSetsValues["cbb_fr"+i]+"/";
+				sets += TrSetsValues["cbb_to"+i];
+				if (i != TrSetCount)
+					sets += "|";
+			}
+			if (String.IsNullOrEmpty(sets))
+				sets = "set_0";
+			MMain.MyConfs.Write("TranslatePanel", "LanguageSets", sets);
+		}
 		void SaveSpecificKeySets(bool change1set = false, int setId = 0, string typ = "") {
 			var sets = "";
 			for (int i = 1; i <= SpecKeySetCount; i++) {
@@ -842,7 +903,7 @@ namespace Mahou {
 					sets += "|";
 			}
 			if (String.IsNullOrEmpty(sets))
-				sets = "set0";
+				sets = "set_0";
 			MMain.MyConfs.Write("Layouts", "SpecificKeySets", sets);
 		}
 		object DoInMainConfigs(Func<object> act) {
@@ -942,7 +1003,6 @@ namespace Mahou {
 			OneLayout = chk_OneLayout.Checked = MMain.MyConfs.ReadBool("Layouts", "OneLayout");
 			QWERTZ_fix = chk_qwertz.Checked = MMain.MyConfs.ReadBool("Layouts", "QWERTZfix");
 			LoadSpecKeySetsValues();
-			RefreshComboboxes();
 			#endregion
 			#region Persistent Layout
 			PersistentLayoutOnWindowChange = chk_OnlyOnWindowChange.Checked = MMain.MyConfs.ReadBool("PersistentLayout", "OnlyOnWindowChange");
@@ -1017,6 +1077,28 @@ namespace Mahou {
 			try { btn_LPFont.Font = LangPanelFont = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("LangPanel", "Font")); 
 				} catch { WrongFontLog(MMain.MyConfs.Read("LangPanel", "Font")); }
 			LangPanelUpperArrow = chk_LPUpperArrow.Checked = MMain.MyConfs.ReadBool("LangPanel", "UpperArrow");
+			#endregion
+			#region Translate Panel
+			TrEnabled = chk_TrEnable.Checked = MMain.MyConfs.ReadBool("TranslatePanel", "Enabled");
+			TrOnDoubleClick = chk_TrOnDoubleClick.Checked = MMain.MyConfs.ReadBool("TranslatePanel", "OnDoubleClick");
+			nud_TrTransparency.Value = TrTransparency = MMain.MyConfs.ReadInt("TranslatePanel", "Transparency");
+			try { btn_TrFG.BackColor = TrFore = ColorTranslator.FromHtml(MMain.MyConfs.Read("TranslatePanel", "FG"));
+			} catch { WrongColorLog(MMain.MyConfs.Read("TranslatePanel", "FG")); }
+			try { btn_TrBG.BackColor = TrBack = ColorTranslator.FromHtml(MMain.MyConfs.Read("TranslatePanel", "BG"));
+			} catch { WrongColorLog(MMain.MyConfs.Read("TranslatePanel", "BG")); }
+			try { btn_TrBorderC.BackColor = TrBorder = ColorTranslator.FromHtml(MMain.MyConfs.Read("TranslatePanel", "BorderC"));
+			} catch { WrongColorLog(MMain.MyConfs.Read("TranslatePanel", "BorderC")); }
+			TrBorderAero = chk_TrUseAccent.Checked = MMain.MyConfs.ReadBool("TranslatePanel", "BorderAero");
+			LoadTrSetsValues();
+			RefreshComboboxes();
+			if (TrEnabled){
+				if (_TranslatePanel == null)
+					_TranslatePanel = new TranslatePanel();
+				_TranslatePanel.SetTitle(MMain.Lang[Languages.Element.Translation]);
+			} else {
+				if (_TranslatePanel != null)
+					_TranslatePanel.Dispose();
+			}
 			#endregion
 			#region Snippets
 			SnippetsEnabled = chk_Snippets.Checked = MMain.MyConfs.ReadBool("Snippets", "SnippetsEnabled");
@@ -1132,21 +1214,49 @@ namespace Mahou {
 			Memory.Flush();
 			Logging.Log("All configurations loaded.");
 		}
-		void LoadSpecKeySetsValues() {
-			var sets_raw = MMain.MyConfs.Read("Layouts", "SpecificKeySets");
-			if (sets_raw == "set0") return;
-			var sets = sets_raw.Split('|');
+		List<string[]> ParseSets(string raw_sets) {
+			if (raw_sets.Contains("set_0")) return new List<string[]>();
+			var sets = raw_sets.Split('|');
 			var last_set = sets[sets.Length-1];
 			Debug.WriteLine(last_set);
 			var set_count = Int32.Parse(last_set.Split('/')[0].Replace("set_",""));
+			var SETS = new List<string[]>();
+			foreach (var _set in sets) {
+				SETS.Add(_set.Split('/'));
+			}
+			return SETS;
+		}
+		void LoadTrSetsValues() {
+			var sets_raw = MMain.MyConfs.Read("TranslatePanel", "LanguageSets");
+			var SETS = ParseSets(sets_raw);
+			if (SETS.Count == 0) return;
+			var NOTR = TrSetCount == 0;
+			if (NOTR)
+				pan_TrSets.Controls.Clear();
+			for(int i = 1; i != SETS.Count+1; i++) {
+				if (NOTR)
+					Btn_TrAddSetClick((object)1, new EventArgs());
+				var values = SETS[i-1];
+				TrSetsValues["cbb_fr"+i] = values[1];
+				TrSetsValues["cbb_to"+i] = values[2];
+//				var key = 0;
+//				if (!String.IsNullOrEmpty(values[1]))
+//					key = Int32.Parse(values[1]);
+//				UpdateSetControls(i, key, values[2]);
+			}
+		}
+		void LoadSpecKeySetsValues() {
+			var sets_raw = MMain.MyConfs.Read("Layouts", "SpecificKeySets");
+			var SETS = ParseSets(sets_raw);
+			if (SETS.Count == 0) return;
 			var NOSPEC = SpecKeySetCount == 0;
 			if (NOSPEC)
 				pan_KeySets.Controls.Clear();
 			// Initilize sets
-			for(int i = 1; i != set_count+1; i++) {
+			for(int i = 1; i != SETS.Count+1; i++) {
 				if (NOSPEC)
 					Btn_AddSetClick((object)1, new EventArgs());
-				var values = sets[i-1].Split('/');
+				var values = SETS[i-1];
 				SpecKeySetsValues["txt_key"+i+"_key"] = values[1];
 				SpecKeySetsValues["txt_key"+i+"_mods"] = values[2];
 				SpecKeySetsValues["cbb_typ"+i] = values[3];
@@ -1236,6 +1346,18 @@ namespace Mahou {
 				cbb.Items.Add(MMain.Lang[Languages.Element.SwitchBetween]);
 				cbb.Items.AddRange(MMain.lcnmid.ToArray());
 				cbb.SelectedIndex = cbb.Items.IndexOf(SpecKeySetsValues["cbb_typ"+i]);
+			}
+			if (TrSetCount > 0)
+			for(int i = 1; i <= TrSetCount; i++) {
+				Logging.Log("Refreshing Tr Set #"+i);
+				var cbb = (pan_TrSets.Controls["set_"+i].Controls["cbb_fr"+i] as ComboBox);
+				cbb.Items.Clear();
+				cbb.Items.AddRange(TranslatePanel.GTLangs);
+				cbb.SelectedIndex = Array.IndexOf(TranslatePanel.GTLangsSh, TrSetsValues["cbb_fr"+i]);
+				cbb = (pan_TrSets.Controls["set_"+i].Controls["cbb_to"+i] as ComboBox);
+				cbb.Items.Clear();
+				cbb.Items.AddRange(TranslatePanel.GTLangs);
+				cbb.SelectedIndex = Array.IndexOf(TranslatePanel.GTLangsSh, TrSetsValues["cbb_to"+i]);
 			}
 			cbb_Layout1.Items.Clear();
 			cbb_Layout2.Items.Clear();
@@ -1344,6 +1466,9 @@ namespace Mahou {
 			lbl_CustomSound.Enabled = btn_SelectSnd.Enabled = chk_UseCustomSnd.Checked;
 			lbl_CustomSound2.Enabled = btn_SelectSnd2.Enabled = chk_UseCustomSnd2.Checked;
 			grb_Sound1.Enabled = grb_Sound2.Enabled = chk_EnableSnd.Checked;
+			// Translation tab
+			btn_TrBorderC.Enabled = !chk_TrUseAccent.Checked;
+			grb_TrConfs.Enabled = chk_TrEnable.Checked;
 		}
 		/// <summary>
 		/// Toggles visibility of main window.
@@ -1617,6 +1742,8 @@ DEL "+restartMahouPath;
 			    Hotkey.GetMods(HKRestart_tempMods), (int)Hotkey.HKID.Restart, false);
 			HKToggleLP = new Hotkey(HKToggleLangPanel_tempEnabled, (uint)HKToggleLangPanel_tempKey, 
 			    Hotkey.GetMods(HKToggleLangPanel_tempMods), (int)Hotkey.HKID.ToggleLangPanel, HKToggleLangPanel_tempDouble);
+			HKShowST = new Hotkey(HKShowSelectionTranslate_tempEnabled, (uint)HKShowSelectionTranslate_tempKey, 
+			    Hotkey.GetMods(HKShowSelectionTranslate_tempMods), (int)Hotkey.HKID.ShowSelectionTranslation, HKShowSelectionTranslate_tempDouble);
 			Logging.Log("Hotkeys initialized.");
 		}
 		public bool HasHotkey(Hotkey thishk) {
@@ -1632,7 +1759,8 @@ DEL "+restartMahouPath;
 				thishk == HKTransliteration ||
 				thishk == ExitHk ||
 				thishk == HKRestart ||
-				thishk == HKToggleLP)
+				thishk == HKToggleLP ||
+				thishk == HKShowST)
 				return true;
 			foreach (Hotkey hk in SpecificSwitchHotkeys) {
 				if (thishk == hk)
@@ -2202,6 +2330,9 @@ DEL "+restartMahouPath;
 			if (HKToggleLangPanel_tempEnabled)
 				WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.ToggleLangPanel,
 				                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKToggleLangPanel_tempMods), HKToggleLangPanel_tempKey);
+			if (HKShowSelectionTranslate_tempEnabled)
+				WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.ShowSelectionTranslation,
+				                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKShowSelectionTranslate_tempMods), HKShowSelectionTranslate_tempKey);
 			if (!ChangeLayouByKey) return;
 			for(int i = 1; i != SpecKeySetCount+1; i++) {
 				var key = 0;
@@ -2474,6 +2605,9 @@ DEL "+restartMahouPath;
 				case 12:
 					UpdateHotkeyControls(HKToggleLangPanel_tempEnabled, HKToggleLangPanel_tempDouble, HKToggleLangPanel_tempMods, HKToggleLangPanel_tempKey);
 					break;
+				case 13:
+					UpdateHotkeyControls(HKShowSelectionTranslate_tempEnabled, HKShowSelectionTranslate_tempDouble, HKShowSelectionTranslate_tempMods, HKShowSelectionTranslate_tempKey);
+					break;
 			}
 		}
 		/// <summary>
@@ -2571,6 +2705,12 @@ DEL "+restartMahouPath;
 					HKToggleLangPanel_tempDouble = chk_DoubleHotkey.Checked;
 					HKToggleLangPanel_tempMods = (chk_WinInHotKey.Checked ? "Win + " : "") + txt_Hotkey_tempModifiers;
 					HKToggleLangPanel_tempKey = txt_Hotkey_tempKey;
+					break;
+				case 13:
+					HKShowSelectionTranslate_tempEnabled = chk_HotKeyEnabled.Checked;
+					HKShowSelectionTranslate_tempDouble = chk_DoubleHotkey.Checked;
+					HKShowSelectionTranslate_tempMods = (chk_WinInHotKey.Checked ? "Win + " : "") + txt_Hotkey_tempModifiers;
+					HKShowSelectionTranslate_tempKey = txt_Hotkey_tempKey;
 					break;
 			}
 		}
@@ -2996,10 +3136,11 @@ DEL ""ExtractASD.cmd""";
 			tab_LangPanel.Text =  MMain.Lang[Languages.Element.tab_LangPanel];
 			tab_about.Text = MMain.Lang[Languages.Element.tab_About];
 			tab_sounds.Text = MMain.Lang[Languages.Element.tab_Sounds];
-			lnk_plugin.Text = "ST3 " + MMain.Lang[Languages.Element.Plugin];
-			chk_OneLayoutWholeWord.Text = MMain.Lang[Languages.Element.OneLayoutWholeWord];
+			tab_translator.Text = MMain.Lang[Languages.Element.tab_Translator];
 			#endregion
 			#region Functions
+			lnk_plugin.Text = "ST3 " + MMain.Lang[Languages.Element.Plugin];
+			chk_OneLayoutWholeWord.Text = MMain.Lang[Languages.Element.OneLayoutWholeWord];
 			chk_AutoStart.Text = MMain.Lang[Languages.Element.AutoStart];
 			cbb_AutostartType.Items.Clear();
 			cbb_AutostartType.Items.AddRange(new [] { 
@@ -3126,20 +3267,26 @@ DEL ""ExtractASD.cmd""";
 										MMain.Lang[Languages.Element.SelectedTransliteration],
 										MMain.Lang[Languages.Element.ExitMahou],
 										MMain.Lang[Languages.Element.RestartMahou],
-										MMain.Lang[Languages.Element.ToggleLangPanel]
+										MMain.Lang[Languages.Element.ToggleLangPanel],
+										MMain.Lang[Languages.Element.TranslateSelection]
 										});
 			#endregion
-			#region LangPanel
+			#region LangPanel/TranslatePanel
 			chk_DisplayLangPanel.Text = MMain.Lang[Languages.Element.DisplayLangPanel];
 			lbl_LPRefreshRate.Text = MMain.Lang[Languages.Element.RefreshRate];
-			lbl_LPTrasparency.Text = MMain.Lang[Languages.Element.Transparency];
-			lbl_LPBorderColor.Text = MMain.Lang[Languages.Element.BorderColor];
-			lbl_LPFore.Text = MMain.Lang[Languages.Element.LDFore];
-			lbl_LPBack.Text = MMain.Lang[Languages.Element.LDBack];
-			chk_LPAeroColor.Text = MMain.Lang[Languages.Element.UseAeroColor];
+			lbl_TrTransparency.Text = lbl_LPTrasparency.Text = MMain.Lang[Languages.Element.Transparency];
+			lbl_TrBorderC.Text = lbl_LPBorderColor.Text = MMain.Lang[Languages.Element.BorderColor];
+			lbl_TrFG.Text = lbl_LPFore.Text = MMain.Lang[Languages.Element.LDFore];
+			lbl_TrBG.Text = lbl_LPBack.Text = MMain.Lang[Languages.Element.LDBack];
+			chk_TrUseAccent.Text = chk_LPAeroColor.Text = MMain.Lang[Languages.Element.UseAeroColor];
 			lbl_LPFont.Text = MMain.Lang[Languages.Element.LDFont] + ":";
 			btn_LPFont.Text = MMain.Lang[Languages.Element.LDFont];
 			chk_LPUpperArrow.Text = MMain.Lang[Languages.Element.DisplayUpperArrow];
+			#endregion
+			#region TranslatePanel
+			chk_TrEnable.Text = MMain.Lang[Languages.Element.EnableTranslatePanel];
+			chk_TrOnDoubleClick.Text = MMain.Lang[Languages.Element.ShowTranslationOnDoubleClick];
+			lbl_TrLanguages.Text = MMain.Lang[Languages.Element.TranslateLanguages];
 			#endregion
 			#region Updtaes
 			btn_CheckForUpdates.Text = MMain.Lang[Languages.Element.CheckForUpdates];
@@ -3377,6 +3524,9 @@ DEL ""ExtractASD.cmd""";
 				case 5:
 					lbl_HotkeyHelp.Text = MMain.Lang[Languages.Element.TT_SymbolIgnore];
 					break;
+				case 13:
+					lbl_HotkeyHelp.Text = MMain.Lang[Languages.Element.TT_ShowSelectionTranslationHotkey];
+					break;
 				default:
 					lbl_HotkeyHelp.Text = "";
 					break;
@@ -3588,6 +3738,54 @@ DEL ""ExtractASD.cmd""";
 			Dowload_ASD_InZip = chk_DownloadASD_InZip.Checked;
 			check_ASD_size = true;
 		}
+		void Btn_TrAddSetClick(object sender, EventArgs e) {
+			if (TrSetCount>98) return;
+			var _set = new Panel();
+			_set.Width = (pan_TrSets.Width*98/100)-2;
+			TrSetCount++;
+			_set.Name = "set_"+TrSetCount;
+			var top = 1;
+			if (TrSetCount>1)
+				top = pan_TrSets.Controls["set_"+(TrSetCount-1)].Top+25;
+			_set.Height = 23;
+			_set.Top = top;
+			_set.Left = 1;
+			var _baseLeft = (int)(pan_TrSets.Width*2/100);
+			var lbl_width = 25;
+			var lbl_frto_width = 40;
+			var cbb_width = 160;
+			_set.Controls.Add(new Label(){Left = _baseLeft, Name="lbl_num"+TrSetCount, Width=lbl_width, Text=TrSetCount+":", Top=2});
+			var fr_lbl = new Label() {Left = _baseLeft+lbl_width, Name="lbl_fr"+TrSetCount, Width=lbl_frto_width, Text="From:", Top=2};
+			var fr_cbb = new ComboBox(){DropDownStyle = ComboBoxStyle.DropDownList, Left = _baseLeft+lbl_width+lbl_frto_width+9, Name="cbb_fr"+TrSetCount, Width=cbb_width};
+			var to_lbl = new Label() {Left = _baseLeft+lbl_width+lbl_frto_width+49+cbb_width, Name="lbl_to"+TrSetCount, Width=lbl_frto_width, Text="To:", Top=2};
+			var to_cbb = new ComboBox(){DropDownStyle = ComboBoxStyle.DropDownList, Left = _baseLeft+lbl_width+lbl_frto_width+49+cbb_width+lbl_frto_width+9, Name="cbb_to"+TrSetCount, Width=cbb_width};
+			fr_cbb.SelectedIndexChanged += new EventHandler(Cbb_FrToSelectedIndexChanged);
+			to_cbb.SelectedIndexChanged += new EventHandler(Cbb_FrToSelectedIndexChanged);
+//			cbb.Items.Add(MMain.Lang[Languages.Element.SwitchBetween]);
+			fr_cbb.Items.AddRange(TranslatePanel.GTLangs);
+			to_cbb.Items.AddRange(TranslatePanel.GTLangs);
+			fr_cbb.SelectedIndex = to_cbb.SelectedIndex = 0;
+			_set.Controls.Add(fr_lbl);
+			_set.Controls.Add(fr_cbb);
+			_set.Controls.Add(new Label(){Left = _baseLeft+lbl_width+lbl_frto_width+20+cbb_width, Name="lbl_arr"+TrSetCount, Width=lbl_width, Text="->", Top=2});
+			_set.Controls.Add(to_lbl);
+			_set.Controls.Add(to_cbb);
+//			SpecKeySetsValues["cbb_fr"+TrSetCount+"_key"] = SpecKeySetsValues["txt_key"+TrSetCount+"_mods"] = SpecKeySetsValues["cbb_typ"+TrSetCount] = "";
+			pan_TrSets.Controls.Add(_set);
+			lbl_TrSetsCount.ForeColor = Color.Black;
+			lbl_TrSetsCount.Text = "#"+TrSetCount;
+			if (TrSetCount>98) lbl_TrSetsCount.ForeColor = Color.Red;
+		}
+		void Btn_TrSubSetClick(object sender, EventArgs e) {
+			if (TrSetCount < 1) return;
+			pan_TrSets.Controls["set_"+TrSetCount].Dispose();
+			TrSetCount--;
+			lbl_SetsCount.ForeColor = Color.Black;
+			lbl_SetsCount.Text = "#"+TrSetCount;
+			if (TrSetCount < 1)
+				lbl_TrSetsCount.ForeColor = Color.LightGray;
+	
+		}
 		void Btn_AddSetClick(object sender, EventArgs e) {
 			if (SpecKeySetCount>98) return;
 			var _set = new Panel();
@@ -3658,6 +3856,11 @@ DEL ""ExtractASD.cmd""";
 		void Cbb_SpecTypeSelectedIndexChanged(object sender, EventArgs e) {
 			var cb = sender as ComboBox;
 			SpecKeySetsValues[cb.Name] = cb.SelectedItem.ToString();
+		}
+		void Cbb_FrToSelectedIndexChanged(object sender, EventArgs e) {
+			var cb = sender as ComboBox;
+			TrSetsValues[cb.Name] = TranslatePanel.GTLangsSh[cb.SelectedIndex];
+			Debug.WriteLine(TrSetsValues[cb.Name]);
 		}
 		void Cbb_SpecKeysTypeSelectedIndexChanged(object sender, EventArgs e) {
 			var old = cbb_SpecKeysType.SelectedIndex == 0;

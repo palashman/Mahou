@@ -178,6 +178,16 @@ namespace Mahou {
         public Configs() {
         	CreateConfigsFile();
         	ReadFromDisk();
+        	#region TranslatePanel
+			CheckBool("TranslatePanel", "Enabled", "False");
+			CheckBool("TranslatePanel", "OnDoubleClick", "False");
+			CheckBool("TranslatePanel", "BorderAero", "False");
+			CheckInt("TranslatePanel", "Transparency", "90");
+			CheckString("TranslatePanel", "FG", "#8B5FFF");
+			CheckString("TranslatePanel", "BorderC", "#F1F100");
+			CheckString("TranslatePanel", "BG", "#FFFFFF");
+			CheckString("TranslatePanel", "LanguageSets", "set_1/auto/ru|set_2/auto/en");
+        	#endregion
             #region Sounds
             CheckBool("Sounds", "Enabled", "False");
             CheckBool("Sounds", "OnAutoSwitch", "True");
@@ -215,6 +225,11 @@ namespace Mahou {
 			CheckBool("LangPanel", "Display", "false");
 			#endregion
 			#region Hotkeys section
+			CheckInt("Hotkeys", "ShowSelectionTranslate_Key", "0");
+			CheckString("Hotkeys", "ShowSelectionTranslate_Modifiers", "Alt");
+			CheckBool("Hotkeys", "ShowSelectionTranslate_Double", "true");
+			CheckBool("Hotkeys", "ShowSelectionTranslate_Enabled", "false");
+			// Show Selection Translation
 			CheckInt("Hotkeys", "ToggleLangPanel_Key", "120");
 			CheckString("Hotkeys", "ToggleLangPanel_Modifiers", "Shift");
 			CheckBool("Hotkeys", "ToggleLangPanel_Double", "false");

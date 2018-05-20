@@ -224,6 +224,24 @@ namespace Mahou
 		private System.Windows.Forms.CheckBox chk_SndSnippets2;
 		private System.Windows.Forms.CheckBox chk_SndAutoSwitch2;
 		private System.Windows.Forms.GroupBox grb_Sound1;
+		private System.Windows.Forms.TabPage tab_translator;
+		private System.Windows.Forms.Label lbl_TrSetsCount;
+		private System.Windows.Forms.Button btn_TrAddSet;
+		private System.Windows.Forms.Button btn_TrSubSet;
+		private System.Windows.Forms.CheckBox chk_TrUseAccent;
+		private System.Windows.Forms.Label lbl_TrBorderC;
+		private System.Windows.Forms.Button btn_TrBorderC;
+		private System.Windows.Forms.Label lbl_TrBG;
+		private System.Windows.Forms.Label lbl_TrFG;
+		private System.Windows.Forms.Button btn_TrBG;
+		private System.Windows.Forms.Button btn_TrFG;
+		private System.Windows.Forms.NumericUpDown nud_TrTransparency;
+		private System.Windows.Forms.Label lbl_TrTransparency;
+		private System.Windows.Forms.Panel pan_TrSets;
+		private System.Windows.Forms.Label lbl_TrLanguages;
+		private System.Windows.Forms.CheckBox chk_TrEnable;
+		private System.Windows.Forms.GroupBox grb_TrConfs;
+		private System.Windows.Forms.CheckBox chk_TrOnDoubleClick;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -434,6 +452,24 @@ namespace Mahou
 			this.nud_LPRefreshRate = new System.Windows.Forms.NumericUpDown();
 			this.lbl_LPRefreshRate = new System.Windows.Forms.Label();
 			this.chk_DisplayLangPanel = new System.Windows.Forms.CheckBox();
+			this.tab_translator = new System.Windows.Forms.TabPage();
+			this.chk_TrEnable = new System.Windows.Forms.CheckBox();
+			this.grb_TrConfs = new System.Windows.Forms.GroupBox();
+			this.chk_TrOnDoubleClick = new System.Windows.Forms.CheckBox();
+			this.pan_TrSets = new System.Windows.Forms.Panel();
+			this.lbl_TrLanguages = new System.Windows.Forms.Label();
+			this.lbl_TrSetsCount = new System.Windows.Forms.Label();
+			this.btn_TrAddSet = new System.Windows.Forms.Button();
+			this.btn_TrSubSet = new System.Windows.Forms.Button();
+			this.chk_TrUseAccent = new System.Windows.Forms.CheckBox();
+			this.lbl_TrBorderC = new System.Windows.Forms.Label();
+			this.btn_TrBorderC = new System.Windows.Forms.Button();
+			this.lbl_TrBG = new System.Windows.Forms.Label();
+			this.lbl_TrFG = new System.Windows.Forms.Label();
+			this.btn_TrBG = new System.Windows.Forms.Button();
+			this.btn_TrFG = new System.Windows.Forms.Button();
+			this.nud_TrTransparency = new System.Windows.Forms.NumericUpDown();
+			this.lbl_TrTransparency = new System.Windows.Forms.Label();
 			this.tab_updates = new System.Windows.Forms.TabPage();
 			this.cbb_UpdatesChannel = new System.Windows.Forms.ComboBox();
 			this.lbl_UpdateChannel = new System.Windows.Forms.Label();
@@ -503,6 +539,9 @@ namespace Mahou
 			this.grb_LPConfig.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.nud_LPTransparency)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.nud_LPRefreshRate)).BeginInit();
+			this.tab_translator.SuspendLayout();
+			this.grb_TrConfs.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.nud_TrTransparency)).BeginInit();
 			this.tab_updates.SuspendLayout();
 			this.grb_DownloadUpdate.SuspendLayout();
 			this.grb_ProxyConfig.SuspendLayout();
@@ -523,6 +562,7 @@ namespace Mahou
 			this.tabs.Controls.Add(this.tab_hotkeys);
 			this.tabs.Controls.Add(this.tab_sounds);
 			this.tabs.Controls.Add(this.tab_LangPanel);
+			this.tabs.Controls.Add(this.tab_translator);
 			this.tabs.Controls.Add(this.tab_updates);
 			this.tabs.Controls.Add(this.tab_about);
 			this.tabs.Location = new System.Drawing.Point(0, 0);
@@ -1996,18 +2036,18 @@ namespace Mahou
 			// 
 			// txt_ExcludedPrograms
 			// 
-			this.txt_ExcludedPrograms.Location = new System.Drawing.Point(8, 26);
+			this.txt_ExcludedPrograms.Location = new System.Drawing.Point(8, 18);
 			this.txt_ExcludedPrograms.Multiline = true;
 			this.txt_ExcludedPrograms.Name = "txt_ExcludedPrograms";
 			this.txt_ExcludedPrograms.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.txt_ExcludedPrograms.Size = new System.Drawing.Size(541, 236);
+			this.txt_ExcludedPrograms.Size = new System.Drawing.Size(541, 244);
 			this.txt_ExcludedPrograms.TabIndex = 24;
 			this.txt_ExcludedPrograms.Text = "LA.exe SomeProgram.exe";
 			// 
 			// lbl_ExcludedPrograms
 			// 
 			this.lbl_ExcludedPrograms.AutoSize = true;
-			this.lbl_ExcludedPrograms.Location = new System.Drawing.Point(20, 8);
+			this.lbl_ExcludedPrograms.Location = new System.Drawing.Point(20, 0);
 			this.lbl_ExcludedPrograms.Name = "lbl_ExcludedPrograms";
 			this.lbl_ExcludedPrograms.Size = new System.Drawing.Size(111, 15);
 			this.lbl_ExcludedPrograms.TabIndex = 25;
@@ -2016,7 +2056,7 @@ namespace Mahou
 			// chk_Change1KeyL
 			// 
 			this.chk_Change1KeyL.AutoSize = true;
-			this.chk_Change1KeyL.Location = new System.Drawing.Point(185, 6);
+			this.chk_Change1KeyL.Location = new System.Drawing.Point(185, 0);
 			this.chk_Change1KeyL.Name = "chk_Change1KeyL";
 			this.chk_Change1KeyL.Size = new System.Drawing.Size(243, 19);
 			this.chk_Change1KeyL.TabIndex = 26;
@@ -2047,14 +2087,14 @@ namespace Mahou
 			this.cbb_SnippetExpandKeys.Items.AddRange(new object[] {
 			"Space",
 			"Tab"});
-			this.cbb_SnippetExpandKeys.Location = new System.Drawing.Point(427, 6);
+			this.cbb_SnippetExpandKeys.Location = new System.Drawing.Point(427, 9);
 			this.cbb_SnippetExpandKeys.Name = "cbb_SnippetExpandKeys";
 			this.cbb_SnippetExpandKeys.Size = new System.Drawing.Size(121, 23);
 			this.cbb_SnippetExpandKeys.TabIndex = 7;
 			// 
 			// lbl_SnippetExpandKey
 			// 
-			this.lbl_SnippetExpandKey.Location = new System.Drawing.Point(261, 6);
+			this.lbl_SnippetExpandKey.Location = new System.Drawing.Point(261, 9);
 			this.lbl_SnippetExpandKey.Name = "lbl_SnippetExpandKey";
 			this.lbl_SnippetExpandKey.Size = new System.Drawing.Size(160, 23);
 			this.lbl_SnippetExpandKey.TabIndex = 6;
@@ -2063,22 +2103,19 @@ namespace Mahou
 			// 
 			// txt_Snippets
 			// 
-			this.txt_Snippets.Location = new System.Drawing.Point(8, 56);
+			this.txt_Snippets.Location = new System.Drawing.Point(8, 59);
 			this.txt_Snippets.MaxLength = 0;
 			this.txt_Snippets.Multiline = true;
 			this.txt_Snippets.Name = "txt_Snippets";
 			this.txt_Snippets.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.txt_Snippets.Size = new System.Drawing.Size(541, 206);
+			this.txt_Snippets.Size = new System.Drawing.Size(541, 203);
 			this.txt_Snippets.TabIndex = 1;
-			this.txt_Snippets.Text = "->mahou\r\n====>Mahou (魔法) - Magical layout switcher.<====\r\n->eml\r\n====>BladeMight@" +
-	"gmail.com<====\r\n->nowtime====>__date(HH:mm:ss)<====\r\n->nowdate====>__date(dd/MM/yyyy)<====\r\n->datepretty====>__date(dd, ddd MMM)<===="+
-	"\r\n->mahouver====>__version()<====\r\n->mahoutitle====>__title()<====\r\n->env_system====>__system()<====\r\n->date_esc====>\\__date(HH:mm:ss)<====";
 			this.txt_Snippets.TextChanged += new System.EventHandler(this.Txt_SnippetsTextChanged);
 			// 
 			// chk_Snippets
 			// 
 			this.chk_Snippets.AutoSize = true;
-			this.chk_Snippets.Location = new System.Drawing.Point(8, 0);
+			this.chk_Snippets.Location = new System.Drawing.Point(8, 3);
 			this.chk_Snippets.Name = "chk_Snippets";
 			this.chk_Snippets.Size = new System.Drawing.Size(111, 19);
 			this.chk_Snippets.TabIndex = 0;
@@ -2089,7 +2126,7 @@ namespace Mahou
 			// chk_SnippetsSpaceAfter
 			// 
 			this.chk_SnippetsSpaceAfter.AutoSize = true;
-			this.chk_SnippetsSpaceAfter.Location = new System.Drawing.Point(8, 18);
+			this.chk_SnippetsSpaceAfter.Location = new System.Drawing.Point(8, 21);
 			this.chk_SnippetsSpaceAfter.Name = "chk_SnippetsSpaceAfter";
 			this.chk_SnippetsSpaceAfter.Size = new System.Drawing.Size(167, 19);
 			this.chk_SnippetsSpaceAfter.TabIndex = 2;
@@ -2099,7 +2136,7 @@ namespace Mahou
 			// chk_SnippetsSwitchToGuessLayout
 			// 
 			this.chk_SnippetsSwitchToGuessLayout.AutoSize = true;
-			this.chk_SnippetsSwitchToGuessLayout.Location = new System.Drawing.Point(8, 36);
+			this.chk_SnippetsSwitchToGuessLayout.Location = new System.Drawing.Point(8, 39);
 			this.chk_SnippetsSwitchToGuessLayout.Name = "chk_SnippetsSwitchToGuessLayout";
 			this.chk_SnippetsSwitchToGuessLayout.Size = new System.Drawing.Size(216, 19);
 			this.chk_SnippetsSwitchToGuessLayout.TabIndex = 4;
@@ -2110,7 +2147,7 @@ namespace Mahou
 			// 
 			this.lbl_SnippetsCount.AutoSize = true;
 			this.lbl_SnippetsCount.ForeColor = System.Drawing.Color.Orange;
-			this.lbl_SnippetsCount.Location = new System.Drawing.Point(427, 32);
+			this.lbl_SnippetsCount.Location = new System.Drawing.Point(427, 35);
 			this.lbl_SnippetsCount.Name = "lbl_SnippetsCount";
 			this.lbl_SnippetsCount.Size = new System.Drawing.Size(64, 15);
 			this.lbl_SnippetsCount.TabIndex = 5;
@@ -2136,7 +2173,7 @@ namespace Mahou
 			// chk_DownloadASD_InZip
 			// 
 			this.chk_DownloadASD_InZip.AutoSize = true;
-			this.chk_DownloadASD_InZip.Location = new System.Drawing.Point(200, 58);
+			this.chk_DownloadASD_InZip.Location = new System.Drawing.Point(200, 44);
 			this.chk_DownloadASD_InZip.Name = "chk_DownloadASD_InZip";
 			this.chk_DownloadASD_InZip.Size = new System.Drawing.Size(211, 19);
 			this.chk_DownloadASD_InZip.TabIndex = 12;
@@ -2148,7 +2185,7 @@ namespace Mahou
 			// 
 			this.lbl_AutoSwitchWordsCount.AutoSize = true;
 			this.lbl_AutoSwitchWordsCount.ForeColor = System.Drawing.Color.Orange;
-			this.lbl_AutoSwitchWordsCount.Location = new System.Drawing.Point(427, 32);
+			this.lbl_AutoSwitchWordsCount.Location = new System.Drawing.Point(427, 22);
 			this.lbl_AutoSwitchWordsCount.Name = "lbl_AutoSwitchWordsCount";
 			this.lbl_AutoSwitchWordsCount.Size = new System.Drawing.Size(53, 15);
 			this.lbl_AutoSwitchWordsCount.TabIndex = 11;
@@ -2157,7 +2194,7 @@ namespace Mahou
 			// chk_AutoSwitchSpaceAfter
 			// 
 			this.chk_AutoSwitchSpaceAfter.AutoSize = true;
-			this.chk_AutoSwitchSpaceAfter.Location = new System.Drawing.Point(275, 7);
+			this.chk_AutoSwitchSpaceAfter.Location = new System.Drawing.Point(275, 3);
 			this.chk_AutoSwitchSpaceAfter.Name = "chk_AutoSwitchSpaceAfter";
 			this.chk_AutoSwitchSpaceAfter.Size = new System.Drawing.Size(186, 19);
 			this.chk_AutoSwitchSpaceAfter.TabIndex = 7;
@@ -2166,7 +2203,7 @@ namespace Mahou
 			// 
 			// btn_UpdateAutoSwitchDictionary
 			// 
-			this.btn_UpdateAutoSwitchDictionary.Location = new System.Drawing.Point(8, 55);
+			this.btn_UpdateAutoSwitchDictionary.Location = new System.Drawing.Point(8, 41);
 			this.btn_UpdateAutoSwitchDictionary.Name = "btn_UpdateAutoSwitchDictionary";
 			this.btn_UpdateAutoSwitchDictionary.Size = new System.Drawing.Size(186, 23);
 			this.btn_UpdateAutoSwitchDictionary.TabIndex = 9;
@@ -2177,7 +2214,7 @@ namespace Mahou
 			// chk_AutoSwitchSwitchToGuessLayout
 			// 
 			this.chk_AutoSwitchSwitchToGuessLayout.AutoSize = true;
-			this.chk_AutoSwitchSwitchToGuessLayout.Location = new System.Drawing.Point(8, 31);
+			this.chk_AutoSwitchSwitchToGuessLayout.Location = new System.Drawing.Point(8, 21);
 			this.chk_AutoSwitchSwitchToGuessLayout.Name = "chk_AutoSwitchSwitchToGuessLayout";
 			this.chk_AutoSwitchSwitchToGuessLayout.Size = new System.Drawing.Size(240, 19);
 			this.chk_AutoSwitchSwitchToGuessLayout.TabIndex = 8;
@@ -2186,12 +2223,12 @@ namespace Mahou
 			// 
 			// txt_AutoSwitchDictionary
 			// 
-			this.txt_AutoSwitchDictionary.Location = new System.Drawing.Point(8, 85);
+			this.txt_AutoSwitchDictionary.Location = new System.Drawing.Point(8, 69);
 			this.txt_AutoSwitchDictionary.MaxLength = 0;
 			this.txt_AutoSwitchDictionary.Multiline = true;
 			this.txt_AutoSwitchDictionary.Name = "txt_AutoSwitchDictionary";
 			this.txt_AutoSwitchDictionary.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.txt_AutoSwitchDictionary.Size = new System.Drawing.Size(541, 177);
+			this.txt_AutoSwitchDictionary.Size = new System.Drawing.Size(541, 193);
 			this.txt_AutoSwitchDictionary.TabIndex = 6;
 			this.txt_AutoSwitchDictionary.Text = "EMPTY, need to update.";
 			this.txt_AutoSwitchDictionary.TextChanged += new System.EventHandler(this.Txt_AutoSwitchDictionaryTextChanged);
@@ -2199,7 +2236,7 @@ namespace Mahou
 			// chk_AutoSwitch
 			// 
 			this.chk_AutoSwitch.AutoSize = true;
-			this.chk_AutoSwitch.Location = new System.Drawing.Point(8, 7);
+			this.chk_AutoSwitch.Location = new System.Drawing.Point(8, 3);
 			this.chk_AutoSwitch.Name = "chk_AutoSwitch";
 			this.chk_AutoSwitch.Size = new System.Drawing.Size(130, 19);
 			this.chk_AutoSwitch.TabIndex = 5;
@@ -2526,7 +2563,7 @@ namespace Mahou
 			// chk_EnableSnd
 			// 
 			this.chk_EnableSnd.AutoSize = true;
-			this.chk_EnableSnd.Location = new System.Drawing.Point(8, 0);
+			this.chk_EnableSnd.Location = new System.Drawing.Point(8, 3);
 			this.chk_EnableSnd.Name = "chk_EnableSnd";
 			this.chk_EnableSnd.Size = new System.Drawing.Size(105, 19);
 			this.chk_EnableSnd.TabIndex = 1;
@@ -2563,9 +2600,9 @@ namespace Mahou
 			this.grb_LPConfig.Controls.Add(this.lbl_LPTrasparency);
 			this.grb_LPConfig.Controls.Add(this.nud_LPRefreshRate);
 			this.grb_LPConfig.Controls.Add(this.lbl_LPRefreshRate);
-			this.grb_LPConfig.Location = new System.Drawing.Point(6, 24);
+			this.grb_LPConfig.Location = new System.Drawing.Point(7, 19);
 			this.grb_LPConfig.Name = "grb_LPConfig";
-			this.grb_LPConfig.Size = new System.Drawing.Size(542, 234);
+			this.grb_LPConfig.Size = new System.Drawing.Size(542, 240);
 			this.grb_LPConfig.TabIndex = 1;
 			this.grb_LPConfig.TabStop = false;
 			// 
@@ -2733,13 +2770,212 @@ namespace Mahou
 			// chk_DisplayLangPanel
 			// 
 			this.chk_DisplayLangPanel.AutoSize = true;
-			this.chk_DisplayLangPanel.Location = new System.Drawing.Point(8, 7);
+			this.chk_DisplayLangPanel.Location = new System.Drawing.Point(7, 2);
 			this.chk_DisplayLangPanel.Name = "chk_DisplayLangPanel";
 			this.chk_DisplayLangPanel.Size = new System.Drawing.Size(151, 19);
 			this.chk_DisplayLangPanel.TabIndex = 0;
 			this.chk_DisplayLangPanel.Text = "Display language panel.";
 			this.chk_DisplayLangPanel.UseVisualStyleBackColor = true;
 			this.chk_DisplayLangPanel.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
+			// 
+			// tab_translator
+			// 
+			this.tab_translator.Controls.Add(this.chk_TrEnable);
+			this.tab_translator.Controls.Add(this.grb_TrConfs);
+			this.tab_translator.Location = new System.Drawing.Point(4, 44);
+			this.tab_translator.Name = "tab_translator";
+			this.tab_translator.Padding = new System.Windows.Forms.Padding(3);
+			this.tab_translator.Size = new System.Drawing.Size(559, 268);
+			this.tab_translator.TabIndex = 13;
+			this.tab_translator.Text = "Translator";
+			this.tab_translator.UseVisualStyleBackColor = true;
+			// 
+			// chk_TrEnable
+			// 
+			this.chk_TrEnable.AutoSize = true;
+			this.chk_TrEnable.Location = new System.Drawing.Point(8, 0);
+			this.chk_TrEnable.Name = "chk_TrEnable";
+			this.chk_TrEnable.Size = new System.Drawing.Size(117, 19);
+			this.chk_TrEnable.TabIndex = 1;
+			this.chk_TrEnable.Text = "Enable translator.";
+			this.chk_TrEnable.UseVisualStyleBackColor = true;
+			this.chk_TrEnable.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
+			// 
+			// grb_TrConfs
+			// 
+			this.grb_TrConfs.Controls.Add(this.chk_TrOnDoubleClick);
+			this.grb_TrConfs.Controls.Add(this.pan_TrSets);
+			this.grb_TrConfs.Controls.Add(this.lbl_TrLanguages);
+			this.grb_TrConfs.Controls.Add(this.lbl_TrSetsCount);
+			this.grb_TrConfs.Controls.Add(this.btn_TrAddSet);
+			this.grb_TrConfs.Controls.Add(this.btn_TrSubSet);
+			this.grb_TrConfs.Controls.Add(this.chk_TrUseAccent);
+			this.grb_TrConfs.Controls.Add(this.lbl_TrBorderC);
+			this.grb_TrConfs.Controls.Add(this.btn_TrBorderC);
+			this.grb_TrConfs.Controls.Add(this.lbl_TrBG);
+			this.grb_TrConfs.Controls.Add(this.lbl_TrFG);
+			this.grb_TrConfs.Controls.Add(this.btn_TrBG);
+			this.grb_TrConfs.Controls.Add(this.btn_TrFG);
+			this.grb_TrConfs.Controls.Add(this.nud_TrTransparency);
+			this.grb_TrConfs.Controls.Add(this.lbl_TrTransparency);
+			this.grb_TrConfs.Location = new System.Drawing.Point(6, 17);
+			this.grb_TrConfs.Name = "grb_TrConfs";
+			this.grb_TrConfs.Size = new System.Drawing.Size(547, 245);
+			this.grb_TrConfs.TabIndex = 2;
+			this.grb_TrConfs.TabStop = false;
+			// 
+			// chk_TrOnDoubleClick
+			// 
+			this.chk_TrOnDoubleClick.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.chk_TrOnDoubleClick.Location = new System.Drawing.Point(6, 19);
+			this.chk_TrOnDoubleClick.Name = "chk_TrOnDoubleClick";
+			this.chk_TrOnDoubleClick.Size = new System.Drawing.Size(199, 19);
+			this.chk_TrOnDoubleClick.TabIndex = 2;
+			this.chk_TrOnDoubleClick.Text = "Show on double click.";
+			this.chk_TrOnDoubleClick.UseVisualStyleBackColor = true;
+			// 
+			// pan_TrSets
+			// 
+			this.pan_TrSets.AutoScroll = true;
+			this.pan_TrSets.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.pan_TrSets.Location = new System.Drawing.Point(28, 89);
+			this.pan_TrSets.Name = "pan_TrSets";
+			this.pan_TrSets.Size = new System.Drawing.Size(515, 146);
+			this.pan_TrSets.TabIndex = 42;
+			// 
+			// lbl_TrLanguages
+			// 
+			this.lbl_TrLanguages.AutoSize = true;
+			this.lbl_TrLanguages.Location = new System.Drawing.Point(8, 71);
+			this.lbl_TrLanguages.Name = "lbl_TrLanguages";
+			this.lbl_TrLanguages.Size = new System.Drawing.Size(115, 15);
+			this.lbl_TrLanguages.TabIndex = 46;
+			this.lbl_TrLanguages.Text = "Translate languages:";
+			// 
+			// lbl_TrSetsCount
+			// 
+			this.lbl_TrSetsCount.Location = new System.Drawing.Point(3, 111);
+			this.lbl_TrSetsCount.Name = "lbl_TrSetsCount";
+			this.lbl_TrSetsCount.Size = new System.Drawing.Size(27, 22);
+			this.lbl_TrSetsCount.TabIndex = 45;
+			this.lbl_TrSetsCount.Text = "#";
+			this.lbl_TrSetsCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// btn_TrAddSet
+			// 
+			this.btn_TrAddSet.Location = new System.Drawing.Point(3, 144);
+			this.btn_TrAddSet.Name = "btn_TrAddSet";
+			this.btn_TrAddSet.Size = new System.Drawing.Size(23, 23);
+			this.btn_TrAddSet.TabIndex = 43;
+			this.btn_TrAddSet.Text = "+";
+			this.btn_TrAddSet.UseVisualStyleBackColor = true;
+			this.btn_TrAddSet.Click += new System.EventHandler(this.Btn_TrAddSetClick);
+			// 
+			// btn_TrSubSet
+			// 
+			this.btn_TrSubSet.Location = new System.Drawing.Point(3, 173);
+			this.btn_TrSubSet.Name = "btn_TrSubSet";
+			this.btn_TrSubSet.Size = new System.Drawing.Size(23, 23);
+			this.btn_TrSubSet.TabIndex = 44;
+			this.btn_TrSubSet.Text = "-";
+			this.btn_TrSubSet.UseVisualStyleBackColor = true;
+			this.btn_TrSubSet.Click += new System.EventHandler(this.Btn_TrSubSetClick);
+			// 
+			// chk_TrUseAccent
+			// 
+			this.chk_TrUseAccent.AutoSize = true;
+			this.chk_TrUseAccent.Location = new System.Drawing.Point(284, 19);
+			this.chk_TrUseAccent.Name = "chk_TrUseAccent";
+			this.chk_TrUseAccent.Size = new System.Drawing.Size(145, 19);
+			this.chk_TrUseAccent.TabIndex = 41;
+			this.chk_TrUseAccent.Text = "Use Aero/Accent color";
+			this.chk_TrUseAccent.UseVisualStyleBackColor = true;
+			this.chk_TrUseAccent.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
+			// 
+			// lbl_TrBorderC
+			// 
+			this.lbl_TrBorderC.Location = new System.Drawing.Point(174, 20);
+			this.lbl_TrBorderC.Name = "lbl_TrBorderC";
+			this.lbl_TrBorderC.Size = new System.Drawing.Size(102, 15);
+			this.lbl_TrBorderC.TabIndex = 40;
+			this.lbl_TrBorderC.Text = "Border color:";
+			this.lbl_TrBorderC.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// btn_TrBorderC
+			// 
+			this.btn_TrBorderC.Location = new System.Drawing.Point(506, 15);
+			this.btn_TrBorderC.Name = "btn_TrBorderC";
+			this.btn_TrBorderC.Size = new System.Drawing.Size(25, 25);
+			this.btn_TrBorderC.TabIndex = 39;
+			this.btn_TrBorderC.UseVisualStyleBackColor = true;
+			this.btn_TrBorderC.Click += new System.EventHandler(this.Btn_ColorSelectionClick);
+			// 
+			// lbl_TrBG
+			// 
+			this.lbl_TrBG.AutoSize = true;
+			this.lbl_TrBG.Location = new System.Drawing.Point(382, 50);
+			this.lbl_TrBG.Name = "lbl_TrBG";
+			this.lbl_TrBG.Size = new System.Drawing.Size(104, 15);
+			this.lbl_TrBG.TabIndex = 38;
+			this.lbl_TrBG.Text = "Background color:";
+			// 
+			// lbl_TrFG
+			// 
+			this.lbl_TrFG.Location = new System.Drawing.Point(174, 50);
+			this.lbl_TrFG.Name = "lbl_TrFG";
+			this.lbl_TrFG.Size = new System.Drawing.Size(102, 15);
+			this.lbl_TrFG.TabIndex = 37;
+			this.lbl_TrFG.Text = "Foreground color:";
+			this.lbl_TrFG.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// btn_TrBG
+			// 
+			this.btn_TrBG.Location = new System.Drawing.Point(506, 45);
+			this.btn_TrBG.Name = "btn_TrBG";
+			this.btn_TrBG.Size = new System.Drawing.Size(25, 25);
+			this.btn_TrBG.TabIndex = 36;
+			this.btn_TrBG.UseVisualStyleBackColor = true;
+			this.btn_TrBG.Click += new System.EventHandler(this.Btn_ColorSelectionClick);
+			// 
+			// btn_TrFG
+			// 
+			this.btn_TrFG.Location = new System.Drawing.Point(279, 45);
+			this.btn_TrFG.Name = "btn_TrFG";
+			this.btn_TrFG.Size = new System.Drawing.Size(25, 25);
+			this.btn_TrFG.TabIndex = 35;
+			this.btn_TrFG.UseVisualStyleBackColor = true;
+			this.btn_TrFG.Click += new System.EventHandler(this.Btn_ColorSelectionClick);
+			// 
+			// nud_TrTransparency
+			// 
+			this.nud_TrTransparency.Increment = new decimal(new int[] {
+			3,
+			0,
+			0,
+			0});
+			this.nud_TrTransparency.Location = new System.Drawing.Point(105, 45);
+			this.nud_TrTransparency.Minimum = new decimal(new int[] {
+			1,
+			0,
+			0,
+			0});
+			this.nud_TrTransparency.Name = "nud_TrTransparency";
+			this.nud_TrTransparency.Size = new System.Drawing.Size(43, 23);
+			this.nud_TrTransparency.TabIndex = 29;
+			this.nud_TrTransparency.Value = new decimal(new int[] {
+			1,
+			0,
+			0,
+			0});
+			// 
+			// lbl_TrTransparency
+			// 
+			this.lbl_TrTransparency.AutoSize = true;
+			this.lbl_TrTransparency.Location = new System.Drawing.Point(8, 48);
+			this.lbl_TrTransparency.Name = "lbl_TrTransparency";
+			this.lbl_TrTransparency.Size = new System.Drawing.Size(81, 15);
+			this.lbl_TrTransparency.TabIndex = 28;
+			this.lbl_TrTransparency.Text = "Transparency:";
 			// 
 			// tab_updates
 			// 
@@ -3121,6 +3357,11 @@ namespace Mahou
 			this.grb_LPConfig.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.nud_LPTransparency)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.nud_LPRefreshRate)).EndInit();
+			this.tab_translator.ResumeLayout(false);
+			this.tab_translator.PerformLayout();
+			this.grb_TrConfs.ResumeLayout(false);
+			this.grb_TrConfs.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.nud_TrTransparency)).EndInit();
 			this.tab_updates.ResumeLayout(false);
 			this.tab_updates.PerformLayout();
 			this.grb_DownloadUpdate.ResumeLayout(false);

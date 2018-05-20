@@ -17,7 +17,9 @@ namespace Mahou
 			keyAfterCTRL, keyAfterALT, keyAfterSHIFT,
 			clickAfterCTRL, clickAfterALT, clickAfterSHIFT,
 			hotkeywithmodsfired, csdoing, incapt, waitfornum, 
-			IsHotkey, ff_chr_wheeled, preSnip, LMB_down, RMB_down, MMB_down;
+			IsHotkey, ff_chr_wheeled, preSnip, LMB_down, RMB_down, MMB_down,
+			dbl_click, click;
+		public static System.Windows.Forms.Timer click_reset = new System.Windows.Forms.Timer();
 		public static int skip_mouse_events, skip_spec_keys;
 		static string lastClipText = "";
 		static List<Keys> tempNumpads = new List<Keys>();
@@ -27,6 +29,7 @@ namespace Mahou
 		public static List<IntPtr> PLC_HWNDs = new List<IntPtr>();
 		/// <summary> Created for faster check if program is excluded, when checkin too many times(in hooks, timers etc.). </summary>
 		public static List<IntPtr> EXCLUDED_HWNDs = new List<IntPtr>(); 
+		public static Stopwatch pif = new Stopwatch();
 		public static List<IntPtr> NOT_EXCLUDED_HWNDs = new List<IntPtr>(); 
 		public static List<IntPtr> ConHost_HWNDs = new List<IntPtr>();
 		public static string[] snipps = new []{ "mahou", "eml" };
@@ -468,6 +471,51 @@ namespace Mahou
 					MahouUI.currentLayout = 0;
 				ClearWord(true, true, true, "Mouse click");
 			}
+			#region Double click show translate
+			if (MahouUI.TrEnabled)
+				if (MahouUI.TrOnDoubleClick) {
+					if (MSG == (ushort)WinAPI.RawMouseButtons.LeftUp || MSG == (ushort)WinAPI.RawMouseButtons.RightUp) {
+						if (dbl_click) {
+							Debug.WriteLine("DBL");
+							MahouUI.ShowSelectionTranslation(true);
+							dbl_click = click = false;
+						}
+					}
+					if (MSG == (ushort)WinAPI.RawMouseButtons.LeftDown || MSG == (ushort)WinAPI.RawMouseButtons.RightDown) {
+						if (!click) {
+							pif.Start();
+							click = true;
+							click_reset.Interval = SystemInformation.DoubleClickTime;
+							click_reset.Tick += (_, __) => {
+								click = false;
+								Debug.WriteLine("Slow second click!");
+								click_reset.Stop();
+								click_reset.Dispose();
+								click_reset = new System.Windows.Forms.Timer();
+							};
+							click_reset.Start();
+							Debug.WriteLine("First click, reset after: " + SystemInformation.DoubleClickTime);
+						} else {
+							var el = pif.ElapsedMilliseconds;
+							pif.Reset();
+							if (el <= 5) {
+								Debug.WriteLine("Too fast ["+el+"ms], probably buggy...");
+								click_reset.Stop();
+								click_reset.Dispose();
+								click_reset = new System.Windows.Forms.Timer();
+								click = false;
+							} else {
+								Debug.WriteLine("Second click, after: [" + el + "ms] + kill reset + waiting to Up button");
+								click_reset.Stop();
+								click_reset.Dispose();
+								click_reset = new System.Windows.Forms.Timer();
+								dbl_click = true;
+								click = false;
+							}
+						}
+					}
+				}
+			#endregion
 			if (MMain.mahou.LDUseWindowsMessages) {
 				if (MSG == (ushort)WinAPI.RawMouseButtons.LeftDown)
 					LMB_down = true;
@@ -884,7 +932,7 @@ namespace Mahou
 			try { //Used to catch errors
 				DoSelf(() => {
 					Logging.Log("Starting Convert selection.");
-					string ClipStr = Regex.Replace(GetClipStr(), "\r\n?|\n", "\n");
+					string ClipStr = GetClipStr();
 					ClipStr = Regex.Replace(ClipStr, @"(\d+)[,.?бю/]", "$1.");
 					if (!String.IsNullOrEmpty(ClipStr)) {
 						csdoing = true;
@@ -1257,7 +1305,7 @@ namespace Mahou
 			} while (CB_Blocker != IntPtr.Zero);
 			return true;
 		}
-		static void RestoreClipBoard() {
+		public static void RestoreClipBoard() {
 			Logging.Log("Restoring clipboard text: ["+lastClipText+"].");
 			if (WaitForClip2BeFree())
 				try { Clipboard.SetDataObject(lastClipText, true, 5, 120); } catch { Logging.Log("Error during clipboard text restore after 5 tries.", 2); }
@@ -1276,7 +1324,7 @@ namespace Mahou
 			Thread.Sleep(30);
 			return NativeClipboard.GetText();
 		}
-		static string GetClipStr() {
+		public static string GetClipStr() {
 			Locales.IfLessThan2();
 			string ClipStr = "";
 			// Backup & Restore feature, now only text supported...

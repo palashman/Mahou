@@ -7,6 +7,9 @@ using System.Runtime.InteropServices;
 /// This class contains only WinAPI functions.
 /// </summary>
 public static class WinAPI {
+	[DllImport("winmm.dll")]
+	public static extern uint mciSendString( 
+  		string lpstrCommand, string lpstrReturnString, uint uReturnLength, uint hWndCallback);
 	#region jklXHidServ
 	public const int WM_QUIT = 0x0012;
 	public const int WM_DESTROY = 0x0002;

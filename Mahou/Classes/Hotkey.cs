@@ -32,7 +32,8 @@ namespace Mahou {
 			ToggleVisibility,
 			Exit,
 			Restart,
-			ToggleLangPanel
+			ToggleLangPanel,
+			ShowSelectionTranslation
 		}
 		/// <summary>
 		/// Gets all modifiers in hotkey.
@@ -126,7 +127,7 @@ namespace Mahou {
 							KMHook.RePressAfter(Convert.ToInt32(hotkey.Modifiers));
 						}
 					}
-					if (hotkey.ID <= (int)Hotkey.HKID.TransliterateSelection) {
+					if (hotkey.ID <= (int)Hotkey.HKID.TransliterateSelection || hotkey.ID == (int)Hotkey.HKID.ShowSelectionTranslation) {
 						KMHook.SendModsUp(Convert.ToInt32(hotkey.Modifiers));
 					}
 					KMHook.IfKeyIsMod((System.Windows.Forms.Keys)hotkey.VirtualKeyCode);
