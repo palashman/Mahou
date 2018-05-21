@@ -18,7 +18,7 @@ namespace Mahou {
 		public static List<GTResp> GTRs = new List<GTResp>();
 //		public static List<string> SPFs = new List<string>();
 //		public static List<string> SPUs = new List<string>();
-		public static bool running;
+		public static bool running, multiline;
 		public static readonly WebClient client = new WebClient();
 		public static readonly string GTLink = "https://script.google.com/macros/s/AKfycbz0CSalG4GlyRKRIfLFoC2N4GMAet2PNVaxQBEnRX_EUx2nlvsu/exec"; // q, sl, tl
 		public static object _LOCK = new object();
@@ -218,14 +218,9 @@ namespace Mahou {
 				btn.BackColor = slt.BackColor = txt.BackColor = pan_Translations.BackColor;
 				btn.ForeColor = slt.ForeColor = txt.ForeColor = pan_Translations.ForeColor;
 				pan_Translations.Controls.Add(pan);
-				var h = 0;
-				foreach (Control ct in pan_Translations.Controls) {
-					h+=ct.Height+2;
-				}
-				pan_Translations.Height = h;
-				pan_Translations.Location = new Point(1, txt_Source.Location.Y + 12+1);
-				Height = txt_Source.Height+1+pan_Translations.Height+TITLE.Height+2;
+				UpdateHeight();
 			}
+			SetOptimalWidth();
 			SetOptimalWidth();
 		}
 		public void UpdateTranslation(GTResp gtr) {
@@ -269,18 +264,21 @@ namespace Mahou {
 		public void UpdateApperence(Color back, Color fore, int opacity, Font font) {
 			foreach (Control ct in pan_Translations.Controls) {
 				if (ct.Name.Contains("PN_LINE")) {
+					var txt = ct.Controls[1] as TextBox;
 					ct.Controls[0].BackColor = back;
-					ct.Controls[1].BackColor = back;
+					txt.BackColor = back;
 					(ct.Controls[2] as ButtonLabel).origin_bg = ct.Controls[2].BackColor = ControlPaint.Light(back, (float)0.4);
 					ct.Controls[0].ForeColor = fore;
-					ct.Controls[1].ForeColor = fore;
+					txt.ForeColor = fore;
 					(ct.Controls[2] as ButtonLabel).origin_fg = ct.Controls[2].ForeColor = fore;
 					ct.Controls[0].Font = font;
-					ct.Controls[1].Font = font;
+					txt.Font = font;
+					txt.Multiline = multiline;
 				}
 			}
 			txt_Source.BackColor = back;
 			txt_Source.ForeColor = fore;
+			txt_Source.Multiline = multiline;
 			txt_Source.Font = font;
 			X.BackColor = back;
 			X._original_color = X.ForeColor = fore;
@@ -293,29 +291,56 @@ namespace Mahou {
 			Opacity = (double)opacity / 100;
 			Invalidate();
 		}
+		public void UpdateHeight() {
+			var h = 0;
+			foreach (Control ct in pan_Translations.Controls) {
+				h+=ct.Height;
+			}
+			pan_Translations.Height = h;
+			pan_Translations.Location = new Point(1, TITLE.Height +1 + 2+ txt_Source.Height);
+			Height = txt_Source.Height+1+pan_Translations.Height+TITLE.Height+2+2;
+		}
 		public void SetOptimalWidth() {
 			SuspendLayout();
 			Width = pan_Translations.Width = 0; // Minify
+			txt_Source.Height = 0;
 			// 1st find max width
 			var g = CreateGraphics();
+			SetAboveTitleWidth();
+			var s = g.MeasureString(txt_Source.Text, txt_Source.Font);
+			if ((int)s.Width > Width)
+				Width = (int)s.Width;
+			if ((int)s.Width > Width)
+				multiline = true;
+			else multiline = false;
+			if (Width != MaximumSize.Width)
+				multiline = false;
+			txt_Source.Multiline = multiline;
+			var mod = Math.Ceiling(s.Width / Width);
+//				Debug.WriteLine("Height[mod]x[H] " + mod +"x"+s.Height);
+			if (mod > 1)
+				txt_Source.Height = (int)(s.Height*mod);
+			else txt_Source.Height = (int)s.Height;
 			foreach (Control ct in pan_Translations.Controls) {
 				var pan = ct;
 				var slt = pan.Controls[0];
-				var txt = pan.Controls[1];
+				var txt = pan.Controls[1] as TextBox;
 				var btn = pan.Controls[2];
 				var size = g.MeasureString(slt.Text, slt.Font);
 				var trsize = g.MeasureString(txt.Text, txt.Font);
 				slt.Width = (int)size.Width;
 				txt.Width = (int)trsize.Width;
+				if (multiline) {
+					mod = Math.Ceiling(trsize.Width / Width);
+					txt.Multiline = true;
+					Debug.WriteLine(txt.Text.Substring(0,5)+" Height[mod]x[H] " + mod +"x"+(int)(Math.Floor(trsize.Height)*mod));
+					txt.Height = (int)(Math.Floor(trsize.Height)*mod);
+				}
 				var longest = (slt.Width + txt.Width + btn.Width + 4);
 				if (longest > Width) {
 					Width = longest;
 				}
 			}
-			SetAboveTitleWidth();
-			var s = g.MeasureString(txt_Source.Text, txt_Source.Font);
-			if ((int)s.Width > Width)
-				Width = (int)s.Width;
 			g.Dispose();
 			pan_Translations.Width = Width-2;
 			// 2nd set right positions
@@ -325,11 +350,13 @@ namespace Mahou {
 				var txt = pan.Controls[1];
 				var btn = pan.Controls[2];
 				pan.Width = pan_Translations.Width-2;
+				pan.Height = txt.Height+2;
 				btn.Location = new Point(pan.Width-14-1, 1);
 				txt.Width = pan.Width-slt.Width-2-btn.Width-2;
 				txt.Location = new Point(slt.Width+2, 1);
 		  		Prepare();
 			}
+			UpdateHeight();
 			ResumeLayout(false);
 		}
 		void SetAboveTitleWidth() {

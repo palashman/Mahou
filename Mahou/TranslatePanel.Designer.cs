@@ -114,7 +114,7 @@ namespace Mahou
 			this.Controls.Add(this.X);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.MaximizeBox = false;
-			this.MaximumSize = new System.Drawing.Size(400, 400);
+			this.MaximumSize = new System.Drawing.Size(600, 400);
 			this.MinimizeBox = false;
 			this.MinimumSize = new System.Drawing.Size(40, 24);
 			this.Name = "TranslatePanel";
