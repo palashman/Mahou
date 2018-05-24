@@ -791,20 +791,8 @@ namespace Mahou
 				var c = args[i];
 				Debug.WriteLine("c: " +c);
 				if (!fil_get) {
-					if (c == ',') {
-						var esc = false;
-						if (i-1>0) {
-							if(args[i-1] == '|') {
-								esc = true;
-								fil = fil.Substring(0, i-1);
-								fil += c;
-							} else {
-								fil_get = true;
-							}
-						} else {
-							fil_get = true;
-						}
-						if (!esc && !fil_get) fil+=c;
+					if (c == '|') {
+						fil_get = true;
 					} else fil += c;
 				} else {
 					arg += c;
