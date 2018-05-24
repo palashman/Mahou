@@ -811,12 +811,13 @@ namespace Mahou
 		}
 		static void SimKeyboard(string args) {
 			string[] multi_args;
-			var keys = new List<Keys>();
+			var all_keys = new List<List<Keys>>();
 			if (args.Contains(" "))
 				multi_args = args.Split(' ');
 			else
 				multi_args = new []{args};
 			for (int i = 0; i!= multi_args.Length; i++) {
+				var keys = new List<Keys>();
 				var _args = multi_args[i];
 				string[] multi_keys;
 				if (_args.Contains("+"))
@@ -856,14 +857,18 @@ namespace Mahou
 						}
 					}
 				}
+				all_keys.Add(keys);
 			}
-			foreach (var key in keys) {
-				Debug.WriteLine("Pressing: " +key);
-				KInputs.MakeInput(new []{KInputs.AddKey(key, true)});
-			}
-			foreach (var key in keys) {
-				Debug.WriteLine("Releasing: " +key);
-				KInputs.MakeInput(new []{KInputs.AddKey(key, false)});
+			foreach (var keys in all_keys) {
+				foreach (var key in keys) {
+					Debug.WriteLine("Pressing: " +key);
+					KInputs.MakeInput(new []{KInputs.AddKey(key, true)});
+				}
+				foreach (var key in keys) {
+					Debug.WriteLine("Releasing: " +key);
+					KInputs.MakeInput(new []{KInputs.AddKey(key, false)});
+				}
+				Thread.Sleep(1);
 			}
 		}
 		public static void DoLater(Action act, int timeout) {
