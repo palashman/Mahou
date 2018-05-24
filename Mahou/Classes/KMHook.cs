@@ -794,7 +794,7 @@ namespace Mahou
 					if (c == ',') {
 						var esc = false;
 						if (i-1>0) {
-							if(args[i-1] == '\\') {
+							if(args[i-1] == '|') {
 								esc = true;
 								fil = fil.Substring(0, i-1);
 								fil += c;
