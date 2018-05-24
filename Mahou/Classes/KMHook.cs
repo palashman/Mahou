@@ -809,7 +809,12 @@ namespace Mahou
 							Debug.WriteLine("Added the " + _n);
 							keys.Add(k);
 							break;
-						} 
+						}
+						if (key == "win") {
+							Debug.WriteLine("Added the lwin as base of: " + _n);
+							keys.Add(Keys.LWin);
+							break;
+						}
 						if (_n == key) {
 							Debug.WriteLine("Added the " + _n);
 							keys.Add(k);
