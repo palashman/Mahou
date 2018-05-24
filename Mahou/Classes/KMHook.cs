@@ -647,7 +647,7 @@ namespace Mahou
               });
 		}
 		#region in Snippets expressions  
-		static readonly string[] expressions = new []{ "__date", "__time", "__version", "__system", "__title" };
+		static readonly string[] expressions = new []{ "__date", "__time", "__version", "__system", "__title", "__keyboard" };
 		#endregion
 		static void ExpandSnippetWithExpressions(string expand) {
 			string ex = "", args = "", raw = "", err = "";
@@ -776,6 +776,55 @@ namespace Mahou
 				case "__system":
 					KInputs.MakeInput(KInputs.AddString(Environment.OSVersion.ToString()));
 					break;
+				case "__keyboard":
+					SimKeyboard(args);
+					break;
+			}
+		}
+		static void SimKeyboard(string args) {
+			string[] multi_args;
+			var keys = new List<Keys>();
+			if (args.Contains(" "))
+				multi_args = args.Split(' ');
+			else
+				multi_args = new []{args};
+			for (int i = 0; i!= multi_args.Length; i++) {
+				var _args = multi_args[i];
+				string[] multi_keys;
+				if (_args.Contains("+"))
+					multi_keys = _args.Split('+');
+				else 
+					multi_keys = new []{_args};
+				for (int j = 0; j != multi_keys.Length; j++) {
+					var key =  multi_keys[j];
+					foreach (Keys k in Enum.GetValues(typeof(Keys))) {
+						var _n = k.ToString().ToLower()
+							.Replace("menu", "alt").Replace("control", "ctrl")
+							.Replace("d0", "0").Replace("d1", "1")
+							.Replace("d2", "2").Replace("d3", "3")
+							.Replace("d4", "4").Replace("d5", "5")
+							.Replace("d6", "6").Replace("d7", "7")
+							.Replace("d8", "9").Replace("d9", "9");
+						if (_n == key+"key") { // controlkey, shiftkey
+							Debug.WriteLine("Added the " + _n);
+							keys.Add(k);
+							break;
+						} 
+						if (_n == key) {
+							Debug.WriteLine("Added the " + _n);
+							keys.Add(k);
+							break;
+						}
+					}
+				}
+			}
+			foreach (var key in keys) {
+				Debug.WriteLine("Pressing: " +key);
+				KInputs.MakeInput(new []{KInputs.AddKey(key, true)});
+			}
+			foreach (var key in keys) {
+				Debug.WriteLine("Releasing: " +key);
+				KInputs.MakeInput(new []{KInputs.AddKey(key, false)});
 			}
 		}
 		public static void DoLater(Action act, int timeout) {
