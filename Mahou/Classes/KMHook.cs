@@ -647,7 +647,7 @@ namespace Mahou
               });
 		}
 		#region in Snippets expressions  
-		static readonly string[] expressions = new []{ "__date", "__time", "__version", "__system", "__title", "__keyboard" };
+		static readonly string[] expressions = new []{ "__date", "__time", "__version", "__system", "__title", "__keyboard", "__execute" };
 		#endregion
 		static void ExpandSnippetWithExpressions(string expand) {
 			string ex = "", args = "", raw = "", err = "";
@@ -779,6 +779,46 @@ namespace Mahou
 				case "__keyboard":
 					SimKeyboard(args);
 					break;
+				case "__execute":
+					Execute(args);
+					break;
+			}
+		}
+		static void Execute(string args) {
+			string fil = "", arg ="";
+			bool fil_get = false;
+			for (int i = 0; i < args.Length; i++) {
+				var c = args[i];
+				Debug.WriteLine("c: " +c);
+				if (!fil_get) {
+					if (c == ',') {
+						var esc = false;
+						if (i-1>0) {
+							if(args[i-1] == '\\') {
+								esc = true;
+								fil = fil.Substring(0, i-1);
+								fil += c;
+							} else {
+								fil_get = true;
+							}
+						} else {
+							fil_get = true;
+						}
+						if (!esc && !fil_get) fil+=c;
+					} else fil += c;
+				} else {
+					arg += c;
+				}
+			}
+			Debug.WriteLine("Executing: executable: ["+fil+"] with args: ["+arg+"].");
+			var p = new ProcessStartInfo();
+			p.Arguments = arg;
+			p.UseShellExecute = true;
+			p.FileName = fil;
+			try {
+				Process.Start(p);
+			} catch(Exception e) {
+				Debug.WriteLine("Execute error: " + e.Message);
 			}
 		}
 		static void SimKeyboard(string args) {
