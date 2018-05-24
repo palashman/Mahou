@@ -624,10 +624,10 @@ namespace Mahou
 								KInputs.AddKey(Keys.Back, false) 
 							});
 						}
-		       			expand = ReplaceAllExpressions(expand, true);
 						Logging.Log("Expanding snippet [" + snip + "] to [" + expand + "].");
+		       			ExpandSnippetWithExpressions(expand);
 						ClearWord(true, true, false, "Cleared due to snippet expansion");
-						KInputs.MakeInput(KInputs.AddString(expand));
+//						KInputs.MakeInput(KInputs.AddString(expand));
 					}
 					if (spaceAft)
 						KInputs.MakeInput(KInputs.AddString(" "));
@@ -645,6 +645,138 @@ namespace Mahou
 					KInputs.MakeInput(KInputs.AddString(snip));
 				}
               });
+		}
+		#region in Snippets expressions  
+		static readonly string[] expressions = new []{ "__date", "__time", "__version", "__system", "__title" };
+		#endregion
+		static void ExpandSnippetWithExpressions(string expand) {
+			string ex = "", args = "", raw = "", err = "";
+			bool args_getting = false, is_expr = false, escaped = false;
+			int expr_start = -1;
+			bool contains_expr = false;
+			foreach (var expr in expressions) {
+				if (expand.Contains(expr)) {
+					contains_expr = true;
+					break;
+				}
+			}
+			if (!contains_expr) {
+				KInputs.MakeInput(KInputs.AddString(expand));
+				return;
+			}
+			for (int i = 0; i!=expand.Length; i++) {
+				var args_get = false;
+				var e = expand[i]; 
+//				Debug.WriteLine("i:"+i+", e:"+e);
+				if (!is_expr)
+					ex += e;
+				else err+=e;
+				if (is_expr && e == ')') {
+					if (args_getting) {
+						args_getting = false;
+						args_get = true;
+//						Debug.WriteLine("end of args of: " + fun + " -> " +i);
+					} else {
+						Debug.WriteLine("Expression \"(\" missing, but \")\" were there, in ["+ex+"], at position: "+expr_start+" in ["+expand+"]");
+						KInputs.MakeInput(KInputs.AddString(ex+err));
+						is_expr = false;
+						args_get = false;
+						escaped = false;
+						args = ex = raw = "";
+					}
+				}
+				if (args_getting)
+					args += e;
+				if (is_expr && e == '(') {
+					args_getting = true; 
+//					Debug.WriteLine("start of args of: " + fun + " -> " +i);
+				}
+				var maybe_fun = false;
+				if (!args_getting && !string.IsNullOrEmpty(ex) && !is_expr) {
+					foreach (var expr in expressions) {
+						if (expr.StartsWith(ex, StringComparison.InvariantCulture)) {
+							maybe_fun = true;
+				    		if (expr == ex) {
+								expr_start = i - (ex.Length-1);
+								escaped = false;
+								if (expr_start-1<0)
+									escaped = false;
+								else if (expand[expr_start-1] == '\\')
+									escaped = true;
+								is_expr = !escaped;
+								Debug.WriteLine("expr: " +expr+" equals " + ex + ", expr_start: " + expr_start + " is_expr: " + is_expr);
+								err = "";
+								break;
+				    		}
+						} else
+							maybe_fun = false;
+//						Debug.WriteLine("Try: " +fun+" > " + expr + (maybe_fun ? " OK" : " NO"));
+						if (maybe_fun) break;
+					}
+				}
+				if (is_expr && i == expand.Length-1 && !args_get) {
+					Debug.WriteLine("Expression [" + ex +"] missing its end \")\", at positon: " + expr_start +" in: [" + expand + "].", 2);
+					KInputs.MakeInput(KInputs.AddString(ex+err+args));
+					err = "";
+				}
+				if (args_get && !escaped) {
+					Debug.WriteLine("Executing expression: " + ex + " with args: [" + args + "]");
+					ExecExpression(ex, args);
+					is_expr = false;
+					args_get = false;
+					args = ex = "";
+				}
+				if (!args_getting && !maybe_fun && !is_expr) {
+					if (!escaped) {
+//						Debug.WriteLine("Not even start of any expression: " + ex);
+						raw += ex;
+					}
+					ex = "";
+					maybe_fun = false;
+					is_expr = false;
+					expr_start = -1;
+				}
+				if (!string.IsNullOrEmpty(raw)) {
+//					Debug.WriteLine("Inputting raw: ["+raw+"]");
+					KInputs.MakeInput(KInputs.AddString(raw));
+					raw = "";
+				}
+				if (escaped) {
+					Debug.WriteLine("Ignored espaced expression: " + ex);
+					KInputs.MakeInput(new []{KInputs.AddKey(Keys.Back, true), KInputs.AddKey(Keys.Back, false)});
+					KInputs.MakeInput(KInputs.AddString(ex));
+					is_expr = false;
+					args_get = false;
+					escaped = false;
+					args = ex = raw = "";
+				}
+			}
+				
+		}
+		static void ExecExpression(string expr, string args) {
+			switch (expr) {
+				case "__date":
+				case "__time":
+					var now = DateTime.Now;
+					var format = args;
+					if (string.IsNullOrEmpty(args)) {
+						if (expr == "__date")
+							format = "dd/MM/yyyy";
+						else 
+							format = "HH:mm:ss";
+					}
+					KInputs.MakeInput(KInputs.AddString(now.ToString(format)));
+					break;
+				case "__version":
+					KInputs.MakeInput(KInputs.AddString(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()));
+					break;
+				 case "__title":
+					KInputs.MakeInput(KInputs.AddString(MMain.mahou.Text));
+					 break;
+				case "__system":
+					KInputs.MakeInput(KInputs.AddString(Environment.OSVersion.ToString()));
+					break;
+			}
 		}
 		public static void DoLater(Action act, int timeout) {
 			System.Threading.Tasks.Task.Factory.StartNew(() => {
@@ -2033,86 +2165,6 @@ namespace Mahou
 			}
 			Memory.Flush();
 		}
-		#region in Snippets expressions  
-		static readonly string[] search_types = new []{ "__date(", "__time(", "__version(", "__system(", "__title(" };
-		static string ReadUntil(string source, string search, string ending, bool include_search = false) {
-			var result = "";
-			var ind = source.IndexOf(search);
-			var ind_aft = ind + search.Length;
-			if (ind == -1) return "";
-			if (!include_search) ind = ind_aft;
-			for (;;ind++) {
-				if (ind >= source.Length) return "";
-				if (ind >= ind_aft) {
-					var end = "";
-					if (ending.Length-1>1) {
-						for (int i = 0; i != ending.Length-1; i++) {
-							end += source[ind+i];
-						}
-					} else end += source[ind];
-					if (end == ending) break;
-				}
-				result += source[ind];
-			}
-			return result;
-		}
-		static string ReplaceAllExpressions(string source, bool use_escape = false) {
-			var ru = "";
-			int ind = 0;
-			var ustr = source;
-			var ending = ")";
-			foreach (var search in search_types) {
-				do {
-					ind = ustr.IndexOf(search);
-					ru = ReadUntil(ustr, search, ending);
-					var replt = search+ru+ending;
-					if (ind != -1)
-						if (ustr.IndexOf(replt) == -1) {
-							Logging.Log("Maybe unfinished expression [" + replt + "] in: [" + source + "].", 2);
-							break;
-						}
-					if (use_escape) 
-						if (ind > 0)
-							if (ustr[ind-1] == '\\') {
-								ustr = ustr.Replace('\\'+replt, (ReverseStr(search)+ru+ending));
-								continue;
-							}
-					switch (search) {
-						case "__date(":
-						case "__time(":
-							var now = DateTime.Now;
-							ustr = ustr.Replace(replt, now.ToString(ru));
-							break;
-						case "__version(":
-							ustr = ustr.Replace(replt, System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
-							break;
-						 case "__title(":
-							 ustr = ustr.Replace(replt, MMain.mahou.Text);
-							 break;
-						case "__system(":
-							ustr = ustr.Replace(replt, Environment.OSVersion.ToString());
-							break;
-					}
-				} while (ind != -1);
-			}
-			if (use_escape) 
-				foreach (var search in search_types) {
-					do {
-						var rsearch = ReverseStr(search);
-						ind = ustr.IndexOf(rsearch);
-						ru = ReadUntil(ustr, rsearch, ending);
-						var replt = rsearch+ru+ending;
-						ustr = ustr.Replace(replt, search+ru+ending);
-					} while (ru != "");
-				}
-			return ustr;
-		}
-		static string ReverseStr(string input) {
-			var chars = input.ToCharArray();
-			Array.Reverse(chars);
-			return new string(chars);
-		}
-		#endregion
 		#region Snippets Aliases
 		static readonly string pipe_esc = "__pipeEscape::";
 		#endregion
