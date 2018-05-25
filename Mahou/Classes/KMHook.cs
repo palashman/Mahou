@@ -840,6 +840,18 @@ namespace Mahou
 							keys.Add(k);
 							break;
 						}
+						if (key.Length>1) {
+							if (key[0] == '[' && key[key.Length-1] == ']') {
+								var scode = key.Substring(1,key.Length-2);
+								int code = -1;
+								Int32.TryParse(scode, out code);
+								if (code == (int)k) { 
+									Debug.WriteLine("Added the key by code: " + code + ", key: " + k);
+									keys.Add(k);
+									break;
+								}
+							}
+						}
 						if (key == "esc") {
 							Debug.WriteLine("Added the short escape: " + key);
 							keys.Add(Keys.Escape);
