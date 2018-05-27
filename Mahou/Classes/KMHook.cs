@@ -842,9 +842,16 @@ namespace Mahou
 						}
 						if (key.Length>1) {
 							if (key[0] == '[' && key[key.Length-1] == ']') {
-								var scode = key.Substring(1,key.Length-2);
+								var scode = key.Substring(1,key.Length-2).ToLower();
 								int code = -1;
-								if (Int32.TryParse(scode, out code))
+								bool ok = false;
+								if (scode.Contains("x")) {
+									scode = scode.Replace("x", "");
+									ok = Int32.TryParse(scode, System.Globalization.NumberStyles.HexNumber, null, out code);
+								} else {
+									ok = Int32.TryParse(scode, out code);
+								}
+								if (ok)
 									if (code == (int)k) { 
 										Debug.WriteLine("Added the key by code: " + code + ", key: " + k);
 										keys.Add(k);
