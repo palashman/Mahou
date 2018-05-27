@@ -704,7 +704,7 @@ namespace Mahou
 								else if (expand[expr_start-1] == '\\')
 									escaped = true;
 								is_expr = !escaped;
-								Debug.WriteLine("expr: " +expr+" equals " + ex + ", expr_start: " + expr_start + " is_expr: " + is_expr);
+//								Debug.WriteLine("expr: " +expr+" equals " + ex + ", expr_start: " + expr_start + " is_expr: " + is_expr);
 								err = "";
 								break;
 				    		}
@@ -715,12 +715,12 @@ namespace Mahou
 					}
 				}
 				if (is_expr && i == expand.Length-1 && !args_get) {
-					Debug.WriteLine("Expression [" + ex +"] missing its end \")\", at positon: " + expr_start +" in: [" + expand + "].", 2);
+					Logging.Log("Expression [" + ex +"] missing its end \")\", at positon: " + expr_start +" in: [" + expand + "].", 2);
 					KInputs.MakeInput(KInputs.AddString(ex+err+args));
 					err = "";
 				}
 				if (args_get && !escaped) {
-					Debug.WriteLine("Executing expression: " + ex + " with args: [" + args + "]");
+					Logging.Log("Executing expression: " + ex + " with args: [" + args + "]");
 					ExecExpression(ex, args);
 					is_expr = false;
 					args_get = false;
@@ -742,7 +742,7 @@ namespace Mahou
 					raw = "";
 				}
 				if (escaped) {
-					Debug.WriteLine("Ignored espaced expression: " + ex);
+					Logging.Log("Ignored espaced expression: " + ex);
 					KInputs.MakeInput(new []{KInputs.AddKey(Keys.Back, true), KInputs.AddKey(Keys.Back, false)});
 					KInputs.MakeInput(KInputs.AddString(ex));
 					is_expr = false;
@@ -798,7 +798,7 @@ namespace Mahou
 					arg += c;
 				}
 			}
-			Debug.WriteLine("Executing: executable: ["+fil+"] with args: ["+arg+"].");
+			Logging.Log("Executing: executable: ["+fil+"] with args: ["+arg+"].");
 			var p = new ProcessStartInfo();
 			p.Arguments = arg;
 			p.UseShellExecute = true;
@@ -806,7 +806,7 @@ namespace Mahou
 			try {
 				Process.Start(p);
 			} catch(Exception e) {
-				Debug.WriteLine("Execute error: " + e.Message);
+				Logging.Log("Execute error: " + e.Message);
 			}
 		}
 		static void SimKeyboard(string args) {
@@ -836,7 +836,7 @@ namespace Mahou
 							.Replace("d8", "9").Replace("d9", "9")
 							.Replace("return", "enter").Replace("numpa", "numpad");
 						if (_n == key+"key") { // controlkey, shiftkey
-							Debug.WriteLine("Added the " + _n);
+							Logging.Log("Added the " + _n);
 							keys.Add(k);
 							break;
 						}
@@ -853,24 +853,24 @@ namespace Mahou
 								}
 								if (ok)
 									if (code == (int)k) { 
-										Debug.WriteLine("Added the key by code: " + code + ", key: " + k);
+										Logging.Log("Added the key by code: " + code + ", key: " + k);
 										keys.Add(k);
 										break;
 									}
 							}
 						}
 						if (key == "esc") {
-							Debug.WriteLine("Added the short escape: " + key);
+							Logging.Log("Added the short escape: " + key);
 							keys.Add(Keys.Escape);
 							break;
 						}
 						if (key == "win") {
-							Debug.WriteLine("Added the lwin as base of: " + _n);
+							Logging.Log("Added the lwin as base of: " + _n);
 							keys.Add(Keys.LWin);
 							break;
 						}
 						if (_n == key) {
-							Debug.WriteLine("Added the " + _n);
+							Logging.Log("Added the " + _n);
 							keys.Add(k);
 							break;
 						}
@@ -880,11 +880,11 @@ namespace Mahou
 			}
 			foreach (var keys in all_keys) {
 				foreach (var key in keys) {
-					Debug.WriteLine("Pressing: " +key);
+					Logging.Log("Pressing: " +key);
 					KInputs.MakeInput(new []{KInputs.AddKey(key, true)});
 				}
 				foreach (var key in keys) {
-					Debug.WriteLine("Releasing: " +key);
+					Logging.Log("Releasing: " +key);
 					KInputs.MakeInput(new []{KInputs.AddKey(key, false)});
 				}
 				Thread.Sleep(5);
