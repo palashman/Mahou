@@ -31,6 +31,28 @@ Mahou работает так как **Вы** хотите, настраивай
 
 ###### Возможности по версиям:
 
+**v2.7.0.0**<br/>
+
+- :memo: Доабавлена возможность ввода кодов клавиш в hex стиле для функции __keyboard.
+- :memo: Доабавлена возможность ввода кодов клавиш для функции __keyboard.
+- :memo: Добавлена поддержка не зависимо от регистра названий клавиш.
+- :memo: Исправлено слишком быстрое выполнение клавиш в функции __keyboard разделенных пробелом.
+- :gem: Добавлена функция __execute в функции сниппетов.
+- :gem: Добавлена функция __keyboard в функции сниппетов.
+- :gem: Добавлена поддержка нескольких линий в панели перевода.
+- :bug: Исправлена невозможность уменьшить количество языков перевода до перезапуска.
+- :memo: Исправлен показ окна перевода без никаких языков перевода.
+- :bug: Исправлено поведений двойной горячей клавиши для перевода.
+- :gem: Добавлена функция переводчика.
+- :gem: Добавлена возможность показа перевода выделенного по двойному клику мыши.
+- :gem: Добавлена гор. клавиша для показа перевода выделенного текста (по умолчанию: Alt x2)..
+- :gem: Добавлена возможность выбора до 99 языков перевода (также как в смене раскладки одной клавишей - назначить гор. клавиши).
+- :gem: Добавлена функция или для сниппетов #177.
+- :gem: Добавлена функция "Функции в сниппетах" #176,#179.
+- :memo: Добавлено больше стандартных сниппетов (с функциями).
+- :memo: Добавлены старые флаги в репозиторий.
+- :gem: Добавлены новые звуки в репозиторий.
+
 **v2.6.7.7**<br/>
 
 - 🐛 Исправлено что jkl не запускал jklx86 когда стартовая папка не папка jkl.
@@ -594,6 +616,47 @@ Even selected text switches just between **selected** layouts, though if you lik
 6. Read the [wiki](https://github.com/BladeMight/Mahou/wiki/Functions-list) or [ask me](#license).
 
 ###### By version features:
+
+**v2.7.0.0**<br/>
+
+- :memo: Added hex style key code in __keyboard expression.
+- :bug: Fixed by keycode in __keyboard.
+- :memo: Optimized wait time after __keyboard.
+- :memo: Added by keycode key support to __keyboard expression.
+- :memo: Added case-insensetive keys compararison, fixed numpad[0-9] being numpa[0-9].
+- :memo: Fixed multiple keystrokes in __keyboard were too fast executed one after another.
+- :memo: Added esc and enter key for __keyboard expression.
+- :memo: Simplified execute syntax to (file|args), due to windows path "|" restriction.
+- :memo: Changed escape symbol for __execute expression from "\" to "|", due to windows path.
+- :gem: Added __execute expression to snippets expressions.
+- :memo: Added base "win" to be "lwin".
+- :gem: Added __keyboard expression to snippets expressions.
+- :memo: Rewrited method for snippets expressions to support __keyboard(in future) function.:memo: etc...
+- :gem: Added multiline support to translate panel.
+- :memo: Fixed newlines, replaced just with spaces.
+- :bug: Fixed translator language selector wasn't able to decrease translate languages.
+- :memo: Fixed no languages translation.
+- :bug: Fixed old version sets bug.
+- :bug: Fixed show selection translation double hotkey wasnt resetting.
+- :gem: Added translator feature.
+- :gem: Added Double click show selection translation feature.
+- :gem: Added hotkey for show selection translation feature (default: Alt x2).
+- :gem: Added languages selector using sets(like change layout by specific key sets).
+- :memo: A lot of work done to support that feature:
+ 1. Remote Google script that do translations.
+ 2. Multi remote request(for faster 1 responce instead of much)
+ 3. Created Translation Panel based on Language panel with JustUI elements.
+ 4. Added text to speech feature.
+ 5. Added new control just *like* JustUI - ButtonLabel.
+ 6. A lot [test/retest]'st in [remote/local].
+- :bug: Fixed autoswitch null items.
+- :bug: Fixded snippets expressions were empty sometimes.
+- :gem: Added snippets alias feature #177.
+- :gem: Added snippets expressions function #176,#179.
+- :bug: Fixed snippets file write on first start when snippets is on and snippets.txt not exist.
+- :memo: Added more default snippets(with expressions).
+- :memo: Added old flags icons to repository.
+- :gem: Added new sounds to repository.
 
 **v2.6.7.7**<br/>
 
