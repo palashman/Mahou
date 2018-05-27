@@ -844,12 +844,12 @@ namespace Mahou
 							if (key[0] == '[' && key[key.Length-1] == ']') {
 								var scode = key.Substring(1,key.Length-2);
 								int code = -1;
-								Int32.TryParse(scode, out code);
-								if (code == (int)k) { 
-									Debug.WriteLine("Added the key by code: " + code + ", key: " + k);
-									keys.Add(k);
-									break;
-								}
+								if (Int32.TryParse(scode, out code))
+									if (code == (int)k) { 
+										Debug.WriteLine("Added the key by code: " + code + ", key: " + k);
+										keys.Add(k);
+										break;
+									}
 							}
 						}
 						if (key == "esc") {
@@ -880,8 +880,9 @@ namespace Mahou
 					Debug.WriteLine("Releasing: " +key);
 					KInputs.MakeInput(new []{KInputs.AddKey(key, false)});
 				}
-				Thread.Sleep(1);
+				Thread.Sleep(5);
 			}
+			Thread.Sleep(30);
 		}
 		public static void DoLater(Action act, int timeout) {
 			System.Threading.Tasks.Task.Factory.StartNew(() => {
