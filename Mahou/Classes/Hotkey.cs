@@ -127,7 +127,8 @@ namespace Mahou {
 							KMHook.RePressAfter(Convert.ToInt32(hotkey.Modifiers));
 						}
 					}
-					if (hotkey.ID <= (int)Hotkey.HKID.TransliterateSelection || hotkey.ID == (int)Hotkey.HKID.ShowSelectionTranslation) {
+					if (hotkey.ID <= (int)Hotkey.HKID.TransliterateSelection //|| hotkey.ID == (int)Hotkey.HKID.ShowSelectionTranslation
+					   ) {
 						KMHook.SendModsUp(Convert.ToInt32(hotkey.Modifiers));
 					}
 					KMHook.IfKeyIsMod((System.Windows.Forms.Keys)hotkey.VirtualKeyCode);

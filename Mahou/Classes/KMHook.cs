@@ -119,6 +119,9 @@ namespace Mahou
 				IsHotkey = false;
 			if ((Key >= Keys.D0 || Key <= Keys.D9) && waitfornum)
 				IsHotkey = true;
+			if (MahouUI.OnceSpecific && (MSG == WinAPI.WM_SYSKEYUP || MSG == WinAPI.WM_KEYUP)) {
+				MahouUI.OnceSpecific = false;
+			}
 			//Key log
 			Logging.Log("Catched Key=[" + Key + "] with VKCode=[" + vkCode + "] and message=[" + (int)MSG + "], modifiers=[" + 
 			            (shift ? "L-Shift" : "") + (shift_r ? "R-Shift" : "") + 
