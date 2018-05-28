@@ -594,7 +594,7 @@ namespace Mahou
 						ConHost_HWNDs.Add(hwnd);
 						jklXHidServ.CycleAllLayouts(hwnd);
 					} else {
-						MahouUI.currentLayout = MahouUI.GlobalLayout = Locales.GetCurrentLocale();
+						MahouUI.currentLayout = /*MahouUI.GlobalLayout =*/ Locales.GetCurrentLocale();
 						Logging.Log("[JKL] > Updating currentLayout on window activate to ["+MahouUI.currentLayout+"]...");
 					}
 				}
@@ -607,7 +607,7 @@ namespace Mahou
 					WinAPI.GetWindowText(hwnd, title, 127);
 					DoLater(() => {
 						Logging.Log("Layout in this window ["+title+"] was different, changing layout to Mahou global layout.");
-						ChangeToLayout(Locales.ActiveWindow(), MahouUI.GlobalLayout);
+						ChangeToLayout(hwnd, MahouUI.GlobalLayout);
 			       	 }, 100);
 				}
 		}
