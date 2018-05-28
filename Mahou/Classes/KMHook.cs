@@ -650,7 +650,7 @@ namespace Mahou
               });
 		}
 		#region in Snippets expressions  
-		static readonly string[] expressions = new []{ "__date", "__time", "__version", "__system", "__title", "__keyboard", "__execute" };
+		static readonly string[] expressions = new []{ "__date", "__time", "__version", "__system", "__title", "__keyboard", "__execute", "__cursorhere" };
 		#endregion
 		static void ExpandSnippetWithExpressions(string expand) {
 			string ex = "", args = "", raw = "", err = "";
@@ -724,7 +724,8 @@ namespace Mahou
 				}
 				if (args_get && !escaped) {
 					Logging.Log("Executing expression: " + ex + " with args: [" + args + "]");
-					ExecExpression(ex, args);
+					var curlefts = expand.Length - i -1;
+					ExecExpression(ex, args, curlefts);
 					is_expr = false;
 					args_get = false;
 					args = ex = "";
@@ -756,7 +757,7 @@ namespace Mahou
 			}
 				
 		}
-		static void ExecExpression(string expr, string args) {
+		static void ExecExpression(string expr, string args, int curlefts = -1) {
 			switch (expr) {
 				case "__date":
 				case "__time":
@@ -784,6 +785,16 @@ namespace Mahou
 					break;
 				case "__execute":
 					Execute(args);
+					break;
+				case "__cursorhere":
+					Debug.WriteLine("Curlefts: " +curlefts);
+					DoLater(() => {
+					        	for (int i=0; i != curlefts; i++) {
+					        		KInputs.MakeInput(new []{ KInputs.AddKey(Keys.Left, true), 
+					        		                  	KInputs.AddKey(Keys.Left, false)
+					        		                  });
+					        	}
+					        }, curlefts * 5);
 					break;
 			}
 		}
