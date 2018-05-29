@@ -197,6 +197,10 @@ namespace Mahou
 								var aft = at+__ANY__.Length;
 //								Debug.WriteLine("aftst:"+pins[aft]);
 								var laf = len-aft;
+								if (snip.Length < laf+at) {
+									Debug.WriteLine("Too small snip, to use with "+__ANY__);
+									continue;
+								}
 //								Debug.WriteLine("at:"+at+",aft:"+aft+",laf:"+laf);
 								bool yay = true;
 								if (at <= snip.Length)
