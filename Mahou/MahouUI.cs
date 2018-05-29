@@ -653,7 +653,7 @@ namespace Mahou {
 			MMain.MyConfs.Write("Appearence", "MouseLTHeight", LDMouseHeight_temp.ToString());		
 			MMain.MyConfs.Write("Appearence", "CaretLTHeight", LDCaretHeight_temp.ToString());
 			MMain.MyConfs.Write("Appearence", "MouseLTWidth", LDMouseWidth_temp.ToString());
-			MMain.MyConfs.Write("Appearence", "MouseLTWidth", LDCaretWidth_temp.ToString());
+			MMain.MyConfs.Write("Appearence", "CaretLTWidth", LDCaretWidth_temp.ToString());
 			MMain.MyConfs.Write("Appearence", "Layout1Height", Layout1Height_temp.ToString());
 			MMain.MyConfs.Write("Appearence", "Layout2Height", Layout2Height_temp.ToString());
 			MMain.MyConfs.Write("Appearence", "Layout1Width", Layout1Width_temp.ToString());
