@@ -62,42 +62,26 @@ namespace Mahou
 			if (MMain.mahou.CaretLangTooltipEnabled)
 				ff_chr_wheeled = false;
 			if (vkCode > 254) return;
+			var down = ((MSG == WinAPI.WM_SYSKEYDOWN) ? true : false) || ((MSG == WinAPI.WM_KEYDOWN) ? true : false);
 			var Key = (Keys)vkCode; // "Key" will further be used instead of "(Keys)vkCode"
 			if (MMain.c_words.Count == 0) {
 				MMain.c_words.Add(new List<YuKey>());
 			}
-			if ((Key < Keys.D0 || Key > Keys.D9) && waitfornum && (uint)Key != MMain.mahou.HKConMorWor.VirtualKeyCode && (MSG == WinAPI.WM_KEYDOWN))
+			if ((Key < Keys.D0 || Key > Keys.D9) && waitfornum && (uint)Key != MMain.mahou.HKConMorWor.VirtualKeyCode && down)
 				MMain.mahou.FlushConvertMoreWords();
 			#region Checks modifiers that are down
 			switch (Key) {
-				case Keys.LShiftKey:
-					shift = ((MSG == WinAPI.WM_SYSKEYDOWN) ? true : false) || ((MSG == WinAPI.WM_KEYDOWN) ? true : false);
-					break;
-				case Keys.LControlKey:
-					ctrl = ((MSG == WinAPI.WM_SYSKEYDOWN) ? true : false) || ((MSG == WinAPI.WM_KEYDOWN) ? true : false);
-					break;
-				case Keys.LMenu:
-					alt = ((MSG == WinAPI.WM_SYSKEYDOWN) ? true : false) || ((MSG == WinAPI.WM_KEYDOWN) ? true : false);
-					break;
-				case Keys.LWin:
-					win = ((MSG == WinAPI.WM_SYSKEYDOWN) ? true : false) || ((MSG == WinAPI.WM_KEYDOWN) ? true : false);
-					break;
-				case Keys.RShiftKey:
-					shift_r = ((MSG == WinAPI.WM_SYSKEYDOWN) ? true : false) || ((MSG == WinAPI.WM_KEYDOWN) ? true : false);
-					break;
-				case Keys.RControlKey:
-					ctrl_r = ((MSG == WinAPI.WM_SYSKEYDOWN) ? true : false) || ((MSG == WinAPI.WM_KEYDOWN) ? true : false);
-					break;
-				case Keys.RMenu:
-					alt_r = ((MSG == WinAPI.WM_SYSKEYDOWN) ? true : false) || ((MSG == WinAPI.WM_KEYDOWN) ? true : false);
-					break;
-				case Keys.RWin:
-					win_r = ((MSG == WinAPI.WM_SYSKEYDOWN) ? true : false) || ((MSG == WinAPI.WM_KEYDOWN) ? true : false);
-					break;
+				case Keys.LShiftKey:   shift = down; break;
+				case Keys.LControlKey: ctrl = down; break;
+				case Keys.LMenu:       alt = down; break;
+				case Keys.LWin:        win = down; break;
+				case Keys.RShiftKey:   shift_r = down; break;
+				case Keys.RControlKey: ctrl_r = down; break;
+				case Keys.RMenu:       alt_r = down; break;
+				case Keys.RWin:        win_r = down; break;
 			}
 			// Additional fix for scroll tip.
-			if (MMain.mahou.ScrollTip &&
-			   Key == Keys.Scroll && MSG == WinAPI.WM_KEYDOWN) {
+			if (MMain.mahou.ScrollTip && Key == Keys.Scroll && down) {
 				DoSelf(() => {
 					KeybdEvent(Keys.Scroll, 0);
 					KeybdEvent(Keys.Scroll, 2);
@@ -119,7 +103,7 @@ namespace Mahou
 				IsHotkey = false;
 			if ((Key >= Keys.D0 || Key <= Keys.D9) && waitfornum)
 				IsHotkey = true;
-			if (MahouUI.OnceSpecific && (MSG == WinAPI.WM_SYSKEYUP || MSG == WinAPI.WM_KEYUP)) {
+			if (MahouUI.OnceSpecific && !down) {
 				MahouUI.OnceSpecific = false;
 			}
 			//Key log
@@ -142,7 +126,7 @@ namespace Mahou
 				            Key != Keys.LWin && 
 				            Key != Keys.RWin)) // On any Win+[AnyKey] hotkey
 					MahouUI.currentLayout = 0;
-			if ((MSG == WinAPI.WM_KEYUP || MSG == WinAPI.WM_SYSKEYUP) && (
+			if (!down && (
 			    ((alt || ctrl || alt_r || ctrl_r) && (Key == Keys.Shift || Key == Keys.LShiftKey || Key == Keys.RShiftKey)) ||
 			     shift && (Key == Keys.Menu || Key == Keys.LMenu || Key == Keys.RMenu) ||
 			     (Environment.OSVersion.Version.Major == 10 && (win || win_r) && Key == Keys.Space))) {
@@ -173,7 +157,7 @@ namespace Mahou
 			if (MMain.mahou.SnippetsEnabled && !ExcludedProgram()) {
 				if (((Key >= Keys.D0 && Key <= Keys.Z) || // This is 0-9 & A-Z
 				   Key >= Keys.Oem1 && Key <= Keys.OemBackslash // All other printable
-				  ) && !win && !win_r && !alt && !alt_r && !ctrl && !ctrl_r && MSG == WinAPI.WM_KEYDOWN) {
+				  ) && !win && !win_r && !alt && !alt_r && !ctrl && !ctrl_r && down) {
 					var stb = new StringBuilder(10);
 					var byt = new byte[256];
 					if (shift || shift_r || Control.IsKeyLocked(Keys.CapsLock)) {
@@ -255,8 +239,7 @@ namespace Mahou
 			}
 			#endregion
 			#region Release Re-Pressed keys
-			if (hotkeywithmodsfired &&
-			    (MSG == WinAPI.WM_KEYUP || MSG == WinAPI.WM_SYSKEYUP) &&
+			if (hotkeywithmodsfired && !down &&
 			   ((Key == Keys.LShiftKey || Key == Keys.LMenu || Key == Keys.LControlKey || Key == Keys.LWin) ||
 			     (Key == Keys.RShiftKey || Key == Keys.RMenu || Key == Keys.RControlKey || Key == Keys.RWin))) {
 				hotkeywithmodsfired = false;
@@ -281,7 +264,7 @@ namespace Mahou
 			}
 			#endregion
 			#region One key layout switch
-			if (MSG == WinAPI.WM_KEYUP)
+			if (!down)
 				if (Key == Keys.LControlKey || Key == Keys.RControlKey)
 					clickAfterCTRL = false;
 				if (Key != Keys.LMenu && Key != Keys.RMenu)
@@ -418,8 +401,7 @@ namespace Mahou
 			#endregion
 			#region Alt+Numpad (fully workable)
 			if (incapt &&
-			   (Key == Keys.RMenu || Key == Keys.LMenu || Key == Keys.Menu) &&
-			   MSG == WinAPI.WM_KEYUP) {
+			   (Key == Keys.RMenu || Key == Keys.LMenu || Key == Keys.Menu) && !down) {
 				Logging.Log("Capture of numpads ended, captured [" + tempNumpads.Count + "] numpads.");
 				if (tempNumpads.Count > 0) { // Prevents zero numpads(alt only) keys
 					MMain.c_word.Add(new YuKey() {
@@ -434,12 +416,12 @@ namespace Mahou
 				tempNumpads.Clear();
 				incapt = false;
 			}
-			if (!incapt && (alt || alt_r) && MSG == WinAPI.WM_SYSKEYDOWN) {
+			if (!incapt && (alt || alt_r) && down) {
 				Logging.Log("Alt is down, starting capture of Numpads...");
 				incapt = true;
 			}
 			if ((alt || alt_r) && incapt) {
-				if (Key >= Keys.NumPad0 && Key <= Keys.NumPad9 && MSG == WinAPI.WM_SYSKEYUP) {
+				if (Key >= Keys.NumPad0 && Key <= Keys.NumPad9 && !down) {
 					tempNumpads.Add(Key);
 				}
 			}
