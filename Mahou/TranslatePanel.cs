@@ -24,6 +24,7 @@ namespace Mahou {
 		public static readonly string GTLink = "https://translate.googleapis.com/translate_a/single?client=gtx&dt=t"; // q, sl, & tl
 		public static object _LOCK = new object();
 		public TranslatePanel() {
+			// corrects GTLink responce encoding.
 			InitializeComponent();
 			X.Width = 23;
 			X.Text = "X";
@@ -58,8 +59,12 @@ namespace Mahou {
 			var gtrlist = new List<GTResp>();
 			try {
 				for (int i=0; i!= tls.Length; i++) {
-					var raw_array = Encoding.UTF8.GetString(Encoding.Default.GetBytes(client.DownloadString(TranslatePanel.GTLink+"&q="+qs[i]+"&sl="+sls[i]+"&tl="+tls[i])));
-//					Debug.WriteLine("RAW:" +raw_array);
+					client.Headers["User-Agent"] = "User-Agent: Mozilla/5.0 (Windows NT x.y; Win64; x64; rv:10.0) Gecko/20180501 Firefox/60.0";
+					var url = TranslatePanel.GTLink+"&q="+HttpUtility.UrlPathEncode(qs[i].Replace(" ", "%20"))+
+						"&sl="+sls[i]+"&tl="+tls[i];
+					Debug.WriteLine("url: " + url);
+					var raw_array = Encoding.UTF8.GetString(client.DownloadData(url));
+					Debug.WriteLine("RAW:" +raw_array);
 					var aur = new Auray(raw_array);
 					var gtresp = new GTResp();
 					string src = "", tr = "";
@@ -101,6 +106,7 @@ namespace Mahou {
 				txt_Source.Text = str;
 			Debug.WriteLine("UPDATING TRANSLATION::");
 			var gtrs = GetGTResponceAll(tls, qs, sls);
+			TITLE.Text = MMain.Lang[Languages.Element.Translation] + " <"+gtrs[0].src_lang+">";
 			foreach (var gtr in gtrs) {
 //				var gtr = TranslatePanel.ParseGTResp(raw_gtr);
 				if (string.IsNullOrEmpty(gtr.translation)) continue;
