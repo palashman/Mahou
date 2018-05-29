@@ -37,7 +37,7 @@ public class Auray {
 	void __SET(int[] index_path, string VALUE) {
 		var l = index_path.Length;
 		var indpath = __STR_INDEX_PATH(index_path);
-		Console.WriteLine(">Index Path => " + indpath);
+		Debug.WriteLine(">Index Path => " + indpath);
 		var pre = "";
 		var val = raw;
 		var post = "";
@@ -78,7 +78,7 @@ public class Auray {
 					nw += "["; c++;
 				}
 				var ll = index_path[i]-minus;
-				Console.WriteLine("ADDING "+ll+" emptys.");
+				Debug.WriteLine("ADDING "+ll+" emptys.");
 				for (int k = 0; ; k++) {
 					if (k >= ll) break;
 					nw += ",";
@@ -90,21 +90,21 @@ public class Auray {
 		nw += VALUE;
 		for (int i = 0; i != c; i++)
 			nw += "]";
-		Console.WriteLine(pre + "/" + val + "/" + post);
-		Console.WriteLine(nw);
+		Debug.WriteLine(pre + "/" + val + "/" + post);
+		Debug.WriteLine(nw);
 		raw = "["+pre+nw+post+"]";
 		var dl = __SIZE(raw);
 		len = dl.len;
 		deep = dl.deep;
-		Console.WriteLine(raw);
-		Console.WriteLine("len: " +dl.len + ", deep: " +dl.deep);
+		Debug.WriteLine(raw);
+		Debug.WriteLine("len: " +dl.len + ", deep: " +dl.deep);
 	}
 	string __GET(int[] index_path) {
 		var val = raw;
 		var indpath = __STR_INDEX_PATH(index_path);
-		Console.WriteLine("<Index Path => " + indpath);
+		Debug.WriteLine("<Index Path => " + indpath);
 		for(int i = 0; i!= index_path.Length; i++) {
-			Console.WriteLine("Move #"+i+" => [" + index_path[i]+"]");
+			Debug.WriteLine("Move #"+i+" => [" + index_path[i]+"]");
 			var nuv = false;
 			if (val != null) {
 				var siz = __SIZE(val);
