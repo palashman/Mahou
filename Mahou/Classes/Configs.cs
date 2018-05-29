@@ -118,7 +118,7 @@ namespace Mahou {
 			var sect = HasSection(Section);
 			var val_line = HasValue(sect, ValueName);
 			if (val_line < 0) return "";
-			return lines[val_line].Split('=')[1];
+			return lines[val_line].Split(new []{'='}, 2)[1];
 		}
 		#endregion
 	}
