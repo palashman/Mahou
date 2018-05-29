@@ -20,7 +20,7 @@ namespace Mahou
 			IsHotkey, ff_chr_wheeled, preSnip, LMB_down, RMB_down, MMB_down,
 			dbl_click, click;
 		public static System.Windows.Forms.Timer click_reset = new System.Windows.Forms.Timer();
-		public static int skip_mouse_events, skip_spec_keys;
+		public static int skip_mouse_events, skip_spec_keys, cursormove = -1;
 		static string lastClipText = "";
 		static List<Keys> tempNumpads = new List<Keys>();
 		public static List<char> c_snip = new List<char>();
@@ -680,7 +680,7 @@ namespace Mahou
 						args_get = true;
 //						Debug.WriteLine("end of args of: " + fun + " -> " +i);
 					} else {
-						Debug.WriteLine("Expression \"(\" missing, but \")\" were there, in ["+ex+"], at position: "+expr_start+" in ["+expand+"]");
+						Logging.Log("Expression \"(\" missing, but \")\" were there, in ["+ex+"], at position: "+expr_start+" in ["+expand+"]");
 						KInputs.MakeInput(KInputs.AddString(ex+err));
 						is_expr = false;
 						args_get = false;
@@ -755,6 +755,14 @@ namespace Mahou
 					args = ex = raw = "";
 				}
 			}
+			if (cursormove != -1) {
+	        	for (int i=0; i != cursormove; i++) {
+	        		KInputs.MakeInput(new []{ KInputs.AddKey(Keys.Left, true), 
+	        		                  	KInputs.AddKey(Keys.Left, false)
+	        		                  });
+	        	}
+			}
+			cursormove = -1;
 				
 		}
 		static void ExecExpression(string expr, string args, int curlefts = -1) {
@@ -788,13 +796,7 @@ namespace Mahou
 					break;
 				case "__cursorhere":
 					Debug.WriteLine("Curlefts: " +curlefts);
-					DoLater(() => {
-					        	for (int i=0; i != curlefts; i++) {
-					        		KInputs.MakeInput(new []{ KInputs.AddKey(Keys.Left, true), 
-					        		                  	KInputs.AddKey(Keys.Left, false)
-					        		                  });
-					        	}
-					        }, curlefts * 5);
+					cursormove = curlefts;
 					break;
 			}
 		}

@@ -1232,7 +1232,7 @@ namespace Mahou {
 			if (raw_sets.Contains("set_0") || raw_sets.Contains("set0")) return new List<string[]>();
 			var sets = raw_sets.Split('|');
 			var last_set = sets[sets.Length-1];
-			Debug.WriteLine(last_set);
+//			Debug.WriteLine(last_set);
 			var set_count = Int32.Parse(last_set.Split('/')[0].Replace("set_",""));
 			var SETS = new List<string[]>();
 			foreach (var _set in sets) {
