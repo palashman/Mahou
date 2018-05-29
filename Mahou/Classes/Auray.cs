@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 /// <summary> Multidimensional various types array.</summary>
 public class Auray {
 	public string raw;
