@@ -46,7 +46,7 @@ namespace Mahou {
 			public string speech_url;
 			public string targ_lang;
 		}
-		void GTRespError(string msg) {
+		public void GTRespError(string msg) {
 		  	txt_Source.Text = MMain.Lang[Languages.Element.Error]+ " " + msg;
 		  	pan_Translations.Width = 0;
 		  	pan_Translations.Height = 0;
@@ -72,11 +72,15 @@ namespace Mahou {
 					}
 					gtresp.source = src;
 					gtresp.translation = tr;
-					gtresp.src_lang = aur[2];
+					var det_l = aur[2];
+					det_l = det_l.Substring(1, det_l.Length-2);
+					gtresp.speech_url = GTSpeechLink+"&q="+HttpUtility.UrlEncode(tr)+"&sl="+det_l+"&tl="+tls[i];
+					Debug.WriteLine(gtresp.speech_url);
+					gtresp.src_lang = det_l;
 					gtresp.targ_lang = tls[i];
 					gtrlist.Add(gtresp);
 				}
-			} catch(Exception e) { GTRespError(e.Message); }
+			} catch(Exception e) { MMain.mahou._TranslatePanel.GTRespError(e.Message); }
 			return gtrlist;
 		}
 		public void ShowTranslation(string str, Point pos) {
