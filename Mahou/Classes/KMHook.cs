@@ -216,6 +216,10 @@ namespace Mahou
 									if (snip[g] != pins[t]) yay = false;
 								}
 								if (yay) {
+	            					if (MahouUI.SoundOnSnippets)
+	            						MahouUI.SoundPlay();
+	            					if (MahouUI.SoundOnSnippets2)
+	            						MahouUI.Sound2Play();
 									any = snip.Substring(at, (snip.Length-laf-at));
 //									Debug.WriteLine("Yay!" + any);
 									Logging.Log("Current snippet [" + snip + "] matched with "+__ANY__+" existing snippet [" + exps[i] + "].");
