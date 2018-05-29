@@ -502,13 +502,21 @@ namespace Mahou {
 				} catch { WrongColorLog(MMain.MyConfs.Read("Appearence", "Layout1BackColor")); }
 			try { Layout2Back_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "Layout2BackColor")); 
 				} catch { WrongColorLog(MMain.MyConfs.Read("Appearence", "Layout2BackColor")); }
-			try { LDMouseFont_temp = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("Appearence", "MouseLTFont")); 
-				} catch { WrongFontLog(MMain.MyConfs.Read("Appearence", "MouseLTFont")); }
-			try { LDCaretFont_temp = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("Appearence", "CaretLTFont")); 
+			try { var f = MMain.MyConfs.Read("Appearence", "MouseLTFont");
+				if (!f.Contains("style=")) f = f.Replace("; style", "");
+				LDMouseFont_temp = (Font)fcv.ConvertFromString(f);
+			} catch { WrongFontLog(MMain.MyConfs.Read("Appearence", "MouseLTFont")); }
+			try { var f = MMain.MyConfs.Read("Appearence", "CaretLTFont");
+				if (!f.Contains("style=")) f = f.Replace("; style", "");
+				LDCaretFont_temp = (Font)fcv.ConvertFromString(f);
 				} catch { WrongFontLog(MMain.MyConfs.Read("Appearence", "CaretLTFont")); }
-			try { Layout1Font_temp = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("Appearence", "Layout1Font")); 
+			try { var f = MMain.MyConfs.Read("Appearence", "Layout1Font");
+				if (!f.Contains("style=")) f = f.Replace("; style", "");
+				Layout1Font_temp = (Font)fcv.ConvertFromString(f); 
 				} catch { WrongFontLog(MMain.MyConfs.Read("Appearence", "Layout1Font")); }
-			try { Layout2Font_temp = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("Appearence", "Layout2Font")); 
+			try { var f = MMain.MyConfs.Read("Appearence", "Layout2Font");
+				if (!f.Contains("style=")) f = f.Replace("; style", "");
+				Layout2Font_temp = (Font)fcv.ConvertFromString(f);
 				} catch { WrongFontLog(MMain.MyConfs.Read("Appearence", "Layout2Font")); }
 			// Transparent background colors
 			LDMouseTransparentBack_temp = MMain.MyConfs.ReadBool("Appearence", "MouseLTTransparentBackColor");
