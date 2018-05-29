@@ -125,6 +125,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\Auray.cs" />
     <Compile Include="Classes\CaretPos.cs" />
     <Compile Include="Classes\Hotkey.cs" />
     <Compile Include="Classes\ICheckings.cs" />

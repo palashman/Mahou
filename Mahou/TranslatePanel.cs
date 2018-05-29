@@ -20,7 +20,8 @@ namespace Mahou {
 //		public static List<string> SPUs = new List<string>();
 		public static bool running, multiline;
 		public static readonly WebClient client = new WebClient();
-		public static readonly string GTLink = "https://script.google.com/macros/s/AKfycbz0CSalG4GlyRKRIfLFoC2N4GMAet2PNVaxQBEnRX_EUx2nlvsu/exec"; // q, sl, tl
+		public static readonly string GTSpeechLink = "https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob"; // tl & q
+		public static readonly string GTLink = "https://translate.googleapis.com/translate_a/single?client=gtx&dt=t"; // q, sl, & tl
 		public static object _LOCK = new object();
 		public TranslatePanel() {
 			InitializeComponent();
@@ -45,24 +46,6 @@ namespace Mahou {
 			public string speech_url;
 			public string targ_lang;
 		}
-//		public string getRespContent(string url) {
-//		  var rawq = (HttpWebRequest)WebRequest.Create(url);
-//		  rawq.Proxy = null;
-//		  rawq.AllowAutoRedirect = true;
-//		  WebResponse raw;
-//		  try {
-//		  	raw = rawq.GetResponse();
-//		  } catch (Exception e) {
-//		  	GTRespError(e.Message);
-//		  	return e.Message;
-//		  }
-//		  var t = "";
-//		  using (var r = new StreamReader(raw.GetResponseStream())) {
-//		  	t = r.ReadToEnd();
-//		  }
-//		  raw.Close();
-//		  return t;
-//		}
 		void GTRespError(string msg) {
 		  	txt_Source.Text = MMain.Lang[Languages.Element.Error]+ " " + msg;
 		  	pan_Translations.Width = 0;
@@ -71,43 +54,30 @@ namespace Mahou {
 		  	SetOptimalWidth();
 		  	Prepare();
 		}
-		public static GTResp ParseGTResp(string raw_GTresp) {
-			var lines = raw_GTresp.Split('\n');
-			var gtresp = new GTResp();
-			foreach (var l in lines) {
-				if (l.Contains("_!_TR_TXT:"))
-					gtresp.translation = l.Replace("_!_TR_TXT:", "");
-				if (l.Contains("_!_TL_TXT:"))
-					gtresp.targ_lang = l.Replace("_!_TL_TXT:", "");
-				if (l.Contains("_!_SQ_TXT:"))
-					gtresp.source = l.Replace("_!_SQ_TXT:", "");
-				if (l.Contains("_!_SL_DET:"))
-					gtresp.src_lang = l.Replace("_!_SL_DET:", "");
-				if (l.Contains("_!_SP_URL:"))
-					gtresp.speech_url = l.Replace("_!_SP_URL:", "");
-			}
-			return gtresp;
-		}
-		public static string getMultiParams(string[] tls, string[] qs, string[] sls = null) {
-			var multi = "[";
-			for (int i = 0; i != qs.Length; i++) {
-				multi += "{\"q\":\""+HttpUtility.UrlEncode(HttpUtility.UrlPathEncode(
-					qs[i].Replace(" ", "%20")
-				))+"\"";
-				multi += ", \"sl\":\"";
-				try {
-					multi += sls[i];
-				} catch {
-					multi += "auto";
+		public static List<GTResp> GetGTResponceAll(string[] tls, string[] qs, string[] sls) {
+			var gtrlist = new List<GTResp>();
+			try {
+				for (int i=0; i!= tls.Length; i++) {
+					var raw_array = Encoding.UTF8.GetString(Encoding.Default.GetBytes(client.DownloadString(TranslatePanel.GTLink+"&q="+qs[i]+"&sl="+sls[i]+"&tl="+tls[i])));
+//					Debug.WriteLine("RAW:" +raw_array);
+					var aur = new Auray(raw_array);
+					var gtresp = new GTResp();
+					string src = "", tr = "";
+					var aur_dim_2 = new Auray(aur[0]);
+					for (int m=0; m != aur_dim_2.len+1; m++) { // combine all responce from all dimensions
+						var s = aur_dim_2[m,1];
+						src += s.Substring(1, s.Length-2);
+						s = aur_dim_2[m,0];
+						tr += s.Substring(1, s.Length-2);
+					}
+					gtresp.source = src;
+					gtresp.translation = tr;
+					gtresp.src_lang = aur[2];
+					gtresp.targ_lang = tls[i];
+					gtrlist.Add(gtresp);
 				}
-				multi += "\"";
-				multi += ", \"tl\":\"" + tls[i] + "\"";
-				multi += "}";
-				if (i != qs.Length-1)
-					multi += ",";
-			}
-			multi += "]";
-			return multi;
+			} catch(Exception e) { GTRespError(e.Message); }
+			return gtrlist;
 		}
 		public void ShowTranslation(string str, Point pos) {
 			GTRs.Clear();
@@ -126,17 +96,9 @@ namespace Mahou {
 			if (tls.Length == 0)
 				txt_Source.Text = str;
 			Debug.WriteLine("UPDATING TRANSLATION::");
-			var multi = HttpUtility.UrlEncode(TranslatePanel.getMultiParams(tls, qs, sls));
-//			var multi_resp = getRespContent(TranslatePanel.GTLink+"?multi="+multi);
-			var multi_resp = "";
-			if (multi != "%5b%5d")
-				try { multi_resp = Encoding.UTF8.GetString(Encoding.Default.GetBytes(client.DownloadString(TranslatePanel.GTLink+"?multi="+multi)));
-					} catch(Exception e) { GTRespError(e.Message); }
-			Debug.WriteLine(multi);
-			Debug.WriteLine(multi_resp);
-			var gtrs = multi_resp.Split(new [] {"_!_!_!_SEPARATOR_!_!_!_"}, StringSplitOptions.None);
-			foreach (var raw_gtr in gtrs) {
-				var gtr = TranslatePanel.ParseGTResp(raw_gtr);
+			var gtrs = GetGTResponceAll(tls, qs, sls);
+			foreach (var gtr in gtrs) {
+//				var gtr = TranslatePanel.ParseGTResp(raw_gtr);
 				if (string.IsNullOrEmpty(gtr.translation)) continue;
 //				Debug.WriteLine("Added " + gtr.targ_lang + ", " +gtr.source);
 				AddTranslation(gtr);
@@ -145,28 +107,6 @@ namespace Mahou {
 			running = false;
 			SpecialShow();
 		}
-//		public static GTResp TranslateText(string text, string tl, string sl = "auto") {
-//			var gtr = new GTResp();
-//			var slik = GTLink+"?q="+WebUtility.HtmlEncode(text)+"&tl="+tl+"&sl="+sl;
-//		    var response = getRespContent(slik);
-//		    gtr = ParseGTResp(response);
-//		    var bytestr = BitConverter.ToString(Encoding.UTF8.GetBytes(gtr.source + gtr.translation)).Replace("-", "");
-//		    var len = bytestr.Length-1 <= 240 ? bytestr.Length-1 : 240;
-//		    len = len < 0 ? 0 : len;
-//		    bytestr = bytestr.Substring(0, len);
-//		    var sp_f = Path.Combine(Path.GetTempPath(), bytestr + ".mp3");
-//		    var ind = SLs.IndexOf(gtr.targ_lang);
-//		    if (ind != -1) {
-//		    	SPFs.RemoveAt(ind);
-//		    	SPUs.RemoveAt(ind);
-//			    SPFs.Add(sp_f);
-//			    SPUs.Add(gtr.speech_url);
-//		    } else {
-//			    SPFs.Add(sp_f);
-//			    SPUs.Add(gtr.speech_url);
-//		    }
-//			return gtr;
-//		}
 		public void AddTranslation(GTResp gtr) {
 			txt_Source.Text = gtr.source;
 			pan_Translations.Width = Width-2;
