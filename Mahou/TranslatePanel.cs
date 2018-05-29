@@ -24,7 +24,6 @@ namespace Mahou {
 		public static readonly string GTLink = "https://translate.googleapis.com/translate_a/single?client=gtx&dt=t"; // q, sl, & tl
 		public static object _LOCK = new object();
 		public TranslatePanel() {
-			// corrects GTLink responce encoding.
 			InitializeComponent();
 			X.Width = 23;
 			X.Text = "X";
@@ -59,6 +58,7 @@ namespace Mahou {
 			var gtrlist = new List<GTResp>();
 			try {
 				for (int i=0; i!= tls.Length; i++) {
+					// corrects GTLink responce encoding.
 					client.Headers["User-Agent"] = "User-Agent: Mozilla/5.0 (Windows NT x.y; Win64; x64; rv:10.0) Gecko/20180501 Firefox/60.0";
 					var url = TranslatePanel.GTLink+"&q="+HttpUtility.UrlPathEncode(qs[i].Replace(" ", "%20"))+
 						"&sl="+sls[i]+"&tl="+tls[i];
