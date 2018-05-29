@@ -47,12 +47,17 @@ namespace JustUI
 		     byte b = (byte)(color >> 0 & 0xFF);
 		     return Color.FromArgb(a, r, g, b);
 		}
-		protected override void OnMouseHover(EventArgs e) {
-			ForeColor = Color.White;
-			base.OnMouseHover(e);
+		bool once=false;
+		protected override void OnMouseMove(MouseEventArgs e) {
+			if (!once) {
+				ForeColor = Color.White;
+				once = true;
+			}
+			base.OnMouseMove(e);
 		}
 		protected override void OnMouseLeave(EventArgs e) {
 			ForeColor = _original_color;
+			once = false;
 			base.OnMouseLeave(e);
 		}
 	}
