@@ -222,6 +222,7 @@ namespace Mahou
 									var exp = exps[i].Replace(__ANY__, any);
 //									Debug.WriteLine("exp: " + exp);
 									ExpandSnippet(snip, exp, MMain.mahou.SnippetSpaceAfter, MMain.mahou.SnippetsSwitchToGuessLayout);
+									break;
 								}
 //						    	Debug.WriteLine("ANY " + yay);
 						    }
