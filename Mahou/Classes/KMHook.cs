@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Diagnostics;
 using System.Threading;
@@ -10,6 +11,7 @@ using System.Windows.Forms;
 namespace Mahou
 {
 	class KMHook  { // Keyboard & Mouse Listeners & Event hook		#region Variables
+		public static string __ANY__ = "***ANY***";
 		public static bool win, alt, ctrl, shift,
 			win_r, alt_r, ctrl_r, shift_r,
 			shiftRP, ctrlRP, altRP, winRP, //RP = Re-Press
@@ -186,6 +188,39 @@ namespace Mahou
 					if (Key == seKey) {
 						Logging.Log("Current snippet is [" + snip + "].");
 						for (int i = 0; i < snipps.Length; i++) {
+							if (snipps[i] == null) break;
+							if (snipps[i].Contains(__ANY__)) {
+								var any = "";
+								var pins = snipps[i];
+								var len = pins.Length;
+								var at = pins.IndexOf(__ANY__, StringComparison.InvariantCulture);
+								var aft = at+__ANY__.Length;
+//								Debug.WriteLine("aftst:"+pins[aft]);
+								var laf = len-aft;
+//								Debug.WriteLine("at:"+at+",aft:"+aft+",laf:"+laf);
+								bool yay = true;
+								if (at <= snip.Length)
+									for (int f = 0; f != at; f++) {
+										if (snip[f] != pins[f]) yay = false;
+									}
+								for (int f = 0; f != laf; f++) {
+									var t = f + (pins.Length-laf);
+									var g = f + (snip.Length-laf);
+//									Debug.WriteLine("Calc: " + g + ", " + t +  ", " + at + ", " + laf);
+									if (g > snip.Length || g < 0) continue;
+//									Debug.WriteLine("Cht: " + snip[g] + ", " + pins[t]);
+									if (snip[g] != pins[t]) yay = false;
+								}
+								if (yay) {
+									any = snip.Substring(at, (snip.Length-laf-at));
+//									Debug.WriteLine("Yay!" + any);
+									Logging.Log("Current snippet [" + snip + "] matched with "+__ANY__+" existing snippet [" + exps[i] + "].");
+									var exp = exps[i].Replace(__ANY__, any);
+//									Debug.WriteLine("exp: " + exp);
+									ExpandSnippet(snip, exp, MMain.mahou.SnippetSpaceAfter, MMain.mahou.SnippetsSwitchToGuessLayout);
+								}
+//						    	Debug.WriteLine("ANY " + yay);
+						    }
 							if (snip == snipps[i]) {
 								if (exps.Length > i) {
 	            					if (MahouUI.SoundOnSnippets)
