@@ -2245,20 +2245,20 @@ DEL "+restartMahouPath;
 			MMain.rif.RegisterRawInputDevices(IntPtr.Zero, WinAPI.RawInputDeviceFlags.Remove);
 			if (uche != null)
 				uche.Abort();
-			if (tmr != null) tmr.Stop(); tmr.Dispose();
-			if (old != null) old.Stop(); old.Dispose();
-			if (res != null) res.Stop(); res.Dispose();
-			if (stimer != null) stimer.Stop(); stimer.Dispose();
-			if (ICheck != null) ICheck.Stop(); ICheck.Dispose();
-			if (animate != null) animate.Stop(); animate.Dispose();
-			if (crtCheck != null) crtCheck.Stop(); crtCheck.Dispose();
-			if (ScrlCheck != null) ScrlCheck.Stop(); ScrlCheck.Dispose();
-			if (capsCheck != null) capsCheck.Stop(); capsCheck.Dispose();
-			if (showUpdWnd != null) showUpdWnd.Stop(); showUpdWnd.Dispose();
-			if (flagsCheck != null) flagsCheck.Stop(); flagsCheck.Dispose();
-			if (langPanelRefresh != null) langPanelRefresh.Stop(); langPanelRefresh.Dispose();
-			if (persistentLayout1Check != null) persistentLayout1Check.Stop(); persistentLayout1Check.Dispose();
-			if (persistentLayout2Check != null) persistentLayout2Check.Stop(); persistentLayout2Check.Dispose();
+			if (tmr != null) { tmr.Stop(); tmr.Dispose(); }
+			if (old != null) { old.Stop(); old.Dispose(); }
+			if (res != null) { res.Stop(); res.Dispose(); }
+			if (stimer != null) { stimer.Stop(); stimer.Dispose(); }
+			if (ICheck != null) { ICheck.Stop(); ICheck.Dispose(); }
+			if (animate != null) { animate.Stop(); animate.Dispose(); }
+			if (crtCheck != null) { crtCheck.Stop(); crtCheck.Dispose(); }
+			if (ScrlCheck != null) { ScrlCheck.Stop(); ScrlCheck.Dispose(); }
+			if (capsCheck != null) { capsCheck.Stop(); capsCheck.Dispose(); }
+			if (showUpdWnd != null) { showUpdWnd.Stop(); showUpdWnd.Dispose(); }
+			if (flagsCheck != null) { flagsCheck.Stop(); flagsCheck.Dispose(); }
+			if (langPanelRefresh != null) { langPanelRefresh.Stop(); langPanelRefresh.Dispose(); }
+			if (persistentLayout1Check != null) { persistentLayout1Check.Stop(); persistentLayout1Check.Dispose(); }
+			if (persistentLayout2Check != null) { persistentLayout2Check.Stop(); persistentLayout2Check.Dispose(); }
 		}
 		/// <summary>Exits Mahou.</summary>
 		public void ExitProgram() {
