@@ -615,7 +615,7 @@ public class Languages
 		{ Element.MCDSBottomIndent, "Снизу" }, 
 		{ Element.UseFlags, "Использовать флаги." }, 
 		{ Element.Always, "Всегда." },
-		{ Element.LDUpperArrow, "Стелка при верхнем регистре." },
+		{ Element.LDUpperArrow, "Стрелка при верхнем регистре." },
 		{ Element.LDUseWinMessages, "Использовать Сообщения Windows вместо таймеров." },
 		#endregion
 		#region Timings
