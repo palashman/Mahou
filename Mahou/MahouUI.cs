@@ -537,7 +537,7 @@ namespace Mahou {
 			LDMouseHeight_temp = MMain.MyConfs.ReadInt("Appearence", "MouseLTHeight");		
 			LDCaretHeight_temp = MMain.MyConfs.ReadInt("Appearence", "CaretLTHeight");
 			LDMouseWidth_temp = MMain.MyConfs.ReadInt("Appearence", "MouseLTWidth");
-			LDCaretWidth_temp = MMain.MyConfs.ReadInt("Appearence", "MouseLTWidth");
+			LDCaretWidth_temp = MMain.MyConfs.ReadInt("Appearence", "CaretLTWidth");
 		    Layout1Height_temp = MMain.MyConfs.ReadInt("Appearence", "Layout1Height");
 			Layout2Height_temp = MMain.MyConfs.ReadInt("Appearence", "Layout2Height");
 			Layout1Width_temp = MMain.MyConfs.ReadInt("Appearence", "Layout1Width");
