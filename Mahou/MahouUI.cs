@@ -269,6 +269,14 @@ namespace Mahou {
 //			Logging.Log("MSG: "+m.Msg+", LP: "+m.LParam+", WP: "+m.WParam+", KMS: "+KMHook.self+" 0x312");
 			if (m.Msg == WinAPI.WM_HOTKEY) {
 				var id = (Hotkey.HKID)m.WParam.ToInt32();
+				var mods = (int)m.LParam & 0xFFFF;
+				if (mods == WinAPI.MOD_ALT) { // Experimental fix for [only Alt] + something.
+					KInputs.MakeInput(new [] {
+					                  	KInputs.AddKey(Keys.LMenu, false),
+					                  	KInputs.AddKey(Keys.RMenu, false),
+				                  		KInputs.AddKey(Keys.LMenu, true)
+					                  });
+				}
 				#region Convert multiple words 
 				if (m.WParam.ToInt32() >= 100 && m.WParam.ToInt32() <= 109 && KMHook.waitfornum) {
 					int wordnum = m.WParam.ToInt32() - 100;
