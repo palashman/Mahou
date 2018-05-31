@@ -182,6 +182,7 @@ namespace Mahou {
 			// Switch to more secure connection.
 			ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
 			LoadConfigs();
+			chk_CSLayoutSwitching.ForeColor = chk_CSLayoutSwitchingPlus.ForeColor = Color.Red;
 			InitializeListBoxes();
 			// Set minnimum values because they're ALWAYS restores to 0 after Form Editor is used.
 		    nud_CapsLockRefreshRate.Minimum = nud_DoubleHK2ndPressWaitTime.Minimum =

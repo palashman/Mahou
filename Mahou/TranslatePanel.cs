@@ -106,12 +106,14 @@ namespace Mahou {
 				txt_Source.Text = str;
 			Debug.WriteLine("UPDATING TRANSLATION::");
 			var gtrs = GetGTResponceAll(tls, qs, sls);
-			TITLE.Text = MMain.Lang[Languages.Element.Translation] + " <"+gtrs[0].src_lang+">";
-			foreach (var gtr in gtrs) {
-//				var gtr = TranslatePanel.ParseGTResp(raw_gtr);
-				if (string.IsNullOrEmpty(gtr.translation)) continue;
-//				Debug.WriteLine("Added " + gtr.targ_lang + ", " +gtr.source);
-				AddTranslation(gtr);
+			if (gtrs.Count > 0) {
+				TITLE.Text = MMain.Lang[Languages.Element.Translation] + " <"+gtrs[0].src_lang+">";
+				foreach (var gtr in gtrs) {
+	//				var gtr = TranslatePanel.ParseGTResp(raw_gtr);
+					if (string.IsNullOrEmpty(gtr.translation)) continue;
+	//				Debug.WriteLine("Added " + gtr.targ_lang + ", " +gtr.source);
+					AddTranslation(gtr);
+				}
 			}
 			Location = pos;
 			running = false;

@@ -475,7 +475,7 @@ public class Languages
 		{ Element.TT_SwitchBetween, "While this option is disabled, [Convert word], [Convert line] and [Convert selection with \"Convert selection layout switching\" enabled]\n" + 
 		                                  "will just cycle between all locales instead of switching between the selected ones in settings."+
 		                                  "If there is a program in which [Convert word], [Convert line] or [Convert selection with \"CS-Switch\" enabled] don't work,try with this option enabled.\nThere is also possible now to enable this function with Emulate layout switching, that will fix problems with apps like MSOffice2016.\nThis function is not working in console apps without getconkbl.dll." },
-		{ Element.TT_ConvertSelectionSwitch, "If enabled, Convert selection will use layout switching.\nAll symbols will be written as the must(if layout before switching was the one where they are written it).\nThere also a plus version of that function." }, 
+		{ Element.TT_ConvertSelectionSwitch, "Can cause bugs!!\r\nIf enabled, Convert selection will use layout switching.\nAll symbols will be written as the must(if layout before switching was the one where they are written it).\nThere also a plus version of that function." }, 
 		{ Element.TT_BlockCtrl, "Blocks hotkeys that use Control,\nwhen \"Switch layout by key\" is set to Left/Right Control." }, 
 		{ Element.TT_CapsDis, "If enabled, timer which disables CapsLock(led) will work." }, 
 		{ Element.TT_EmulateLS, "If enabled, layout switching will emulate press of keys selected on right.\nNow it is possible to enable this functin with [Switch between layouts] function." }, 
@@ -486,7 +486,7 @@ public class Languages
 		{ Element.TT_ReSelect, "If enabled, any \"Convert selected\" will select text again after conversion." }, 
 		{ Element.TT_ScrollTip, "Highlight Scroll Lock when active language 1, selected in Layouts tab.\nUnnesesary to keep enabled \"Switch between layouts\" function enabled for this function to work, just select layout #1 below it and then disable it if you need to." }, 
 		{ Element.TT_LDOnlyOnChange, "Display language tooltip only on layout change.\nDisplay time - 2x[Refresh rate for mouse + for caret]." }, 
-		{ Element.TT_ConvertSelectionSwitchPlus, "Combines some abilities of Convert selection with enabled \"Convert selection layout switching\" and when it's disabled." +
+		{ Element.TT_ConvertSelectionSwitchPlus, "Can cause bugs!!\r\nCombines some abilities of Convert selection with enabled \"Convert selection layout switching\" and when it's disabled." +
 										"\nIt can:"+
 										"\n1.Convert text from different layouts to different layouts at once."+
 										"\n2.Ignore symbols feature work in it."+
@@ -749,7 +749,7 @@ public class Languages
 		{ Element.TT_SwitchBetween, "Пока включена, [Конверт слова] and [Конверт линии] and [Конверт выделения с \"Смена раскладки в конверт выделенния\" включённой]\n" +
 		                                  "будет переключать раскладку циклично, вместо переключения между выбранными в настройках." +
 		                                  "Если есть программа в которой [Конверт слова] или [Конверт линии] или [Конверт выделения с \"Смена раскладки в конверт выделенния\" включённой] не работают,то попробуйте включить эту функцию.\nТакже теперь можно включать эту функцию *вместе* с эмуляцией переключения раскладку,\nэто исправляет проблемы в программах типа MSOffice2016, функция не работает в консольных приложениях без getconbl.dll." }, 
-		{ Element.TT_ConvertSelectionSwitch, "Если включена, Конверт выделения Будет использовать переключение раскладки.\nВсе символы будут напечатаны правильно(если перед переключением стояла раскладка в которой они были написаны).\nТакже есть улучшение функции, \"плюс\"." }, 
+		{ Element.TT_ConvertSelectionSwitch, "Может вызвать проблемы!!\r\nЕсли включена, Конверт выделения Будет использовать переключение раскладки.\nВсе символы будут напечатаны правильно(если перед переключением стояла раскладка в которой они были написаны).\nТакже есть улучшение функции, \"плюс\"." }, 
 		{ Element.TT_BlockCtrl, "Блокирует горячие клавиши содержащие Control,\nможет быть полезно если \"Переключать язык клавишей\" установлен на Left/Right Control." }, 
 		{ Element.TT_CapsDis, "Если включено, то будет работать таймер который будет выключать CapsLock(лампочку)." }, 
 		{ Element.TT_EmulateLS, "Если включено, переключение раскладку будет эмулировать нажатие клавиш выбранный правее для переключения раскладки.\nЭту функцию теперь можно включать вместе с функцией [Переключать между раскладками]." }, 
@@ -760,7 +760,7 @@ public class Languages
 		{ Element.TT_ReSelect, "Если включено, любые \"Конверт выделения\" будут выделять текcт заново." }, 
 		{ Element.TT_ScrollTip, "Подсвечивать лампочку Scroll Lock когда активна раскладка 1, выбранная во вкладке Раскладки.\nНе обязательно оставлять включенным функцию \"Переключать между раскладками\", нужно просто выбрать раскладку #1 ниже неё." }, 
 		{ Element.TT_LDOnlyOnChange, "Отображать подсказку языка только при смене раскладки.\nВремя оторбражения - 2x[Скорость обновления возле каретки + возле мыши]." }, 
-		{ Element.TT_ConvertSelectionSwitchPlus, "Совмещает способности Конверт выделения с включенным \"Смена раскладки в Конверт выделения\" и когда она выключена." +
+		{ Element.TT_ConvertSelectionSwitchPlus, "Может вызвать проблемы!!\r\nСовмещает способности Конверт выделения с включенным \"Смена раскладки в Конверт выделения\" и когда она выключена." +
 										"\nВозможности:"+
 										"\n1.Конвертировать текст с разных языков на разные языки за 1 конвертацию."+
 										"\n2.Игнорирование символов работает здесь."+

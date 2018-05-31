@@ -1247,7 +1247,7 @@ namespace Mahou
 										nowLocale = MahouUI.currentLayout;
 								}
 							} else {
-								Thread.Sleep(10); nowLocale = Locales.GetCurrentLocale() & 0xffff;
+								Thread.Sleep(10); nowLocale = GetNextLayout().uId & 0xffff;
 							}
 							var index = 0;
 							foreach (char c in ClipStr) {
@@ -1320,15 +1320,20 @@ namespace Mahou
 								index++;
 							}
 						} else {
-							var l1 = MahouUI.MAIN_LAYOUT1;
-							var l2 = MahouUI.MAIN_LAYOUT2;
+							var l1 = Locales.GetCurrentLocale();
+							if (MahouUI.UseJKL)
+								l1 = MahouUI.currentLayout;
+							ChangeLayout();
+							var l2 = GetNextLayout(l1).uId;
+							if (MMain.mahou.SwitchBetweenLayouts)
+								l2 = l1 == MahouUI.MAIN_LAYOUT1 ? MahouUI.MAIN_LAYOUT2 : MahouUI.MAIN_LAYOUT1;
 							var index = 0;
 							if (MMain.mahou.OneLayoutWholeWord) {
 								Logging.Log("Using one layout whole word convert selection mode.");
 								var allWords = SplitWords(ClipStr);
 								var word_index = 0;
 								foreach (var w in allWords) {
-									result += w == " " ? w : WordGuessLayout(w).Item1;
+									result += w == " " ? w : WordGuessLayout(w, l2).Item1;
 									word_index +=1;
 //									Debug.WriteLine("(" + w + ") ["+ result +"]");
 									index++;
@@ -1989,12 +1994,8 @@ namespace Mahou
 			if (!MahouUI.UseJKL)
 				DoLater(() => { MahouUI.currentLayout = MahouUI.GlobalLayout = Locales.GetCurrentLocale(); }, 10);
 		}
-		/// <summary>
-		/// Changing layout to next with PostMessage and WM_INPUTLANGCHANGEREQUEST and LParam HKL_NEXT.
-		/// </summary>
-		public static void CycleLayoutSwitch() {
-			Logging.Log("Changing layout using cycle mode by sending Message [WinAPI.WM_INPUTLANGCHANGEREQUEST] with LParam [HKL_NEXT] using WinAPI.PostMessage to ActiveWindow");
-			//Use WinAPI.PostMessage to switch to next layout
+		public static Locales.Locale GetNextLayout(uint before = 0) {
+			var loc = new Locales.Locale();
 			uint last = 0;
 			for (int i=MMain.locales.Length; i!=0; i--) {
 				var br = false;
@@ -2004,31 +2005,45 @@ namespace Mahou
 				if (MahouUI.UseJKL)
 					if (cur == 0 || cur == last)
 						cur = MahouUI.currentLayout;
+				if (before != 0)
+					cur = before;
+//				Debug.WriteLine("Current: " +cur);
 				Thread.Sleep(5);
 				var curind = MMain.locales.ToList().FindIndex(lid => lid.uId == cur);
-				int lidc = 0;
-				foreach (var l in MMain.locales) {
+				for (int g=0; g != MMain.locales.Length; g++) {
+					var l = MMain.locales[g];
+//					Debug.WriteLine("Checking: " + l.Lang + ", with "+cur);
 					if (curind == MMain.locales.Length - 1) {
 						Logging.Log("Locales BREAK!");
-						ChangeToLayout(Locales.ActiveWindow(), MMain.locales[0].uId);
+						loc = l;
 						br = true;
 						break;
 					}
-					Logging.Log("LIDC = "+lidc +" curid = "+curind + " Lidle = " +(MMain.locales.Length - 1));
-					if (lidc > curind)
+					Logging.Log("LIDC = "+g +" curid = "+curind + " Lidle = " +(MMain.locales.Length - 1));
+					if (l.Lang.Contains("Microsoft Office IME")) // fake layout
+						continue;
+					if (g > curind)
 						if (l.uId != cur) {
 							Logging.Log("Locales +1 Next BREAK on " + l.uId);
-							ChangeToLayout(Locales.ActiveWindow(), l.uId);
+							loc = l;
 							if (last !=0) // ensure its checked at least twice
 								br = true;
 							break;
 					}
-					lidc++;
 				}
 				last = cur;
 				if (br)
 					break;
 			}
+			return loc;
+		}
+		/// <summary>
+		/// Changing layout to next with PostMessage and WM_INPUTLANGCHANGEREQUEST and LParam HKL_NEXT.
+		/// </summary>
+		public static void CycleLayoutSwitch() {
+			Logging.Log("Changing layout using cycle mode by sending Message [WinAPI.WM_INPUTLANGCHANGEREQUEST] with LParam [HKL_NEXT] using WinAPI.PostMessage to ActiveWindow");
+			//Use WinAPI.PostMessage to switch to next layout
+			ChangeToLayout(Locales.ActiveWindow(), GetNextLayout().uId);
 		}
 		/// <summary>
 		/// Converts character(c) from layout(uID1) to another layout(uID2) by using WinAPI.ToUnicodeEx().
@@ -2127,59 +2142,77 @@ namespace Mahou
 			}
 			SendModsUp((int)mods);
 		}
-		public static Tuple<string, uint> WordGuessLayout(string word) {
-			var l1 = MahouUI.MAIN_LAYOUT1;
-			var l2 = MahouUI.MAIN_LAYOUT2;
+		public static Tuple<string, uint> WordGuessLayout(string word, uint _target = 0) {
 			uint layout = 0;
-			var result = "";
-			var index = 0;
-			int wordL1Minuses = 0;
-			int wordL2Minuses = 0;
-			var wordL1 = "";
-			var wordL2 = "";
-			foreach (var c in word) {
-				var T3 = GermanLayoutFix(c);
-				if (T3 != "") {
-					wordL1 += T3;
-					wordL2 += T3;
-					continue;
+			string guess = "";
+			uint target = 0;
+			if (_target == 0) {
+				if (MMain.mahou.SwitchBetweenLayouts) {
+					var cur = Locales.GetCurrentLocale();
+					if (MahouUI.UseJKL)
+						cur = MahouUI.currentLayout;
+					target = cur == MahouUI.MAIN_LAYOUT1 ? MahouUI.MAIN_LAYOUT2 : MahouUI.MAIN_LAYOUT1;
+				} else 
+					target = GetNextLayout().uId;
+			} else target = _target;
+			for (int i = 0; i != MMain.locales.Length; i++ ) {
+				var l = MMain.locales[i].uId;
+				var l2 = target;
+				if (l == target) continue;
+//				Debug.WriteLine("Testing " +word+" against: " +l+" and "+l2);
+				int wordLMinuses = 0;
+				int wordL2Minuses = 0;
+				uint lay = 0;
+				var wordL = "";
+				var wordL2 = "";
+				var result = "";
+				var index = 0;
+				foreach (var c in word) {
+					var T3 = GermanLayoutFix(c);
+					if (T3 != "") {
+						wordL += T3;
+						wordL2 += T3;
+						continue;
+					}
+					if (c == '\n') {
+						wordL += "\n";
+						wordL2 += "\n";
+						continue;
+					}
+					var T1 = InAnother(c, l & 0xffff, l2 & 0xffff);
+					wordL += T1;
+					if (T1 == "") wordLMinuses++;
+					var T2 = InAnother(c, l2 & 0xffff, l & 0xffff);
+					wordL2 += T2;
+					if (T2 == "") wordL2Minuses++;
+//					Debug.WriteLine("T1: "+ T1 + ", T2: "+ T2);
+					if (T2 == "" && T1 == "") {
+//							Debug.WriteLine("Char ["+c+"] is not in any of two layouts ["+l+"], ["+l2+"] just rewriting.");
+						wordL += word[index].ToString();
+						wordL2 += word[index].ToString();
+					}
+					index++;
 				}
-				var T1 = InAnother(c, l2 & 0xffff, l1 & 0xffff);
-				if (c == '\n')
-					T1 = "\n";
-				wordL1 += T1;
-				if (T1 == "") {
-					wordL1Minuses++;
+				if (wordLMinuses > wordL2Minuses) {
+					lay = l2;
+					result = wordL2;
 				}
-				var T2 = InAnother(c, l1 & 0xffff, l2 & 0xffff);
-				if (c == '\n')
-					T2 = "\n";
-				wordL2 += T2;
-				if (T2 == "") {
-					wordL2Minuses++;
+				else {
+					lay = l;
+					result = wordL;
 				}
-				if (T1 == "" && T2 == "") {
-					Logging.Log("Char ["+c+"] is not in any of two layouts ["+l1+"], ["+l2+"] just rewriting.");
-					wordL1 += word[index].ToString();
-					wordL2 += word[index].ToString();
+//				Debug.WriteLine("End, " +wordL2Minuses + ", " +wordLMinuses);
+				if (wordLMinuses == wordL2Minuses) {
+					lay = 0;
+					result = word;
 				}
-				index++;
+				if (result.Length > guess.Length || (result.Length == guess.Length && lay != 0)) {
+					guess = result;
+					layout = lay;
+				}
 			}
-			if (wordL1Minuses > wordL2Minuses) {
-				result = wordL2;
-				layout = l1;
-			}
-			else {
-				result = wordL1;
-				layout = l2;
-			}
-			if (wordL1Minuses == wordL2Minuses) {
-				result = word;
-				layout = 0;
-			}
-			Logging.Log("Layout 1 minuses: " + wordL1Minuses + "wordL1: " + wordL1 + 
-			                ", Layout 2 minuses: " + wordL2Minuses + "wordL2: " + wordL2);
-			return Tuple.Create(result, layout);
+			Logging.Log("Word " + word + " layout is " + layout + " targeting: " + target);
+			return Tuple.Create(guess, layout);
 		}
 		public static Tuple<bool, int> SnippetsLineCommented(string snippets, int k) {
 			if (k == 0 || (k-1 >= 0 && snippets[k-1].Equals('\n'))) { // only at every new line
