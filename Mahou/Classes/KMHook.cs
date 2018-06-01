@@ -1342,17 +1342,20 @@ namespace Mahou
 							} else {
 								Logging.Log("Using default convert selection mode.");
 								foreach (char c in ClipStr) {
-									var T = InAnother(c, l2 & 0xffff, l1 & 0xffff);
-									if (c == '\n')
-										T = "\n";
-									if (T == "")
-										T = InAnother(c, l1 & 0xffff, l2 & 0xffff);
-									if (T == "")
+									var T = InAnother(c, l1 & 0xffff, l2 & 0xffff);
+									for (int i = 0; i != MMain.locales.Length; i++) {
+										var l = MMain.locales[i].uId;
+										if (c == '\n')
+											T = "\n";
 										T = GermanLayoutFix(c);
+										T = InAnother(c, l & 0xffff, l2 & 0xffff);
+										if (T != "") 
+											break;
+										index++;
+									}
 									if (T == "")
-										T = ClipStr[index].ToString();							
+										T = ClipStr[index].ToString();
 									result += T;
-									index++;
 								}
 							}
 							Logging.Log("Conversion of string [" + ClipStr + "] from locale [" + l1 + "] into locale [" + l2 + "] became [" + result + "].");
@@ -2162,9 +2165,11 @@ namespace Mahou
 				var l = MMain.locales[i].uId;
 				var l2 = target;
 				if (l == target) continue;
-				Debug.WriteLine("Testing " +word+" against: " +l+" and "+l2);
+//				Debug.WriteLine("Testing " +word+" against: " +l+" and "+l2);
 				int wordLMinuses = 0;
 				int wordL2Minuses = 0;
+				int minmin = 0;
+				int thismin = 0;
 				uint lay = 0;
 				var wordL = "";
 				var wordL2 = "";
@@ -2188,7 +2193,7 @@ namespace Mahou
 					var T2 = InAnother(c, l2 & 0xffff, l & 0xffff);
 					wordL2 += T2;
 					if (T2 == "") wordL2Minuses++;
-					Debug.WriteLine("T1: "+ T1 + ", T2: "+ T2);
+//					Debug.WriteLine("T1: "+ T1 + ", T2: "+ T2);
 					if (T2 == "" && T1 == "") {
 //							Debug.WriteLine("Char ["+c+"] is not in any of two layouts ["+l+"], ["+l2+"] just rewriting.");
 						wordL += word[index].ToString();
@@ -2197,27 +2202,32 @@ namespace Mahou
 					index++;
 				}
 				if (wordLMinuses > wordL2Minuses) {
+					thismin = wordL2Minuses;
 					lay = l2;
 					result = wordL2;
 				}
 				else {
+					thismin = wordLMinuses;
 					lay = l;
 					result = wordL;
 				}
-				Debug.WriteLine("End, " +wordL2Minuses + ", " +wordLMinuses);
+//				Debug.WriteLine("End, " +wordLMinuses + ", " +wordL2Minuses);
 				if (wordLMinuses == wordL2Minuses) {
+					thismin = wordLMinuses;
 					lay = 0;
 					result = word;
 				}
-				if (result.Length > guess.Length || (result.Length == guess.Length && lay != 0)) {
+				if (result.Length > guess.Length || (result.Length == guess.Length && lay != 0 && thismin <= minmin)) {
 					guess = result;
 					layout = lay;
 				}
+				if (thismin < minmin)
+					minmin = thismin;
 				if (lay == target) break;
 			}
-			Logging.Log("Word " + word + " layout is " + layout + " targeting: " + target);
 			if (target == layout) 
 				guess = word;
+			Logging.Log("Word " + word + " layout is " + layout + " targeting: " + target +" guess: " + guess);
 			return Tuple.Create(guess, layout);
 		}
 		public static Tuple<bool, int> SnippetsLineCommented(string snippets, int k) {
