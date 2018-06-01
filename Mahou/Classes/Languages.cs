@@ -505,7 +505,7 @@ public class Languages
 		{ Element.TT_MCDSSupport, "Add the ability to display language tooltip around caret in Sublime Text 3.\nFor it to work yout need to install a plugin, link on right.\nSettings avaible in appearence tab:\nTop: Your ST3 titlebar + tab bar height,\nBottom: Your y pixels to ST3 console edit box(ctrl+`).\nFor different windows/themes settings will be different!" }, 
 		{ Element.TT_LDText, "Leave empty for auto-detect.\r\nEnter Alt+255(Numpad) to disable displaying of this layout, when display flags feature active." }, 
 		{ Element.TT_OneLayoutWholeWordCS, "Use one layout for whole word in Convert Selection,\r\n"+
-				"this feature uses quantity of rightly recognized chars in two selected layouts to indicate layout of whole word,"+
+				"this feature uses quantity of rightly recognized chars IN ALL layouts to indicate layout of whole word,"+
 				"\r\nthis feature works PERFECTLY with words that have symbols around them, but word lenght must be greater that 1 char for this feature to work properly." },
 		{ Element.TT_PersistentLayout, "Write here process names in which you want to have persistent layout, separators are spaces and new lines.\r\nIf process name has spaces in it replace it with _, if process name has the _ just write it so.\r\nExample: Process Name: foo_bar 2000.exe\r\nIn Mahou: foo_bar_2000.exe."},
 		{ Element.TT_SwitchOnlyOnWindowChange, "Enabling this will disable timers and persistent layout will update only when active window changes(Windows message).\r\nConsumes CPU only when changing windows, i.e. way less CPU usage than timers."},
@@ -779,7 +779,7 @@ public class Languages
 		{ Element.TT_MCDSSupport, "Дает возможность отображения подсказки текущего языка возле каретки в Sublime Text 3.\nДля его работы нужно установить плагин, ссылка с права.\nНастройки во вкладке Вид.\nСверху: Высота заголовка окна + высота панели вкладок ST3,\nСнизу: Ваши y пиксели от конца окна до формы ввода консоли ST3(ctrl+`).\nДля разных Windows/Тем будут нужны разные настройки!" }, 
 		{ Element.TT_LDText, "Оставьте пустым для авто-определения.\r\nВведите Alt+255(NumPad) для отключения отображения подсказки для этой раскладки при функции отображении флагов активной." }, 
 		{ Element.TT_OneLayoutWholeWordCS, "Использовать одну раскладку для целого слова в Конверт Выделения,\r\n"+
-				"эта функция использует количество правильно распознанных букв в двух раскладках чтобы определить раскладку слова,\r\n"+
+				"эта функция использует количество правильно распознанных букв ВО ВСЕХ раскладках чтобы определить раскладку слова,\r\n"+
 				"эта функция ПРЕКРАСНО работает с словами которые имеют рядом символы, но длинна слова должна быть больше 1(не включая символы) чтобы функция нормально работала." },
 		{ Element.TT_PersistentLayout, "Напишите здесь названия процессов в которых вы бы хотели иметь постоянную раскладку, разделитель - пробел или новая строка.\r\nЕсли в именах процессах есть пробел заменяйте его на _ , сам _ тоже можно заменять на _ .\r\nПример: Имя процесса: mon_hun online.exe\r\nВ Mahou: mon_hun_online.exe."},
 		{ Element.TT_SwitchOnlyOnWindowChange, "Если включено то функция постоянной раскладки не будет обновляться через таймеры, а будет обновлятся только при смене окон(Сообщения Windows).\r\nПотребляет ЦП только при смене окон, в итоге НАМНОГО меньше чем таймеры."},
