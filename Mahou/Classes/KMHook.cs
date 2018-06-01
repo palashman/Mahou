@@ -1327,6 +1327,7 @@ namespace Mahou
 							var l2 = GetNextLayout(l1).uId;
 							if (MMain.mahou.SwitchBetweenLayouts)
 								l2 = l1 == MahouUI.MAIN_LAYOUT1 ? MahouUI.MAIN_LAYOUT2 : MahouUI.MAIN_LAYOUT1;
+							Debug.WriteLine("next: " +l2);
 							var index = 0;
 							if (MMain.mahou.OneLayoutWholeWord) {
 								Logging.Log("Using one layout whole word convert selection mode.");
@@ -2007,12 +2008,12 @@ namespace Mahou
 						cur = MahouUI.currentLayout;
 				if (before != 0)
 					cur = before;
-//				Debug.WriteLine("Current: " +cur);
+				Debug.WriteLine("Current: " +cur);
 				Thread.Sleep(5);
 				var curind = MMain.locales.ToList().FindIndex(lid => lid.uId == cur);
 				for (int g=0; g != MMain.locales.Length; g++) {
 					var l = MMain.locales[g];
-//					Debug.WriteLine("Checking: " + l.Lang + ", with "+cur);
+					Debug.WriteLine("Checking: " + l.Lang + ", with "+cur);
 					if (curind == MMain.locales.Length - 1) {
 						Logging.Log("Locales BREAK!");
 						loc = l;
@@ -2156,10 +2157,12 @@ namespace Mahou
 					target = GetNextLayout().uId;
 			} else target = _target;
 			for (int i = 0; i != MMain.locales.Length; i++ ) {
+				if (MMain.locales[i].Lang.Contains("Microsoft Office IME")) // fake layout
+					continue;
 				var l = MMain.locales[i].uId;
 				var l2 = target;
 				if (l == target) continue;
-//				Debug.WriteLine("Testing " +word+" against: " +l+" and "+l2);
+				Debug.WriteLine("Testing " +word+" against: " +l+" and "+l2);
 				int wordLMinuses = 0;
 				int wordL2Minuses = 0;
 				uint lay = 0;
@@ -2185,7 +2188,7 @@ namespace Mahou
 					var T2 = InAnother(c, l2 & 0xffff, l & 0xffff);
 					wordL2 += T2;
 					if (T2 == "") wordL2Minuses++;
-//					Debug.WriteLine("T1: "+ T1 + ", T2: "+ T2);
+					Debug.WriteLine("T1: "+ T1 + ", T2: "+ T2);
 					if (T2 == "" && T1 == "") {
 //							Debug.WriteLine("Char ["+c+"] is not in any of two layouts ["+l+"], ["+l2+"] just rewriting.");
 						wordL += word[index].ToString();
@@ -2201,7 +2204,7 @@ namespace Mahou
 					lay = l;
 					result = wordL;
 				}
-//				Debug.WriteLine("End, " +wordL2Minuses + ", " +wordLMinuses);
+				Debug.WriteLine("End, " +wordL2Minuses + ", " +wordLMinuses);
 				if (wordLMinuses == wordL2Minuses) {
 					lay = 0;
 					result = word;
@@ -2210,8 +2213,11 @@ namespace Mahou
 					guess = result;
 					layout = lay;
 				}
+				if (lay == target) break;
 			}
 			Logging.Log("Word " + word + " layout is " + layout + " targeting: " + target);
+			if (target == layout) 
+				guess = word;
 			return Tuple.Create(guess, layout);
 		}
 		public static Tuple<bool, int> SnippetsLineCommented(string snippets, int k) {
