@@ -1341,7 +1341,34 @@ namespace Mahou
 								}
 							} else {
 								Logging.Log("Using default convert selection mode.");
-								foreach (char c in ClipStr) {
+								for (int I=0; I!=ClipStr.Length; I++) {
+									var sm = false;
+									var c = ClipStr[I];
+									if (c == 'ո' || c == 'Ո') {
+										if (c == 'ո') sm = true;
+										if (ClipStr.Length > I+1) {
+											if (ClipStr[I+1] == 'ւ') {
+												var shrt = l2 & 0xffff;
+												var _shrt = l1 & 0xffff;
+												if (shrt == 1033 || shrt == 1041) {
+													result += sm ? "u" : "U";
+													I++; continue;
+												}
+												if (_shrt == 1033 || _shrt == 1041) {
+													result += sm ? "u" : "U";
+													I++; continue;
+												}
+												if (shrt == 1049) {
+													result += sm ? "г" : "Г";
+													I++; continue;
+												}
+												if (_shrt == 1049) {
+													result += sm ? "г" : "Г";
+													I++; continue;
+												}
+											}
+										}
+									}
 									var T = InAnother(c, l1 & 0xffff, l2 & 0xffff);
 									for (int i = 0; i != MMain.locales.Length; i++) {
 										var l = MMain.locales[i].uId;
@@ -1533,6 +1560,25 @@ namespace Mahou
 					});
 				}
 			}
+		}
+		static string ArmenianSignleCharFix(string word, uint next_layout, uint this_layout = 0) {
+			var shrt = next_layout & 0xffff;
+			var _shrt = this_layout & 0xffff;
+//			if (shrt == 1033 || shrt == 1041) // English/Japanese
+			var repl = word;
+//			Debug.WriteLine("Next: " + next_layout + ", word: " +word);
+			if (shrt == 1067) // Armenian
+				repl = word.Replace("u", "w6").Replace("U", "W6").Replace("г","ц6").Replace("Г","Ц6");
+			if (_shrt == 1067) {
+				if (shrt == 1033 || shrt == 1041) // English/Japanese
+					repl = word.Replace("ու", "u").Replace("Ու", "U");
+				if (shrt == 1049) //  Russian
+					repl = word.Replace("ու", "Г").Replace("Ու", "Г");
+			}
+//			else if (shrt == 1049) // Russian
+//				word.Replace("Ու", "Г").Replace("ու", "г");
+			Debug.WriteLine("RELT: " + repl);
+			return repl;
 		}
 		static string GermanLayoutFix(char c) {
 			if (!MMain.mahou.QWERTZ_fix)
@@ -2165,7 +2211,6 @@ namespace Mahou
 				var l = MMain.locales[i].uId;
 				var l2 = target;
 				if (l == target) continue;
-//				Debug.WriteLine("Testing " +word+" against: " +l+" and "+l2);
 				int wordLMinuses = 0;
 				int wordL2Minuses = 0;
 				int minmin = 0;
@@ -2174,8 +2219,35 @@ namespace Mahou
 				var wordL = "";
 				var wordL2 = "";
 				var result = "";
-				var index = 0;
-				foreach (var c in word) {
+				Debug.WriteLine("Testing " +word+" against: " +l+" and "+l2);
+				for (int I = 0; I!=word.Length; I++) {
+					var c = word[I];
+					var sm = false;
+					if (c == 'ո' || c == 'Ո') {
+						if (c == 'ո') sm = true;
+						if (word.Length > I+1) {
+							if (word[I+1] == 'ւ') {
+								var shrt = l2 & 0xffff;
+								var _shrt = l & 0xffff;
+								if (shrt == 1033 || shrt == 1041) {
+									wordL += sm ? "u" : "U";
+									I++; continue;
+								}
+								if (_shrt == 1033 || _shrt == 1041) {
+									wordL2 += sm ? "u" : "U";
+									I++; continue;
+								}
+								if (shrt == 1049) {
+									wordL += sm ? "г" : "Г";
+									I++; continue;
+								}
+								if (_shrt == 1049) {
+									wordL2 += sm ? "г" : "Г";
+									I++; continue;
+								}
+							}
+						}
+					}
 					var T3 = GermanLayoutFix(c);
 					if (T3 != "") {
 						wordL += T3;
@@ -2193,13 +2265,12 @@ namespace Mahou
 					var T2 = InAnother(c, l2 & 0xffff, l & 0xffff);
 					wordL2 += T2;
 					if (T2 == "") wordL2Minuses++;
-//					Debug.WriteLine("T1: "+ T1 + ", T2: "+ T2);
+//					Debug.WriteLine("T1: "+ T1 + ", T2: "+ T2 + ", C: " +c);
 					if (T2 == "" && T1 == "") {
 //							Debug.WriteLine("Char ["+c+"] is not in any of two layouts ["+l+"], ["+l2+"] just rewriting.");
-						wordL += word[index].ToString();
-						wordL2 += word[index].ToString();
+						wordL += word[I].ToString();
+						wordL2 += word[I].ToString();
 					}
-					index++;
 				}
 				if (wordLMinuses > wordL2Minuses) {
 					thismin = wordL2Minuses;
@@ -2211,13 +2282,13 @@ namespace Mahou
 					lay = l;
 					result = wordL;
 				}
-//				Debug.WriteLine("End, " +wordLMinuses + ", " +wordL2Minuses);
+//				Debug.WriteLine("End, " + lay + "|" +wordL + ", " + wordL2 + "|" +wordLMinuses + ", " +wordL2Minuses);
 				if (wordLMinuses == wordL2Minuses) {
 					thismin = wordLMinuses;
 					lay = 0;
 					result = word;
 				}
-				if (result.Length > guess.Length || (result.Length == guess.Length && lay != 0 && thismin <= minmin)) {
+				if (result.Length > guess.Length || (lay != 0 && thismin <= minmin)) {
 					guess = result;
 					layout = lay;
 				}
@@ -2227,7 +2298,7 @@ namespace Mahou
 			}
 			if (target == layout) 
 				guess = word;
-			Logging.Log("Word " + word + " layout is " + layout + " targeting: " + target +" guess: " + guess);
+			Debug.WriteLine("Word " + word + " layout is " + layout + " targeting: " + target +" guess: " + guess);
 			return Tuple.Create(guess, layout);
 		}
 		public static Tuple<bool, int> SnippetsLineCommented(string snippets, int k) {
