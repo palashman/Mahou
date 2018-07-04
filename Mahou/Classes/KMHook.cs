@@ -114,6 +114,17 @@ namespace Mahou
 			            (alt ? "L-Alt" : "") + (alt_r ? "R-Alt" : "") + 
 			            (ctrl ? "L-Ctrl" : "") + (ctrl_r ? "R-Ctrl" : "") + 
 			            (win ? "L-Win" : "") + (win_r ? "R-Win" : "") + "].");
+			// Anti C-A-DEL C & A stuck rule
+			if (Key == Keys.Delete) {
+				if (ctrl && alt)
+					ctrl = alt = false;
+				if (ctrl && alt_r)
+					ctrl = alt_r = false;
+				if (ctrl_r && alt_r)
+					ctrl_r = alt_r = false;
+				if (ctrl_r && alt)
+					ctrl_r = alt = false;
+			}
 			// Anti win-stuck rule
 			if (Key == Keys.L) {
 				if (win)

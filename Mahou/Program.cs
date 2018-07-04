@@ -14,7 +14,7 @@ namespace Mahou
 		#region Prevent another instance variables
 		/// GGPU = Global GUID PC User
 		public static string GGPU_Mutex = "Global\\" +"ec511418-1d57-4dbe-a0c3-c6022b33735b_" + Environment.UserDomainName + "_" + Environment.UserName;
-		public static uint ao = RegisterWindowMessage("AlderyOpenedMahou!");
+		public static uint ao = RegisterWindowMessage("AlreadyOpenedMahou!");
 		public static uint re = RegisterWindowMessage("RestartMahou!");
 		#endregion
 		#region All Main variables, arrays etc.
@@ -51,11 +51,14 @@ namespace Mahou
 			Logging.Log("Mahou started.");
 			using (var mutex = new Mutex(false, GGPU_Mutex)) {
 				if (!mutex.WaitOne(0, false)) {
-					var arg1 = args[0].ToUpper();
-					if (arg1.StartsWith("/R") || arg1.StartsWith("-R") || arg1.StartsWith("R"))
-						WinAPI.PostMessage((IntPtr)0xffff, re, 0, 0);
-					else 
-						WinAPI.PostMessage((IntPtr)0xffff, ao, 0, 0);
+					if (args.Length > 0) {
+						var arg1 = args[0].ToUpper();
+						if (arg1.StartsWith("/R") || arg1.StartsWith("-R") || arg1.StartsWith("R")) {
+							WinAPI.PostMessage((IntPtr)0xffff, re, 0, 0);
+							return;
+						}
+					} 
+					WinAPI.PostMessage((IntPtr)0xffff, ao, 0, 0);
 					return;
 				}
 				if (MMain.MyConfs.ReadBool("Functions", "AppDataConfigs")) {
