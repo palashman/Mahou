@@ -248,6 +248,10 @@ namespace Mahou {
 				ToggleVisibility();
         		Logging.Log("Another instance detected, closing it.");
 			}
+			if (m.Msg == MMain.re) { // Restart Mahou
+				Logging.Log("Restarting Mahou from command line...");
+				Restart();
+			}
 			if (m.Msg == WinAPI.WM_MOUSEWHEEL) {
 				if (WinAPI.WindowFromPoint(Cursor.Position) == tabs.Handle) {
 					try {
