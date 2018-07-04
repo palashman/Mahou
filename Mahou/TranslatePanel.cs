@@ -40,6 +40,7 @@ namespace Mahou {
 		  	Prepare();
 		}
 		public struct GTResp {
+			public bool auto_detect;
 			public string translation;
 			public string source;
 			public string src_lang;
@@ -81,6 +82,8 @@ namespace Mahou {
 					det_l = det_l.Substring(1, det_l.Length-2);
 					gtresp.speech_url = GTSpeechLink+"&q="+HttpUtility.UrlEncode(tr)+"&sl="+det_l+"&tl="+tls[i];
 					Debug.WriteLine(gtresp.speech_url);
+					if(sls[i] == "auto")
+						gtresp.auto_detect = true;
 					gtresp.src_lang = det_l;
 					gtresp.targ_lang = tls[i];
 					gtrlist.Add(gtresp);
@@ -126,7 +129,7 @@ namespace Mahou {
 			if (GTRs.Count == 0)
 				pan_Translations.Height = 0;
 			foreach (Control ct in pan_Translations.Controls) {
-				if (ct.Name == "PN_LINE_"+gtr.targ_lang) {
+				if (ct.Name == "PN_LINE_"+gtr.src_lang+".to."+gtr.targ_lang) {
 					exist = true;
 					break;
 				}
@@ -139,7 +142,7 @@ namespace Mahou {
 				var pan = new Panel();
 				pan.Width = pan_Translations.Width-2;
 				pan.Height = 16;
-				pan.Name = "PN_LINE_"+gtr.targ_lang;
+				pan.Name = "PN_LINE_"+gtr.src_lang+".to."+gtr.targ_lang;
 				pan.Location = new Point(1, pan_Translations.Height+1);
 				var slt = new TextBox();
 				var txt = new TextBox();
@@ -148,7 +151,7 @@ namespace Mahou {
 				slt.Name = "SL_TXT"+gtr.targ_lang;
 				slt.BorderStyle = txt.BorderStyle = 0;
 				slt.Location = new Point(1, 0);
-				slt.Text = gtr.targ_lang+":";
+				slt.Text = (gtr.auto_detect ? "" : gtr.src_lang+"/")+gtr.targ_lang+":";
 				var g = CreateGraphics();
 				var size = g.MeasureString(slt.Text, slt.Font);
 				g.Dispose();
