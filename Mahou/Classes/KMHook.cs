@@ -41,7 +41,7 @@ namespace Mahou
 		};
 		public static string[] as_wrongs;
 		public static string[] as_corrects;
-		static Dictionary<string, string> transliterationDict = new Dictionary<string, string>() { 
+		static Dictionary<string, string> DefaultTransliterationDict = new Dictionary<string, string>() { 
 				{"Щ", "SCH"}, {"щ", "sch"}, {"Ч", "CH"}, {"Ш", "SH"}, {"Ё", "JO"}, {"ВВ", "W"},
 				{"Є", "EH"}, {"ю", "yu"}, {"я", "ya"}, {"є", "eh"}, {"Ж", "ZH"},
 				{"ч", "ch"}, {"ш", "sh"}, {"Й", "JJ"}, {"ж", "zh"},
@@ -58,6 +58,7 @@ namespace Mahou
 				{"у", "u"}, {"ф", "f"}, {"х", "h"}, {"ц", "c"}, {"ъ", ":"},
 				{"Ы", "Y"}, {"Ь", "J"}, {"е", "e"}, {"т", "t"}, {"ы", "y"}
 		};
+		static Dictionary<string, string> transliterationDict = new Dictionary<string, string>(DefaultTransliterationDict);
 		#endregion
 		#region Keyboard, Mouse & Event hooks callbacks
 		public static void ListenKeyboard(int vkCode, uint MSG, short Flags = 0) {
@@ -650,6 +651,38 @@ namespace Mahou
 		}
 		#endregion
 		#region Functions/Struct
+		public static void ReloadTSDict() {
+			var tsdict = new Dictionary<string, string>();
+			var tsdictp = System.IO.Path.Combine(MahouUI.nPath, "TSDict.txt");
+			if (System.IO.File.Exists(tsdictp)) {
+				var lines = System.IO.File.ReadAllLines(tsdictp);
+				for (int i = 0; i != lines.Length; i++) {
+					var line = lines[i];
+					if (line.Contains("|")) {
+				    	var lr = line.Split('|');
+				    	tsdict[lr[0]] = lr[1];
+				    	Debug.WriteLine("Added to TSDict: " +lr[0] +" <=> " + lr[1]);
+					} else {
+						Logging.Log("Wrong Transliteration Dict line #"+i+", => " +line);
+				    	tsdict = null;
+				    	break;
+					}
+				}
+			} else {
+				var raw = "";
+				foreach (var kv in DefaultTransliterationDict) {
+					raw += kv.Key+"|"+kv.Value+"\r\n";
+				}
+				System.IO.File.WriteAllText(tsdictp, raw);
+			}
+			if (tsdict != null && tsdict.Count != 0) {
+				Logging.Log("Succesfully initialized Transliteration Dictionary from ["+tsdictp+"].");
+				transliterationDict = tsdict;
+			} else {
+				Logging.Log(tsdictp+" missing or wrong syntax reset to default transliteration Dictionary.");
+				transliterationDict = DefaultTransliterationDict;
+			}
+		}
 		static void ExpandSnippet(string snip, string expand, bool spaceAft, bool switchLayout, bool ignoreExpand = false) {
 			DoSelf(() => {
 				try {
