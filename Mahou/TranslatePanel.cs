@@ -181,7 +181,7 @@ namespace Mahou {
 		public void UpdateTranslation(GTResp gtr) {
 		    foreach (Control ct in pan_Translations.Controls) {
 				var ind = GTRs.IndexOf(gtr);
-				var pan = pan_Translations.Controls["PN_LINE_"+gtr.targ_lang];
+				var pan = pan_Translations.Controls["PN_LINE_"+gtr.src_lang+".to."+gtr.targ_lang];
 				var slt = pan.Controls[0];
 				var txt = pan.Controls[1];
 				var btn = pan.Controls[2] as ButtonLabel;
