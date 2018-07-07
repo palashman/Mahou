@@ -28,7 +28,7 @@ namespace Mahou {
 						   ShiftInHotkey, AltInHotkey, CtrlInHotkey, WinInHotkey, AutoStartAsAdmin, UseJKL, AutoSwitchEnabled, ReadOnlyNA,
 						   SoundEnabled, UseCustomSound, SoundOnAutoSwitch, SoundOnConvLast, SoundOnSnippets, SoundOnLayoutSwitch,
 						   UseCustomSound2, SoundOnAutoSwitch2, SoundOnConvLast2, SoundOnSnippets2, SoundOnLayoutSwitch2, TrOnDoubleClick,
-						   TrEnabled, TrBorderAero, OnceSpecific;
+						   TrEnabled, TrBorderAero, OnceSpecific, WriteInputHistory;
 		static string[] UpdInfo;
 		static bool updating, was, isold = true, checking, snip_checking, as_checking, check_ASD_size = true;
 		#region Timers
@@ -759,6 +759,7 @@ namespace Mahou {
 				MMain.MyConfs.Write("Functions", "RemapCapslockAsF18", chk_RemapCapsLockAsF18.Checked.ToString());
 				MMain.MyConfs.Write("Functions", "UseJKL", chk_GetLayoutFromJKL.Checked.ToString());
 				MMain.MyConfs.Write("Functions", "ReadOnlyNA", chk_ReadOnlyNA.Checked.ToString());
+				MMain.MyConfs.Write("Functions", "WriteInputHistory", chk_WriteInputHistory.Checked.ToString());
 				#endregion
 				#region Layouts
 				MMain.MyConfs.Write("Layouts", "SwitchBetweenLayouts", chk_SwitchBetweenLayouts.Checked.ToString());
@@ -1002,6 +1003,7 @@ namespace Mahou {
 			RemapCapslockAsF18 = chk_RemapCapsLockAsF18.Checked = MMain.MyConfs.ReadBool("Functions", "RemapCapslockAsF18");
 			UseJKL = chk_GetLayoutFromJKL.Checked = MMain.MyConfs.ReadBool("Functions", "UseJKL");
 			ReadOnlyNA = chk_ReadOnlyNA.Checked = MMain.MyConfs.ReadBool("Functions", "ReadOnlyNA");
+			WriteInputHistory = chk_WriteInputHistory.Checked = MMain.MyConfs.ReadBool("Functions", "WriteInputHistory");
 			#endregion
 			#region Layouts
 			SwitchBetweenLayouts = chk_SwitchBetweenLayouts.Checked = MMain.MyConfs.ReadBool("Layouts", "SwitchBetweenLayouts");
@@ -3200,6 +3202,7 @@ DEL ""ExtractASD.cmd""";
 			chk_RemapCapsLockAsF18.Text = MMain.Lang[Languages.Element.RemapCapslockAsF18];
 			chk_GetLayoutFromJKL.Text = MMain.Lang[Languages.Element.UseJKL];
 			chk_ReadOnlyNA.Text = MMain.Lang[Languages.Element.ReadOnlyNA];
+			chk_WriteInputHistory.Text = MMain.Lang[Languages.Element.WriteInputHistory];
 			#endregion
 			#region Layouts
 			chk_SwitchBetweenLayouts.Text = MMain.Lang[Languages.Element.SwitchBetween]+":";
@@ -3420,6 +3423,7 @@ DEL ""ExtractASD.cmd""";
 			HelpMeUnderstand.SetToolTip(chk_UseDelayAfterBackspaces, MMain.Lang[Languages.Element.TT_UseDelayAfterBackspaces]);
 			HelpMeUnderstand.SetToolTip(chk_GetLayoutFromJKL, MMain.Lang[Languages.Element.TT_UseJKL]);
 			HelpMeUnderstand.SetToolTip(chk_ReadOnlyNA, MMain.Lang[Languages.Element.TT_ReadOnlyNA]);
+			HelpMeUnderstand.SetToolTip(chk_WriteInputHistory, MMain.Lang[Languages.Element.TT_WriteInputHistory]);
 		}
 		void HelpMeUnderstandPopup(object sender, PopupEventArgs e) {
 			HelpMeUnderstand.ToolTipTitle = e.AssociatedControl.Text;

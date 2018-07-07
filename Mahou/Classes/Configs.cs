@@ -418,6 +418,7 @@ namespace Mahou {
 			CheckBool("Layouts", "SwitchBetweenLayouts", "true");
 			#endregion
             #region Functions section
+            CheckBool("Functions", "WriteInputHistory", "false");
             CheckBool("Functions", "ReadOnlyNA", "false");
             CheckBool("Functions", "UseJKL", "true");
             CheckBool("Functions", "RemapCapslockAsF18", "true");

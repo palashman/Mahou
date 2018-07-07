@@ -242,6 +242,7 @@ namespace Mahou
 		private System.Windows.Forms.CheckBox chk_TrEnable;
 		private System.Windows.Forms.GroupBox grb_TrConfs;
 		private System.Windows.Forms.CheckBox chk_TrOnDoubleClick;
+		private System.Windows.Forms.CheckBox chk_WriteInputHistory;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -498,6 +499,7 @@ namespace Mahou
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
 			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
+			this.chk_WriteInputHistory = new System.Windows.Forms.CheckBox();
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -575,6 +577,7 @@ namespace Mahou
 			// 
 			// tab_functions
 			// 
+			this.tab_functions.Controls.Add(this.chk_WriteInputHistory);
 			this.tab_functions.Controls.Add(this.chk_ReadOnlyNA);
 			this.tab_functions.Controls.Add(this.chk_GetLayoutFromJKL);
 			this.tab_functions.Controls.Add(this.chk_SilentUpdate);
@@ -3275,6 +3278,16 @@ namespace Mahou
 			this.HelpMeUnderstand.ShowAlways = true;
 			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.HelpMeUnderstand.Popup += new System.Windows.Forms.PopupEventHandler(this.HelpMeUnderstandPopup);
+			// 
+			// chk_WriteInputHistory
+			// 
+			this.chk_WriteInputHistory.AutoSize = true;
+			this.chk_WriteInputHistory.Location = new System.Drawing.Point(301, 214);
+			this.chk_WriteInputHistory.Name = "chk_WriteInputHistory";
+			this.chk_WriteInputHistory.Size = new System.Drawing.Size(127, 19);
+			this.chk_WriteInputHistory.TabIndex = 27;
+			this.chk_WriteInputHistory.Text = "Write input history.";
+			this.chk_WriteInputHistory.UseVisualStyleBackColor = true;
 			// 
 			// MahouUI
 			// 

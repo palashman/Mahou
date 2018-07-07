@@ -109,6 +109,13 @@ namespace Mahou
 			if (MahouUI.OnceSpecific && !down) {
 				MahouUI.OnceSpecific = false;
 			}
+			var printable = ((Key >= Keys.D0 && Key <= Keys.Z) || // This is 0-9 & A-Z
+			                 Key >= Keys.Oem1 && Key <= Keys.OemBackslash || // Other printable
+							(Control.IsKeyLocked(Keys.NumLock) && ( // while numlock is on
+						     Key >= Keys.NumPad0 && Key <= Keys.NumPad9)) || // Numpad numbers 
+						     Key == Keys.Decimal || Key == Keys.Subtract || Key == Keys.Multiply ||
+						     Key == Keys.Divide || Key == Keys.Add); // Numpad symbols
+			var printable_mod = !win && !win_r && !alt && !alt_r && !ctrl && !ctrl_r; // E.g. only shift is PrintAble
 			//Key log
 			Logging.Log("Catched Key=[" + Key + "] with VKCode=[" + vkCode + "] and message=[" + (int)MSG + "], modifiers=[" + 
 			            (shift ? "L-Shift" : "") + (shift_r ? "R-Shift" : "") + 
@@ -167,22 +174,25 @@ namespace Mahou
 				if (MahouUI.caretLTUpperArrow)
 					MMain.mahou.caretLangDisplay.DisplayUpper(upper);
 			#endregion
+			#region InputHistory
+			char sym = '\0';
+			if (MahouUI.WriteInputHistory) {
+				if ((printable || Key == Keys.Enter || Key == Keys.Space) && printable_mod && down) {
+					sym = getSym(vkCode);
+					WriteToHistory(sym);
+				}
+				if (Key == Keys.Back && printable_mod && down) {
+					RemLastHistory();
+				}
+			}
+			#endregion
 			#region Snippets
 			if (MMain.mahou.SnippetsEnabled && !ExcludedProgram()) {
-				if (((Key >= Keys.D0 && Key <= Keys.Z) || // This is 0-9 & A-Z
-				   Key >= Keys.Oem1 && Key <= Keys.OemBackslash // All other printable
-				  ) && !win && !win_r && !alt && !alt_r && !ctrl && !ctrl_r && down) {
-					var stb = new StringBuilder(10);
-					var byt = new byte[256];
-					if (shift || shift_r || Control.IsKeyLocked(Keys.CapsLock)) {
-						byt[(int)Keys.ShiftKey] = 0xFF;
-					}
-					uint layout = Locales.GetCurrentLocale() & 0xffff;
-					if (MahouUI.UseJKL)
-						layout = MahouUI.currentLayout & 0xffff;
-					WinAPI.ToUnicodeEx((uint)vkCode, (uint)vkCode, byt, stb, stb.Capacity, 0, (IntPtr)layout);
-					c_snip.Add(stb.ToString()[0]);
-					Logging.Log("Added ["+ stb.ToString()[0] + "] to current snippet.");
+				if (printable && printable_mod && down) {
+					if (sym == '\0')
+						sym = getSym(vkCode);
+					c_snip.Add(sym);
+					Logging.Log("Added ["+ sym + "] to current snippet.");
 				}
 				var seKey = Keys.Space;
 				if (MMain.mahou.SnippetsExpandType == "Tab")
@@ -418,13 +428,7 @@ namespace Mahou
 						afterEOL = false;
 					}
 				}
-				if (((Key >= Keys.D0 && Key <= Keys.Z) || // This is 0-9 & A-Z
-				   Key >= Keys.Oem1 && Key <= Keys.OemBackslash || // All other printable
-				   (Control.IsKeyLocked(Keys.NumLock) && ( // while numlock is on
-				   Key >= Keys.NumPad0 && Key <= Keys.NumPad9)) || // Numpad numbers 
-				   Key == Keys.Decimal || Key == Keys.Subtract || Key == Keys.Multiply ||
-				   Key == Keys.Divide || Key == Keys.Add // Numpad symbols
-				  ) && !win && !win_r && !alt && !alt_r && !ctrl && !ctrl_r) {
+				if (printable && printable_mod) {
 					if (afterEOS) { //Clears word after Eat ONE space
 						ClearWord(true, false, false, "Clear last word after 1 space");
 						afterEOS = false;
@@ -651,6 +655,29 @@ namespace Mahou
 		}
 		#endregion
 		#region Functions/Struct
+		static void RemLastHistory() {
+			var txt = System.IO.File.ReadAllText(System.IO.Path.Combine(MahouUI.nPath, "history.txt"));
+			txt = txt.Substring(0, txt.Length-1);
+			System.IO.File.WriteAllText(System.IO.Path.Combine(MahouUI.nPath, "history.txt"), txt);
+		}
+		static void WriteToHistory(char c) {
+			var sw = System.IO.File.AppendText(System.IO.Path.Combine(MahouUI.nPath, "history.txt"));
+			sw.Write(c);
+			sw.Close();
+		}
+		static char getSym(int vkCode) {
+			var stb = new StringBuilder(10);
+			var byt = new byte[256];
+			if (shift || shift_r || Control.IsKeyLocked(Keys.CapsLock)) {
+				byt[(int)Keys.ShiftKey] = 0xFF;
+			}
+			uint layout = Locales.GetCurrentLocale() & 0xffff;
+			if (MahouUI.UseJKL)
+				layout = MahouUI.currentLayout & 0xffff;
+			WinAPI.ToUnicodeEx((uint)vkCode, (uint)vkCode, byt, stb, stb.Capacity, 0, (IntPtr)layout);
+			var c = stb.ToString()[0];
+			return c;
+		}
 		public static void ReloadTSDict() {
 			var tsdict = new Dictionary<string, string>();
 			var tsdictp = System.IO.Path.Combine(MahouUI.nPath, "TSDict.txt");
@@ -661,7 +688,7 @@ namespace Mahou
 					if (line.Contains("|")) {
 				    	var lr = line.Split('|');
 				    	tsdict[lr[0]] = lr[1];
-				    	Debug.WriteLine("Added to TSDict: " +lr[0] +" <=> " + lr[1]);
+//				    	Debug.WriteLine("Added to TSDict: " +lr[0] +" <=> " + lr[1]);
 					} else {
 						Logging.Log("Wrong Transliteration Dict line #"+i+", => " +line);
 				    	tsdict = null;
