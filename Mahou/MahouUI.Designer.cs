@@ -581,8 +581,8 @@ namespace Mahou
 			// 
 			// tab_functions
 			// 
-			this.tab_functions.Controls.Add(this.lbl_BackSpaceType);
 			this.tab_functions.Controls.Add(this.cbb_BackSpaceType);
+			this.tab_functions.Controls.Add(this.lbl_BackSpaceType);
 			this.tab_functions.Controls.Add(this.chk_WriteInputHistory);
 			this.tab_functions.Controls.Add(this.chk_ReadOnlyNA);
 			this.tab_functions.Controls.Add(this.chk_GetLayoutFromJKL);
@@ -621,7 +621,7 @@ namespace Mahou
 			// 
 			// lbl_BackSpaceType
 			// 
-			this.lbl_BackSpaceType.Location = new System.Drawing.Point(317, 239);
+			this.lbl_BackSpaceType.Location = new System.Drawing.Point(316, 238);
 			this.lbl_BackSpaceType.Name = "lbl_BackSpaceType";
 			this.lbl_BackSpaceType.Size = new System.Drawing.Size(117, 23);
 			this.lbl_BackSpaceType.TabIndex = 29;
@@ -631,9 +631,9 @@ namespace Mahou
 			// 
 			this.cbb_BackSpaceType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cbb_BackSpaceType.FormattingEnabled = true;
-			this.cbb_BackSpaceType.Location = new System.Drawing.Point(440, 236);
+			this.cbb_BackSpaceType.Location = new System.Drawing.Point(409, 236);
 			this.cbb_BackSpaceType.Name = "cbb_BackSpaceType";
-			this.cbb_BackSpaceType.Size = new System.Drawing.Size(113, 23);
+			this.cbb_BackSpaceType.Size = new System.Drawing.Size(144, 23);
 			this.cbb_BackSpaceType.TabIndex = 28;
 			// 
 			// chk_WriteInputHistory
