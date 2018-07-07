@@ -44,6 +44,7 @@ public class Languages
 		UseJKL,
 		ReadOnlyNA,
 		WriteInputHistory,
+		BackSpaceType,
 		#endregion
 		#region Layouts
 		SwitchBetween,
@@ -204,6 +205,8 @@ public class Languages
 		Readen,
 		RetryInAppData,
 		Sound,
+		InputHistoryBackSpaceWriteType1,
+		InputHistoryBackSpaceWriteType2,
 		#endregion
 		#region Buttons
 		ButtonOK,
@@ -301,6 +304,7 @@ public class Languages
 		{ Element.UseJKL, "Retrieve layout from JKL." },
 		{ Element.ReadOnlyNA, "Read only if no access." },
 		{ Element.WriteInputHistory, "Write input history." },
+		{ Element.BackSpaceType, "BackSpace type:" },
 		#endregion
 		#region Layouts
 		{ Element.SwitchBetween, "Switch between layouts" }, 
@@ -468,6 +472,8 @@ public class Languages
 		{ Element.Readen, "readen" },
 		{ Element.RetryInAppData, "Retry creating/switching to configs in %AppData%?" },
 		{ Element.Sound, "Sound" },
+		{ Element.InputHistoryBackSpaceWriteType1, "Write <Back>" },
+		{ Element.InputHistoryBackSpaceWriteType2, "Delete last" },
 		#endregion
 		#region Buttons
 		{ Element.ButtonOK, "OK" }, 
@@ -526,7 +532,7 @@ public class Languages
 		{ Element.TT_RemapCapslockAsF18, "Remaps Caps Lock as F18, after this CapsLock will be disabled.\r\nTo toggle its state use Ctrl/Alt/Shift/Win + Caps Lock key.\r\n! Mahou window excluded from remap!\r\nIn Mahou you should set hotkeys as Caps Lock key, in other programs they will be remapped as F18.\r\nAfter changing hotkey don't forget to press Apply or OK." },
 		{ Element.TT_UseJKL, "Allows Mahou to retrieve layout from jkl.exe.\r\nAllows always to get right keyboard layout.(Highly recommended)\r\n" },	
 		{ Element.TT_ReadOnlyNA, "Switches to read-only mode when no write access to Mahou.ini.\r\nUseful for Administrators." },
-		{ Element.TT_WriteInputHistory, "Writes input to history.txt(in Mahou folder or in AppData, depends on configuration), with support of <BackSpace> key!, though it may be slow if history too big." },
+		{ Element.TT_WriteInputHistory, "Writes input to history.txt(in Mahou folder or in AppData, depends on configuration),\nwith support of <BackSpace> key!, though it may be slow if history too big." },
 		{ Element.TT_UseDelayAfterBackspaces, "If enabled Mahou will wait some time after deleting old word and before inputting converted word.\r\nUseful if in some apps Mahou's function to convert last word doesn't work properly." },
 		{ Element.TT_ShowSelectionTranslationHotkey, "Enable the translator in [Translator] tab in order this hotkey to work." },
 		#endregion
@@ -579,6 +585,7 @@ public class Languages
 		{ Element.UseJKL, "Получать раскладку с JKL." },
 		{ Element.ReadOnlyNA, "Только чтение если нет доступа." },
 		{ Element.WriteInputHistory, "Записывать историю ввода." },
+		{ Element.BackSpaceType, "Тип BackSpace:" },
 		#endregion
 		#region Layouts
 		{ Element.SwitchBetween, "Переключать между раскладками" }, 
@@ -744,6 +751,8 @@ public class Languages
 		{ Element.Readen, "прочитан" },
 		{ Element.RetryInAppData, "Попробовать создать/переключится на настройки в %AppData%?" },
 		{ Element.Sound, "Звук" },
+		{ Element.InputHistoryBackSpaceWriteType1, "Писать <Back>" },
+		{ Element.InputHistoryBackSpaceWriteType2, "Удалять символ" },
 		#endregion
 		#region Buttons
 		{ Element.ButtonOK, "ОК" }, 
@@ -802,7 +811,7 @@ public class Languages
 		{ Element.TT_RemapCapslockAsF18, "Переопределет клавишу Caps Lock как F18, после этого функция клавиши CapsLock будет отключена.\r\nЧтобы переключить состояние Caps Lock нажмите вместе с одной из клавиш модификаторов: Ctrl/Alt/Shift/Win.\r\n! Окно Mahou исключено из переопределения!\r\nВ Mahou назначайте гор. клавиши на Caps Lock, в других программах она будет переопределена как F18.\r\nПосле смены гор. клавиш не забудьте нажать Применить или ОК." },
 		{ Element.TT_UseJKL, "Позволяет Mahou получать раскладку с jkl.exe.\r\nПозволяет всегда получать правильную раскладку.(Очень рекомендуется)\r\n" },
 		{ Element.TT_ReadOnlyNA, "Переключается в режим только-чтение когда нет прав на запись Mahou.ini.\r\nПолезно для Администраторов." },
-		{ Element.TT_WriteInputHistory, "Будет писать историю ввода в history.txt(в папке Mahou или в AppData в зависимости от настроек), с поддержкой клавиши <BackSpace>!, хотя может быть медленным если история слишком большая." },
+		{ Element.TT_WriteInputHistory, "Будет писать историю ввода в history.txt(в папке Mahou или в AppData в зависимости от настроек),\nс поддержкой клавиши <BackSpace>!, хотя может быть медленным если история слишком большая." },
 		{ Element.TT_UseDelayAfterBackspaces, "Если включено Mahou будет ждать некоторое время после удаления старого слова и перед вводом конвертированного слова.\r\nПолезно если в некоторых программах функция Mahou Конверт последнего слова не работает нормально." },
 		{ Element.TT_ShowSelectionTranslationHotkey, "Включите переводчик на вкладке [Переводчик], чтобы эта горячая клавиша работала." },
 		#endregion

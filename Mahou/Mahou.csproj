@@ -153,9 +153,7 @@
     <Compile Include="LangDisplay.Designer.cs">
       <DependentUpon>LangDisplay.cs</DependentUpon>
     </Compile>
-    <Compile Include="LangPanel.cs">
-      <DependentUpon>MahouUI.cs</DependentUpon>
-    </Compile>
+    <Compile Include="LangPanel.cs" />
     <Compile Include="LangPanel.Designer.cs">
       <DependentUpon>LangPanel.cs</DependentUpon>
     </Compile>

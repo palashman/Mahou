@@ -418,6 +418,7 @@ namespace Mahou {
 			CheckBool("Layouts", "SwitchBetweenLayouts", "true");
 			#endregion
             #region Functions section
+            CheckInt("Functions", "WriteInputHistoryBackSpaceType", "0");
             CheckBool("Functions", "WriteInputHistory", "false");
             CheckBool("Functions", "ReadOnlyNA", "false");
             CheckBool("Functions", "UseJKL", "true");

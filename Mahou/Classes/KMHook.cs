@@ -182,7 +182,10 @@ namespace Mahou
 					WriteToHistory(sym);
 				}
 				if (Key == Keys.Back && printable_mod && down) {
-					RemLastHistory();
+					if (MahouUI.InputHistoryBackSpaceWriteType == 0) {
+						WriteToHistory("<Back>");
+					} else 
+						RemLastHistory();
 				}
 			}
 			#endregion
@@ -657,12 +660,18 @@ namespace Mahou
 		#region Functions/Struct
 		static void RemLastHistory() {
 			var txt = System.IO.File.ReadAllText(System.IO.Path.Combine(MahouUI.nPath, "history.txt"));
+			if (txt.Length<1) return;
 			txt = txt.Substring(0, txt.Length-1);
 			System.IO.File.WriteAllText(System.IO.Path.Combine(MahouUI.nPath, "history.txt"), txt);
 		}
 		static void WriteToHistory(char c) {
 			var sw = System.IO.File.AppendText(System.IO.Path.Combine(MahouUI.nPath, "history.txt"));
 			sw.Write(c);
+			sw.Close();
+		}
+		static void WriteToHistory(string s) {
+			var sw = System.IO.File.AppendText(System.IO.Path.Combine(MahouUI.nPath, "history.txt"));
+			sw.Write(s);
 			sw.Close();
 		}
 		static char getSym(int vkCode) {

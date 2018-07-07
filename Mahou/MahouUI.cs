@@ -52,7 +52,7 @@ namespace Mahou {
 		static int progress = 0, _progress = 0;
 		public string SnippetsExpandType = "";
 		int titlebar = 12;
-		public static int AtUpdateShow, SpecKeySetCount, SnippetsCount, AutoSwitchCount, TrSetCount;
+		public static int AtUpdateShow, SpecKeySetCount, SnippetsCount, AutoSwitchCount, TrSetCount, InputHistoryBackSpaceWriteType;
 		public int DoubleHKInterval = 200, SelectedTextGetMoreTriesCount, DelayAfterBackspaces;
 		#region Temporary variables
 		/// <summary> Translate Panel Colors</summary>
@@ -760,6 +760,7 @@ namespace Mahou {
 				MMain.MyConfs.Write("Functions", "UseJKL", chk_GetLayoutFromJKL.Checked.ToString());
 				MMain.MyConfs.Write("Functions", "ReadOnlyNA", chk_ReadOnlyNA.Checked.ToString());
 				MMain.MyConfs.Write("Functions", "WriteInputHistory", chk_WriteInputHistory.Checked.ToString());
+				try { MMain.MyConfs.Write("Functions", "WriteInputHistoryBackSpaceType", cbb_BackSpaceType.SelectedIndex.ToString()); } catch { }
 				#endregion
 				#region Layouts
 				MMain.MyConfs.Write("Layouts", "SwitchBetweenLayouts", chk_SwitchBetweenLayouts.Checked.ToString());
@@ -1368,6 +1369,10 @@ namespace Mahou {
 			cbb_UpdatesChannel.SelectedIndex = cbb_UpdatesChannel.Items.IndexOf(MMain.MyConfs.Read("Updates", "Channel"));
 			MMain.locales = Locales.AllList();
 			MMain.RefreshLCnMID();
+			cbb_BackSpaceType.Items.Clear();
+			cbb_BackSpaceType.Items.Add(MMain.Lang[Languages.Element.InputHistoryBackSpaceWriteType1]);
+			cbb_BackSpaceType.Items.Add(MMain.Lang[Languages.Element.InputHistoryBackSpaceWriteType2]);
+			InputHistoryBackSpaceWriteType = cbb_BackSpaceType.SelectedIndex = MMain.MyConfs.ReadInt("Functions", "WriteInputHistoryBackSpaceType");
 			if (SpecKeySetCount > 0)
 			for(int i = 1; i <= SpecKeySetCount; i++) {
 				Logging.Log("Refreshing Specific Hotkey Set #"+i);
@@ -1438,6 +1443,7 @@ namespace Mahou {
 			chk_OneLayoutWholeWord.Enabled = !chk_CSLayoutSwitching.Checked;
 			chk_FlagsInTray.Enabled = chk_TrayIcon.Checked;
 			chk_SilentUpdate.Enabled = chk_StartupUpdatesCheck.Checked;
+			lbl_BackSpaceType.Enabled = cbb_BackSpaceType.Enabled = chk_WriteInputHistory.Checked;
 			// Layouts tab
 			lbl_SetsCount.Enabled = pan_KeySets.Enabled = btn_AddSet.Enabled = btn_SubSet.Enabled = 
 				lbl_KeysType.Enabled = cbb_SpecKeysType.Enabled = chk_SpecificLS.Checked;
@@ -3203,6 +3209,7 @@ DEL ""ExtractASD.cmd""";
 			chk_GetLayoutFromJKL.Text = MMain.Lang[Languages.Element.UseJKL];
 			chk_ReadOnlyNA.Text = MMain.Lang[Languages.Element.ReadOnlyNA];
 			chk_WriteInputHistory.Text = MMain.Lang[Languages.Element.WriteInputHistory];
+			lbl_BackSpaceType.Text = MMain.Lang[Languages.Element.BackSpaceType];
 			#endregion
 			#region Layouts
 			chk_SwitchBetweenLayouts.Text = MMain.Lang[Languages.Element.SwitchBetween]+":";

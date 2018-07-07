@@ -243,6 +243,8 @@ namespace Mahou
 		private System.Windows.Forms.GroupBox grb_TrConfs;
 		private System.Windows.Forms.CheckBox chk_TrOnDoubleClick;
 		private System.Windows.Forms.CheckBox chk_WriteInputHistory;
+		private System.Windows.Forms.ComboBox cbb_BackSpaceType;
+		private System.Windows.Forms.Label lbl_BackSpaceType;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -266,6 +268,9 @@ namespace Mahou
 			this.components = new System.ComponentModel.Container();
 			this.tabs = new System.Windows.Forms.TabControl();
 			this.tab_functions = new System.Windows.Forms.TabPage();
+			this.lbl_BackSpaceType = new System.Windows.Forms.Label();
+			this.cbb_BackSpaceType = new System.Windows.Forms.ComboBox();
+			this.chk_WriteInputHistory = new System.Windows.Forms.CheckBox();
 			this.chk_ReadOnlyNA = new System.Windows.Forms.CheckBox();
 			this.chk_GetLayoutFromJKL = new System.Windows.Forms.CheckBox();
 			this.chk_SilentUpdate = new System.Windows.Forms.CheckBox();
@@ -499,7 +504,6 @@ namespace Mahou
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
 			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
-			this.chk_WriteInputHistory = new System.Windows.Forms.CheckBox();
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -577,6 +581,8 @@ namespace Mahou
 			// 
 			// tab_functions
 			// 
+			this.tab_functions.Controls.Add(this.lbl_BackSpaceType);
+			this.tab_functions.Controls.Add(this.cbb_BackSpaceType);
 			this.tab_functions.Controls.Add(this.chk_WriteInputHistory);
 			this.tab_functions.Controls.Add(this.chk_ReadOnlyNA);
 			this.tab_functions.Controls.Add(this.chk_GetLayoutFromJKL);
@@ -612,6 +618,34 @@ namespace Mahou
 			this.tab_functions.TabIndex = 0;
 			this.tab_functions.Text = "Functions";
 			this.tab_functions.UseVisualStyleBackColor = true;
+			// 
+			// lbl_BackSpaceType
+			// 
+			this.lbl_BackSpaceType.Location = new System.Drawing.Point(317, 239);
+			this.lbl_BackSpaceType.Name = "lbl_BackSpaceType";
+			this.lbl_BackSpaceType.Size = new System.Drawing.Size(117, 23);
+			this.lbl_BackSpaceType.TabIndex = 29;
+			this.lbl_BackSpaceType.Text = "BackSpace type:";
+			// 
+			// cbb_BackSpaceType
+			// 
+			this.cbb_BackSpaceType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cbb_BackSpaceType.FormattingEnabled = true;
+			this.cbb_BackSpaceType.Location = new System.Drawing.Point(440, 236);
+			this.cbb_BackSpaceType.Name = "cbb_BackSpaceType";
+			this.cbb_BackSpaceType.Size = new System.Drawing.Size(113, 23);
+			this.cbb_BackSpaceType.TabIndex = 28;
+			// 
+			// chk_WriteInputHistory
+			// 
+			this.chk_WriteInputHistory.AutoSize = true;
+			this.chk_WriteInputHistory.Location = new System.Drawing.Point(301, 214);
+			this.chk_WriteInputHistory.Name = "chk_WriteInputHistory";
+			this.chk_WriteInputHistory.Size = new System.Drawing.Size(127, 19);
+			this.chk_WriteInputHistory.TabIndex = 27;
+			this.chk_WriteInputHistory.Text = "Write input history.";
+			this.chk_WriteInputHistory.UseVisualStyleBackColor = true;
+			this.chk_WriteInputHistory.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
 			// 
 			// chk_ReadOnlyNA
 			// 
@@ -3278,16 +3312,6 @@ namespace Mahou
 			this.HelpMeUnderstand.ShowAlways = true;
 			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.HelpMeUnderstand.Popup += new System.Windows.Forms.PopupEventHandler(this.HelpMeUnderstandPopup);
-			// 
-			// chk_WriteInputHistory
-			// 
-			this.chk_WriteInputHistory.AutoSize = true;
-			this.chk_WriteInputHistory.Location = new System.Drawing.Point(301, 214);
-			this.chk_WriteInputHistory.Name = "chk_WriteInputHistory";
-			this.chk_WriteInputHistory.Size = new System.Drawing.Size(127, 19);
-			this.chk_WriteInputHistory.TabIndex = 27;
-			this.chk_WriteInputHistory.Text = "Write input history.";
-			this.chk_WriteInputHistory.UseVisualStyleBackColor = true;
 			// 
 			// MahouUI
 			// 
