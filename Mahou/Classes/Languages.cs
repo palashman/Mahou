@@ -472,7 +472,7 @@ public class Languages
 		{ Element.Readen, "readen" },
 		{ Element.RetryInAppData, "Retry creating/switching to configs in %AppData%?" },
 		{ Element.Sound, "Sound" },
-		{ Element.InputHistoryBackSpaceWriteType1, "Write <Back>" },
+		{ Element.InputHistoryBackSpaceWriteType1, "Write <Back>(faster)" },
 		{ Element.InputHistoryBackSpaceWriteType2, "Delete last" },
 		#endregion
 		#region Buttons
@@ -751,7 +751,7 @@ public class Languages
 		{ Element.Readen, "прочитан" },
 		{ Element.RetryInAppData, "Попробовать создать/переключится на настройки в %AppData%?" },
 		{ Element.Sound, "Звук" },
-		{ Element.InputHistoryBackSpaceWriteType1, "Писать <Back>" },
+		{ Element.InputHistoryBackSpaceWriteType1, "Писать <Back>(быстрее)" },
 		{ Element.InputHistoryBackSpaceWriteType2, "Удалять символ" },
 		#endregion
 		#region Buttons
