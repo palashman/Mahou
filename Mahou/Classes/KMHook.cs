@@ -609,7 +609,8 @@ namespace Mahou
 		                                     int idChild, uint dwEventThread, uint dwmsEventTime) {
 			if (MMain.mahou.LDUseWindowsMessages) {
 				if (eventType == WinAPI.EVENT_OBJECT_FOCUS) {
-					MMain.mahou.UpdateLDs();
+					if (MMain.mahou != null)
+						MMain.mahou.UpdateLDs();
 				}
 			}
 		}
