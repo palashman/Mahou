@@ -31,6 +31,59 @@ Mahou работает так как **Вы** хотите, настраивай
 
 ###### Возможности по версиям:
 
+**v2.7.3.1**<br/>
+
+- :memo: Добавлено исправление редкого падения при запуске с языковыми подсказками.
+- :gem: Добавлен другой тип ввода BackSpace в истории ввода.
+- :gem: Добавлена возможность менять тип ввода BackSpace.
+- :bug: Исповлена ошибка с нажатием BackSpace при пустой history.txt(истории ввода, с типом BackSpace стоящим на удаление)
+- :memo: Добавлены подсказка для функции тип BackSpace и истории ввода.
+- :gem: Добавлена функция "История ввода"(с поддержкой Backspace!).
+- :bug: Исправлено проблема с панелью перевода.
+- :gem: Добавлена возможность установить свой словарь транслитерации.
+	Дает возможность создать и редактировать свой словарь.
+	Просто создайте(или запустите Mahou и он создастся автоматически) TSDict.txt
+	рядом с Mahou.exe, и создавайте записи с таким синтаксисом:
+	YA|Я
+	т.е. разделение символом "|".
+- :bug: Исправлена ошибка в функции Командных ключей.
+- :bug: Добавлено исправление Ctrl+Alt+Delete, Ctrl & Alt были зажаты в коде Mahou (#184).
+- :memo: Добавлен ключ для перезапуска Mahou: Mahou.exe "/R" или "-R" or "R" не зависимо от регистра.
+- :bug: Исправлен перевод нескольких языков в тот же язык,
+	Испралвяет что иногда авто-определение языка не всегда верное, например:
+	auto->ru и zh_cn->ru и ja->ru, потому что иногда Google Translate, думает что японский текст(без каны) - китайский.
+- :memo: Добавлено исправления для раскладки в конвертации выделения.
+- :bug: Добавлена возможность переключения текста по >2 раскладках.
+- :memo: Добавлена информация о нерекоммендуемой функции: Смена раскладки в Конверт выделения(или +), и изменен ее текст в красный.
+- :bug: Исправлена ошибка панели перевода при отсутствии интернета.
+- :memo: Добавлен Армянский флаг.
+- :bug: Добавлено эксперементальное исправлене Alt+[любая] для горяч. клавиш.
+- :bug: Исправлена загрузка из настроек ширины подсказки возле каретки.
+- :bug: Исправлены неправельные utf-8 символы в запросе GTLink.
+- :memo: Панель перевода теперь показывает язык авто-определения в скобках <> в названии панели.
+- :bug: Исправлена speech_url для панели перевода.
+- :gem: Добавлен Auray, многомерный массив как в JavaScript, но для C#.
+- :gem: Используюя Auray Панель перевода теперь переводит в  ~30 раз быстрее :rocket:
+  Используется прямой доступ к массиву с переводом, вместа удаленного google script(на JavaScript).
+- :bug: Исправлена сохранение символа '=' в настройках, исправляет сохранения шрифтов.
+- :bug: Исправлена сохранение настроек ширины подсказки возле каретки, сохранялось значение из подсказки мыши.
+- :memo: Опечатка.
+- :memo: Added sound code to any snippet.
+- :bug: Fixed stop seraching next snippet aft any.
+- :bug: Fixed out of index exception for __ANY__.
+- :gem: Добавлена возможность писать слово ***ANY*** в маленькие слова сниппетов для:
+	того что этот сниппет срабатывал при любых буквах/символах,  полезно для создания сниппетов похожих на HTML/XML тэги,
+	например `-><***ANY***>====><***ANY***>__cursorhere()</***ANY***><====`, 
+	этот сниппет будут заменять все что будет начитанься на `<` и заканчиватся на `>`,
+	на все что было введено в скобках и с завершением и функцией `__cursorhere()` ставит курсор между ними.
+- :memo: Улучшена функция __cursorhere, так что только последнее будет работать.
+- :bug: Испрвлена дерегистрация LowLeveHook на другом потоке.
+- :bug: Исправлена выгрузка таймеров при выходе.
+- :memo: Исправлено что шрифт загружался без стиля.
+- :memo: Исправлена совместимость функции Единая раскладка с JKL.
+- :gem: Добавлена функция __cursorhere в функции сниппетов.
+- :bug: Исправлено отпускане модификаторов в: переключать раскладки по клавишам.
+
 **v2.7.0.0**<br/>
 
 - 📝 Доабавлена возможность ввода кодов клавиш в hex стиле для функции __keyboard.
@@ -616,6 +669,82 @@ Even selected text switches just between **selected** layouts, though if you lik
 6. Read the [wiki](https://github.com/BladeMight/Mahou/wiki/Functions-list) or [ask me](#license).
 
 ###### By version features:
+
+**v2.7.3.1**<br/>
+
+- :memo: Added fix for rare startup crash with language displays enabled.
+- :memo: BackSpace Combobox resize.
+- :memo: Note about faster BackSpace type.
+- :gem: Added other BackSpace type.
+- :gem: Added BackSpace type switcher.
+- :bug: Fixed pressing BackSpace to delete empty history.txt
+- :memo: Translations and tooltips updated for BackSpace type and Input
+	History.
+- :gem: Added input history feature(with Backspace support!).
+- :bug: Fixed translation panel update due to wrong id.
+- :gem: Added ability to edit transliteration dictionary.
+	It allows to create custom transliteration dictionary, and edit it.
+	Just create(or run Mahou so it will create it automatically) TSDict.txt
+	near to Mahou.exe, and create entries with that syntax:
+	YA|Я
+	e.g. separate transliterations by "|" pipe.
+- :bug: Fixed Mahou args 0 exception.
+- :bug: Added fix for Ctrl+Alt+Delete, Ctrl & Alt were stuck in Mahou's
+	code.
+- :memo: Added Restart switch Mahou.exe "/R" or "-R" or "R" case
+	insensetive.
+- :bug: Fixed multiple sametarget language translate
+	Fixes something like when you don't want to be auto-detect, e.g. having:
+	auto->ru and zh_cn->ru and ja->ru, because sometimes google translate
+	auto-detect thinks that japanese is chinese(whene no katakana and
+- hiragana are present).
+- :memo: Added special fix for special layout in CS.
+- :memo: Added note about ALL LAYOUTS switching.
+- :bug: Fixed >2 layout selected text switching.
+	In both modes: Whout whole layout word
+	(which actually works far better!),
+	and normal mode without it.
+- :bug: Fixed convert sel when wrong layout selected.
+- :gem: Added convert selection for more that 2 layouts.
+  quite experimental.
+- :memo: Added note(in tooltips) about bad function: Convert Selection Layout
+	Switching(or +), and changed function text to red.
+- :bug: Fixed translation panel bug with no network access.
+- :memo: Added Armenian flag.
+- :bug: Added experimental fix for only Alt+[Any].
+	For hotkeys.
+- :bug: Fixed loading of caret tt width.
+- :memo: Fix white color close button not intsant.
+- :memo: Corrected comment position.
+- :bug: Fixed wrong utf-8 chars in GTLink request.
+- :memo: Translation now shows selected text source language in <> brackets in translator title.
+- :bug: Fixed undefined reference to Debug.
+- :memo: Changed Auray log messages to Debug.WriteLine.
+- :bug: Fixed speech_url for translate panel.
+- :bug: Fixed non-static method call from static.
+- :gem: Added Auray, multidimensional array,
+  like in JavaScript, but for C#.
+- :gem: Using Auray Translate panel now translates ~30 times
+	faster!!! :rocket:
+  Using direct access to array, instead of remote google script.
+- :memo: Actually this hotkey should up modifiers.
+- :bug: Fixed loading saving that contained '=' symbol.
+- :bug: Fixed caret lt Width was saving into mouse lt width.
+- :memo: RU lang typo.
+- :memo: Added sound code to any snippet.
+- :bug: Fixed stop seraching next snippet aft any.
+- :bug: Fixed out of index exception for __ANY__.
+- :gem: Added ***ANY*** word to snippets small words.
+	It matches any words, useful for something like auto-insert-ending and move cursor between ihtml/xml tags, also added default snippets to autocomplete all html/xml tags.
+- :memo: shorten code
+- :memo: Optimized __cursorhere expression so only last will work.
+- :bug: Fixed llhook unregister on different thread.
+- :bug: Fixed unloading of timers on exit.
+- :memo: Fixed font without style loading.
+- :memo: Fixed One Layout feature with JKL enabled.
+- :gem: Added __cursorhere expression.
+- :bug: Fixed release of modifiers in:
+  specific layout switch hotkeys.
 
 **v2.7.0.0**<br/>
 
