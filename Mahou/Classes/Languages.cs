@@ -668,7 +668,7 @@ public class Languages
 		{ Element.ConvertSelected, "Конвертация выделенного текста" }, 
 		{ Element.ConvertLine, "Конвертация последней линии" }, 
 		{ Element.ConvertWords, "Конвертация нескольких слов" }, 
-		{ Element.ToggleSymbolIgnore, "Переключить игнорование символов" }, 
+		{ Element.ToggleSymbolIgnore, "Переключить игнорирование символов" }, 
 		{ Element.SelectedToTitleCase, "Выделенные слова в Заглавный регистр" }, 
 		{ Element.SelectedToRandomCase, "Выделенные слова в СЛУчАйнЫй регистр" }, 
 		{ Element.SelectedToSwapCase, "Выделенные слова в оБРАТНЫЙ регистр" }, 
