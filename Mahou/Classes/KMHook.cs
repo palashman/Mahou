@@ -685,8 +685,11 @@ namespace Mahou
 			if (MahouUI.UseJKL)
 				layout = MahouUI.currentLayout & 0xffff;
 			WinAPI.ToUnicodeEx((uint)vkCode, (uint)vkCode, byt, stb, stb.Capacity, 0, (IntPtr)layout);
-			var c = stb.ToString()[0];
-			return c;
+			if (stb.Length > 0) {
+				var c = stb.ToString()[0];
+				return c;	
+			}
+			return '\0';
 		}
 		public static void ReloadTSDict() {
 			var tsdict = new Dictionary<string, string>();
@@ -2049,7 +2052,7 @@ namespace Mahou
 					break;
 				last = loc;
 			} while (loc != LayoutId);
-			if (!MahouUI.UseJKL)
+//			if (!MahouUI.UseJKL) // Wow, gives no sense!!
 				MahouUI.currentLayout = MahouUI.GlobalLayout = LayoutId;
 		}
 		static bool failed = true;
@@ -2166,6 +2169,7 @@ namespace Mahou
 				if (br)
 					break;
 			}
+			Debug.WriteLine("Next layout: " + loc.Lang);
 			return loc;
 		}
 		/// <summary>
