@@ -760,7 +760,7 @@ namespace Mahou
               });
 		}
 		#region in Snippets expressions  
-		static readonly string[] expressions = new []{ "__date", "__time", "__version", "__system", "__title", "__keyboard", "__execute", "__cursorhere" };
+		static readonly string[] expressions = new []{ "__date", "__time", "__version", "__system", "__title", "__keyboard", "__execute", "__cursorhere", "__paste" };
 		#endregion
 		static void ExpandSnippetWithExpressions(string expand) {
 			string ex = "", args = "", raw = "", err = "";
@@ -784,23 +784,29 @@ namespace Mahou
 				if (!is_expr)
 					ex += e;
 				else err+=e;
-				if (is_expr && e == ')') {
-					if (args_getting) {
-						args_getting = false;
-						args_get = true;
-//						Debug.WriteLine("end of args of: " + fun + " -> " +i);
+				if (is_expr && e == ')') { // Escape closing
+					if (expand[i-1] == '\\') {
+						Logging.Log("Escaped \")\" at position: "+i);
+						if (args.Length >2)
+							args = args.Substring(0, args.Length-1);
 					} else {
-						Logging.Log("Expression \"(\" missing, but \")\" were there, in ["+ex+"], at position: "+expr_start+" in ["+expand+"]");
-						KInputs.MakeInput(KInputs.AddString(ex+err));
-						is_expr = false;
-						args_get = false;
-						escaped = false;
-						args = ex = raw = "";
+						if (args_getting) {
+							args_getting = false;
+							args_get = true;
+	//						Debug.WriteLine("end of args of: " + fun + " -> " +i);
+						} else {
+							Logging.Log("Expression \"(\" missing, but \")\" were there, in ["+ex+"], at position: "+expr_start+" in ["+expand+"]");
+							KInputs.MakeInput(KInputs.AddString(ex+err));
+							is_expr = false;
+							args_get = false;
+							escaped = false;
+							args = ex = raw = "";
+						}
 					}
 				}
 				if (args_getting)
 					args += e;
-				if (is_expr && e == '(') {
+				if (is_expr && e == '(' && !args_getting) {
 					args_getting = true; 
 //					Debug.WriteLine("start of args of: " + fun + " -> " +i);
 				}
@@ -877,6 +883,15 @@ namespace Mahou
 		}
 		static void ExecExpression(string expr, string args, int curlefts = -1) {
 			switch (expr) {
+				case "__paste":
+					Logging.Log("Pasting text from snippet.");
+					Debug.WriteLine("Paste: " + args);
+					GetClipStr();
+					RestoreClipBoard(Regex.Replace(args, "\r?\n|\r", Environment.NewLine));
+					KInputs.MakeInput(new []{ KInputs.AddKey(Keys.LControlKey, true), KInputs.AddKey(Keys.V, true),
+					                  	KInputs.AddKey(Keys.LControlKey, false), KInputs.AddKey(Keys.V, false)});
+					DoLater(() => RestoreClipBoard(), 300);
+					break;
 				case "__date":
 				case "__time":
 					var now = DateTime.Now;
@@ -1731,10 +1746,19 @@ namespace Mahou
 			} while (CB_Blocker != IntPtr.Zero);
 			return true;
 		}
-		public static void RestoreClipBoard() {
-			Logging.Log("Restoring clipboard text: ["+lastClipText+"].");
-			if (WaitForClip2BeFree())
-				try { Clipboard.SetDataObject(lastClipText, true, 5, 120); } catch { Logging.Log("Error during clipboard text restore after 5 tries.", 2); }
+		public static bool RestoreClipBoard(string special = "") {
+			var restore = special;
+			bool spc = true;
+			if (String.IsNullOrEmpty(restore)) {
+				restore = lastClipText;
+				spc = false;
+			}
+			Logging.Log((spc?"Special ":"")+"Restoring clipboard text: ["+restore+"].");
+			if (WaitForClip2BeFree()) {
+				try { Clipboard.SetDataObject(restore, true, 5, 120); return true; } 
+				catch { Logging.Log("Error during clipboard "+(spc?"Special ":"")+"text restore after 5 tries.", 2); return false; }
+			}
+			return false;
 		}
 		/// <summary>
 		/// Sends RCtrl + Insert to selected get text, and returns that text by using WinAPI.GetText().
