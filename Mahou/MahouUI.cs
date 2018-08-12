@@ -57,6 +57,7 @@ namespace Mahou {
 		#region Temporary variables
 		/// <summary> Translate Panel Colors</summary>
 		public Color TrFore, TrBack, TrBorder;
+		public Font TrText, TrTitle;
 		public int TrTransparency;
 		/// <summary> In memory settings, for timers/hooks.</summary>
 		public bool DiffAppearenceForLayouts, LDForCaretOnChange, LDForMouseOnChange, ScrollTip, AddOneSpace,
@@ -873,6 +874,8 @@ namespace Mahou {
 				MMain.MyConfs.Write("TranslatePanel", "BG", ColorTranslator.ToHtml(btn_TrBG.BackColor));
 				MMain.MyConfs.Write("TranslatePanel", "BorderC", ColorTranslator.ToHtml(btn_TrBorderC.BackColor));
 				MMain.MyConfs.Write("TranslatePanel", "BorderAero", chk_TrUseAccent.Checked.ToString());
+				MMain.MyConfs.Write("TranslatePanel", "TextFont", fcv.ConvertToString(btn_TrTextFont.Font));
+				MMain.MyConfs.Write("TranslatePanel", "TitleFont", fcv.ConvertToString(btn_TrTitleFont.Font));
 				SaveTrSets();
 				#endregion
 				#region Proxy
@@ -1129,6 +1132,8 @@ namespace Mahou {
 				if (_TranslatePanel != null)
 					_TranslatePanel.Dispose();
 			}
+			TrText = btn_TrTextFont.Font = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("TranslatePanel", "TextFont")); 
+			TrTitle = btn_TrTitleFont.Font = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("TranslatePanel", "TitleFont")); 
 			#endregion
 			#region Snippets
 			SnippetsEnabled = chk_Snippets.Checked = MMain.MyConfs.ReadBool("Snippets", "SnippetsEnabled");
@@ -3330,6 +3335,9 @@ DEL ""ExtractASD.cmd""";
 			chk_TrEnable.Text = MMain.Lang[Languages.Element.EnableTranslatePanel];
 			chk_TrOnDoubleClick.Text = MMain.Lang[Languages.Element.ShowTranslationOnDoubleClick];
 			lbl_TrLanguages.Text = MMain.Lang[Languages.Element.TranslateLanguages];
+			lbl_TrTextFont.Text = MMain.Lang[Languages.Element.TextFont];
+			lbl_TrTitleFont.Text = MMain.Lang[Languages.Element.TitleFont];
+			btn_TrTitleFont.Text = btn_TrTextFont.Text = MMain.Lang[Languages.Element.LDFont];
 			#endregion
 			#region Updtaes
 			btn_CheckForUpdates.Text = MMain.Lang[Languages.Element.CheckForUpdates];
@@ -3623,11 +3631,14 @@ DEL ""ExtractASD.cmd""";
 			UpdateHotkeyTemps();
 		}
 		void Btn_LangTTFontClick(object sender, EventArgs e) {
+			Btn_FontSelection(sender, e);
+			UpdateLangDisplayTemps();
+		}
+		void Btn_FontSelection(object sender, EventArgs e) {
 			var btn = sender as Button;
 			fntd.Font = btn.Font;
 			if (fntd.ShowDialog() == DialogResult.OK)
 				btn.Font = fntd.Font;
-			UpdateLangDisplayTemps();
 		}
 		void Btn_CheckForUpdatesClick(object sender, EventArgs e) {
 			if (!checking) {

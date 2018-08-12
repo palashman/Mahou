@@ -152,6 +152,8 @@ public class Languages
 		ShowTranslationOnDoubleClick,
 		TranslateLanguages,
 		Translation,
+		TextFont,
+		TitleFont,
 		#endregion
 		#region Updates
 		CheckForUpdates,
@@ -412,6 +414,8 @@ public class Languages
 		{ Element.ShowTranslationOnDoubleClick, "Show on Double Click." }, 
 		{ Element.TranslateLanguages, "Translate languages:" }, 
 		{ Element.Translation, "Translation" }, 
+		{ Element.TextFont, "Text Font:" }, 
+		{ Element.TitleFont, "Title Font:" }, 
 		#endregion
 		#region Updates
 		{ Element.CheckForUpdates, "Check for updates:" }, 
@@ -693,6 +697,8 @@ public class Languages
 		{ Element.ShowTranslationOnDoubleClick, "Показывать при двойном клике." }, 
 		{ Element.TranslateLanguages, "Языки перевода:" }, 
 		{ Element.Translation, "Перевод" }, 
+		{ Element.TextFont, "Шрифт текста:" }, 
+		{ Element.TitleFont, "Шрифт заголовка:" }, 
 		#endregion
 		#region Updates
 		{ Element.CheckForUpdates, "Проверить обновления:" }, 

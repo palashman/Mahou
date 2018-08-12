@@ -111,6 +111,7 @@ namespace Mahou {
 			var gtrs = GetGTResponceAll(tls, qs, sls);
 			if (gtrs.Count > 0) {
 				TITLE.Text = MMain.Lang[Languages.Element.Translation] + " <"+gtrs[0].src_lang+">";
+				TITLE.Font = MMain.mahou.TrTitle;
 				foreach (var gtr in gtrs) {
 	//				var gtr = TranslatePanel.ParseGTResp(raw_gtr);
 					if (string.IsNullOrEmpty(gtr.translation)) continue;
@@ -141,7 +142,8 @@ namespace Mahou {
 				var ind = GTRs.IndexOf(gtr);
 				var pan = new Panel();
 				pan.Width = pan_Translations.Width-2;
-				pan.Height = 16;
+				pan.Height = MMain.mahou.TrText.Height*2;
+				Debug.WriteLine("Pan height: " + pan.Height);
 				pan.Name = "PN_LINE_"+gtr.src_lang+".to."+gtr.targ_lang;
 				pan.Location = new Point(1, pan_Translations.Height+1);
 				var slt = new TextBox();
@@ -173,6 +175,7 @@ namespace Mahou {
 				btn.BackColor = slt.BackColor = txt.BackColor = pan_Translations.BackColor;
 				btn.ForeColor = slt.ForeColor = txt.ForeColor = pan_Translations.ForeColor;
 				pan_Translations.Controls.Add(pan);
+				txt_Source.Font = slt.Font = txt.Font = MMain.mahou.TrText;
 				UpdateHeight();
 			}
 			SetOptimalWidth();
@@ -226,15 +229,16 @@ namespace Mahou {
 					ct.Controls[0].ForeColor = fore;
 					txt.ForeColor = fore;
 					(ct.Controls[2] as ButtonLabel).origin_fg = ct.Controls[2].ForeColor = fore;
-					ct.Controls[0].Font = font;
-					txt.Font = font;
+//					ct.Controls[0].Font = font;
+//					txt.Font = font;
+					ct.Controls[0].Font = txt.Font = MMain.mahou.TrText;
 					txt.Multiline = multiline;
 				}
 			}
 			txt_Source.BackColor = back;
 			txt_Source.ForeColor = fore;
 			txt_Source.Multiline = multiline;
-			txt_Source.Font = font;
+			txt_Source.Font = MMain.mahou.TrText;
 			X.BackColor = back;
 			X._original_color = X.ForeColor = fore;
 			pan_Translations.ForeColor = fore;
@@ -247,6 +251,7 @@ namespace Mahou {
 			Invalidate();
 		}
 		public void UpdateHeight() {
+			TITLE.Height = TITLE.Font.Height;
 			var h = 0;
 			foreach (Control ct in pan_Translations.Controls) {
 				h+=ct.Height;

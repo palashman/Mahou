@@ -245,6 +245,10 @@ namespace Mahou
 		private System.Windows.Forms.CheckBox chk_WriteInputHistory;
 		private System.Windows.Forms.ComboBox cbb_BackSpaceType;
 		private System.Windows.Forms.Label lbl_BackSpaceType;
+		private System.Windows.Forms.Label lbl_TrTitleFont;
+		private System.Windows.Forms.Label lbl_TrTextFont;
+		private System.Windows.Forms.Button btn_TrTitleFont;
+		private System.Windows.Forms.Button btn_TrTextFont;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -268,8 +272,8 @@ namespace Mahou
 			this.components = new System.ComponentModel.Container();
 			this.tabs = new System.Windows.Forms.TabControl();
 			this.tab_functions = new System.Windows.Forms.TabPage();
-			this.lbl_BackSpaceType = new System.Windows.Forms.Label();
 			this.cbb_BackSpaceType = new System.Windows.Forms.ComboBox();
+			this.lbl_BackSpaceType = new System.Windows.Forms.Label();
 			this.chk_WriteInputHistory = new System.Windows.Forms.CheckBox();
 			this.chk_ReadOnlyNA = new System.Windows.Forms.CheckBox();
 			this.chk_GetLayoutFromJKL = new System.Windows.Forms.CheckBox();
@@ -461,6 +465,10 @@ namespace Mahou
 			this.tab_translator = new System.Windows.Forms.TabPage();
 			this.chk_TrEnable = new System.Windows.Forms.CheckBox();
 			this.grb_TrConfs = new System.Windows.Forms.GroupBox();
+			this.lbl_TrTitleFont = new System.Windows.Forms.Label();
+			this.lbl_TrTextFont = new System.Windows.Forms.Label();
+			this.btn_TrTitleFont = new System.Windows.Forms.Button();
+			this.btn_TrTextFont = new System.Windows.Forms.Button();
 			this.chk_TrOnDoubleClick = new System.Windows.Forms.CheckBox();
 			this.pan_TrSets = new System.Windows.Forms.Panel();
 			this.lbl_TrLanguages = new System.Windows.Forms.Label();
@@ -619,14 +627,6 @@ namespace Mahou
 			this.tab_functions.Text = "Functions";
 			this.tab_functions.UseVisualStyleBackColor = true;
 			// 
-			// lbl_BackSpaceType
-			// 
-			this.lbl_BackSpaceType.Location = new System.Drawing.Point(316, 238);
-			this.lbl_BackSpaceType.Name = "lbl_BackSpaceType";
-			this.lbl_BackSpaceType.Size = new System.Drawing.Size(117, 23);
-			this.lbl_BackSpaceType.TabIndex = 29;
-			this.lbl_BackSpaceType.Text = "BackSpace type:";
-			// 
 			// cbb_BackSpaceType
 			// 
 			this.cbb_BackSpaceType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -635,6 +635,14 @@ namespace Mahou
 			this.cbb_BackSpaceType.Name = "cbb_BackSpaceType";
 			this.cbb_BackSpaceType.Size = new System.Drawing.Size(144, 23);
 			this.cbb_BackSpaceType.TabIndex = 28;
+			// 
+			// lbl_BackSpaceType
+			// 
+			this.lbl_BackSpaceType.Location = new System.Drawing.Point(316, 238);
+			this.lbl_BackSpaceType.Name = "lbl_BackSpaceType";
+			this.lbl_BackSpaceType.Size = new System.Drawing.Size(117, 23);
+			this.lbl_BackSpaceType.TabIndex = 29;
+			this.lbl_BackSpaceType.Text = "BackSpace type:";
 			// 
 			// chk_WriteInputHistory
 			// 
@@ -2840,6 +2848,10 @@ namespace Mahou
 			// 
 			// grb_TrConfs
 			// 
+			this.grb_TrConfs.Controls.Add(this.btn_TrTitleFont);
+			this.grb_TrConfs.Controls.Add(this.btn_TrTextFont);
+			this.grb_TrConfs.Controls.Add(this.lbl_TrTitleFont);
+			this.grb_TrConfs.Controls.Add(this.lbl_TrTextFont);
 			this.grb_TrConfs.Controls.Add(this.chk_TrOnDoubleClick);
 			this.grb_TrConfs.Controls.Add(this.pan_TrSets);
 			this.grb_TrConfs.Controls.Add(this.lbl_TrLanguages);
@@ -2861,6 +2873,44 @@ namespace Mahou
 			this.grb_TrConfs.TabIndex = 2;
 			this.grb_TrConfs.TabStop = false;
 			// 
+			// lbl_TrTitleFont
+			// 
+			this.lbl_TrTitleFont.AutoSize = true;
+			this.lbl_TrTitleFont.Location = new System.Drawing.Point(338, 81);
+			this.lbl_TrTitleFont.Name = "lbl_TrTitleFont";
+			this.lbl_TrTitleFont.Size = new System.Drawing.Size(60, 15);
+			this.lbl_TrTitleFont.TabIndex = 50;
+			this.lbl_TrTitleFont.Text = "Title Font:";
+			// 
+			// lbl_TrTextFont
+			// 
+			this.lbl_TrTextFont.Location = new System.Drawing.Point(170, 81);
+			this.lbl_TrTextFont.Name = "lbl_TrTextFont";
+			this.lbl_TrTextFont.Size = new System.Drawing.Size(87, 15);
+			this.lbl_TrTextFont.TabIndex = 49;
+			this.lbl_TrTextFont.Text = "Text Font:";
+			this.lbl_TrTextFont.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// btn_TrTitleFont
+			// 
+			this.btn_TrTitleFont.Location = new System.Drawing.Point(444, 76);
+			this.btn_TrTitleFont.Name = "btn_TrTitleFont";
+			this.btn_TrTitleFont.Size = new System.Drawing.Size(87, 25);
+			this.btn_TrTitleFont.TabIndex = 48;
+			this.btn_TrTitleFont.Text = "Font";
+			this.btn_TrTitleFont.UseVisualStyleBackColor = true;
+			this.btn_TrTitleFont.Click += new System.EventHandler(this.Btn_FontSelection);
+			// 
+			// btn_TrTextFont
+			// 
+			this.btn_TrTextFont.Location = new System.Drawing.Point(252, 76);
+			this.btn_TrTextFont.Name = "btn_TrTextFont";
+			this.btn_TrTextFont.Size = new System.Drawing.Size(80, 25);
+			this.btn_TrTextFont.TabIndex = 47;
+			this.btn_TrTextFont.Text = "Font";
+			this.btn_TrTextFont.UseVisualStyleBackColor = true;
+			this.btn_TrTextFont.Click += new System.EventHandler(this.Btn_FontSelection);
+			// 
 			// chk_TrOnDoubleClick
 			// 
 			this.chk_TrOnDoubleClick.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -2875,15 +2925,15 @@ namespace Mahou
 			// 
 			this.pan_TrSets.AutoScroll = true;
 			this.pan_TrSets.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.pan_TrSets.Location = new System.Drawing.Point(28, 89);
+			this.pan_TrSets.Location = new System.Drawing.Point(28, 117);
 			this.pan_TrSets.Name = "pan_TrSets";
-			this.pan_TrSets.Size = new System.Drawing.Size(515, 146);
+			this.pan_TrSets.Size = new System.Drawing.Size(515, 124);
 			this.pan_TrSets.TabIndex = 42;
 			// 
 			// lbl_TrLanguages
 			// 
 			this.lbl_TrLanguages.AutoSize = true;
-			this.lbl_TrLanguages.Location = new System.Drawing.Point(8, 71);
+			this.lbl_TrLanguages.Location = new System.Drawing.Point(6, 98);
 			this.lbl_TrLanguages.Name = "lbl_TrLanguages";
 			this.lbl_TrLanguages.Size = new System.Drawing.Size(115, 15);
 			this.lbl_TrLanguages.TabIndex = 46;
@@ -2891,7 +2941,7 @@ namespace Mahou
 			// 
 			// lbl_TrSetsCount
 			// 
-			this.lbl_TrSetsCount.Location = new System.Drawing.Point(3, 111);
+			this.lbl_TrSetsCount.Location = new System.Drawing.Point(3, 134);
 			this.lbl_TrSetsCount.Name = "lbl_TrSetsCount";
 			this.lbl_TrSetsCount.Size = new System.Drawing.Size(27, 22);
 			this.lbl_TrSetsCount.TabIndex = 45;
@@ -2900,7 +2950,7 @@ namespace Mahou
 			// 
 			// btn_TrAddSet
 			// 
-			this.btn_TrAddSet.Location = new System.Drawing.Point(3, 144);
+			this.btn_TrAddSet.Location = new System.Drawing.Point(3, 162);
 			this.btn_TrAddSet.Name = "btn_TrAddSet";
 			this.btn_TrAddSet.Size = new System.Drawing.Size(23, 23);
 			this.btn_TrAddSet.TabIndex = 43;
@@ -2910,7 +2960,7 @@ namespace Mahou
 			// 
 			// btn_TrSubSet
 			// 
-			this.btn_TrSubSet.Location = new System.Drawing.Point(3, 173);
+			this.btn_TrSubSet.Location = new System.Drawing.Point(3, 191);
 			this.btn_TrSubSet.Name = "btn_TrSubSet";
 			this.btn_TrSubSet.Size = new System.Drawing.Size(23, 23);
 			this.btn_TrSubSet.TabIndex = 44;
@@ -2958,7 +3008,7 @@ namespace Mahou
 			// 
 			// lbl_TrFG
 			// 
-			this.lbl_TrFG.Location = new System.Drawing.Point(174, 50);
+			this.lbl_TrFG.Location = new System.Drawing.Point(171, 50);
 			this.lbl_TrFG.Name = "lbl_TrFG";
 			this.lbl_TrFG.Size = new System.Drawing.Size(102, 15);
 			this.lbl_TrFG.TabIndex = 37;
@@ -2976,7 +3026,7 @@ namespace Mahou
 			// 
 			// btn_TrFG
 			// 
-			this.btn_TrFG.Location = new System.Drawing.Point(279, 45);
+			this.btn_TrFG.Location = new System.Drawing.Point(284, 45);
 			this.btn_TrFG.Name = "btn_TrFG";
 			this.btn_TrFG.Size = new System.Drawing.Size(25, 25);
 			this.btn_TrFG.TabIndex = 35;
