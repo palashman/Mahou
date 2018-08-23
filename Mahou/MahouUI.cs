@@ -3053,7 +3053,7 @@ DEL ""ExtractASD.cmd""";
 				// I'm not kidding...
 				// They really works :)
 				var Title = Regex.Match(data,
-					            "<h1 class=\"release-title.*\n.*<a href=\".*\">(.*)</a>").Groups[1].Value;
+					            "release-header.+\n.+\n.+\n.+?\\>(.+)\\<").Groups[1].Value;
 				var Description = Regex.Replace(Regex.Match(data,
                                        //These looks unsafe, but really they works!
 					                  "<div class=\"markdown-body\">\n\\s+(.+?)[\\n\\s]+</div>",
@@ -3451,7 +3451,12 @@ DEL ""ExtractASD.cmd""";
 		/// <returns>float</returns>
 		public static float flVersion(string ver) {
 			var justdigs = Regex.Replace(ver, "\\D", "");
-			return float.Parse(justdigs[0] + "." + justdigs.Substring(1), CultureInfo.InvariantCulture);
+			float fl = 0.0f;
+			if (justdigs.Length > 2) {
+				var strfl = justdigs[0] + "." + justdigs.Substring(1);
+				float.TryParse(strfl, out fl);
+			}
+			return fl;
 		}
 		#endregion
 		#region Links
