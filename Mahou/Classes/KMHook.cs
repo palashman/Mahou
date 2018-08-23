@@ -22,7 +22,7 @@ namespace Mahou
 			IsHotkey, ff_chr_wheeled, preSnip, LMB_down, RMB_down, MMB_down,
 			dbl_click, click;
 		public static System.Windows.Forms.Timer click_reset = new System.Windows.Forms.Timer();
-		public static int skip_mouse_events, skip_spec_keys, cursormove = -1;
+		public static int skip_mouse_events, skip_spec_keys, cursormove = -1, guess_tries;
 		static string lastClipText = "";
 		static List<Keys> tempNumpads = new List<Keys>();
 		public static List<char> c_snip = new List<char>();
@@ -2407,6 +2407,18 @@ namespace Mahou
 			}
 			if (target == layout) 
 				guess = word;
+			if (layout == target) {
+				guess_tries++;
+				Debug.WriteLine("WARNING! Guess Try [#"+guess_tries+"], target layout and word layout are same!, taking next layout as target!");
+				if (guess_tries < 10) {
+					target = GetNextLayout().uId;
+					return WordGuessLayout(word, target);
+				} else {
+					guess_tries = 0;
+				}
+			} else {
+				guess_tries = 0;
+			}
 			Debug.WriteLine("Word " + word + " layout is " + layout + " targeting: " + target +" guess: " + guess);
 			return Tuple.Create(guess, layout);
 		}
