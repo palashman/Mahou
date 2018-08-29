@@ -179,7 +179,7 @@ namespace Mahou {
         	CreateConfigsFile();
         	ReadFromDisk();
         	#region TranslatePanel
-			CheckString("TranslatePanel", "TextFont", "Microsoft Sans Serif; 8,25pt");
+			CheckString("TranslatePanel", "TextFont", "Microsoft Sans Serif; 8.25pt");
 			CheckString("TranslatePanel", "TitleFont", "Segoe UI; 12pt");
 			CheckBool("TranslatePanel", "Enabled", "False");
 			CheckBool("TranslatePanel", "OnDoubleClick", "False");
@@ -218,7 +218,7 @@ namespace Mahou {
 			CheckBool("LangPanel", "UpperArrow", "true");
 			CheckBool("LangPanel", "BorderAeroColor", "true");
 			CheckString("LangPanel", "BorderColor", "#8B5FFF");
-			CheckString("LangPanel", "Font", "Microsoft Sans Serif; 8,25pt");
+			CheckString("LangPanel", "Font", "Microsoft Sans Serif; 8.25pt");
 			CheckString("LangPanel", "BackColor", "#FFFFFF");
 			CheckString("LangPanel", "ForeColor", "#000000");
 			CheckString("LangPanel", "Position", "X0 Y0");
