@@ -1132,8 +1132,10 @@ namespace Mahou {
 				if (_TranslatePanel != null)
 					_TranslatePanel.Dispose();
 			}
-			TrText = btn_TrTextFont.Font = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("TranslatePanel", "TextFont")); 
-			TrTitle = btn_TrTitleFont.Font = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("TranslatePanel", "TitleFont")); 
+			try { TrText = btn_TrTextFont.Font = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("TranslatePanel", "TextFont")); 
+			} catch { WrongFontLog(MMain.MyConfs.Read("TranslatePanel", "TextFont")); }
+			try { TrTitle = btn_TrTitleFont.Font = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("TranslatePanel", "TitleFont")); 
+			} catch { WrongFontLog(MMain.MyConfs.Read("TranslatePanel", "TitleFont")); }
 			#endregion
 			#region Snippets
 			SnippetsEnabled = chk_Snippets.Checked = MMain.MyConfs.ReadBool("Snippets", "SnippetsEnabled");

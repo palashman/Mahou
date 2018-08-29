@@ -2414,10 +2414,10 @@ namespace Mahou
 				guess = word;
 			if (layout == target) {
 				guess_tries++;
-				Debug.WriteLine("WARNING! Guess Try [#"+guess_tries+"], target layout and word layout are same!, taking next layout as target!");
+				Logging.Log("WARNING! Guess Try [#"+guess_tries+"], target layout and word layout are same!, taking next layout as target!");
 				if (guess_tries < 10) {
 					target = GetNextLayout(target).uId;
-					Debug.WriteLine("Retry with: layout: " +layout +", target: " + target);
+					Logging.Log("Retry with: layout: " +layout +", target: " + target);
 					return WordGuessLayout(word, target);
 				} else {
 					guess_tries = 0;
