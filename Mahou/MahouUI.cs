@@ -971,9 +971,10 @@ namespace Mahou {
 		string FontDecimReplace(string font_raw) {
 			var pattern = "(?:(\\.|\\,))([0-9]+)pt";
 			var repl = font_raw;
-			if (new Regex(pattern).IsMatch(repl)) {
+			var mt = new Regex(pattern).Match(repl);
+			if (mt.Groups[1].Value != decim && !string.IsNullOrEmpty(mt.Groups[1].Value)) {
 				repl = Regex.Replace(font_raw, pattern, decim+"$1pt");
-				Debug.WriteLine("Replaced decimal in font " + font_raw + ", with: " + decim);
+				Logging.Log("Replaced decimal in font " + font_raw + ", with: " + decim);
 			}
 			return repl;
 		}
