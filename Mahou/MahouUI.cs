@@ -9,6 +9,7 @@ using System.Net;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Reflection;
+using Microsoft.Win32;
 using System.Runtime.InteropServices;
 	
 namespace Mahou {
@@ -140,6 +141,7 @@ namespace Mahou {
 		public LangPanel _langPanel;
 		public TranslatePanel _TranslatePanel;
 		uint latestL = 0, latestCL = 0;
+		static string decim = ",";
 		public static uint currentLayout, GlobalLayout;
 		public static uint MAIN_LAYOUT1, MAIN_LAYOUT2;
 		bool onepass = true, onepassC = true;
@@ -500,38 +502,18 @@ namespace Mahou {
 			HKShowSelectionTranslate_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "ShowSelectionTranslate_Key");
 			#endregion
 			#region Lang Display colors
-			try { LDMouseFore_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "MouseLTForeColor")); 
-				} catch { WrongColorLog(MMain.MyConfs.Read("Appearence", "MouseLTForeColor")); }
-			try { LDCaretFore_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "CaretLTForeColor")); 
-				} catch { WrongColorLog(MMain.MyConfs.Read("Appearence", "CaretLTForeColor")); }
-			try { LDMouseBack_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "MouseLTBackColor")); 
-				} catch { WrongColorLog(MMain.MyConfs.Read("Appearence", "MouseLTBackColor")); }
-			try { LDCaretBack_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "CaretLTBackColor")); 
-				} catch { WrongColorLog(MMain.MyConfs.Read("Appearence", "CaretLTBackColor")); }
-			try { Layout1Fore_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "Layout1ForeColor")); 
-				} catch { WrongColorLog(MMain.MyConfs.Read("Appearence", "Layout1ForeColor")); }
-			try { Layout2Fore_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "Layout2ForeColor")); 
-				} catch { WrongColorLog(MMain.MyConfs.Read("Appearence", "Layout2ForeColor")); }
-			try { Layout1Back_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "Layout1BackColor")); 
-				} catch { WrongColorLog(MMain.MyConfs.Read("Appearence", "Layout1BackColor")); }
-			try { Layout2Back_temp = ColorTranslator.FromHtml(MMain.MyConfs.Read("Appearence", "Layout2BackColor")); 
-				} catch { WrongColorLog(MMain.MyConfs.Read("Appearence", "Layout2BackColor")); }
-			try { var f = MMain.MyConfs.Read("Appearence", "MouseLTFont");
-				if (!f.Contains("style=")) f = f.Replace("; style", "");
-				LDMouseFont_temp = (Font)fcv.ConvertFromString(f);
-			} catch { WrongFontLog(MMain.MyConfs.Read("Appearence", "MouseLTFont")); }
-			try { var f = MMain.MyConfs.Read("Appearence", "CaretLTFont");
-				if (!f.Contains("style=")) f = f.Replace("; style", "");
-				LDCaretFont_temp = (Font)fcv.ConvertFromString(f);
-				} catch { WrongFontLog(MMain.MyConfs.Read("Appearence", "CaretLTFont")); }
-			try { var f = MMain.MyConfs.Read("Appearence", "Layout1Font");
-				if (!f.Contains("style=")) f = f.Replace("; style", "");
-				Layout1Font_temp = (Font)fcv.ConvertFromString(f); 
-				} catch { WrongFontLog(MMain.MyConfs.Read("Appearence", "Layout1Font")); }
-			try { var f = MMain.MyConfs.Read("Appearence", "Layout2Font");
-				if (!f.Contains("style=")) f = f.Replace("; style", "");
-				Layout2Font_temp = (Font)fcv.ConvertFromString(f);
-				} catch { WrongFontLog(MMain.MyConfs.Read("Appearence", "Layout2Font")); }
+			LDMouseFore_temp = GetColor(MMain.MyConfs.Read("Appearence", "MouseLTForeColor")); 
+			LDCaretFore_temp = GetColor(MMain.MyConfs.Read("Appearence", "CaretLTForeColor")); 
+			LDMouseBack_temp = GetColor(MMain.MyConfs.Read("Appearence", "MouseLTBackColor")); 
+			LDCaretBack_temp = GetColor(MMain.MyConfs.Read("Appearence", "CaretLTBackColor")); 
+			Layout1Fore_temp = GetColor(MMain.MyConfs.Read("Appearence", "Layout1ForeColor")); 
+			Layout2Fore_temp = GetColor(MMain.MyConfs.Read("Appearence", "Layout2ForeColor")); 
+			Layout1Back_temp = GetColor(MMain.MyConfs.Read("Appearence", "Layout1BackColor")); 
+			Layout2Back_temp = GetColor(MMain.MyConfs.Read("Appearence", "Layout2BackColor")); 
+			LDMouseFont_temp = GetFont(MMain.MyConfs.Read("Appearence", "MouseLTFont"));
+			LDCaretFont_temp = GetFont(MMain.MyConfs.Read("Appearence", "CaretLTFont"));
+			Layout1Font_temp = GetFont(MMain.MyConfs.Read("Appearence", "Layout1Font")); 
+			Layout2Font_temp = GetFont(MMain.MyConfs.Read("Appearence", "Layout2Font"));
 			// Transparent background colors
 			LDMouseTransparentBack_temp = MMain.MyConfs.ReadBool("Appearence", "MouseLTTransparentBackColor");
 			LDCaretTransparentBack_temp = MMain.MyConfs.ReadBool("Appearence", "CaretLTTransparentBackColor");
@@ -964,10 +946,42 @@ namespace Mahou {
 				txt_AutoSwitchDictionary.Text = AutoSwitchDictionaryRaw;
 			}
 		}
+		Color GetColor(string color_html) {
+			Color color = SystemColors.WindowText;
+			try { 
+				color = ColorTranslator.FromHtml(color_html);
+			} catch  (Exception e) {
+				WrongColorLog(color_html, e.Message + "\r\n" + e.StackTrace);
+			}
+			return color;
+		}
+		Font GetFont(string font_raw, bool remstyle = false) {
+			Font font = SystemFonts.DefaultFont;
+			font_raw = FontDecimReplace(font_raw);
+			try {
+				if (remstyle) {
+					if (!font_raw.Contains("style=")) font_raw = font_raw.Replace("; style", "");
+				}
+				font = (Font)fcv.ConvertFromString(font_raw);
+			} catch (Exception e) {
+				WrongFontLog(font_raw, e.Message + "\r\n" + e.StackTrace);
+			}
+			return font;
+		}
+		string FontDecimReplace(string font_raw) {
+			var pattern = "(?:(\\.|\\,))([0-9]+)pt";
+			var repl = font_raw;
+			if (new Regex(pattern).IsMatch(repl)) {
+				repl = Regex.Replace(font_raw, pattern, decim+"$1pt");
+				Debug.WriteLine("Replaced decimal in font " + font_raw + ", with: " + decim);
+			}
+			return repl;
+		}
 		/// <summary>
 		/// Refresh all controls state from configs.
 		/// </summary>
 		void LoadConfigs() {
+			decim = (string)Registry.GetValue(@"HKEY_CURRENT_USER\Control Panel\International", "sDecimal", null);
 			TrSetsValues = new Dictionary<string, string>();
 			chk_AppDataConfigs.Checked = (bool)DoInMainConfigs(() => MMain.MyConfs.ReadBool("Functions", "AppDataConfigs"));
 			UpdateSaveLoadPaths(chk_AppDataConfigs.Checked);
@@ -1100,27 +1114,20 @@ namespace Mahou {
 			LangPanelDisplay = chk_DisplayLangPanel.Checked = MMain.MyConfs.ReadBool("LangPanel", "Display");
 			nud_LPRefreshRate.Value = LangPanelRefreshRate = MMain.MyConfs.ReadInt("LangPanel", "RefreshRate");
 			nud_LPTransparency.Value = LangPanelTransparency = MMain.MyConfs.ReadInt("LangPanel", "Transparency");
-			try { btn_LPFore.BackColor = LangPanelForeColor = ColorTranslator.FromHtml(MMain.MyConfs.Read("LangPanel", "ForeColor"));
-			} catch { WrongColorLog(MMain.MyConfs.Read("LangPanel", "ForeColor")); }
-			try { btn_LPBack.BackColor = LangPanelBackColor = ColorTranslator.FromHtml(MMain.MyConfs.Read("LangPanel", "BackColor"));
-			} catch { WrongColorLog(MMain.MyConfs.Read("LangPanel", "BackColor")); }
-			try { btn_LPBorderColor.BackColor = LangPanelBorderColor = ColorTranslator.FromHtml(MMain.MyConfs.Read("LangPanel", "BorderColor"));
-			} catch { WrongColorLog(MMain.MyConfs.Read("LangPanel", "BorderColor")); }
+			btn_LPFore.BackColor = LangPanelForeColor = GetColor(MMain.MyConfs.Read("LangPanel", "ForeColor"));
+			btn_LPBack.BackColor = LangPanelBackColor = GetColor(MMain.MyConfs.Read("LangPanel", "BackColor"));
+			btn_LPBorderColor.BackColor = LangPanelBorderColor = GetColor(MMain.MyConfs.Read("LangPanel", "BorderColor"));
 			LangPanelBorderAero = chk_LPAeroColor.Checked = MMain.MyConfs.ReadBool("LangPanel", "BorderAeroColor");
-			try { btn_LPFont.Font = LangPanelFont = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("LangPanel", "Font")); 
-				} catch { WrongFontLog(MMain.MyConfs.Read("LangPanel", "Font")); }
+			btn_LPFont.Font = LangPanelFont = GetFont(MMain.MyConfs.Read("LangPanel", "Font")); 
 			LangPanelUpperArrow = chk_LPUpperArrow.Checked = MMain.MyConfs.ReadBool("LangPanel", "UpperArrow");
 			#endregion
 			#region Translate Panel
 			TrEnabled = chk_TrEnable.Checked = MMain.MyConfs.ReadBool("TranslatePanel", "Enabled");
 			TrOnDoubleClick = chk_TrOnDoubleClick.Checked = MMain.MyConfs.ReadBool("TranslatePanel", "OnDoubleClick");
 			nud_TrTransparency.Value = TrTransparency = MMain.MyConfs.ReadInt("TranslatePanel", "Transparency");
-			try { btn_TrFG.BackColor = TrFore = ColorTranslator.FromHtml(MMain.MyConfs.Read("TranslatePanel", "FG"));
-			} catch { WrongColorLog(MMain.MyConfs.Read("TranslatePanel", "FG")); }
-			try { btn_TrBG.BackColor = TrBack = ColorTranslator.FromHtml(MMain.MyConfs.Read("TranslatePanel", "BG"));
-			} catch { WrongColorLog(MMain.MyConfs.Read("TranslatePanel", "BG")); }
-			try { btn_TrBorderC.BackColor = TrBorder = ColorTranslator.FromHtml(MMain.MyConfs.Read("TranslatePanel", "BorderC"));
-			} catch { WrongColorLog(MMain.MyConfs.Read("TranslatePanel", "BorderC")); }
+			btn_TrFG.BackColor = TrFore = GetColor(MMain.MyConfs.Read("TranslatePanel", "FG"));
+			btn_TrBG.BackColor = TrBack = GetColor(MMain.MyConfs.Read("TranslatePanel", "BG"));
+			btn_TrBorderC.BackColor = TrBorder = GetColor(MMain.MyConfs.Read("TranslatePanel", "BorderC"));
 			TrBorderAero = chk_TrUseAccent.Checked = MMain.MyConfs.ReadBool("TranslatePanel", "BorderAero");
 			LoadTrSetsValues();
 			RefreshComboboxes();
@@ -1132,10 +1139,8 @@ namespace Mahou {
 				if (_TranslatePanel != null)
 					_TranslatePanel.Dispose();
 			}
-			try { TrText = btn_TrTextFont.Font = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("TranslatePanel", "TextFont")); 
-			} catch { WrongFontLog(MMain.MyConfs.Read("TranslatePanel", "TextFont")); }
-			try { TrTitle = btn_TrTitleFont.Font = (Font)fcv.ConvertFromString(MMain.MyConfs.Read("TranslatePanel", "TitleFont")); 
-			} catch { WrongFontLog(MMain.MyConfs.Read("TranslatePanel", "TitleFont")); }
+			TrText = btn_TrTextFont.Font = GetFont(MMain.MyConfs.Read("TranslatePanel", "TextFont")); 
+			TrTitle = btn_TrTitleFont.Font = GetFont(MMain.MyConfs.Read("TranslatePanel", "TitleFont")); 
 			#endregion
 			#region Snippets
 			SnippetsEnabled = chk_Snippets.Checked = MMain.MyConfs.ReadBool("Snippets", "SnippetsEnabled");
@@ -1815,11 +1820,11 @@ DEL "+restartMahouPath;
 			}
 			return false;
 		}
-		void WrongColorLog(string color) {
-			Logging.Log("["+color+"]is not color, it is skipped.", 2);
+		void WrongColorLog(string color, string err = "") {
+			Logging.Log("["+color+"]is not color, it is skipped." + (!string.IsNullOrEmpty(err) ? ("\r\nError: " + err) : ""), 2);
 		}
-		void WrongFontLog(string font) {
-			Logging.Log("["+font+"]is not font, or its missing from system, it is skipped.", 2);
+		void WrongFontLog(string font, string err = "") {
+			Logging.Log("["+font+"]is not font, or its missing from system, it is skipped." + (!string.IsNullOrEmpty(err) ? ("\r\nError: " + err) : ""), 2);
 		}
 		/// <summary>
 		/// Initializes timers.
