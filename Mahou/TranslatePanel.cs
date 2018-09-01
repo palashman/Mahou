@@ -81,7 +81,7 @@ namespace Mahou {
 					var det_l = aur[2];
 					det_l = det_l.Substring(1, det_l.Length-2);
 					gtresp.speech_url = GTSpeechLink+"&q="+HttpUtility.UrlEncode(tr)+"&sl="+det_l+"&tl="+tls[i];
-					Debug.WriteLine(gtresp.speech_url);
+//					Debug.WriteLine(gtresp.speech_url);
 					if(sls[i] == "auto")
 						gtresp.auto_detect = true;
 					gtresp.src_lang = det_l;

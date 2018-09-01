@@ -3928,7 +3928,7 @@ DEL ""ExtractASD.cmd""";
 		void Cbb_FrToSelectedIndexChanged(object sender, EventArgs e) {
 			var cb = sender as ComboBox;
 			TrSetsValues[cb.Name] = TranslatePanel.GTLangsSh[cb.SelectedIndex];
-			Debug.WriteLine(TrSetsValues[cb.Name]);
+//			Debug.WriteLine(TrSetsValues[cb.Name]);
 		}
 		void Cbb_SpecKeysTypeSelectedIndexChanged(object sender, EventArgs e) {
 			var old = cbb_SpecKeysType.SelectedIndex == 0;
