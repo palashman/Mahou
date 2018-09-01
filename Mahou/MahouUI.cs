@@ -3068,7 +3068,7 @@ DEL ""ExtractASD.cmd""";
 					                  RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value, "<[^>]*>", "");
 				var Version = Regex.Match(data, "<span class=\"css-truncate-target\">(.*)</span>").Groups[1].Value;
 				var Link = "https://github.com" + Regex.Match(data,
-					           "<li class=\"d-block py-2\">\n\\s+<a href=\"(.+?)\"").Groups[1].Value;
+					           "<li class=\"d-block py-.+\">\n\\s+<a href=\"(.+?)\"").Groups[1].Value;
 				var Commit = "";
 				if (beta) {
 					Commit = (Regex.Match(Title, @"\(\[?(.+?)(\]|\s)").Groups[1].Value);
