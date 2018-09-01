@@ -31,6 +31,27 @@ Mahou работает так как **Вы** хотите, настраивай
 
 ###### Возможности по версиям:
 
+**v2.7.5.0**<br/>
+
+- :memo: Упрощены проверки и убрана ненужная замена с Regex.
+- :gem: Добавлена загрузка разделителя плавающих значений шрифта и замена его при необходимости.
+- :gem: Упрощен код получения шрифта/цвета в функции загрузке конфигурации.
+- :bug: Исправлено режим одной горяч. клавиши для конвертации выделенного и последнего:
+  Теперь не вызывает неправильную раскладку после конвертации.
+- :bug: Исправлена ошибка переключения раскладки перед конвертацией последнего:
+  со включенной эмуляцией и сменой между раскладками,
+  без этого исправления результат конверсии был бы в -
+  перед-нужной раскладке а ПОСЛЕ конверсии текста раскладка стает нужной, а текст нет.
+- :bug: Обновлены regex функции обновления.
+- :bug: Добавлено исправления для функции угадывания раскладки слова, добавив несколько попыток.
+- :gem: Добавлена возможность изменять шрифт Заголовка и Текста в панели перевода.
+- :gem: Добавлена новая функция сниппетов: __paste().
+	Создана для быстрого ввода больших кусков текста, вместо того чтобы вводить
+	каждый символ эта функция просто вставляет его.
+- :bug: Потенциальное исправления для #189.
+- :bug: Исправлено не запоминание раскладки при обычной смене раскладки через WinAPI.
+- :memo: Исправлена опечатка.
+
 **v2.7.3.1**<br/>
 
 - :memo: Добавлено исправление редкого падения при запуске с языковыми подсказками.
@@ -669,6 +690,34 @@ Even selected text switches just between **selected** layouts, though if you lik
 6. Read the [wiki](https://github.com/BladeMight/Mahou/wiki/Functions-list) or [ask me](#license).
 
 ###### By version features:
+
+**v2.7.5.0**<br/>
+
+- :memo: Simplified checking and removed unneeded regex replace.
+- :gem: Added font decimal retrieve and raw font conversion.
+- :gem: Simplifice code about getting font/color in loadconfigs.
+- :bug: Fixed wrong fonts pt in configs.
+- :bug: Added try/catch for translate panel fonts loading.
+- :bug: Fixed 1 hotkey for convert selection and last:
+  Now using these two actions for 1 hotkey doesn't cause wrong
+  layout switching after conversion of selected text.
+- :bug: Fixed convert last layout switching before conversion:
+  with emulation and switch between layouts enabled,
+  without that fix the convert result would be in layout -
+  pre-needed and after conversion LAYOUT(not text) switched to needed.
+- :bug: Updated Mahou update title find regex.
+- :bug: Another fix for guess word layout tries.
+- :bug: Added guess tries fix for sometimes wrong guess.
+- :gem: Added Title and Text font selection for Translate Panel.
+- :chocolate_bar: Updated chocolatey uninstall script.
+- :gem: Added new snippets function: __paste().
+	Text that expanded through that function is significally faster that
+	from default snippet expansion type, because it just being copied and
+	pasted through keyboard, instead of inputting every character like in
+	default.
+- :bug: Potential fix-for #189.
+- :bug: Fixed layout wasn't remembering after winapi switch.
+- :memo: Typo fixed.
 
 **v2.7.3.1**<br/>
 
