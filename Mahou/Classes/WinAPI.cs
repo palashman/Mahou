@@ -219,6 +219,7 @@ public static class WinAPI {
 	#region Constants
     #region KInputs requirements
     public const int INPUT_KEYBOARD = 1;
+    public const uint HKL_PREV = 0;
     public const uint HKL_NEXT = 1;
     public const uint WM_INPUTLANGCHANGEREQUEST = 0x0050;
     public const uint KEYEVENTF_EXTENDEDKEY = 0x0001;

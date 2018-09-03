@@ -125,9 +125,10 @@ namespace Mahou {
 			}
 	    }
 		public static void CycleAllLayouts(IntPtr hwnd) {
-			for (int i = MMain.locales.Length; i != 0; i--) {
+//			for (int i = MMain.locales.Length; i != 0; i--) {
 				WinAPI.SendMessage(hwnd, (int)WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, (int)WinAPI.HKL_NEXT);
-			}
+				WinAPI.SendMessage(hwnd, (int)WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, (int)WinAPI.HKL_PREV);
+//			}
 		}
 	    static IntPtr jklWndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)  {
 			if (msg == jkluMSG) {
