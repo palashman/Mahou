@@ -740,8 +740,9 @@ namespace Mahou
 			this.lbl_TaskExist.ForeColor = System.Drawing.Color.RoyalBlue;
 			this.lbl_TaskExist.Location = new System.Drawing.Point(269, 9);
 			this.lbl_TaskExist.Name = "lbl_TaskExist";
-			this.lbl_TaskExist.Size = new System.Drawing.Size(0, 15);
+			this.lbl_TaskExist.Size = new System.Drawing.Size(14, 15);
 			this.lbl_TaskExist.TabIndex = 19;
+			this.lbl_TaskExist.Text = "T";
 			this.lbl_TaskExist.Visible = false;
 			// 
 			// lbl_LinkExist
@@ -750,8 +751,9 @@ namespace Mahou
 			this.lbl_LinkExist.ForeColor = System.Drawing.Color.DarkOrange;
 			this.lbl_LinkExist.Location = new System.Drawing.Point(260, 9);
 			this.lbl_LinkExist.Name = "lbl_LinkExist";
-			this.lbl_LinkExist.Size = new System.Drawing.Size(0, 15);
+			this.lbl_LinkExist.Size = new System.Drawing.Size(13, 15);
 			this.lbl_LinkExist.TabIndex = 18;
+			this.lbl_LinkExist.Text = "L";
 			this.lbl_LinkExist.Visible = false;
 			// 
 			// lbl_AutoStartArrow
@@ -759,8 +761,9 @@ namespace Mahou
 			this.lbl_AutoStartArrow.AutoSize = true;
 			this.lbl_AutoStartArrow.Location = new System.Drawing.Point(281, 8);
 			this.lbl_AutoStartArrow.Name = "lbl_AutoStartArrow";
-			this.lbl_AutoStartArrow.Size = new System.Drawing.Size(0, 15);
+			this.lbl_AutoStartArrow.Size = new System.Drawing.Size(20, 15);
 			this.lbl_AutoStartArrow.TabIndex = 17;
+			this.lbl_AutoStartArrow.Text = "->";
 			// 
 			// cbb_AutostartType
 			// 

@@ -2229,11 +2229,13 @@ DEL "+restartMahouPath;
 		/// </summary>
 		void CreateAutoStart() {
 			if (AutoStartAsAdmin) {
+				AutoStartRemove(true);
 				AutoStartTask();
 //				if (AutoStartExist(false))
 //					AutoStartRemove(false);
 				Logging.Log("Startup task created.");
 			} else {
+				AutoStartRemove(false);
 				var exelocation = Assembly.GetExecutingAssembly().Location;
 	 			var shortcutLocation = Path.Combine(
 	 				                       Environment.GetFolderPath(Environment.SpecialFolder.Startup),
@@ -2274,13 +2276,43 @@ DEL "+restartMahouPath;
 				};
 				pif.Start();
 				while (!pif.StandardOutput.EndOfStream) {
-					return pif.StandardOutput.ReadLine().Contains("Y");
+					var l = pif.StandardOutput.ReadLine();
+					if (l.Contains("Y")) {
+						Debug.WriteLine("Task exist!");
+						pif.StartInfo.Arguments = "/c schtasks.exe /query /TN MahouAutoStart+ /fo LIST /v";
+						pif.Start();
+						Debug.WriteLine("Checking task path...");
+						while (!pif.StandardOutput.EndOfStream) {
+							l = pif.StandardOutput.ReadLine();
+							if (l.Contains(Assembly.GetExecutingAssembly().Location)) {
+								Debug.WriteLine("Task path OK! in: " + l);
+								return true;
+							}
+						}
+					}
 				}
+				Debug.WriteLine("Task path wrong!");
 				return false;
 			}
-			return File.Exists(Path.Combine(
-				    Environment.GetFolderPath(Environment.SpecialFolder.Startup),
-				    "Mahou.lnk"));
+			var lnk = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "Mahou.lnk");
+			bool actual = false;
+			if (File.Exists(lnk)) {
+ 				Type t = Type.GetTypeFromCLSID(new Guid("72C24DD5-D70A-438B-8A42-98424B88AFB8")); //Windows Script Host Shell Object
+	 			dynamic shell = Activator.CreateInstance(t);
+	 			try {
+	 				var slnk = shell.CreateShortcut(lnk);
+	 				try {
+	 					if (slnk.TargetPath == Assembly.GetExecutingAssembly().Location)
+	 						actual = true;
+	 				} finally {
+	 					Marshal.FinalReleaseComObject(slnk);
+	 				}
+				} finally {
+					Marshal.FinalReleaseComObject(shell);
+	 			}
+			}
+			Debug.WriteLine("Actual: " + actual);
+			return actual;
 		}
 		/// <summary>
 		/// Remove startup with Windows.
