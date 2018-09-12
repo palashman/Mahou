@@ -203,6 +203,13 @@ namespace Mahou {
 			var commit = MMain.MyConfs.Read("Updates", "LatestCommit");
 			if (MMain.MyConfs.Read("Updates", "LatestCommit").Length == 7)
 				Text += " <"+commit+">";
+			var pty = tabs.RowCount*5;
+			var lsy = btn_OK.Location.Y+pty;
+			btn_Apply.Location = new Point(btn_Apply.Location.X, lsy);
+			btn_Cancel.Location = new Point(btn_Cancel.Location.X, lsy);
+			btn_OK.Location = new Point(btn_OK.Location.X, lsy);
+			tabs.Height += pty;
+			Height += pty;
 			#if GITHUB_RELEASE
 			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version;
 			#endif
