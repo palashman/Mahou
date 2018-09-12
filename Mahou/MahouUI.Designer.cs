@@ -465,10 +465,10 @@ namespace Mahou
 			this.tab_translator = new System.Windows.Forms.TabPage();
 			this.chk_TrEnable = new System.Windows.Forms.CheckBox();
 			this.grb_TrConfs = new System.Windows.Forms.GroupBox();
-			this.lbl_TrTitleFont = new System.Windows.Forms.Label();
-			this.lbl_TrTextFont = new System.Windows.Forms.Label();
 			this.btn_TrTitleFont = new System.Windows.Forms.Button();
 			this.btn_TrTextFont = new System.Windows.Forms.Button();
+			this.lbl_TrTitleFont = new System.Windows.Forms.Label();
+			this.lbl_TrTextFont = new System.Windows.Forms.Label();
 			this.chk_TrOnDoubleClick = new System.Windows.Forms.CheckBox();
 			this.pan_TrSets = new System.Windows.Forms.Panel();
 			this.lbl_TrLanguages = new System.Windows.Forms.Label();
@@ -642,7 +642,6 @@ namespace Mahou
 			this.lbl_BackSpaceType.Name = "lbl_BackSpaceType";
 			this.lbl_BackSpaceType.Size = new System.Drawing.Size(117, 23);
 			this.lbl_BackSpaceType.TabIndex = 29;
-			this.lbl_BackSpaceType.Text = "BackSpace type:";
 			// 
 			// chk_WriteInputHistory
 			// 
@@ -741,9 +740,8 @@ namespace Mahou
 			this.lbl_TaskExist.ForeColor = System.Drawing.Color.RoyalBlue;
 			this.lbl_TaskExist.Location = new System.Drawing.Point(269, 9);
 			this.lbl_TaskExist.Name = "lbl_TaskExist";
-			this.lbl_TaskExist.Size = new System.Drawing.Size(14, 15);
+			this.lbl_TaskExist.Size = new System.Drawing.Size(0, 15);
 			this.lbl_TaskExist.TabIndex = 19;
-			this.lbl_TaskExist.Text = "T";
 			this.lbl_TaskExist.Visible = false;
 			// 
 			// lbl_LinkExist
@@ -752,9 +750,8 @@ namespace Mahou
 			this.lbl_LinkExist.ForeColor = System.Drawing.Color.DarkOrange;
 			this.lbl_LinkExist.Location = new System.Drawing.Point(260, 9);
 			this.lbl_LinkExist.Name = "lbl_LinkExist";
-			this.lbl_LinkExist.Size = new System.Drawing.Size(13, 15);
+			this.lbl_LinkExist.Size = new System.Drawing.Size(0, 15);
 			this.lbl_LinkExist.TabIndex = 18;
-			this.lbl_LinkExist.Text = "L";
 			this.lbl_LinkExist.Visible = false;
 			// 
 			// lbl_AutoStartArrow
@@ -762,9 +759,8 @@ namespace Mahou
 			this.lbl_AutoStartArrow.AutoSize = true;
 			this.lbl_AutoStartArrow.Location = new System.Drawing.Point(281, 8);
 			this.lbl_AutoStartArrow.Name = "lbl_AutoStartArrow";
-			this.lbl_AutoStartArrow.Size = new System.Drawing.Size(20, 15);
+			this.lbl_AutoStartArrow.Size = new System.Drawing.Size(0, 15);
 			this.lbl_AutoStartArrow.TabIndex = 17;
-			this.lbl_AutoStartArrow.Text = "->";
 			// 
 			// cbb_AutostartType
 			// 
@@ -791,10 +787,9 @@ namespace Mahou
 			this.lnk_plugin.AutoSize = true;
 			this.lnk_plugin.Location = new System.Drawing.Point(493, 74);
 			this.lnk_plugin.Name = "lnk_plugin";
-			this.lnk_plugin.Size = new System.Drawing.Size(63, 15);
+			this.lnk_plugin.Size = new System.Drawing.Size(0, 15);
 			this.lnk_plugin.TabIndex = 14;
 			this.lnk_plugin.TabStop = true;
-			this.lnk_plugin.Text = "ST3 plugin";
 			this.lnk_plugin.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Lnk_pluginLinkClicked);
 			// 
 			// chk_MCDS_support
@@ -2873,24 +2868,6 @@ namespace Mahou
 			this.grb_TrConfs.TabIndex = 2;
 			this.grb_TrConfs.TabStop = false;
 			// 
-			// lbl_TrTitleFont
-			// 
-			this.lbl_TrTitleFont.AutoSize = true;
-			this.lbl_TrTitleFont.Location = new System.Drawing.Point(338, 81);
-			this.lbl_TrTitleFont.Name = "lbl_TrTitleFont";
-			this.lbl_TrTitleFont.Size = new System.Drawing.Size(60, 15);
-			this.lbl_TrTitleFont.TabIndex = 50;
-			this.lbl_TrTitleFont.Text = "Title Font:";
-			// 
-			// lbl_TrTextFont
-			// 
-			this.lbl_TrTextFont.Location = new System.Drawing.Point(170, 81);
-			this.lbl_TrTextFont.Name = "lbl_TrTextFont";
-			this.lbl_TrTextFont.Size = new System.Drawing.Size(87, 15);
-			this.lbl_TrTextFont.TabIndex = 49;
-			this.lbl_TrTextFont.Text = "Text Font:";
-			this.lbl_TrTextFont.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
 			// btn_TrTitleFont
 			// 
 			this.btn_TrTitleFont.Location = new System.Drawing.Point(444, 76);
@@ -2910,6 +2887,24 @@ namespace Mahou
 			this.btn_TrTextFont.Text = "Font";
 			this.btn_TrTextFont.UseVisualStyleBackColor = true;
 			this.btn_TrTextFont.Click += new System.EventHandler(this.Btn_FontSelection);
+			// 
+			// lbl_TrTitleFont
+			// 
+			this.lbl_TrTitleFont.AutoSize = true;
+			this.lbl_TrTitleFont.Location = new System.Drawing.Point(338, 81);
+			this.lbl_TrTitleFont.Name = "lbl_TrTitleFont";
+			this.lbl_TrTitleFont.Size = new System.Drawing.Size(60, 15);
+			this.lbl_TrTitleFont.TabIndex = 50;
+			this.lbl_TrTitleFont.Text = "Title Font:";
+			// 
+			// lbl_TrTextFont
+			// 
+			this.lbl_TrTextFont.Location = new System.Drawing.Point(170, 81);
+			this.lbl_TrTextFont.Name = "lbl_TrTextFont";
+			this.lbl_TrTextFont.Size = new System.Drawing.Size(87, 15);
+			this.lbl_TrTextFont.TabIndex = 49;
+			this.lbl_TrTextFont.Text = "Text Font:";
+			this.lbl_TrTextFont.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// chk_TrOnDoubleClick
 			// 
@@ -3248,7 +3243,7 @@ namespace Mahou
 			// 
 			// btn_DebugInfo
 			// 
-			this.btn_DebugInfo.Location = new System.Drawing.Point(353, 246);
+			this.btn_DebugInfo.Location = new System.Drawing.Point(353, 245);
 			this.btn_DebugInfo.Name = "btn_DebugInfo";
 			this.btn_DebugInfo.Size = new System.Drawing.Size(200, 23);
 			this.btn_DebugInfo.TabIndex = 6;
@@ -3264,13 +3259,13 @@ namespace Mahou
 			this.txt_Help.Name = "txt_Help";
 			this.txt_Help.ReadOnly = true;
 			this.txt_Help.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.txt_Help.Size = new System.Drawing.Size(559, 245);
+			this.txt_Help.Size = new System.Drawing.Size(559, 238);
 			this.txt_Help.TabIndex = 5;
 			// 
 			// lnk_Releases
 			// 
 			this.lnk_Releases.AutoSize = true;
-			this.lnk_Releases.Location = new System.Drawing.Point(154, 250);
+			this.lnk_Releases.Location = new System.Drawing.Point(154, 249);
 			this.lnk_Releases.Name = "lnk_Releases";
 			this.lnk_Releases.Size = new System.Drawing.Size(51, 15);
 			this.lnk_Releases.TabIndex = 4;
@@ -3281,7 +3276,7 @@ namespace Mahou
 			// lnk_Email
 			// 
 			this.lnk_Email.AutoSize = true;
-			this.lnk_Email.Location = new System.Drawing.Point(211, 250);
+			this.lnk_Email.Location = new System.Drawing.Point(211, 249);
 			this.lnk_Email.Name = "lnk_Email";
 			this.lnk_Email.Size = new System.Drawing.Size(136, 15);
 			this.lnk_Email.TabIndex = 3;
@@ -3292,7 +3287,7 @@ namespace Mahou
 			// lnk_Wiki
 			// 
 			this.lnk_Wiki.AutoSize = true;
-			this.lnk_Wiki.Location = new System.Drawing.Point(118, 250);
+			this.lnk_Wiki.Location = new System.Drawing.Point(118, 249);
 			this.lnk_Wiki.Name = "lnk_Wiki";
 			this.lnk_Wiki.Size = new System.Drawing.Size(30, 15);
 			this.lnk_Wiki.TabIndex = 2;
@@ -3303,7 +3298,7 @@ namespace Mahou
 			// lnk_Site
 			// 
 			this.lnk_Site.AutoSize = true;
-			this.lnk_Site.Location = new System.Drawing.Point(86, 250);
+			this.lnk_Site.Location = new System.Drawing.Point(86, 249);
 			this.lnk_Site.Name = "lnk_Site";
 			this.lnk_Site.Size = new System.Drawing.Size(26, 15);
 			this.lnk_Site.TabIndex = 1;
@@ -3314,7 +3309,7 @@ namespace Mahou
 			// lnk_Repository
 			// 
 			this.lnk_Repository.AutoSize = true;
-			this.lnk_Repository.Location = new System.Drawing.Point(8, 250);
+			this.lnk_Repository.Location = new System.Drawing.Point(8, 249);
 			this.lnk_Repository.Name = "lnk_Repository";
 			this.lnk_Repository.Size = new System.Drawing.Size(72, 15);
 			this.lnk_Repository.TabIndex = 0;

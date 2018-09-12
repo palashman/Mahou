@@ -203,7 +203,12 @@ namespace Mahou {
 			var commit = MMain.MyConfs.Read("Updates", "LatestCommit");
 			if (MMain.MyConfs.Read("Updates", "LatestCommit").Length == 7)
 				Text += " <"+commit+">";
-			var pty = tabs.RowCount*5;
+			var mult = 4;
+			if (tabs.RowCount >= 2)
+				mult++;
+			if (tabs.RowCount >= 3)
+				mult+=2;
+			var pty = tabs.RowCount*mult;
 			var lsy = btn_OK.Location.Y+pty;
 			btn_Apply.Location = new Point(btn_Apply.Location.X, lsy);
 			btn_Cancel.Location = new Point(btn_Cancel.Location.X, lsy);
