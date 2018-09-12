@@ -47,6 +47,7 @@ namespace Mahou {
 		public Timer persistentLayout2Check = new Timer();
 		public Timer langPanelRefresh = new Timer();
 		public Timer res = new Timer();
+		public Timer resC = new Timer();
 		#endregion
 		static uint lastTrayFlagLayout = 0;
 		public static Bitmap FLAG;
@@ -1132,10 +1133,14 @@ namespace Mahou {
 			TrBorderAero = chk_TrUseAccent.Checked = MMain.MyConfs.ReadBool("TranslatePanel", "BorderAero");
 			LoadTrSetsValues();
 			RefreshComboboxes();
-			if (TrEnabled){
+			if (TrEnabled) {
 				if (_TranslatePanel == null)
-					_TranslatePanel = new TranslatePanel();
-				_TranslatePanel.SetTitle(MMain.Lang[Languages.Element.Translation]);
+					KMHook.DoLater(() => {
+					               	_TranslatePanel = new TranslatePanel();
+					               _TranslatePanel.SetTitle(MMain.Lang[Languages.Element.Translation]);
+					               }, 500);
+				else
+			 		_TranslatePanel.SetTitle(MMain.Lang[Languages.Element.Translation]);
 			} else {
 				if (_TranslatePanel != null)
 					_TranslatePanel.Dispose();
@@ -1510,7 +1515,7 @@ namespace Mahou {
 			lbl_FlagTrayRefreshRate.Enabled = nud_TrayFlagRefreshRate.Enabled = chk_FlagsInTray.Checked;
 			lbl_LangTTCaretRefreshRate.Enabled = nud_LangTTCaretRefreshRate.Enabled = chk_LangTooltipCaret.Checked;
 			lbl_LangTTMouseRefreshRate.Enabled = nud_LangTTMouseRefreshRate.Enabled = LDUseWindowsMessages || chk_LangTooltipMouse.Checked;
-			lbl_LangTTCaretRefreshRate.Enabled = nud_LangTTCaretRefreshRate.Enabled = !chk_LDMessages.Checked;
+			lbl_LangTTCaretRefreshRate.Enabled = !chk_LDMessages.Checked;
 			// Sounds tab
 			lbl_CustomSound.Enabled = btn_SelectSnd.Enabled = chk_UseCustomSnd.Checked;
 			lbl_CustomSound2.Enabled = btn_SelectSnd2.Enabled = chk_UseCustomSnd2.Checked;
@@ -1836,6 +1841,7 @@ DEL "+restartMahouPath;
 			ICheck.Stop();
 			ScrlCheck.Stop();
 			res.Stop();
+			resC.Stop();
 			old.Stop();
 			capsCheck.Stop();
 			flagsCheck.Stop();
@@ -1846,6 +1852,7 @@ DEL "+restartMahouPath;
 			crtCheck = new Timer();
 			ScrlCheck = new Timer();
 			res = new Timer();
+			resC = new Timer();
 			capsCheck = new Timer();
 			flagsCheck = new Timer();
 			persistentLayout1Check = new Timer();
@@ -1859,12 +1866,20 @@ DEL "+restartMahouPath;
 			ICheck.Interval = MMain.MyConfs.ReadInt("Timings", "LangTooltipForMouseRefreshRate");
 			ICheck.Tick += (_, __) => UpdateMouseLD();
 			res.Interval = (ICheck.Interval + crtCheck.Interval) * 2;
+			resC.Interval = (ICheck.Interval + crtCheck.Interval) * 2;
 			res.Tick += (_, __) => {
 				onepass = true;
+				mouseLangDisplay.HideWnd();
+				if (LDUseWindowsMessages)
+					UpdateMouseLD();
+				res.Stop();
+			};
+			resC.Tick += (_, __) => {
 				onepassC = true;
 				caretLangDisplay.HideWnd();
-				mouseLangDisplay.HideWnd();
-				res.Stop();
+				if (LDUseWindowsMessages)
+					UpdateCaredLD();
+				resC.Stop();
 			};
 			ScrlCheck.Interval = MMain.MyConfs.ReadInt("Timings", "ScrollLockStateRefreshRate");
 			ScrlCheck.Tick += (_, __) => {
@@ -1956,6 +1971,7 @@ DEL "+restartMahouPath;
 					onepass = false;
 				}
 				if (latestL != cLuid) {
+					latestL = cLuid;
 					mouseLangDisplay.ShowInactiveTopmost();
 					res.Start();
 				}
@@ -1979,12 +1995,15 @@ DEL "+restartMahouPath;
 				cLuid = Locales.GetCurrentLocale();
 			if (LDForCaretOnChange && cLuid != 0) {
 				if (onepassC) {
+					Debug.WriteLine("OPC!" + cLuid);
 					latestCL = cLuid;
 					onepassC = false;
 				}
+				Debug.WriteLine("L"+latestCL+", CL"+cLuid);
 				if (latestCL != cLuid) {
+					latestCL = cLuid;
 					caretLangDisplay.ShowInactiveTopmost();
-					res.Start();
+					resC.Start();
 				}
 			} else {
 				if (KMHook.ff_chr_wheeled || caretLangDisplay.Empty)
@@ -2286,6 +2305,7 @@ DEL "+restartMahouPath;
 			if (tmr != null) { tmr.Stop(); tmr.Dispose(); }
 			if (old != null) { old.Stop(); old.Dispose(); }
 			if (res != null) { res.Stop(); res.Dispose(); }
+			if (resC != null) { resC.Stop(); resC.Dispose(); }
 			if (stimer != null) { stimer.Stop(); stimer.Dispose(); }
 			if (ICheck != null) { ICheck.Stop(); ICheck.Dispose(); }
 			if (animate != null) { animate.Stop(); animate.Dispose(); }

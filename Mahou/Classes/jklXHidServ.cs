@@ -135,6 +135,7 @@ namespace Mahou {
 				uint layout = (uint)lParam;
 				MahouUI.GlobalLayout = MahouUI.currentLayout = layout;
 				Logging.Log("[JKL] > Layout changed to [" + layout + "] / [0x"+layout.ToString("X") +"].");
+				Debug.WriteLine(">> JKL LC: " + layout);
 				if (start_cyclEmuSwitch) {
 					if (layout != cycleEmuDesiredLayout)
 						KMHook.CycleEmulateLayoutSwitch();

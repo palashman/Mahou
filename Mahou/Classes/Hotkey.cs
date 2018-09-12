@@ -52,6 +52,23 @@ namespace Mahou {
 			return MOD;
 		}
 		/// <summary>
+		/// Get all modifiers in hotkey as string.
+		/// </summary>
+		/// <param name="hkmods">Hotkey modifiers hex unit.</param>
+		/// <returns></returns>
+		public static string GetMods(int hkmods) {
+			string MOD = "";
+			if (ContainsModifier(hkmods, (int)WinAPI.MOD_ALT))
+				MOD += "Alt";
+			if (ContainsModifier(hkmods, (int)WinAPI.MOD_CONTROL))
+				MOD += "Control";
+			if (ContainsModifier(hkmods, (int)WinAPI.MOD_SHIFT))
+				MOD += "Shift";
+			if (ContainsModifier(hkmods, (int)WinAPI.MOD_WIN))
+				MOD += "Win";
+			return MOD;
+		}
+		/// <summary>
 		/// Checks if modifiers "mods" contains modifier "mod".
 		/// </summary>
 		/// <returns>True if "mods" contains "mod".</returns>
@@ -133,7 +150,8 @@ namespace Mahou {
 					}
 					KMHook.IfKeyIsMod((System.Windows.Forms.Keys)hotkey.VirtualKeyCode);
 					hkAction();
-					KMHook.RePress();
+					if (MMain.mahou.RePress)
+						KMHook.RePress();
 				} else if (hotkey.Double) {
 					Logging.Log("Waiting for second hotkey ["+Enum.GetName(typeof(HKID), hkID) +"] press.");
 					hkOK = true;
