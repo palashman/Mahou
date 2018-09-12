@@ -2140,6 +2140,10 @@ namespace Mahou
 		static void EmulateChangeToLayout(uint LayoutId, bool conhost = false) {
 			Debug.WriteLine(">> E-CTL");
 			var last = MahouUI.currentLayout;
+			if (last == LayoutId) {
+				Debug.WriteLine("Layout already " + LayoutId);
+				return;
+			}
 			Logging.Log("Changing to specific layout ["+LayoutId+"] by emulating layout switch.");
 			for (int i = MMain.locales.Length; i != 0; i--) {
 				uint loc = Locales.GetCurrentLocale();
