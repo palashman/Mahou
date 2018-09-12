@@ -345,7 +345,7 @@ namespace Mahou
 					    ((Key == Keys.LShiftKey || Key == Keys.RShiftKey) && !MahouUI.ShiftInHotkey) ||
 					    ((Key == Keys.LMenu || Key == Keys.RMenu) && !MahouUI.AltInHotkey) ||
 					    ((Key == Keys.LWin || Key == Keys.RWin) && !MahouUI.WinInHotkey) ||
-					    Key == Keys.CapsLock || Key == Keys.F18 || vkCode == 240) {
+					    Key == Keys.CapsLock || Key == Keys.F18 || vkCode == 240 || Key == Keys.Tab) {
 						SpecificKey(Key, MSG, vkCode);
 				}
 				if ((ctrl || ctrl_r) && (Key != Keys.LControlKey && Key != Keys.RControlKey && Key != Keys.ControlKey || clickAfterCTRL))
@@ -1114,6 +1114,11 @@ namespace Mahou
 						    return;
 					    }
 						if (speclayout == MMain.Lang[Languages.Element.SwitchBetween]) {
+							if (specificKey == 12 && Key == Keys.Tab && !ctrl && !ctrl_r && !shift_r && !shift && !win && !win_r && !alt && !alt_r) {
+								Logging.Log("Changing layout by Tab key.");
+								ChangeLayout();
+						    	return;
+							}
 							if (specificKey == 11 && (
 								(Key == Keys.LShiftKey && ctrl) || (Key == Keys.RShiftKey && ctrl_r) ||
 								(Key == Keys.LControlKey && shift) || (Key == Keys.RControlKey && shift_r)) && !win && !win_r && !alt && !alt_r) {
@@ -1184,6 +1189,12 @@ namespace Mahou
 						} else {
 							#region By layout switch
 							var matched = false;
+							if (specificKey == 12 && Key == Keys.Tab && !ctrl && !ctrl_r && !shift_r && !shift && !win && !win_r && !alt && !alt_r) {
+								Logging.Log("Switching to specific layout by Tab key.");
+								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
+								matched = true;
+						    	return;
+							}
 							if (specificKey == 10 && (
 								(Key == Keys.LShiftKey && alt) || (Key == Keys.RShiftKey && alt_r) ||
 								(Key == Keys.LMenu && shift) || (Key == Keys.RMenu && shift_r)) && !win && !win_r && !ctrl && !ctrl_r) {
