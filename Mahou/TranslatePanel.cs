@@ -95,10 +95,10 @@ namespace Mahou {
 			GTRs.Clear();
 			pan_Translations.Controls.Clear();
 			running = true;
-			var tls = (from pv in MMain.mahou.TrSetsValues
+			var tls = (from pv in MahouUI.TrSetsValues
 			           where pv.Key.StartsWith("cbb_to") 
 			           select pv.Value).ToArray();
-			var sls = (from pv in MMain.mahou.TrSetsValues
+			var sls = (from pv in MahouUI.TrSetsValues
 			           where pv.Key.StartsWith("cbb_fr") 
 			           select pv.Value).ToArray();
 			var qs = new string[tls.Length];
@@ -111,7 +111,7 @@ namespace Mahou {
 			var gtrs = GetGTResponceAll(tls, qs, sls);
 			if (gtrs.Count > 0) {
 				TITLE.Text = MMain.Lang[Languages.Element.Translation] + " <"+gtrs[0].src_lang+">";
-				TITLE.Font = MMain.mahou.TrTitle;
+				TITLE.Font = MahouUI.TrTitle;
 				foreach (var gtr in gtrs) {
 	//				var gtr = TranslatePanel.ParseGTResp(raw_gtr);
 					if (string.IsNullOrEmpty(gtr.translation)) continue;
@@ -142,7 +142,7 @@ namespace Mahou {
 				var ind = GTRs.IndexOf(gtr);
 				var pan = new Panel();
 				pan.Width = pan_Translations.Width-2;
-				pan.Height = MMain.mahou.TrText.Height*2;
+				pan.Height = MahouUI.TrText.Height*2;
 				Debug.WriteLine("Pan height: " + pan.Height);
 				pan.Name = "PN_LINE_"+gtr.src_lang+".to."+gtr.targ_lang;
 				pan.Location = new Point(1, pan_Translations.Height+1);
@@ -175,7 +175,7 @@ namespace Mahou {
 				btn.BackColor = slt.BackColor = txt.BackColor = pan_Translations.BackColor;
 				btn.ForeColor = slt.ForeColor = txt.ForeColor = pan_Translations.ForeColor;
 				pan_Translations.Controls.Add(pan);
-				txt_Source.Font = slt.Font = txt.Font = MMain.mahou.TrText;
+				txt_Source.Font = slt.Font = txt.Font = MahouUI.TrText;
 				UpdateHeight();
 			}
 			SetOptimalWidth();
@@ -231,14 +231,14 @@ namespace Mahou {
 					(ct.Controls[2] as ButtonLabel).origin_fg = ct.Controls[2].ForeColor = fore;
 //					ct.Controls[0].Font = font;
 //					txt.Font = font;
-					ct.Controls[0].Font = txt.Font = MMain.mahou.TrText;
+					ct.Controls[0].Font = txt.Font = MahouUI.TrText;
 					txt.Multiline = multiline;
 				}
 			}
 			txt_Source.BackColor = back;
 			txt_Source.ForeColor = fore;
 			txt_Source.Multiline = multiline;
-			txt_Source.Font = MMain.mahou.TrText;
+			txt_Source.Font = MahouUI.TrText;
 			X.BackColor = back;
 			X._original_color = X.ForeColor = fore;
 			pan_Translations.ForeColor = fore;
@@ -336,7 +336,7 @@ namespace Mahou {
 		//Comments removed
 		public void SpecialShow(int left = -7, int top = -7) {
 			AeroCheck();
-			UpdateApperence(MMain.mahou.TrBack, MMain.mahou.TrFore, MMain.mahou.TrTransparency, Font);
+			UpdateApperence(MahouUI.TrBack, MahouUI.TrFore, MahouUI.TrTransparency, Font);
 			if (Visible) return;
 			int LEFT = Left, TOP = Top;
 			if (left != -7)
@@ -390,6 +390,7 @@ namespace Mahou {
 			return Color.FromArgb(Int32.Parse(parameters.clrColor.ToString("X"), System.Globalization.NumberStyles.HexNumber));;
 		}
 		protected override void WndProc(ref Message m) {
+			try {
 			if (m.Msg == WinAPI.WM_NCPAINT && AeroEnabled) {
 				var v = 2;
 				WinAPI.DwmSetWindowAttribute(this.Handle, 2, ref v, 4);
@@ -397,6 +398,9 @@ namespace Mahou {
 				WinAPI.DwmExtendFrameIntoClientArea(this.Handle, ref margins);
 			}
 			base.WndProc(ref m);
+			} catch (Exception e) {
+				Debug.WriteLine("Exc:" +e.Message);
+			}
 		}
 		void Prepare() {
 			SuspendLayout();
@@ -411,13 +415,13 @@ namespace Mahou {
 			ResumeLayout(false);
 		}
 		protected override void OnPaint(PaintEventArgs e) {
-			if (MMain.mahou == null) { base.OnPaint(e); return; }
+//			if (MMain.mahou == null) { base.OnPaint(e); return; }
 			Graphics g = CreateGraphics();
 			var pn = new Pen(Color.Black);
 			if (AeroEnabled && MahouUI.TrBorderAero)
 				pn = new Pen(CurrentAeroColor());
 			else
-				pn.Color = MMain.mahou.TrBorder;
+				pn.Color = MahouUI.TrBorder;
 			g.DrawRectangle(pn, new Rectangle(0, 0, Size.Width - 1, Size.Height - 1));
 			g.Dispose();
 			pn.Dispose();

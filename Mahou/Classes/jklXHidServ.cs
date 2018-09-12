@@ -8,6 +8,8 @@ namespace Mahou {
 	static class jklXHidServ {
 		public static uint cycleEmuDesiredLayout = 0;
 		public static bool start_cyclEmuSwitch = false;
+		public static Action ActionOnLayout;
+		public static uint OnLayoutAction = 0;
 		public static int jkluMSG = -1;
 		public static bool running = false;
 		/// <summary>0=exe, 1=dll, 2=x86.exe, 3=x86.dll</summary>
@@ -126,6 +128,7 @@ namespace Mahou {
 	    }
 		public static void CycleAllLayouts(IntPtr hwnd) {
 //			for (int i = MMain.locales.Length; i != 0; i--) {
+			if (MMain.MahouActive()) return; // Else creates invalid culture 0 exception.
 				WinAPI.SendMessage(hwnd, (int)WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, (int)WinAPI.HKL_NEXT);
 				WinAPI.SendMessage(hwnd, (int)WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, (int)WinAPI.HKL_PREV);
 //			}
@@ -136,6 +139,11 @@ namespace Mahou {
 				MahouUI.GlobalLayout = MahouUI.currentLayout = layout;
 				Logging.Log("[JKL] > Layout changed to [" + layout + "] / [0x"+layout.ToString("X") +"].");
 				Debug.WriteLine(">> JKL LC: " + layout);
+				if (layout == OnLayoutAction) {
+					OnLayoutAction = 0;
+					Debug.WriteLine("Executing action: " + ActionOnLayout.Method.Name + " on layout: " +layout);
+					ActionOnLayout();
+				}
 				if (start_cyclEmuSwitch) {
 					if (layout != cycleEmuDesiredLayout)
 						KMHook.CycleEmulateLayoutSwitch();

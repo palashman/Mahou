@@ -58,9 +58,9 @@ namespace Mahou {
 		public int DoubleHKInterval = 200, SelectedTextGetMoreTriesCount, DelayAfterBackspaces;
 		#region Temporary variables
 		/// <summary> Translate Panel Colors</summary>
-		public Color TrFore, TrBack, TrBorder;
-		public Font TrText, TrTitle;
-		public int TrTransparency;
+		public static Color TrFore, TrBack, TrBorder;
+		public static Font TrText, TrTitle;
+		public static int TrTransparency;
 		/// <summary> In memory settings, for timers/hooks.</summary>
 		public bool DiffAppearenceForLayouts, LDForCaretOnChange, LDForMouseOnChange, ScrollTip, AddOneSpace,
 					TrayFlags, SymIgnEnabled, TrayIconVisible, SnippetsEnabled, ChangeLayouByKey, EmulateLS,
@@ -155,7 +155,7 @@ namespace Mahou {
 		/// cbb_typN - Switch type(To specific layout or switch between).
 		/// </summary>
 		public Dictionary<string, string> SpecKeySetsValues = new Dictionary<string, string>();
-		public Dictionary<string, string> TrSetsValues = new Dictionary<string, string>();
+		public static Dictionary<string, string> TrSetsValues = new Dictionary<string, string>();
 		static string latestSwitch = "null";
 		// From more configs
 		ColorDialog clrd = new ColorDialog();
@@ -1135,12 +1135,8 @@ namespace Mahou {
 			RefreshComboboxes();
 			if (TrEnabled) {
 				if (_TranslatePanel == null)
-					KMHook.DoLater(() => {
-					               	_TranslatePanel = new TranslatePanel();
-					               _TranslatePanel.SetTitle(MMain.Lang[Languages.Element.Translation]);
-					               }, 500);
-				else
-			 		_TranslatePanel.SetTitle(MMain.Lang[Languages.Element.Translation]);
+	               	_TranslatePanel = new TranslatePanel();
+               _TranslatePanel.SetTitle(MMain.Lang[Languages.Element.Translation]);
 			} else {
 				if (_TranslatePanel != null)
 					_TranslatePanel.Dispose();

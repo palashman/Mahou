@@ -1944,8 +1944,12 @@ namespace Mahou
 					if (MahouUI.SoundOnConvLast2)
 						MahouUI.Sound2Play();
 					var wasLocale = Locales.GetCurrentLocale() & 0xFFFF;
-					ChangeLayout(true);
-					StartConvertWord(YuKeys, wasLocale);
+					var desl = ChangeLayout(true);
+					if (MahouUI.UseJKL && MMain.mahou.SwitchBetweenLayouts && MMain.mahou.EmulateLS) {
+						jklXHidServ.OnLayoutAction = desl;
+						jklXHidServ.ActionOnLayout = () => StartConvertWord(YuKeys, wasLocale);
+					} else
+						StartConvertWord(YuKeys, wasLocale);
 		       });
 			} catch (Exception e) {
 				Logging.Log("Convert Last encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
@@ -2023,7 +2027,8 @@ namespace Mahou
 		/// <summary>
 		/// Changes current layout.
 		/// </summary>
-		public static void ChangeLayout(bool quiet = false) {
+		public static uint ChangeLayout(bool quiet = false) {
+			uint desired = 0;
 			Debug.WriteLine(">> LC");
 			if (!quiet) {
 				if (MahouUI.SoundOnLayoutSwitch)
@@ -2041,7 +2046,6 @@ namespace Mahou
 			} else {
 				if (MMain.mahou.SwitchBetweenLayouts) {
 					uint last = 0;
-					uint desired = 0;
 					bool conhost = false;
 					if (MahouUI.UseJKL) {
 						var strb = new StringBuilder(256);
@@ -2077,6 +2081,7 @@ namespace Mahou
 					}
 				}
 			}
+			return desired;
 		}
 		/// <summary>
 		/// Calls functions to change layout based on EmulateLS variable.
