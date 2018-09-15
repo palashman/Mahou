@@ -393,6 +393,9 @@ namespace Mahou {
 						var line = new List<KMHook.YuKey>();
 						foreach (var word in MMain.c_words) {
 							line.AddRange(word);
+							foreach(var x in word) {
+								Debug.WriteLine("KK: " + x.key);
+							}
 						}
 						KMHook.ConvertLast(line);
 					});
@@ -1974,6 +1977,8 @@ DEL "+restartMahouPath;
 		public void UpdateMouseLD() {
 			if (LDForMouseOnChange) {
 				var cLuid = Locales.GetCurrentLocale();
+				if (UseJKL)
+					cLuid = currentLayout;
 				if (onepass) {
 					latestL = cLuid;
 					onepass = false;
@@ -1999,15 +2004,18 @@ DEL "+restartMahouPath;
 			var curCrtPos = CaretPos.GetCaretPointToScreen(out crtOnly);
 			uint cLuid = 0;
 			var notTwo = false;
-			if (LDForCaretOnChange || DiffAppearenceForLayouts)
+			if (LDForCaretOnChange || DiffAppearenceForLayouts) {
 				cLuid = Locales.GetCurrentLocale();
+				if (UseJKL)
+					cLuid = currentLayout;
+			}
 			if (LDForCaretOnChange && cLuid != 0) {
 				if (onepassC) {
-					Debug.WriteLine("OPC!" + cLuid);
+//					Debug.WriteLine("OPC!" + cLuid);
 					latestCL = cLuid;
 					onepassC = false;
 				}
-				Debug.WriteLine("L"+latestCL+", CL"+cLuid);
+//				Debug.WriteLine("L"+latestCL+", CL"+cLuid);
 				if (latestCL != cLuid) {
 					latestCL = cLuid;
 					caretLangDisplay.ShowInactiveTopmost();

@@ -11,7 +11,7 @@ namespace Mahou {
 		public static Action ActionOnLayout;
 		public static uint OnLayoutAction = 0;
 		public static int jkluMSG = -1;
-		public static bool running = false;
+		public static bool running = false, self_change;
 		/// <summary>0=exe, 1=dll, 2=x86.exe, 3=x86.dll</summary>
 		public static bool[] jklFEX = new bool[5];
 		public static string jklInfoStr = "";
@@ -117,7 +117,8 @@ namespace Mahou {
 						Logging.Log("[JKL] > Retrieving umsg.id...");
 						jkluMSG = Convert.ToInt32(File.ReadAllText(umsgID));
 						File.Delete(umsgID);
-						KMHook.DoLater(() => CycleAllLayouts(Locales.ActiveWindow()), 350);
+//						KMHook.DoLater(() => CycleAllLayouts(Locales.ActiveWindow()), 350);
+						KMHook.DoLater(() => { MahouUI.GlobalLayout = MahouUI.currentLayout = Locales.GetCurrentLocale(); }, 200);
 						running = true;
 					}
 				} else {
@@ -127,11 +128,14 @@ namespace Mahou {
 			}
 	    }
 		public static void CycleAllLayouts(IntPtr hwnd) {
-//			for (int i = MMain.locales.Length; i != 0; i--) {
-			if (MMain.MahouActive()) return; // Else creates invalid culture 0 exception.
+			self_change = true;
+			for (int i = MMain.locales.Length; i != 0; i--) {
+				if (MMain.MahouActive()) return; // Else creates invalid culture 0 exception.
 				WinAPI.SendMessage(hwnd, (int)WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, (int)WinAPI.HKL_NEXT);
-				WinAPI.SendMessage(hwnd, (int)WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, (int)WinAPI.HKL_PREV);
-//			}
+//				Thread.Sleep(5);
+//				WinAPI.SendMessage(hwnd, (int)WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, (int)WinAPI.HKL_PREV);
+			}
+			self_change = false;
 		}
 	    static IntPtr jklWndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)  {
 			if (msg == jkluMSG) {
@@ -149,7 +153,7 @@ namespace Mahou {
 						KMHook.CycleEmulateLayoutSwitch();
 					else
 						start_cyclEmuSwitch = false;
-				} else {
+				} else if (!self_change) {
 					MahouUI.RefreshFLAG();
 					MMain.mahou.RefreshAllIcons();
 					MMain.mahou.UpdateLDs();
