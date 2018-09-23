@@ -23,6 +23,7 @@ namespace Mahou
 			dbl_click, click;
 		public static System.Windows.Forms.Timer click_reset = new System.Windows.Forms.Timer();
 		public static int skip_mouse_events, skip_spec_keys, cursormove = -1, guess_tries;
+		static uint cs_layout_last = 0;
 		static string lastClipText = "";
 		static List<Keys> tempNumpads = new List<Keys>();
 		public static List<char> c_snip = new List<char>();
@@ -1393,7 +1394,7 @@ namespace Mahou
 						SendBack();
 						var result = "";
 						int items = 0;
-						if (MMain.mahou.ConvertSelectionLS) {
+						if (MMain.mahou.ConvertSelectionLS && !MMain.mahou.OneLayoutWholeWord) {
 							Logging.Log("Using CS-Switch mode.");
 							var wasLocale = Locales.GetCurrentLocale() & 0xffff;
 							var wawasLocale = wasLocale & 0xffff;
@@ -1483,13 +1484,15 @@ namespace Mahou
 								index++;
 							}
 						} else {
-							var l1 = Locales.GetCurrentLocale();
-							if (MahouUI.UseJKL)
-								l1 = MahouUI.currentLayout;
-							ChangeLayout();
+							var l1 = cs_layout_last;
+							if (MMain.mahou.ConvertSelectionLS) {
+								Logging.Log("Using Layout Switch in Convert Selection.");
+								l1 = Locales.GetCurrentLocale();
+								if (MahouUI.UseJKL)
+									l1 = MahouUI.currentLayout;
+								ChangeLayout();
+							}
 							var l2 = GetNextLayout(l1).uId;
-							if (MMain.mahou.SwitchBetweenLayouts)
-								l2 = l1 == MahouUI.MAIN_LAYOUT1 ? MahouUI.MAIN_LAYOUT2 : MahouUI.MAIN_LAYOUT1;
 							Debug.WriteLine("next: " +l2);
 							var index = 0;
 							if (MMain.mahou.OneLayoutWholeWord) {
@@ -1548,6 +1551,7 @@ namespace Mahou
 									result += T;
 								}
 							}
+							cs_layout_last = l2;
 							Logging.Log("Conversion of string [" + ClipStr + "] from locale [" + l1 + "] into locale [" + l2 + "] became [" + result + "].");
 							//Inputs converted text
 							Logging.Log("Making input of [" + result + "] as string");
@@ -2288,6 +2292,15 @@ namespace Mahou
 				if (before != 0)
 					cur = before;
 				Debug.WriteLine("Current: " +cur);
+				if (MMain.mahou.SwitchBetweenLayouts) {
+					if (cur == MahouUI.MAIN_LAYOUT1) 
+						loc.uId = MahouUI.MAIN_LAYOUT2;
+					else if (cur == MahouUI.MAIN_LAYOUT2) {
+						loc.uId = MahouUI.MAIN_LAYOUT1;
+					} else 
+						loc.uId = MahouUI.MAIN_LAYOUT1;
+					break;
+				}
 				Thread.Sleep(5);
 				var curind = MMain.locales.ToList().FindIndex(lid => lid.uId == cur);
 				for (int g=0; g != MMain.locales.Length; g++) {
@@ -2295,7 +2308,7 @@ namespace Mahou
 					Debug.WriteLine("Checking: " + l.Lang + ", with "+cur);
 					if (curind == MMain.locales.Length - 1) {
 						Logging.Log("Locales BREAK!");
-						loc = l;
+						loc = MMain.locales[0];
 						br = true;
 						break;
 					}

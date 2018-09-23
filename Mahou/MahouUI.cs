@@ -186,7 +186,6 @@ namespace Mahou {
 			// Switch to more secure connection.
 			ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
 			LoadConfigs();
-			chk_CSLayoutSwitching.ForeColor = chk_CSLayoutSwitchingPlus.ForeColor = Color.Red;
 			InitializeListBoxes();
 			// Set minnimum values because they're ALWAYS restores to 0 after Form Editor is used.
 		    nud_CapsLockRefreshRate.Minimum = nud_DoubleHK2ndPressWaitTime.Minimum =
@@ -1469,7 +1468,13 @@ namespace Mahou {
 		void ToggleDependentControlsEnabledState() {
 			// Functions tab
 			chk_CSLayoutSwitchingPlus.Enabled = chk_CSLayoutSwitching.Checked;
-			chk_OneLayoutWholeWord.Enabled = !chk_CSLayoutSwitching.Checked;
+//			chk_OneLayoutWholeWord.Enabled = !chk_CSLayoutSwitching.Checked;
+			if (chk_CSLayoutSwitching.Checked && chk_OneLayoutWholeWord.Checked)
+				chk_CSLayoutSwitchingPlus.Enabled = false;
+			if (!chk_OneLayoutWholeWord.Checked)
+				chk_CSLayoutSwitching.ForeColor = chk_CSLayoutSwitchingPlus.ForeColor = Color.Red;
+			else 
+				chk_CSLayoutSwitching.ForeColor = chk_CSLayoutSwitchingPlus.ForeColor = chk_OneLayoutWholeWord.ForeColor;
 			chk_FlagsInTray.Enabled = chk_TrayIcon.Checked;
 			chk_SilentUpdate.Enabled = chk_StartupUpdatesCheck.Checked;
 			lbl_BackSpaceType.Enabled = cbb_BackSpaceType.Enabled = chk_WriteInputHistory.Checked;
