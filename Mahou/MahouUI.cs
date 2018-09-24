@@ -201,7 +201,8 @@ namespace Mahou {
 			Text += "-dev";
 			if (____.commit != "") {
 				Text += " <"+____.commit+">";
-				MMain.MyConfs.WriteToDisk("Updates", "LatestCommit", ____.commit);
+				MMain.MyConfs.Write("Updates", "LatestCommit", ____.commit);
+				MMain.MyConfs.WriteToDisk();
 			}
 			else {
 				var commit = MMain.MyConfs.Read("Updates", "LatestCommit");
