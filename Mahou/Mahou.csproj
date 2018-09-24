@@ -169,6 +169,7 @@
     <Compile Include="TranslatePanel.Designer.cs">
       <DependentUpon>TranslatePanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="____commit.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

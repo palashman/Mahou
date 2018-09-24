@@ -12,8 +12,16 @@ IF /I [%1] == [-h] GOTO HELP
 IF /I [%1] == [--help] GOTO HELP
 IF /I [%1] == [/?] GOTO HELP
 IF NOT [%3] == [] SET const=%3;%const%
+cd %~dp0 
+FOR /F "tokens=* USEBACKQ" %%F in (
+`"git.exe log -1 --pretty=%%h"`
+) DO (
+ECHO static class ____ { public static string commit="%%F"; } > ____commit.cs
+)
+echo %const%
 ECHO %windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe .\Mahou.sln /nologo /m /t:Build /p:Configuration=%configuration% /p:Platform=%platform% /p:DefineConstants="%const%"
 @%windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe .\Mahou.sln /nologo /m /t:Build /p:Configuration=%configuration% /p:Platform=%platform% /p:DefineConstants="%const%"
+ECHO static class ____ { public static string commit=""; } > ____commit.cs
 GOTO EOF
 :CLEAN
 clean.cmd

@@ -199,9 +199,13 @@ namespace Mahou {
 			pan_TrSets.AutoScroll = pan_KeySets.AutoScroll = true;
 			Text = "Mahou " + Assembly.GetExecutingAssembly().GetName().Version;
 			Text += "-dev";
-			var commit = MMain.MyConfs.Read("Updates", "LatestCommit");
-			if (MMain.MyConfs.Read("Updates", "LatestCommit").Length == 7)
-				Text += " <"+commit+">";
+			if (____.commit != "")
+				Text += " <"+____.commit+">";
+			else {
+				var commit = MMain.MyConfs.Read("Updates", "LatestCommit");
+				if (MMain.MyConfs.Read("Updates", "LatestCommit").Length == 7)
+					Text += " <"+commit+">";
+			}
 			var mult = 4;
 			if (tabs.RowCount >= 2)
 				mult++;
