@@ -735,44 +735,45 @@ Even selected text switches just between **selected** layouts, though if you lik
 
 **v2.8.0.0**<br/>
 
-- bug: Updated updates funtion.
-- ow just switches 1 layout forward and backward.
-- nstead of switching through all layouts,
-- memo: Another way to initialize layout for JKL.
-- bug: Fixed numeric updown was disabled in timings tabs,
+- :bug: Updated update regex.
+- :memo: Another way to initialize layout for JKL.
+  now just switches 1 layout forward and backward.
+  instead of switching through all layouts,
+- :bug: Fixed numeric updown was disabled in timings tabs,
   Actually it is also used for language tooltip on change display time.
   due to enabled windows messages feature for language tooltips.
-- bug: Fixed translation panel initialization before MMain.mahou.
-- bug: Fixed un-needed send modifiers up.
-- bug: Minor bugs fixes.
-- memo: Added more debugging.
-- bug: Fixed Convert Last was sometimes too slow.
-- bug: Fixed language display display on switch in windows messages.
-- buf: Fixed Convert Last function in Emulate LS Between layouts mode with JKL.
-- bug: Fixed access to MMain.mahou through _TranslatePanel before init.
-- memo: Added rule to increase height based on count of tab rows.
-- gem: Added rule to increase height of Mahou window depending on tab rows.
-- bug: Fixed "T", "L" and "->" was empty in functions tab.
-- bug: Added checking of startup path of types. #198
+- :bug: Fixed translation panel initialization before MMain.mahou.
+- :bug: Fixed un-needed send modifiers up.
+- :bug: Minor bugs fixes.
+- :memo: Added more debugging.
+- :bug: Fixed Convert Last was sometimes too slow.
+- :bug: Fixed language display display on switch in windows messages.
+- :bug: Fixed Convert Last function in Emulate LS Between layouts mode with JKL.
+- :bug: Fixed access to MMain.mahou through _TranslatePanel before init.
+- :memo: Added rule to increase height based on count of tab rows.
+- :gem: Added rule to increase height of Mahou window depending on tab rows.
+- :bug: Fixed "T", "L" and "->" was empty in functions tab.
+- :bug: Added checking of startup path of types. #198
   Now it checks lnk and task path.
-- memo: Added Tab key to one key layout switch. #182
-- memo: Removed useless switch between all layouts,
+- :memo: Added Tab key to one key layout switch. #182
+- :memo: Removed useless switch between all layouts,
   when layout already desired.
-- bug: Fix for wrong layout icon at start in Language Displays with JKL.
-- bug: Some minor bug fixes with Convert Last and Snippets.
-- bug: Potential fix for #192.
-- gem: Some code simplified.
-- gem: Improved AutoSwitch and Snippets functions.
-- gem: Added ability to use 2-word snippets/autoswitch.
+- :bug: Fix for wrong layout icon at start in Language Displays with JKL.
+- :bug: Some minor bug fixes with Convert Last and Snippets.
+- :bug: Potential fix for #192.
+- :gem: Some code simplified.
+- :gem: Improved AutoSwitch and Snippets functions.
+- :gem: Added ability to use 2-word snippets/autoswitch.
   example: chat room => chat-room
-- speech_balloon: Updated tooltips around "Use layout switching in CS.".
-- bug: Fixed GetNextLayout was returning last layout on break.
-- gem: Added ability to use Convert Selection Layout Switching with WWL. #200
+- :speech_balloon: Updated tooltips around "Use layout switching in CS.".
+- :bug: Fixed GetNextLayout was returning last layout on break.
+- :gem: Added ability to use Convert Selection Layout Switching with WWL. #200
   WWL = Whole Word Layout
-- gem: Added ability to set commit on build. #203
+- :gem: Added ability to set commit on build. #203
   P.S. Only using the build.cmd script(with git in path), or yourself.
-- memo: Saving *real* commit to Mahou.ini on start.
-- bug: Wrong function to write commit into configuration.
+- :memo: Saving *real* commit to Mahou.ini on start.
+- :bug: Wrong function to write commit into configuration.
+
 
 **v2.7.5.0**<br/>
 
