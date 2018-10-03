@@ -31,6 +31,46 @@ Mahou работает так как **Вы** хотите, настраивай
 
 ###### Возможности по версиям:
 
+**v2.8.0.0**<br/>
+
+- bug: Обновлена функция обновлений.
+- memo: Изменен способ инициализации текущей раскладки для JKL.
+- bug: Исправлено что выбор тайминга был отключен во вкладке тайминга,
+  Сделано так потому что при изменении этого значения так же меняется значение 
+  показа языковых подсказок при "только при смене" влкюченной.
+- bug: Исправлена ошибка инициализации панели переводчика.
+- bug: Исправлены ненужные отпускания модификаторов, когда они не были до этого нажаты.
+- memo: Добавлено больше лога.
+- bug: Исправлено что конверт выделения иногда был очень медленным. #193
+- bug: Исправлен показ языков в некоторых случаях в подсказках языка при включенном
+  режиме Windows сообщений.
+- buf: Исправлена функция "Конверт последнего слова" в "Эмуляции переключения раскладок" при JKL включенном.
+- memo: Добавлено правило чтобы изменялось окно Mahou в зависимости от вкладок. #181
+- bug: Исправлено отображение значков "T", "L" и "->" во вкладке Функции.
+- bug: Добавлена проверка путей автозапуска при запуске. #198
+  Теперь она проверяет пути ярлыка и задачи.
+- memo: Добавлена клавиша Tab в "Переключать раскладки 1 клавишей". #182
+- memo: Убрано переключение между всемя раскладками,
+  когда текущая раскладка уже и есть нужная.
+- bug: Исправлено отображение неправильной иконки в подсказсках языка с JKL при запуске Mahou.
+- bug: Другие мелкие исправления с конверт последнего слова и сниппетами.
+- bug: Потенциальное исправление для #192.
+- gem: Некоторый код упрощен.
+- gem: Улучшены функции Автозамены и сниппетов.
+- gem: Добавлена возможность назначать 2-словные сниппеты(и автозамены).
+  пример: 
+  сниппет: ->как то====>как-то<====
+  результат: "как то" => "как-то"
+- speech_balloon: Обнлвлены подсказки мыши возле "Смена раскладки в Конверт выделения.".
+- bug: Исправлено что GetNextLayout возвравшал последнюю раскладки, а не первую при break.
+- gem: Добавлена возможность использовать "Смена раскладки в Конверт выделения."  СРдВС. #200
+  СРдВС = Считать раскладку для всего слова в КВ.
+  При совместном использовании будет производится реальная смена раскладки,
+  без - "реально" раскладка не будет изменена, только текст.
+- gem: Доабвлена возможность внедрять версию коммит для Mahou dev в сам Mahou.exe. #203
+  P.S. Только используя скрипт build.cmd (при git в путе), или вручную.
+- bug: Другие мелкие исправления.
+
 **v2.7.5.0**<br/>
 
 - :memo: Упрощены проверки и убрана ненужная замена с Regex.
@@ -644,6 +684,8 @@ Mahou работает так как **Вы** хотите, настраивай
 
 ### [Скачать или посмотреть заметки о выпусках.](https://github.com/BladeMight/Mahou/releases)
 
+### Beta или "версия с последними изменениями"(aka latest-commit) [здесь](https://github.com/BladeMight/Mahou/releases/tag/latest-commit)
+
 ### Используете Chocolatey? `cinst Mahou` для установки.
 
 ### Wiki
@@ -690,6 +732,47 @@ Even selected text switches just between **selected** layouts, though if you lik
 6. Read the [wiki](https://github.com/BladeMight/Mahou/wiki/Functions-list) or [ask me](#license).
 
 ###### By version features:
+
+**v2.8.0.0**<br/>
+
+- bug: Updated updates funtion.
+- ow just switches 1 layout forward and backward.
+- nstead of switching through all layouts,
+- memo: Another way to initialize layout for JKL.
+- bug: Fixed numeric updown was disabled in timings tabs,
+  Actually it is also used for language tooltip on change display time.
+  due to enabled windows messages feature for language tooltips.
+- bug: Fixed translation panel initialization before MMain.mahou.
+- bug: Fixed un-needed send modifiers up.
+- bug: Minor bugs fixes.
+- memo: Added more debugging.
+- bug: Fixed Convert Last was sometimes too slow.
+- bug: Fixed language display display on switch in windows messages.
+- buf: Fixed Convert Last function in Emulate LS Between layouts mode with JKL.
+- bug: Fixed access to MMain.mahou through _TranslatePanel before init.
+- memo: Added rule to increase height based on count of tab rows.
+- gem: Added rule to increase height of Mahou window depending on tab rows.
+- bug: Fixed "T", "L" and "->" was empty in functions tab.
+- bug: Added checking of startup path of types. #198
+  Now it checks lnk and task path.
+- memo: Added Tab key to one key layout switch. #182
+- memo: Removed useless switch between all layouts,
+  when layout already desired.
+- bug: Fix for wrong layout icon at start in Language Displays with JKL.
+- bug: Some minor bug fixes with Convert Last and Snippets.
+- bug: Potential fix for #192.
+- gem: Some code simplified.
+- gem: Improved AutoSwitch and Snippets functions.
+- gem: Added ability to use 2-word snippets/autoswitch.
+  example: chat room => chat-room
+- speech_balloon: Updated tooltips around "Use layout switching in CS.".
+- bug: Fixed GetNextLayout was returning last layout on break.
+- gem: Added ability to use Convert Selection Layout Switching with WWL. #200
+  WWL = Whole Word Layout
+- gem: Added ability to set commit on build. #203
+  P.S. Only using the build.cmd script(with git in path), or yourself.
+- memo: Saving *real* commit to Mahou.ini on start.
+- bug: Wrong function to write commit into configuration.
 
 **v2.7.5.0**<br/>
 
@@ -1374,6 +1457,8 @@ Removed (some just commented) the ones that are less popular.
 - Other hotkeys disabled by default or have description in Mahou.
 
 ### [Download or view release notes.](https://github.com/BladeMight/Mahou/releases)
+
+### Beta or "version with latest changes "(aka latest-commit) [here](https://github.com/BladeMight/Mahou/releases/tag/latest-commit)
 
 ### Using Chocolatey? type `cinst Mahou` to install.
 
