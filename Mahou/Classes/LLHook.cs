@@ -12,6 +12,7 @@ namespace Mahou {
 		public static WinAPI.LowLevelProc _LLHook_proc = LLHook.Callback;
 		static bool alt, shift, ctrl, win;
 		public static void Set() {
+			if (!MahouUI.ENABLED) return;
 			if (_LLHook_ID != IntPtr.Zero)
 				UnSet();
 			using (Process currProcess = Process.GetCurrentProcess())

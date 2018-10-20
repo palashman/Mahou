@@ -51,6 +51,7 @@ namespace Mahou {
 			return false;
 		}
 	    public static void Init() {
+			if (!MahouUI.ENABLED) return;
 			if (running) {
 				bool exist = true;
 				if (Environment.Is64BitOperatingSystem) {

@@ -63,8 +63,10 @@ namespace Mahou {
         /// <param name="ExiText">Exit tray icon menu item's text.</param>
         public void RefreshText(string TrText, string ShHiText, string ExiText) {
             trIcon.Text = TrText;
-            ShHi.Text = ShHiText;
-            Exi.Text = ExiText;
+            if (!String.IsNullOrEmpty(ShHiText))
+            	ShHi.Text = ShHiText;
+            if (!String.IsNullOrEmpty(ExiText))
+            	Exi.Text = ExiText;
         }
     }
 }

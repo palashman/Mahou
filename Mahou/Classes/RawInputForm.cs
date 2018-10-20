@@ -58,6 +58,7 @@ namespace Mahou {
 		/// To unregister pass hwnd = IntPtr.Zero, and flag = WinAPI.RawInputDeviceFlags.Remove;
 		/// </summary>
 		public void RegisterRawInputDevices(IntPtr hwnd, WinAPI.RawInputDeviceFlags flag = WinAPI.RawInputDeviceFlags.InputSink) {
+			if (!MahouUI.ENABLED) return;
 			WinAPI.RAWINPUTDEVICE[] rids = new WinAPI.RAWINPUTDEVICE[2];
 			// Keyboard device
 			rids[0].UsagePage = 0x1;

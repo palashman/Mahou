@@ -138,6 +138,7 @@ public class Languages
 		DoubleHK,
 		ToggleLangPanel,
 		TranslateSelection,
+		ToggleMahou,
 		#endregion
 		#region LangPanel
 		DisplayLangPanel,
@@ -209,6 +210,7 @@ public class Languages
 		Sound,
 		InputHistoryBackSpaceWriteType1,
 		InputHistoryBackSpaceWriteType2,
+		Disabled,
 		#endregion
 		#region Buttons
 		ButtonOK,
@@ -400,6 +402,7 @@ public class Languages
 		{ Element.DoubleHK, "Double hotkey" }, 
 		{ Element.ToggleLangPanel, "Toggle language panel" }, 
 		{ Element.TranslateSelection, "Show selected text translation" }, 
+		{ Element.ToggleMahou, "Toogle Pause Mahou" }, 
 		#endregion
 		#region LangPanel
 		{ Element.DisplayLangPanel, "Display language panel." },
@@ -478,6 +481,7 @@ public class Languages
 		{ Element.Sound, "Sound" },
 		{ Element.InputHistoryBackSpaceWriteType1, "Write <Back>(faster)" },
 		{ Element.InputHistoryBackSpaceWriteType2, "Delete last" },
+		{ Element.Disabled, "Disabled" },
 		#endregion
 		#region Buttons
 		{ Element.ButtonOK, "OK" }, 
@@ -683,6 +687,7 @@ public class Languages
 		{ Element.DoubleHK, "Двойная горячая клавиша" }, 
 		{ Element.ToggleLangPanel, "Переключить видимость панели языка" }, 
 		{ Element.TranslateSelection, "Показать перевод выделенного текста" }, 
+		{ Element.ToggleMahou, "Переключать паузу Mahou" }, 
 		#endregion
 		#region LangPanel
 		{ Element.DisplayLangPanel, "Отображать языковую панель." },
@@ -759,6 +764,7 @@ public class Languages
 		{ Element.Sound, "Звук" },
 		{ Element.InputHistoryBackSpaceWriteType1, "Писать <Back>(быстрее)" },
 		{ Element.InputHistoryBackSpaceWriteType2, "Удалять символ" },
+		{ Element.Disabled, "Отключен" },
 		#endregion
 		#region Buttons
 		{ Element.ButtonOK, "ОК" }, 

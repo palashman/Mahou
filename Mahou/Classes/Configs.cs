@@ -227,6 +227,11 @@ namespace Mahou {
 			CheckBool("LangPanel", "Display", "false");
 			#endregion
 			#region Hotkeys section
+			CheckInt("Hotkeys", "ToggleMahou_Key", "112");
+			CheckString("Hotkeys", "ToggleMahou_Modifiers", "Win Shift");
+			CheckBool("Hotkeys", "ToggleMahou_Double", "false");
+			CheckBool("Hotkeys", "ToggleMahou_Enabled", "true");
+			// Toggle Mahou
 			CheckInt("Hotkeys", "ShowSelectionTranslate_Key", "0");
 			CheckString("Hotkeys", "ShowSelectionTranslate_Modifiers", "Alt");
 			CheckBool("Hotkeys", "ShowSelectionTranslate_Double", "true");
