@@ -211,6 +211,7 @@ public class Languages
 		InputHistoryBackSpaceWriteType1,
 		InputHistoryBackSpaceWriteType2,
 		Disabled,
+		Open,
 		#endregion
 		#region Buttons
 		ButtonOK,
@@ -482,6 +483,7 @@ public class Languages
 		{ Element.InputHistoryBackSpaceWriteType1, "Write <Back>(faster)" },
 		{ Element.InputHistoryBackSpaceWriteType2, "Delete last" },
 		{ Element.Disabled, "Disabled" },
+		{ Element.Open, "Open" },
 		#endregion
 		#region Buttons
 		{ Element.ButtonOK, "OK" }, 
@@ -765,6 +767,7 @@ public class Languages
 		{ Element.InputHistoryBackSpaceWriteType1, "Писать <Back>(быстрее)" },
 		{ Element.InputHistoryBackSpaceWriteType2, "Удалять символ" },
 		{ Element.Disabled, "Отключен" },
+		{ Element.Open, "Открыть" },
 		#endregion
 		#region Buttons
 		{ Element.ButtonOK, "ОК" }, 

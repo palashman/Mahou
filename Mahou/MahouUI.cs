@@ -1522,7 +1522,7 @@ namespace Mahou {
 				chk_CSLayoutSwitching.ForeColor = chk_CSLayoutSwitchingPlus.ForeColor = chk_OneLayoutWholeWord.ForeColor;
 			chk_FlagsInTray.Enabled = chk_TrayIcon.Checked;
 			chk_SilentUpdate.Enabled = chk_StartupUpdatesCheck.Checked;
-			lbl_BackSpaceType.Enabled = cbb_BackSpaceType.Enabled = chk_WriteInputHistory.Checked;
+			lnk_OpenHistory.Enabled = lbl_BackSpaceType.Enabled = cbb_BackSpaceType.Enabled = chk_WriteInputHistory.Checked;
 			// Layouts tab
 			lbl_SetsCount.Enabled = pan_KeySets.Enabled = btn_AddSet.Enabled = btn_SubSet.Enabled = 
 				lbl_KeysType.Enabled = cbb_SpecKeysType.Enabled = chk_SpecificLS.Checked;
@@ -3367,6 +3367,7 @@ DEL ""ExtractASD.cmd""";
 			chk_ReadOnlyNA.Text = MMain.Lang[Languages.Element.ReadOnlyNA];
 			chk_WriteInputHistory.Text = MMain.Lang[Languages.Element.WriteInputHistory];
 			lbl_BackSpaceType.Text = MMain.Lang[Languages.Element.BackSpaceType];
+			lnk_OpenHistory.Text = MMain.Lang[Languages.Element.Open];
 			#endregion
 			#region Layouts
 			chk_SwitchBetweenLayouts.Text = MMain.Lang[Languages.Element.SwitchBetween]+":";
@@ -3613,6 +3614,11 @@ DEL ""ExtractASD.cmd""";
 		}
 		#endregion
 		#region Links
+		void Lnk_OpenHistoryClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+			try {
+				Process.Start(Path.Combine(nPath, "history.txt"));
+			} catch (Exception ex) { Logging.Log("No program to open txt, opening skiped. Details:\r\n"+ex.Message + "\r\n" + ex.StackTrace, 2); }
+		}
 		void Lnk_RepositoryLinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
 			try {
 				Process.Start("http://github.com/BladeMight/Mahou");

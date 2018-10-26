@@ -249,6 +249,7 @@ namespace Mahou
 		private System.Windows.Forms.Label lbl_TrTextFont;
 		private System.Windows.Forms.Button btn_TrTitleFont;
 		private System.Windows.Forms.Button btn_TrTextFont;
+		private System.Windows.Forms.LinkLabel lnk_OpenHistory;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -272,6 +273,7 @@ namespace Mahou
 			this.components = new System.ComponentModel.Container();
 			this.tabs = new System.Windows.Forms.TabControl();
 			this.tab_functions = new System.Windows.Forms.TabPage();
+			this.lnk_OpenHistory = new System.Windows.Forms.LinkLabel();
 			this.cbb_BackSpaceType = new System.Windows.Forms.ComboBox();
 			this.lbl_BackSpaceType = new System.Windows.Forms.Label();
 			this.chk_WriteInputHistory = new System.Windows.Forms.CheckBox();
@@ -589,6 +591,7 @@ namespace Mahou
 			// 
 			// tab_functions
 			// 
+			this.tab_functions.Controls.Add(this.lnk_OpenHistory);
 			this.tab_functions.Controls.Add(this.cbb_BackSpaceType);
 			this.tab_functions.Controls.Add(this.lbl_BackSpaceType);
 			this.tab_functions.Controls.Add(this.chk_WriteInputHistory);
@@ -626,6 +629,17 @@ namespace Mahou
 			this.tab_functions.TabIndex = 0;
 			this.tab_functions.Text = "Functions";
 			this.tab_functions.UseVisualStyleBackColor = true;
+			// 
+			// lnk_OpenHistory
+			// 
+			this.lnk_OpenHistory.AutoSize = true;
+			this.lnk_OpenHistory.Location = new System.Drawing.Point(493, 215);
+			this.lnk_OpenHistory.Name = "lnk_OpenHistory";
+			this.lnk_OpenHistory.Size = new System.Drawing.Size(36, 15);
+			this.lnk_OpenHistory.TabIndex = 30;
+			this.lnk_OpenHistory.TabStop = true;
+			this.lnk_OpenHistory.Text = "Open";
+			this.lnk_OpenHistory.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Lnk_OpenHistoryClicked);
 			// 
 			// cbb_BackSpaceType
 			// 
