@@ -211,6 +211,7 @@ public class Languages
 		InputHistoryBackSpaceWriteType1,
 		InputHistoryBackSpaceWriteType2,
 		Disabled,
+		Enable,
 		Open,
 		#endregion
 		#region Buttons
@@ -472,7 +473,7 @@ public class Languages
 		{ Element.Hotkey, "Hotkey" }, 
 		{ Element.UpdateFound, "New version avaible!" }, 
 		{ Element.UpdateComplete, "Mahou succesfully updated!" }, 
-		{ Element.ShowHide, "Show/Hide" }, 
+		{ Element.ShowHide, "Show" }, 
 		{ Element.Mahou, "Mahou(魔法) - magic layout switcher." }, 
 		{ Element.Download, "Download" }, 
 		{ Element.ConfigsCannot, "Configs file Mahou.ini cannot be " },
@@ -483,6 +484,7 @@ public class Languages
 		{ Element.InputHistoryBackSpaceWriteType1, "Write <Back>(faster)" },
 		{ Element.InputHistoryBackSpaceWriteType2, "Delete last" },
 		{ Element.Disabled, "Disabled" },
+		{ Element.Enable, "Enable" },
 		{ Element.Open, "Open" },
 		#endregion
 		#region Buttons
@@ -756,7 +758,7 @@ public class Languages
 		{ Element.Hotkey, "Горячая клавиша" }, 
 		{ Element.UpdateFound, "Новая версия доступна!" }, 
 		{ Element.UpdateComplete, "Mahou успешно обновлен!" }, 
-		{ Element.ShowHide, "Показать/Скрыть" }, 
+		{ Element.ShowHide, "Показать" }, 
 		{ Element.Mahou, "Mahou(魔法) - волшебный переключатель раскладок." }, 
 		{ Element.Download, "Скачать" }, 
 		{ Element.ConfigsCannot, "Файл настроек Mahou.ini не может быть " },
@@ -767,6 +769,7 @@ public class Languages
 		{ Element.InputHistoryBackSpaceWriteType1, "Писать <Back>(быстрее)" },
 		{ Element.InputHistoryBackSpaceWriteType2, "Удалять символ" },
 		{ Element.Disabled, "Отключен" },
+		{ Element.Enable, "Включить" },
 		{ Element.Open, "Открыть" },
 		#endregion
 		#region Buttons

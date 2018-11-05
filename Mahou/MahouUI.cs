@@ -464,6 +464,7 @@ namespace Mahou {
 				icon.trIcon.Text = icon.trIcon.Text.Replace(" ["+MMain.Lang[Languages.Element.Disabled]+"]", "");
 				ChangeTrayIconToFlag(true);
 			}
+			icon.CheckEnDis(ENABLED);
 			Logging.Log("Switched Mahou enabled state to: ["+ENABLED+"].");
 		}
 		public static void ShowSelectionTranslation(bool mouse = false) {
@@ -1599,6 +1600,7 @@ namespace Mahou {
 			}
 			if (MMain.mahou != null)
 				KMHook.ClearModifiers();
+			icon.CheckShHi(Visible);
 			Memory.Flush();
 		}
 		public void ToggleLangPanel() {
@@ -1809,6 +1811,7 @@ DEL "+restartMahouPath;
 			icon = new TrayIcon(MMain.MyConfs.ReadBool("Functions", "TrayIconVisible"));
 			icon.Exit += (_, __) => ExitProgram();
 			icon.ShowHide += (_, __) => ToggleVisibility();
+			icon.EnaDisable += (_, __) => ToggleMahou();
 		}
 		/// <summary>
 		/// Initializes list boxes.
@@ -3527,7 +3530,7 @@ DEL ""ExtractASD.cmd""";
 			btn_OK.Text = MMain.Lang[Languages.Element.ButtonOK];
 			#endregion
 			#region Misc
-			icon.RefreshText(MMain.Lang[Languages.Element.Mahou], MMain.Lang[Languages.Element.ShowHide], MMain.Lang[Languages.Element.ExitMahou]);
+			icon.RefreshText(MMain.Lang[Languages.Element.Mahou], MMain.Lang[Languages.Element.ShowHide], MMain.Lang[Languages.Element.ExitMahou], MMain.Lang[Languages.Element.Enable]);
 			#endregion
 			Logging.Log("Language changed.");
 			SetTooltips();
