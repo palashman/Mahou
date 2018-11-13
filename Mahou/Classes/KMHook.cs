@@ -20,7 +20,7 @@ namespace Mahou
 			clickAfterCTRL, clickAfterALT, clickAfterSHIFT,
 			hotkeywithmodsfired, csdoing, incapt, waitfornum, 
 			IsHotkey, ff_chr_wheeled, preSnip, LMB_down, RMB_down, MMB_down,
-			dbl_click, click;
+			dbl_click, click, selfie;
 		public static System.Windows.Forms.Timer click_reset = new System.Windows.Forms.Timer();
 		public static int skip_mouse_events, skip_spec_keys, cursormove = -1, guess_tries;
 		static uint cs_layout_last = 0;
@@ -92,6 +92,9 @@ namespace Mahou
 					KeybdEvent(Keys.Scroll, 2);
 	              });
 			}
+//			if (alt_r) { 
+//				Debug.WriteLine("|? {0}", selfie);
+//			}
 			uint mods = 0;
 			if (alt || alt_r)
 				mods += WinAPI.MOD_ALT;
@@ -1918,16 +1921,23 @@ namespace Mahou
 		/// </summary>
 		/// <param name="self_action">Action that will be done without RawInput listeners, Hotkeys and low-level hook.</param>
 		public static void DoSelf(Action self_action) {
-			Debug.WriteLine(">> DS" + self_action.Method.Name);
-			if (MMain.mahou.RemapCapslockAsF18)
-				MMain.mahou.Invoke((MethodInvoker)delegate{LLHook.UnSet();});
-			MMain.mahou.UnregisterHotkeys();
-			MMain.rif.RegisterRawInputDevices(IntPtr.Zero, WinAPI.RawInputDeviceFlags.Remove);
-			self_action();
-			if (MMain.mahou.RemapCapslockAsF18)
-				MMain.mahou.Invoke((MethodInvoker)delegate{LLHook.Set();});
-			MMain.rif.RegisterRawInputDevices(MMain.rif.Handle);
-			MMain.mahou.RegisterHotkeys();
+			if (selfie) {
+				self_action();
+			} else {
+				Debug.WriteLine(">> DS" + self_action.Method.Name);
+				MMain.mahou.Invoke((MethodInvoker)delegate {
+                   	if (MMain.mahou.RemapCapslockAsF18) { LLHook.UnSet(); } MMain.mahou.UnregisterHotkeys(); });
+				MMain.rif.Invoke((MethodInvoker)delegate{MMain.rif.RegisterRawInputDevices(IntPtr.Zero, WinAPI.RawInputDeviceFlags.Remove);});
+				MMain.rif.Dispose();
+				selfie = true;
+				self_action();
+				MMain.mahou.Invoke((MethodInvoker)delegate {
+                   	if (MMain.mahou.RemapCapslockAsF18) { LLHook.Set(); } MMain.mahou.RegisterHotkeys(); });
+				MMain.rif = new RawInputForm();
+				MMain.rif.Invoke((MethodInvoker)delegate{MMain.rif.RegisterRawInputDevices(MMain.rif.Handle);});
+				selfie = false;
+				Debug.WriteLine(">> ES" + self_action.Method.Name);
+			}
 		}
 		public static void StartConvertWord(YuKey[] YuKeys, uint wasLocale, bool skipsnip = false) {
 			DoSelf(() => {
