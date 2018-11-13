@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Mahou
 {
-	class KMHook  { // Keyboard & Mouse Listeners & Event hook		#region Variables
+	static class KMHook  { // Keyboard & Mouse Listeners & Event hook		#region Variables
 		public static string __ANY__ = "***ANY***", last_snip;
 		public static bool win, alt, ctrl, shift,
 			win_r, alt_r, ctrl_r, shift_r,
@@ -64,6 +64,7 @@ namespace Mahou
 		#endregion
 		#region Keyboard, Mouse & Event hooks callbacks
 		public static void ListenKeyboard(int vkCode, uint MSG, short Flags = 0) {
+			if (selfie) return;
 			if (MMain.mahou.CaretLangTooltipEnabled)
 				ff_chr_wheeled = false;
 			if (vkCode > 254) return;
@@ -1922,18 +1923,17 @@ namespace Mahou
 		/// <param name="self_action">Action that will be done without RawInput listeners, Hotkeys and low-level hook.</param>
 		public static void DoSelf(Action self_action) {
 			if (selfie) {
+				Debug.WriteLine("INSELF AN SELF");
 				self_action();
 			} else {
 				Debug.WriteLine(">> DS" + self_action.Method.Name);
 				MMain.mahou.Invoke((MethodInvoker)delegate {
                    	if (MMain.mahou.RemapCapslockAsF18) { LLHook.UnSet(); } MMain.mahou.UnregisterHotkeys(); });
 				MMain.rif.Invoke((MethodInvoker)delegate{MMain.rif.RegisterRawInputDevices(IntPtr.Zero, WinAPI.RawInputDeviceFlags.Remove);});
-				MMain.rif.Dispose();
 				selfie = true;
 				self_action();
 				MMain.mahou.Invoke((MethodInvoker)delegate {
                    	if (MMain.mahou.RemapCapslockAsF18) { LLHook.Set(); } MMain.mahou.RegisterHotkeys(); });
-				MMain.rif = new RawInputForm();
 				MMain.rif.Invoke((MethodInvoker)delegate{MMain.rif.RegisterRawInputDevices(MMain.rif.Handle);});
 				selfie = false;
 				Debug.WriteLine(">> ES" + self_action.Method.Name);
