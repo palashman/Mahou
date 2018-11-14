@@ -302,9 +302,8 @@ namespace Mahou {
 				if (mods == WinAPI.MOD_ALT) { // Experimental fix for [only Alt] + something.
 					KInputs.MakeInput(new [] {
 					                  	KInputs.AddKey(Keys.LMenu, false),
-					                  	KInputs.AddKey(Keys.RMenu, false),
-				                  		KInputs.AddKey(Keys.LMenu, true)
-					                  });
+					                  	KInputs.AddKey(Keys.RMenu, false), 
+					                  	KInputs.AddKey(Keys.LMenu, true)});
 				}
 				#region Convert multiple words 
 				if (m.WParam.ToInt32() >= 100 && m.WParam.ToInt32() <= 109 && KMHook.waitfornum) {
@@ -435,6 +434,8 @@ namespace Mahou {
 //				if (m.WParam.ToInt32() <= (int)Hotkey.HKID.TransliterateSelection)
 //					KMHook.ClearModifiers();
 				UpdateLDs();
+				// Fix for experimental alt-only + something;
+				KInputs.MakeInput(new []{KInputs.AddKey(Keys.LMenu, false)});
 			}
 			base.WndProc(ref m);
 		}

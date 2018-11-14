@@ -12,6 +12,8 @@ static class KInputs {
 	/// <returns>WinAPI.INPUT</returns>
     public static WinAPI.INPUT AddKey(Keys key, bool down) {
         var vk = (UInt16)key;
+        var scan = (ushort)WinAPI.MapVirtualKey(vk, 0);
+        System.Diagnostics.Debug.WriteLine("ADDED VK: " +vk + " KEY: " + key + " scan: " + scan);
         var input = new WinAPI.INPUT {
             Type = WinAPI.INPUT_KEYBOARD,
             Data = {
@@ -20,7 +22,7 @@ static class KInputs {
                     Flags = IsExtended(key) ? (down ? (WinAPI.KEYEVENTF_EXTENDEDKEY) :
                                                (WinAPI.KEYEVENTF_KEYUP | WinAPI.KEYEVENTF_EXTENDEDKEY)) : 
                     							(down ? 0 : WinAPI.KEYEVENTF_KEYUP),
-                    Scan = (ushort)WinAPI.MapVirtualKey(vk, 0),
+                    Scan = scan,
                     ExtraInfo = IntPtr.Zero,
                     Time = 0
                 }
@@ -34,10 +36,7 @@ static class KInputs {
     /// <param name="key">Key to be checked.</param>
     /// <returns>bool</returns>
     public static bool IsExtended(Keys key) { //Check for extended keys
-		return key == Keys.Menu ||
-			key == Keys.LMenu ||
-			key == Keys.RMenu ||
-			key == Keys.Control ||
+		return key == Keys.RMenu ||
 			key == Keys.RControlKey ||
 			key == Keys.Insert ||
 			key == Keys.Delete ||
@@ -52,6 +51,7 @@ static class KInputs {
 			key == Keys.NumLock || 
 			key == Keys.Cancel ||
 			key == Keys.Snapshot || 
+			key == Keys.Return || 
 			key == Keys.Divide;
     }
     public static string GetWordByIndex(string LINE, int index) {
@@ -135,6 +135,7 @@ static class KInputs {
     /// <param name="inputs">Array of INPUT to be inputted.</param>
     public static void MakeInput(WinAPI.INPUT[] inputs) { //Simply, sends input
     	var done = WinAPI.SendInput((UInt32)inputs.Length, inputs, Marshal.SizeOf(typeof(WinAPI.INPUT)));
+    	System.Diagnostics.Debug.WriteLine("VK SENDED: " + inputs[0].Data.Keyboard.Vk);
     	if (done != inputs.Length)
     		Mahou.Logging.Log("ERROR during send input, lenght: " +done+ ", Win32ERR: " + Marshal.GetLastWin32Error());
     }
