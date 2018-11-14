@@ -3277,7 +3277,7 @@ DEL ""ExtractASD.cmd""";
 			bool silent = MMain.MyConfs.ReadBool("Functions", "SilentUpdate");
 			Debug.WriteLine(UpdInfo[2]);
 			try {
-				if (UpdInfo[2] == "latest-commit" ? 
+				if ((UpdInfo[2] == "latest-commit" || MMain.MyConfs.Read("Updates", "Channel") != "Stable") ?
 				    MMain.MyConfs.Read("Updates", "LatestCommit") != UpdInfo[4] :
 				    flVersion("v" + Application.ProductVersion) < flVersion(UpdInfo[2])) {
 					Logging.Log("New version available, " + (!silent ? "showing dialog..." : "silent updating..."));
