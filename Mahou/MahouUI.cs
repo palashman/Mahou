@@ -3214,7 +3214,7 @@ DEL ""ExtractASD.cmd""";
                                        //These looks unsafe, but really they works!
 					                  "<div class=\"markdown-body\">\n\\s+(.+?)[\\n\\s]+</div>",
 					                  RegexOptions.IgnoreCase | RegexOptions.Singleline).Groups[1].Value, "<[^>]*>", "");
-				var Version = Regex.Match(data, "<span class=\"css-truncate-target\">(.*)</span>").Groups[1].Value;
+				var Version = Regex.Match(data, "<span class=\"css-truncate-target\".+?>(.*)</span>").Groups[1].Value;
 				var Link = "https://github.com" + Regex.Match(data,
 					           "<li class=\"d-block py-.+\">\n\\s+<a href=\"(.+?)\"").Groups[1].Value;
 				var Commit = "";
@@ -3275,6 +3275,7 @@ DEL ""ExtractASD.cmd""";
 			System.Threading.Tasks.Task.Factory.StartNew(GetUpdateInfo).Wait();
 			SetUInfo();
 			bool silent = MMain.MyConfs.ReadBool("Functions", "SilentUpdate");
+			Debug.WriteLine(UpdInfo[2]);
 			try {
 				if (UpdInfo[2] == "latest-commit" ? 
 				    MMain.MyConfs.Read("Updates", "LatestCommit") != UpdInfo[4] :
