@@ -1289,8 +1289,6 @@ namespace Mahou {
 			InitializeLangPanel();
 			ToggleDependentControlsEnabledState();
 			RefreshAllIcons();
-			UnregisterHotkeys();
-			RegisterHotkeys();
 			if (_langPanel != null) {
 				_langPanel.UpdateApperence(LangPanelBackColor, LangPanelForeColor, LangPanelTransparency, LangPanelFont);
 				if(LangPanelDisplay)
@@ -1316,6 +1314,8 @@ namespace Mahou {
 				chk_GetLayoutFromJKL.ForeColor = Color.FromKnownColor(KnownColor.WindowText);
 				HelpMeUnderstand.SetToolTip(chk_GetLayoutFromJKL, MMain.Lang[Languages.Element.TT_UseJKL]);
 			}
+			UnregisterHotkeys();
+			RegisterHotkeys();
 			Memory.Flush();
 			Logging.Log("All configurations loaded.");
 		}
@@ -3734,6 +3734,7 @@ DEL ""ExtractASD.cmd""";
 			}
 		}
 		void Lsb_HotkeysSelectedIndexChanged(object sender, EventArgs e) {
+			UnregisterHotkeys(1);
 			UpdateHotkeyControlsSwitch();
 			UpdateHotkeyTemps();
 			switch (lsb_Hotkeys.SelectedIndex) {

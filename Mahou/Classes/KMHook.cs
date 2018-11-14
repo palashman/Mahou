@@ -64,7 +64,6 @@ namespace Mahou
 		#endregion
 		#region Keyboard, Mouse & Event hooks callbacks
 		public static void ListenKeyboard(int vkCode, uint MSG, short Flags = 0) {
-			if (selfie) return;
 			if (MMain.mahou.CaretLangTooltipEnabled)
 				ff_chr_wheeled = false;
 			if (vkCode > 254) return;
@@ -93,9 +92,6 @@ namespace Mahou
 					KeybdEvent(Keys.Scroll, 2);
 	              });
 			}
-//			if (alt_r) { 
-//				Debug.WriteLine("|? {0}", selfie);
-//			}
 			uint mods = 0;
 			if (alt || alt_r)
 				mods += WinAPI.MOD_ALT;
@@ -2009,6 +2005,7 @@ namespace Mahou
 						}
 					}
 				}
+				Debug.WriteLine("XX CLW_END");
 			});
 		}
 		/// <summary>
@@ -2031,6 +2028,7 @@ namespace Mahou
 				var wasLocale = Locales.GetCurrentLocale() & 0xFFFF;
 				var desl = ChangeLayout(true);
 				if (MahouUI.UseJKL && MMain.mahou.SwitchBetweenLayouts && MMain.mahou.EmulateLS) {
+					Debug.WriteLine("JKL-ed CLW");
 					jklXHidServ.OnLayoutAction = desl;
 					jklXHidServ.ActionOnLayout = () => StartConvertWord(YuKeys, wasLocale);
 				} else
@@ -2118,56 +2116,58 @@ namespace Mahou
 		/// </summary>
 		public static uint ChangeLayout(bool quiet = false) {
 			uint desired = 0;
-			Debug.WriteLine(">> LC");
-			if (!quiet) {
-				if (MahouUI.SoundOnLayoutSwitch)
-					MahouUI.SoundPlay();
-				if (MahouUI.SoundOnLayoutSwitch2)
-					MahouUI.Sound2Play();
-			}
-			if (Locales.ActiveWindowProcess().ProcessName.ToLower() == "HD-Frontend".ToLower()) {
-				KInputs.MakeInput(new [] { 
-				                  	KInputs.AddKey(Keys.LControlKey, true),
-				                  	KInputs.AddKey(Keys.Space, true),
-				                  	KInputs.AddKey(Keys.Space, false),
-				                  	KInputs.AddKey(Keys.LControlKey, false)});
-				Thread.Sleep(13);
-			} else {
-				if (MMain.mahou.SwitchBetweenLayouts) {
-					uint last = 0;
-					bool conhost = false;
-					if (MahouUI.UseJKL) {
-						conhost = IsConhost();
-					}
-					for (int i=MMain.locales.Length; i!=0; i--) {
-						var nowLocale = Locales.GetCurrentLocale();
-						if (MahouUI.UseJKL) {
-							if (nowLocale == 0 || conhost)
-								nowLocale = MahouUI.currentLayout;
-							if (last == nowLocale && nowLocale != 0) {
-								nowLocale = MahouUI.currentLayout;
-								desired = 0;
-							}
-						}
-						if (nowLocale == desired)
-							break;
-						uint notnowLocale = nowLocale == MahouUI.MAIN_LAYOUT1
-			                ? MahouUI.MAIN_LAYOUT2
-			                : MahouUI.MAIN_LAYOUT1;
-						last = nowLocale;
-						ChangeToLayout(Locales.ActiveWindow(), notnowLocale, conhost);
-						desired = notnowLocale;
-						if (MMain.mahou.EmulateLS)
-							break;
-					}
+			Debug.WriteLine(">> LC + SELF");
+			DoSelf(() => {
+				if (!quiet) {
+					if (MahouUI.SoundOnLayoutSwitch)
+						MahouUI.SoundPlay();
+					if (MahouUI.SoundOnLayoutSwitch2)
+						MahouUI.Sound2Play();
+				}
+				if (Locales.ActiveWindowProcess().ProcessName.ToLower() == "HD-Frontend".ToLower()) {
+					KInputs.MakeInput(new [] { 
+					                  	KInputs.AddKey(Keys.LControlKey, true),
+					                  	KInputs.AddKey(Keys.Space, true),
+					                  	KInputs.AddKey(Keys.Space, false),
+					                  	KInputs.AddKey(Keys.LControlKey, false)});
+					Thread.Sleep(13);
 				} else {
-					if (MMain.mahou.EmulateLS) {
-						CycleEmulateLayoutSwitch();
+					if (MMain.mahou.SwitchBetweenLayouts) {
+						uint last = 0;
+						bool conhost = false;
+						if (MahouUI.UseJKL) {
+							conhost = IsConhost();
+						}
+						for (int i=MMain.locales.Length; i!=0; i--) {
+							var nowLocale = Locales.GetCurrentLocale();
+							if (MahouUI.UseJKL) {
+								if (nowLocale == 0 || conhost)
+									nowLocale = MahouUI.currentLayout;
+								if (last == nowLocale && nowLocale != 0) {
+									nowLocale = MahouUI.currentLayout;
+									desired = 0;
+								}
+							}
+							if (nowLocale == desired)
+								break;
+							uint notnowLocale = nowLocale == MahouUI.MAIN_LAYOUT1
+				                ? MahouUI.MAIN_LAYOUT2
+				                : MahouUI.MAIN_LAYOUT1;
+							last = nowLocale;
+							ChangeToLayout(Locales.ActiveWindow(), notnowLocale, conhost);
+							desired = notnowLocale;
+							if (MMain.mahou.EmulateLS)
+								break;
+						}
 					} else {
-						CycleLayoutSwitch();
+						if (MMain.mahou.EmulateLS) {
+							CycleEmulateLayoutSwitch();
+						} else {
+							CycleLayoutSwitch();
+						}
 					}
 				}
-			}
+			});
 			return desired;
 		}
 		/// <summary>
