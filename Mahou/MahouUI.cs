@@ -2478,49 +2478,59 @@ DEL "+restartMahouPath;
 				WinAPI.UnregisterHotKey(Handle, id);
 			}
 		}
+		public void _regHK(IntPtr h, int id, uint mod, int key) {
+			int rk = key;
+			if (RemapCapslockAsF18) {
+				if (key == (int)Keys.Capital) {
+					rk = (int)Keys.F18;
+				}
+				Debug.WriteLine("WCHI " + key + " rk:" +rk);
+			}
+			WinAPI.RegisterHotKey(h, id,mod, rk);
+		}
 		public void RegisterHotkeys() {
 			if (ENABLED) {
 				if (HKCLast_tempEnabled)
-					WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.ConvertLastWord, 
+					_regHK(Handle, (int)Hotkey.HKID.ConvertLastWord, 
 					                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKCLast_tempMods), HKCLast_tempKey);
 				if (HKCSelection_tempEnabled)
-					WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.ConvertSelection, 
+					_regHK(Handle, (int)Hotkey.HKID.ConvertSelection, 
 					                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKCSelection_tempMods), HKCSelection_tempKey);
 				if (HKCLine_tempEnabled)
-					WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.ConvertLastLine, 
+					_regHK(Handle, (int)Hotkey.HKID.ConvertLastLine, 
 					                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKCLine_tempMods), HKCLine_tempKey);
 				if (HKConMorWor_tempEnabled)
-					WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.ConvertMultipleWords,
+					_regHK(Handle, (int)Hotkey.HKID.ConvertMultipleWords,
 					                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKConMorWor_tempMods), HKConMorWor_tempKey);
 				if (HKTitleCase_tempEnabled)
-					WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.ToTitleSelection, 
+					_regHK(Handle, (int)Hotkey.HKID.ToTitleSelection, 
 					                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKTitleCase_tempMods), HKTitleCase_tempKey);
 				if (HKSwapCase_tempEnabled)
-					WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.ToSwapSelection, 
+					_regHK(Handle, (int)Hotkey.HKID.ToSwapSelection, 
 					                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKSwapCase_tempMods), HKSwapCase_tempKey);
 				if (HKRandomCase_tempEnabled)
-					WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.ToRandomSelection, 
+					_regHK(Handle, (int)Hotkey.HKID.ToRandomSelection, 
 					                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKRandomCase_tempMods), HKRandomCase_tempKey);
 				if (HKTransliteration_tempEnabled)
-					WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.TransliterateSelection, 
+					_regHK(Handle, (int)Hotkey.HKID.TransliterateSelection, 
 					                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKTransliteration_tempMods), HKTransliteration_tempKey);
 				if (HKSymIgn_tempEnabled)
-					WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.ToggleSymbolIgnoreMode, 
+					_regHK(Handle, (int)Hotkey.HKID.ToggleSymbolIgnoreMode, 
 					                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKSymIgn_tempMods), HKSymIgn_tempKey);
 				if (Mainhk_tempEnabled)
-					WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.ToggleVisibility, 
+					_regHK(Handle, (int)Hotkey.HKID.ToggleVisibility, 
 					                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(Mainhk_tempMods), Mainhk_tempKey);
 				if (ExitHk_tempEnabled) 
-					WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.Exit, 
+					_regHK(Handle, (int)Hotkey.HKID.Exit, 
 					                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(ExitHk_tempMods), ExitHk_tempKey);
 				if (HKRestart_tempEnabled)
-					WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.Restart,
+					_regHK(Handle, (int)Hotkey.HKID.Restart,
 					                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKRestart_tempMods), HKRestart_tempKey);
 				if (HKToggleLangPanel_tempEnabled)
-					WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.ToggleLangPanel,
+					_regHK(Handle, (int)Hotkey.HKID.ToggleLangPanel,
 					                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKToggleLangPanel_tempMods), HKToggleLangPanel_tempKey);
 				if (HKShowSelectionTranslate_tempEnabled)
-					WinAPI.RegisterHotKey(Handle, (int)Hotkey.HKID.ShowSelectionTranslation,
+					_regHK(Handle, (int)Hotkey.HKID.ShowSelectionTranslation,
 					                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKShowSelectionTranslate_tempMods), HKShowSelectionTranslate_tempKey);
 				if (!ChangeLayouByKey) return;
 				for(int i = 1; i != SpecKeySetCount+1; i++) {
