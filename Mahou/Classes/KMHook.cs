@@ -2193,7 +2193,7 @@ namespace Mahou
 				if (MahouUI.UseJKL)
 					if ((loc == last && loc != 0) || conhost)
 						loc = MahouUI.currentLayout;
-				WinAPI.SendMessage(hwnd, (int)WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, (UIntPtr)LayoutId);
+				WinAPI.SendMessage(hwnd, (int)WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, LayoutId);
 				Thread.Sleep(10);//Give some time to switch layout
 				tries++;
 				if (tries == MMain.locales.Length) {

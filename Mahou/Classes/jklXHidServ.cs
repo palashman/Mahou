@@ -132,7 +132,7 @@ namespace Mahou {
 			self_change = true;
 			for (int i = MMain.locales.Length; i != 0; i--) {
 				if (MMain.MahouActive()) return; // Else creates invalid culture 0 exception.
-				WinAPI.SendMessage(hwnd, (int)WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, (UIntPtr)WinAPI.HKL_NEXT);
+				WinAPI.SendMessage(hwnd, (int)WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, WinAPI.HKL_NEXT);
 //				Thread.Sleep(5);
 //				WinAPI.SendMessage(hwnd, (int)WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, (int)WinAPI.HKL_PREV);
 			}
