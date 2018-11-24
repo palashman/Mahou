@@ -414,8 +414,8 @@ public static class WinAPI {
 	public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
     #endregion
     #region LangPanel requires
-	[DllImport("user32.dll")]
-	public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+	[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+	public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, UIntPtr lParam);
 	[DllImport("user32.dll")]
 	public static extern bool ReleaseCapture();
 	#region From JustUI

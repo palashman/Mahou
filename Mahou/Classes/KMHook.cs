@@ -24,7 +24,7 @@ namespace Mahou
 		public static System.Windows.Forms.Timer click_reset = new System.Windows.Forms.Timer();
 		public static int skip_mouse_events, skip_spec_keys, cursormove = -1, guess_tries;
 		static uint cs_layout_last = 0;
-		static string lastClipText = "";
+		static string lastClipText = "", busy_on = "";
 		static List<Keys> tempNumpads = new List<Keys>();
 		public static List<char> c_snip = new List<char>();
 		public static System.Windows.Forms.Timer doublekey = new System.Windows.Forms.Timer();
@@ -102,10 +102,10 @@ namespace Mahou
 			if (win || win_r)
 				mods += WinAPI.MOD_WIN;
 			if (MMain.mahou.HasHotkey(new Hotkey(false, (uint)Key, mods, 77))) {
-				Logging.Log("Pressed Mahou, hotkey words would not be cleared.");
 				IsHotkey = true;
 			} else
 				IsHotkey = false;
+			Logging.Log("Pressed hotkey?: "+IsHotkey+" => ["+Key+"+"+mods+"] .");
 			if ((Key >= Keys.D0 || Key <= Keys.D9) && waitfornum)
 				IsHotkey = true;
 			if (MahouUI.OnceSpecific && !down) {
@@ -203,7 +203,6 @@ namespace Mahou
 				var seKey = Keys.Space;
 				if (MMain.mahou.SnippetsExpandType == "Tab")
 					seKey = Keys.F14;
-				Logging.Log("Snippet expand key: " + MMain.mahou.SnippetsExpandType);
 				if (Key == seKey || seKey == Keys.F14)
 					preSnip = true;
 				if (MSG == WinAPI.WM_KEYUP) {
@@ -373,25 +372,19 @@ namespace Mahou
 						ClearWord(true, false, false, "Clear last word after 1 enter");
 						afterEOL = false;
 					}
-					if (!shift && !shift_r && !Control.IsKeyLocked(Keys.CapsLock)) {
-						MMain.c_word.Add(new YuKey() {
-							key = Key,
-							upper = false
-						});
-						MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() {
-							key = Key,
-							upper = false
-						});
-					} else {
-						MMain.c_word.Add(new YuKey() {
-							key = Key,
-							upper = true
-						});
-						MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() {
-							key = Key,
-							upper = true
-						});
+					var upr = false;
+					if (shift || shift_r || Control.IsKeyLocked(Keys.CapsLock)) {
+						upr = true;
 					}
+					MMain.c_word.Add(new YuKey() {
+						key = Key,
+						upper = upr
+					});
+					MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() {
+						key = Key,
+						upper = upr
+					});
+					Logging.Log("Added [" + Key + "]^"+upr);
 				}
 			}
 			#endregion
@@ -1919,7 +1912,7 @@ namespace Mahou
 		/// <param name="self_action">Action that will be done without RawInput listeners, Hotkeys and low-level hook.</param>
 		public static void DoSelf(Action self_action) {
 			if (selfie) {
-				Debug.WriteLine("INSELF AN SELF");
+				Logging.Log("Inside "+busy_on+"called: "+self_action.Method.Name);
 				self_action();
 			} else {
 				Debug.WriteLine(">> DS" + self_action.Method.Name);
@@ -1927,6 +1920,7 @@ namespace Mahou
                    	if (MMain.mahou.RemapCapslockAsF18) { LLHook.UnSet(); } MMain.mahou.UnregisterHotkeys(); });
 				MMain.rif.Invoke((MethodInvoker)delegate{MMain.rif.RegisterRawInputDevices(IntPtr.Zero, WinAPI.RawInputDeviceFlags.Remove);});
 				selfie = true;
+				busy_on = self_action.Method.Name;
 				self_action();
 				MMain.mahou.Invoke((MethodInvoker)delegate {
                    	if (MMain.mahou.RemapCapslockAsF18) { LLHook.Set(); } MMain.mahou.RegisterHotkeys(); });
@@ -1936,6 +1930,7 @@ namespace Mahou
 			}
 		}
 		public static void StartConvertWord(YuKey[] YuKeys, uint wasLocale, bool skipsnip = false) {
+			Logging.Log("Start Convert Word len: ["+YuKeys.Length+"], wl:"+wasLocale+", ss:"+skipsnip);
 			DoSelf(() => {
 				Debug.WriteLine(">> ST CLW");
 				var backs = YuKeys.Length;
@@ -2189,7 +2184,7 @@ namespace Mahou
 		/// <param name="LayoutId">Desired layout to switch to.</param>
 		static void NormalChangeToLayout(IntPtr hwnd, uint LayoutId, bool conhost = false) {
 			Debug.WriteLine(">> N-CTL");
-			Logging.Log("Changing layout using normal mode, WinAPI.PostMessage [WinAPI.WM_INPUTLANGCHANGEREQUEST] with LParam ["+LayoutId+"].");
+			Logging.Log("Changing layout using normal mode, WinAPI.SendMessage [WinAPI.WM_INPUTLANGCHANGEREQUEST] with LParam ["+LayoutId+"].");
 			int tries = 0;
 			uint last = 0;
 			var loc = Locales.GetCurrentLocale();
@@ -2198,11 +2193,13 @@ namespace Mahou
 				if (MahouUI.UseJKL)
 					if ((loc == last && loc != 0) || conhost)
 						loc = MahouUI.currentLayout;
-				WinAPI.PostMessage(hwnd, WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, LayoutId);
+				WinAPI.SendMessage(hwnd, (int)WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, (UIntPtr)LayoutId);
 				Thread.Sleep(10);//Give some time to switch layout
 				tries++;
-				if (tries == MMain.locales.Length)
+				if (tries == MMain.locales.Length) {
+					Logging.Log("Tries break, probably failed layout changing...",1);
 					break;
+				}
 				last = loc;
 			} while (loc != LayoutId);
 //			if (!MahouUI.UseJKL) // Wow, gives no sense!!
