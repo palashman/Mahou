@@ -323,7 +323,7 @@ namespace Mahou
 				if (Key == Keys.Home || Key == Keys.End ||
 				    (Key == Keys.Tab && MMain.mahou.SnippetsExpandType != "Tab" && snipps.Length > 0) || Key == Keys.PageDown || Key == Keys.PageUp ||
 				   Key == Keys.Left || Key == Keys.Right || Key == Keys.Down || Key == Keys.Up ||
-				   Key == Keys.BrowserSearch || 
+				   Key == Keys.BrowserSearch || ((win||win_r) && (Key >= Keys.D1 || Key <= Keys.D9)) ||
 				   ((ctrl||win||alt||ctrl_r||win_r||alt_r) && (Key != Keys.Menu  && //Ctrl modifier and key which is not modifier
 							Key != Keys.LMenu &&
 							Key != Keys.RMenu &&
@@ -1354,6 +1354,9 @@ namespace Mahou
 					Logging.Log("Cleared current snippet" + ReasonEnding);
 				}
 			}
+			MahouUI.RefreshFLAG();
+			MMain.mahou.RefreshAllIcons();
+			MMain.mahou.UpdateLDs();
 		}
 		public static string[] SplitWords(string LINE) {
 			var LIST = new List<string>();
