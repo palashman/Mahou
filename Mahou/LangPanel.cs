@@ -123,7 +123,7 @@ namespace Mahou {
 		#region Derived from JustUI
 		public bool AeroEnabled;
 		public void AeroCheck() {
-			if (Environment.OSVersion.Version.Major >= 6) {
+			if (KMHook.IfNW7()) {
 				int enabled = 0;
 				WinAPI.DwmIsCompositionEnabled(ref enabled);
 				AeroEnabled = (enabled == 1);

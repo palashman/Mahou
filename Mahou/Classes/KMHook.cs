@@ -152,10 +152,10 @@ namespace Mahou
 			if (!down && (
 			    ((alt || ctrl || alt_r || ctrl_r) && (Key == Keys.Shift || Key == Keys.LShiftKey || Key == Keys.RShiftKey)) ||
 			     shift && (Key == Keys.Menu || Key == Keys.LMenu || Key == Keys.RMenu) ||
-			     (Environment.OSVersion.Version.Major == 10 && (win || win_r) && Key == Keys.Space))) {
+			     (IfNW7() && (win || win_r) && Key == Keys.Space))) {
 				if (!MahouUI.UseJKL) {
 					var time = 200;
-					if (Environment.OSVersion.Version.Major == 10)
+					if (IfNW7())
 						time = 50;
 					MahouUI.currentLayout = 0;
 					DoLater(() => { MahouUI.GlobalLayout = MahouUI.currentLayout = Locales.GetCurrentLocale(); }, time);
@@ -1083,6 +1083,10 @@ namespace Mahou
 			}
 			Thread.Sleep(30);
 		}
+		public static bool IfNW7() {
+			Logging.Log("OS: " +Environment.OSVersion.Version);
+			return Environment.OSVersion.Version.Major == 10 || (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor > 1);
+		}
 		public static void DoLater(Action act, int timeout) {
 			System.Threading.Tasks.Task.Factory.StartNew(() => {
 			                                             	Thread.Sleep(timeout);
@@ -1155,8 +1159,8 @@ namespace Mahou
 								skip_spec_keys++; // Skip next CapsLock up event
 								GJIME = true;
 							}
-						if ((Key == Keys.CapsLock && !shift && !shift_r && !alt && !alt_r && !ctrl && !ctrl_r && specificKey == 1) ||
-						    (Key == Keys.CapsLock && (shift || shift_r) && !alt && !alt_r && !ctrl && !ctrl_r && specificKey == 8) )
+						if ((Key == Keys.CapsLock && !shift && !shift_r && !alt && !alt_r && !ctrl && !ctrl_r && !win && !win_r && specificKey == 1) ||
+						    (Key == Keys.CapsLock && (shift || shift_r) && !alt && !alt_r && !ctrl && !ctrl_r && !win && !win_r && specificKey == 8) )
 							if (Control.IsKeyLocked(Keys.CapsLock))
 								DoSelf(() => { KeybdEvent(Keys.CapsLock, 0); KeybdEvent(Keys.CapsLock, 2); });
 						var speclayout = (string)typeof(MahouUI).GetField("Layout"+i).GetValue(MMain.mahou);
@@ -1189,7 +1193,7 @@ namespace Mahou
 								ChangeLayout();
 						    	return;
 							} else 
-							if (!shift && !shift_r && !alt && !alt_r && !ctrl && !ctrl_r && specificKey == 1 && 
+							if (!shift && !shift_r && !alt && !alt_r && !ctrl && !ctrl_r && !win && !win_r && specificKey == 1 && 
 								    (Key == Keys.CapsLock || F18)) {
 								ChangeLayout();
 								Logging.Log("Changing layout by CapsLock"+(F18?"(F18)":"")+" key.");
@@ -1939,7 +1943,7 @@ namespace Mahou
 				var backs = YuKeys.Length;
 				// Fix for cmd exe pause hotkey leaving one char. 
 				var clsNM = new StringBuilder(256);
-				if (Environment.OSVersion.Version.Major >= 9 && 
+				if (IfNW7() &&
 				    clsNM.ToString() == "ConsoleWindowClass" && (
 					MMain.mahou.HKCLast.VirtualKeyCode == (int)Keys.Pause))
 					backs++;
