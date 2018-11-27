@@ -34,6 +34,7 @@ BOOL APIENTRY DllMain (HINSTANCE hInstance, DWORD  Reason, LPVOID Reserved) {
 			return TRUE;
 		case DLL_PROCESS_DETACH:
 			unHook();
+			FreeLibrary(hInstance);
 			return TRUE;
 	}
 	return TRUE;
