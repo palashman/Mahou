@@ -33,7 +33,8 @@ namespace Mahou {
 	    }
 	    public static WinAPI.INPUT[] AddPress(Keys key, int times = 1) {
 			var q = new List<WinAPI.INPUT>();
-			for (int j = 1; j <= times; j++) {
+			for (int j = 0; j <= times-1; j++) {
+				System.Diagnostics.Debug.WriteLine("Sending "+j+", key:"+key);
 				q.Add(AddKey(key, true));
 				q.Add(AddKey(key, false));
 			}

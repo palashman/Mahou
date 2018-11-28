@@ -18,7 +18,7 @@ namespace Mahou {
 			clickAfterCTRL, clickAfterALT, clickAfterSHIFT,
 			hotkeywithmodsfired, csdoing, incapt, waitfornum, 
 			IsHotkey, ff_chr_wheeled, preSnip, LMB_down, RMB_down, MMB_down,
-			dbl_click, click, selfie;
+			dbl_click, click, selfie, aftsingleAS;
 		public static System.Windows.Forms.Timer click_reset = new System.Windows.Forms.Timer();
 		public static int skip_mouse_events, skip_spec_keys, cursormove = -1, guess_tries;
 		static uint cs_layout_last = 0;
@@ -199,6 +199,7 @@ namespace Mahou {
 					Debug.WriteLine("added " + sym);
 				}
 				var seKey = Keys.Space;
+				var asls = false;
 				if (MMain.mahou.SnippetsExpandType == "Tab")
 					seKey = Keys.F14;
 				if (Key == seKey || seKey == Keys.F14)
@@ -214,7 +215,7 @@ namespace Mahou {
 					if (Key == seKey) {
 		            	matched = CheckSnippet(snip);
 		            	if (!matched)
-		            		matched = CheckSnippet(last_snip+" "+snip);
+		            		matched = CheckSnippet(last_snip+" "+snip, true);
 						if (matched || preSnip)
 							c_snip.Clear();
 					}
@@ -225,20 +226,22 @@ namespace Mahou {
 							CW = MMain.c_word;
 							CLW = c_word_backup;
 						}
-		            	matched = CheckAutoSwitch(snip, CW);
+		            	asls = matched = CheckAutoSwitch(snip, CW);
 		            	if (!matched) {
 		            		var snip2x = last_snip+" "+snip;
 		            		Debug.WriteLine("SNIp2x! " + snip2x);
 		            		var SPace = new List<YuKey>(){ new YuKey() { key = Keys.Space, altnum = false, upper = false } };
 		            		var dash = new List<YuKey>(){ new YuKey() { key = Keys.OemMinus, altnum = false, upper = false } };
 		            		var last2words = CLW.Concat(dash).Concat(CW).ToList();
-		            		CheckAutoSwitch(snip2x, last2words);
-		            		last2words = CLW.Concat(MMain.mahou.AddOneSpace ? new List<YuKey>() : SPace).Concat(CW).ToList();
-		            		CheckAutoSwitch(snip2x, last2words);
+		            		asls = matched = CheckAutoSwitch(snip2x, last2words);
+		            		if (!matched) {
+			            		last2words = CLW.Concat(MMain.mahou.AddOneSpace ? new List<YuKey>() : SPace).Concat(CW).ToList();
+			            		asls = matched = CheckAutoSwitch(snip2x, last2words);
+		            		}
 		            	}
 						c_snip.Clear();
 					}
-					if (Key == seKey) {
+					if (Key == seKey && !asls) {
 						last_snip = snip;
 					}
 				}
@@ -581,8 +584,9 @@ namespace Mahou {
 		}
 		#endregion
 		#region Functions/Struct
-		static bool CheckAutoSwitch(string snip, List<YuKey> word) {
+		static bool CheckAutoSwitch(string snip, List<YuKey> word, bool single = true) {
 			var matched = false;
+			var corr = "";
 			var snil = snip.ToLowerInvariant();
 			foreach (var element in word) {
 				Debug.WriteLine(element.key);
@@ -601,6 +605,7 @@ namespace Mahou {
 	        						MahouUI.SoundPlay();
 	        					if (MahouUI.SoundOnAutoSwitch2)
 	        						MahouUI.Sound2Play();
+	        					corr = as_corrects[i];
 	        					var snl = WordGuessLayout(snil).Item2;
 	        					var asl = WordGuessLayout(as_corrects[i]).Item2;
 	        					var skipLS = (snl == asl);
@@ -623,6 +628,7 @@ namespace Mahou {
 										};
 	        						} else ofk = true;
         							ChangeToLayout(Locales.ActiveWindow(), asl);
+        							Debug.WriteLine("ASL"+asl);
 	        					} else ofk = true;
 	        					if (ofk) {
 									if (!MMain.mahou.AddOneSpace)
@@ -644,10 +650,16 @@ namespace Mahou {
 					Logging.Log("Auto-switch word ["+snip+"] has no expansion, snippet is not finished or its expansion commented.", 1);
 				}
 			}
+			if (matched) {
+				Logging.Log("Changed last snippet to AS-ed, "+corr+", instead of ignorecase: "+ snil);
+				aftsingleAS = single;
+				last_snip = corr;
+			}
 			return matched;
 		}
-		static bool CheckSnippet(string snip) {
+		static bool CheckSnippet(string snip, bool xx2 = false) {
 			var matched = false;
+			var x2 = xx2 && aftsingleAS && !MMain.mahou.AutoSwitchSpaceAfter;
 			Logging.Log("Current snippet is [" + snip + "].");
 			for (int i = 0; i < snipps.Length; i++) {
 				if (snipps[i] == null) break;
@@ -687,7 +699,8 @@ namespace Mahou {
 						Logging.Log("Current snippet [" + snip + "] matched with "+__ANY__+" existing snippet [" + exps[i] + "].");
 						var exp = exps[i].Replace(__ANY__, any);
 //						Debug.WriteLine("exp: " + exp);
-						ExpandSnippet(snip, exp, MMain.mahou.SnippetSpaceAfter, MMain.mahou.SnippetsSwitchToGuessLayout);
+						ExpandSnippet(snip, exp, MMain.mahou.SnippetSpaceAfter, MMain.mahou.SnippetsSwitchToGuessLayout, false, x2);
+						aftsingleAS = false;
 						break;
 					}
 //		    		Debug.WriteLine("ANY " + yay);
@@ -699,11 +712,12 @@ namespace Mahou {
     					if (MahouUI.SoundOnSnippets2)
     						MahouUI.Sound2Play();
 						Logging.Log("Current snippet [" + snip + "] matched existing snippet [" + exps[i] + "].");
-						ExpandSnippet(snip, exps[i], MMain.mahou.SnippetSpaceAfter, MMain.mahou.SnippetsSwitchToGuessLayout);
+						ExpandSnippet(snip, exps[i], MMain.mahou.SnippetSpaceAfter, MMain.mahou.SnippetsSwitchToGuessLayout, false, x2);
 						matched = true;
 					} else {
 						Logging.Log("Snippet ["+snip+"] has no expansion, snippet is not finished or its expansion commented.", 1);
 					}
+					aftsingleAS = false;
 					break;
 				}
 			}
@@ -777,7 +791,7 @@ namespace Mahou {
 				transliterationDict = DefaultTransliterationDict;
 			}
 		}
-		static void ExpandSnippet(string snip, string expand, bool spaceAft, bool switchLayout, bool ignoreExpand = false) {
+		static void ExpandSnippet(string snip, string expand, bool spaceAft, bool switchLayout, bool ignoreExpand = false, bool x2 = false) {
 			DoSelf(() => {
 				try {
 		       		Debug.WriteLine("Snippet: " +snip);
@@ -787,18 +801,20 @@ namespace Mahou {
 						ChangeToLayout(Locales.ActiveWindow(), guess.Item2);
 					}
 					if (!ignoreExpand) {
-		       			KInputs.MakeInput(KInputs.AddPress(Keys.Back, snip.Length -  
-		       			                                   (MMain.mahou.SnippetsExpandType == "Tab" ? 0 : 1)));
+		       			var backs = snip.Length+1;
+		       			Debug.WriteLine("X2" + x2);
+		       			if (x2) backs--;
+		       			KInputs.MakeInput(KInputs.AddPress(Keys.Back, backs));
 						Logging.Log("Expanding snippet [" + snip + "] to [" + expand + "].");
 		       			ExpandSnippetWithExpressions(expand);
 						ClearWord(true, true, false, "Cleared due to snippet expansion");
 //						KInputs.MakeInput(KInputs.AddString(expand));
 					}
-					if (spaceAft)
+		       		if (spaceAft && !expand.Contains("__cursorhere"))
 						KInputs.MakeInput(KInputs.AddString(" "));
 					DoLater(() => MMain.mahou.Invoke((MethodInvoker)delegate {
 						MMain.mahou.UpdateLDs();
-					}), 500);
+					}), snip.Length*2);
 		       	} catch(Exception e) {
 					Logging.Log("Some snippets configured wrong, check them, error:\r\n" + e.Message +"\r\n" + e.StackTrace+"\r\n", 1);
 					// If not use TASK, form(MessageBox) won't accept the keys(Enter/Escape/Alt+F4).
