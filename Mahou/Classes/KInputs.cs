@@ -157,7 +157,7 @@ namespace Mahou {
 	    	var sinputs = rinputs.ToArray();
 	    	var done = WinAPI.SendInput((UInt32)sinputs.Length, sinputs, Marshal.SizeOf(typeof(WinAPI.INPUT)));
 	    	System.Diagnostics.Debug.WriteLine("VK SENDED: " + sinputs[0].Data.Keyboard.Vk);
-	    	if (done != inputs.Length)
+	    	if (done != sinputs.Length)
 	    		Mahou.Logging.Log("ERROR during send input, lenght: " +done+ ", Win32ERR: " + Marshal.GetLastWin32Error());
 	    }
 	}
