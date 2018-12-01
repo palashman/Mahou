@@ -553,6 +553,7 @@ namespace Mahou {
 				if (MMain.mahou.PersistentLayoutOnlyOnce && !cont)
 					PLC_HWNDs.Add(hwnd);
 			}
+			uint hwndLayout = Locales.GetCurrentLocale(hwnd);
 			if (MahouUI.UseJKL) {
 				if (ConHost_HWNDs.Contains(hwnd)) {
 					Logging.Log("[JKL] > Known ConHost window: " + hwnd);
@@ -564,13 +565,12 @@ namespace Mahou {
 						Logging.Log("[JKL] > ["+hwnd+"] = ConHost window, remembering...");
 						ConHost_HWNDs.Add(hwnd);
 						jklXHidServ.CycleAllLayouts(hwnd);
-					} else {
-						MahouUI.currentLayout = /*MahouUI.GlobalLayout =*/ Locales.GetCurrentLocale();
-						Logging.Log("[JKL] > Updating currentLayout on window activate to ["+MahouUI.currentLayout+"]...");
 					}
 				}
+			} else {
+				MahouUI.currentLayout = /*MahouUI.GlobalLayout =*/ hwndLayout;
+				Logging.Log("Updating currentLayout on window activate to ["+MahouUI.currentLayout+"]...");
 			}
-			uint hwndLayout = Locales.GetCurrentLocale(hwnd);
 			Logging.Log("Hwnd " + hwnd + ", layout: " + hwndLayout + ", Mahou layout: " + MahouUI.GlobalLayout);		
 			if (MMain.mahou.OneLayout)
 				if (hwndLayout != MahouUI.GlobalLayout) {
