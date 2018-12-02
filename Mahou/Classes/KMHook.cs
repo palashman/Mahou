@@ -554,20 +554,24 @@ namespace Mahou {
 					PLC_HWNDs.Add(hwnd);
 			}
 			uint hwndLayout = Locales.GetCurrentLocale(hwnd);
+			bool conhost = false;
 			if (MahouUI.UseJKL) {
 				if (ConHost_HWNDs.Contains(hwnd)) {
+					conhost = true;
 					Logging.Log("[JKL] > Known ConHost window: " + hwnd);
 					jklXHidServ.CycleAllLayouts(hwnd);
 				} else {
 					var strb = new StringBuilder(350);
 					WinAPI.GetClassName(hwnd, strb, strb.Capacity);
 					if (strb.ToString() == "ConsoleWindowClass" || strb.ToString() == "Chrome_WidgetWin_1") {
+						conhost = true;
 						Logging.Log("[JKL] > ["+hwnd+"] = ConHost window, remembering...");
 						ConHost_HWNDs.Add(hwnd);
 						jklXHidServ.CycleAllLayouts(hwnd);
 					}
 				}
-			} else {
+		}
+			if (!MahouUI.UseJKL || !conhost) {
 				MahouUI.currentLayout = /*MahouUI.GlobalLayout =*/ hwndLayout;
 				Logging.Log("Updating currentLayout on window activate to ["+MahouUI.currentLayout+"]...");
 			}
