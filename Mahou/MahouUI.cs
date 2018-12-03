@@ -1525,6 +1525,7 @@ namespace Mahou {
 			chk_FlagsInTray.Enabled = chk_TrayIcon.Checked;
 			chk_SilentUpdate.Enabled = chk_StartupUpdatesCheck.Checked;
 			lnk_OpenHistory.Enabled = lbl_BackSpaceType.Enabled = cbb_BackSpaceType.Enabled = chk_WriteInputHistory.Checked;
+			lnk_OpenLogs.Enabled = chk_Logging.Checked;
 			// Layouts tab
 			lbl_SetsCount.Enabled = pan_KeySets.Enabled = btn_AddSet.Enabled = btn_SubSet.Enabled = 
 				lbl_KeysType.Enabled = cbb_SpecKeysType.Enabled = chk_SpecificLS.Checked;
@@ -3382,8 +3383,7 @@ DEL ""ExtractASD.cmd""";
 			chk_ReadOnlyNA.Text = MMain.Lang[Languages.Element.ReadOnlyNA];
 			chk_WriteInputHistory.Text = MMain.Lang[Languages.Element.WriteInputHistory];
 			lbl_BackSpaceType.Text = MMain.Lang[Languages.Element.BackSpaceType];
-			lnk_OpenHistory.Text = MMain.Lang[Languages.Element.Open];
-			#endregion
+			lnk_OpenLogs.Text = lnk_OpenConfig.Text = lnk_OpenHistory.Text = MMain.Lang[Languages.Element.Open];
 			#region Layouts
 			chk_SwitchBetweenLayouts.Text = MMain.Lang[Languages.Element.SwitchBetween]+":";
 			chk_EmulateLS.Text = MMain.Lang[Languages.Element.EmulateLS];
@@ -3608,6 +3608,9 @@ DEL ""ExtractASD.cmd""";
 			HelpMeUnderstand.SetToolTip(chk_GetLayoutFromJKL, MMain.Lang[Languages.Element.TT_UseJKL]);
 			HelpMeUnderstand.SetToolTip(chk_ReadOnlyNA, MMain.Lang[Languages.Element.TT_ReadOnlyNA]);
 			HelpMeUnderstand.SetToolTip(chk_WriteInputHistory, MMain.Lang[Languages.Element.TT_WriteInputHistory]);
+			HelpMeUnderstand.SetToolTip(lnk_OpenLogs, MMain.Lang[Languages.Element.TT_LeftRightMB]+"\n"+Logging.log);
+			HelpMeUnderstand.SetToolTip(lnk_OpenHistory, MMain.Lang[Languages.Element.TT_LeftRightMB]+"\n"+Path.Combine(nPath,"history.txt"));
+			HelpMeUnderstand.SetToolTip(lnk_OpenConfig, MMain.Lang[Languages.Element.TT_LeftRightMB]+"\n"+Configs.filePath);
 		}
 		void HelpMeUnderstandPopup(object sender, PopupEventArgs e) {
 			HelpMeUnderstand.ToolTipTitle = e.AssociatedControl.Text;
@@ -3628,41 +3631,41 @@ DEL ""ExtractASD.cmd""";
 			return fl;
 		}
 		#endregion
+		#endregion
+
 		#region Links
-		void Lnk_OpenHistoryClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+		void __lopen(string file, string type, bool dir = false) {
+			string fORd = dir ? Path.GetDirectoryName(file) : file;
 			try {
-				Process.Start(Path.Combine(nPath, "history.txt"));
-			} catch (Exception ex) { Logging.Log("No program to open txt, opening skiped. Details:\r\n"+ex.Message + "\r\n" + ex.StackTrace, 2); }
+				Process.Start(fORd);
+			} catch (Exception ex) { Logging.Log("No program to open "+type+", opening skiped. Details:\r\n"+ex.Message + "\r\n" + ex.StackTrace, 2); }
+		}
+		void Lnk_OpenHistoryClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+			__lopen(Path.Combine(nPath, "history.txt"), "txt", e.Button == MouseButtons.Right);
+		}
+		void Lnk_OpenConfigClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+			__lopen(Path.Combine(nPath, "Mahou.ini"), "ini", e.Button == MouseButtons.Right);
+		}
+		void Lnk_OpenLogsClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+			__lopen(Logging.log, "txt", e.Button == MouseButtons.Right);
 		}
 		void Lnk_RepositoryLinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-			try {
-				Process.Start("http://github.com/BladeMight/Mahou");
-			} catch (Exception ex) { Logging.Log("No program to open http:// opening skiped. Details:\r\n"+ex.Message + "\r\n" + ex.StackTrace, 2); }
+			__lopen("http://github.com/BladeMight/Mahou", "http");
 		}
 		void Lnk_SiteLinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-			try {
-				Process.Start("http://blademight.github.io/Mahou/");
-			} catch (Exception ex) { Logging.Log("No program to open http:// opening skiped. Details:\r\n"+ex.Message + "\r\n" + ex.StackTrace, 2); }
+			__lopen("http://blademight.github.io/Mahou/", "http");
 		}
 		void Lnk_WikiLinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-			try {
-				Process.Start("http://github.com/BladeMight/Mahou/wiki");
-			} catch (Exception ex) { Logging.Log("No program to open http:// opening skiped. Details:\r\n"+ex.Message + "\r\n" + ex.StackTrace, 2); }
+			__lopen("http://github.com/BladeMight/Mahou/wiki", "http");
 		}
 		void Lnk_ReleasesLinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-			try {
-				Process.Start("http://github.com/BladeMight/Mahou/releases");
-			} catch (Exception ex) { Logging.Log("No program to open http:// opening skiped. Details:\r\n"+ex.Message + "\r\n" + ex.StackTrace, 2); }
+			__lopen("http://github.com/BladeMight/Mahou/releases", "http");
 		}
 		void Lnk_EmailLinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-			try {
-				Process.Start("mailto:BladeMight@gmail.com");
-			} catch (Exception ex) { Logging.Log("No program to open mailto: opening skiped. Details:\r\n"+ex.Message + "\r\n" + ex.StackTrace, 2); }
+			__lopen("mailto:BladeMight@gmail.com", "mailto");
 		}
 		void Lnk_pluginLinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
-			try {
-				Process.Start("http://github.com/BladeMight/MahouCaretDisplayServer");
-			} catch (Exception ex) { Logging.Log("No program to open http:// opening skiped. Details:\r\n"+ex.Message + "\r\n" + ex.StackTrace, 2); }
+			__lopen("http://github.com/BladeMight/MahouCaretDisplayServer", "http");
 		}
 		#endregion
 		#region Mahou UI controls events

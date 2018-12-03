@@ -250,6 +250,8 @@ namespace Mahou
 		private System.Windows.Forms.Button btn_TrTitleFont;
 		private System.Windows.Forms.Button btn_TrTextFont;
 		private System.Windows.Forms.LinkLabel lnk_OpenHistory;
+		private System.Windows.Forms.LinkLabel lnk_OpenLogs;
+		private System.Windows.Forms.LinkLabel lnk_OpenConfig;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -273,6 +275,8 @@ namespace Mahou
 			this.components = new System.ComponentModel.Container();
 			this.tabs = new System.Windows.Forms.TabControl();
 			this.tab_functions = new System.Windows.Forms.TabPage();
+			this.lnk_OpenConfig = new System.Windows.Forms.LinkLabel();
+			this.lnk_OpenLogs = new System.Windows.Forms.LinkLabel();
 			this.lnk_OpenHistory = new System.Windows.Forms.LinkLabel();
 			this.cbb_BackSpaceType = new System.Windows.Forms.ComboBox();
 			this.lbl_BackSpaceType = new System.Windows.Forms.Label();
@@ -591,6 +595,8 @@ namespace Mahou
 			// 
 			// tab_functions
 			// 
+			this.tab_functions.Controls.Add(this.lnk_OpenConfig);
+			this.tab_functions.Controls.Add(this.lnk_OpenLogs);
 			this.tab_functions.Controls.Add(this.lnk_OpenHistory);
 			this.tab_functions.Controls.Add(this.cbb_BackSpaceType);
 			this.tab_functions.Controls.Add(this.lbl_BackSpaceType);
@@ -629,6 +635,28 @@ namespace Mahou
 			this.tab_functions.TabIndex = 0;
 			this.tab_functions.Text = "Functions";
 			this.tab_functions.UseVisualStyleBackColor = true;
+			// 
+			// lnk_OpenConfig
+			// 
+			this.lnk_OpenConfig.AutoSize = true;
+			this.lnk_OpenConfig.Location = new System.Drawing.Point(493, 95);
+			this.lnk_OpenConfig.Name = "lnk_OpenConfig";
+			this.lnk_OpenConfig.Size = new System.Drawing.Size(36, 15);
+			this.lnk_OpenConfig.TabIndex = 32;
+			this.lnk_OpenConfig.TabStop = true;
+			this.lnk_OpenConfig.Text = "Open";
+			this.lnk_OpenConfig.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Lnk_OpenConfigClicked);
+			// 
+			// lnk_OpenLogs
+			// 
+			this.lnk_OpenLogs.AutoSize = true;
+			this.lnk_OpenLogs.Location = new System.Drawing.Point(265, 248);
+			this.lnk_OpenLogs.Name = "lnk_OpenLogs";
+			this.lnk_OpenLogs.Size = new System.Drawing.Size(36, 15);
+			this.lnk_OpenLogs.TabIndex = 31;
+			this.lnk_OpenLogs.TabStop = true;
+			this.lnk_OpenLogs.Text = "Open";
+			this.lnk_OpenLogs.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Lnk_OpenLogsClicked);
 			// 
 			// lnk_OpenHistory
 			// 
@@ -707,6 +735,7 @@ namespace Mahou
 			this.chk_Logging.TabIndex = 9;
 			this.chk_Logging.Text = "Enable logging for debugging.";
 			this.chk_Logging.UseVisualStyleBackColor = true;
+			this.chk_Logging.CheckedChanged += new System.EventHandler(this.Chk_CheckedChanged);
 			// 
 			// chk_Add1NL
 			// 
