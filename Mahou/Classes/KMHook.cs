@@ -21,6 +21,7 @@ namespace Mahou {
 			dbl_click, click, selfie, aftsingleAS;
 		public static System.Windows.Forms.Timer click_reset = new System.Windows.Forms.Timer();
 		public static int skip_mouse_events, skip_spec_keys, cursormove = -1, guess_tries;
+		static uint as_lword_layout = 0;
 		static uint cs_layout_last = 0;
 		static string lastClipText = "", busy_on = "";
 		static List<Keys> tempNumpads = new List<Keys>();
@@ -117,7 +118,7 @@ namespace Mahou {
 						     Key == Keys.Divide || Key == Keys.Add); // Numpad symbols
 			var printable_mod = !win && !win_r && !alt && !alt_r && !ctrl && !ctrl_r; // E.g. only shift is PrintAble
 			//Key log
-			Logging.Log("Catched Key=[" + Key + "] with VKCode=[" + vkCode + "] and message=[" + (int)MSG + "], modifiers=[" + 
+			Logging.Log("[KEY] > Catched Key=[" + Key + "] with VKCode=[" + vkCode + "] and message=[" + (int)MSG + "], modifiers=[" + 
 			            (shift ? "L-Shift" : "") + (shift_r ? "R-Shift" : "") + 
 			            (alt ? "L-Alt" : "") + (alt_r ? "R-Alt" : "") + 
 			            (ctrl ? "L-Ctrl" : "") + (ctrl_r ? "R-Ctrl" : "") + 
@@ -156,6 +157,7 @@ namespace Mahou {
 					if (IfNW7())
 						time = 50;
 					MahouUI.currentLayout = 0;
+					as_lword_layout = 0;
 					DoLater(() => { MahouUI.GlobalLayout = MahouUI.currentLayout = Locales.GetCurrentLocale(); }, time);
 				}
 			}
@@ -195,7 +197,7 @@ namespace Mahou {
 					if (sym == '\0')
 						sym = getSym(vkCode);
 					c_snip.Add(sym);
-					Logging.Log("Added ["+ sym + "] to current snippet.");
+					Logging.Log("[SNI] > Added ["+ sym + "] to current snippet.");
 					Debug.WriteLine("added " + sym);
 				}
 				var seKey = Keys.Space;
@@ -239,6 +241,10 @@ namespace Mahou {
 			            		asls = matched = CheckAutoSwitch(snip2x, last2words);
 		            		}
 		            	}
+    					var snl = WordGuessLayout(snip).Item2;
+    					if (!matched) 
+    						as_lword_layout = snl;
+    					Logging.Log("[AS] > Last AS word layout: " +snl );
 						c_snip.Clear();
 					}
 					if (Key == seKey && !asls) {
@@ -313,17 +319,17 @@ namespace Mahou {
 					}
 					if (MMain.c_words.Count > 0) {
 						if (MMain.c_words[MMain.c_words.Count - 1].Count - 1 > 0) {
-							Logging.Log("Removed key [" + MMain.c_words[MMain.c_words.Count - 1][MMain.c_words[MMain.c_words.Count - 1].Count - 1].key + "] from last word in words.");
+							Logging.Log("[WORD] > Removed key [" + MMain.c_words[MMain.c_words.Count - 1][MMain.c_words[MMain.c_words.Count - 1].Count - 1].key + "] from last word in words.");
 							MMain.c_words[MMain.c_words.Count - 1].RemoveAt(MMain.c_words[MMain.c_words.Count - 1].Count - 1);
 						} else {
-							Logging.Log("Removed one empty word from current words.");
+							Logging.Log("[WORD] > Removed one empty word from current words.");
 							MMain.c_words.RemoveAt(MMain.c_words.Count - 1);
 						}
 					}
 					if (MMain.mahou.SnippetsEnabled) {
 						if (c_snip.Count != 0) {
 							c_snip.RemoveAt(c_snip.Count - 1);
-							Logging.Log("Removed one character from current snippet.");
+							Logging.Log("[SNI] >Removed one character from current snippet.");
 						}
 					}
 				}
@@ -346,12 +352,12 @@ namespace Mahou {
 					ClearWord(true, true, true, "Pressed combination of key and modifiers(not shift) or key that changes caret position.");
 				}
 				if (Key == Keys.Space) {
-					Logging.Log("Adding one new empty word to words, and adding to it [Space] key.");
+					Logging.Log("[FUN] > Adding one new empty word to words, and adding to it [Space] key.");
 					MMain.c_words.Add(new List<YuKey>());
 					MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() { key = Keys.Space });
 					if (MMain.mahou.AddOneSpace && MMain.c_word.Count != 0 &&
 					   MMain.c_word[MMain.c_word.Count - 1].key != Keys.Space) {
-						Logging.Log("Eat one space passed, next space will clear last word.");
+						Logging.Log("[FUN] > Eat one space passed, next space will clear last word.");
 						MMain.c_word.Add(new YuKey() { key = Keys.Space });
 						afterEOS = true;
 					} else {
@@ -362,7 +368,7 @@ namespace Mahou {
 				if (Key == Keys.Enter) {
 					if (MMain.mahou.Add1NL && MMain.c_word.Count != 0 && 
 					    MMain.c_word[MMain.c_word.Count - 1].key != Keys.Enter) {
-						Logging.Log("Eat one New Line passed, next Enter will clear last word.");
+						Logging.Log("[FUN] > Eat one New Line passed, next Enter will clear last word.");
 						MMain.c_word.Add(new YuKey() { key = Keys.Enter });
 						MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() { key = Keys.Enter });
 						afterEOL = true;
@@ -370,6 +376,7 @@ namespace Mahou {
 						ClearWord(true, true, true, "Pressed enter");
 						afterEOL = false;
 					}
+					as_lword_layout = 0;
 				}
 				if (printable && printable_mod) {
 					if (afterEOS) { //Clears word after Eat ONE space
@@ -383,14 +390,14 @@ namespace Mahou {
 					var upr = IsUpperInput();
 					MMain.c_word.Add(new YuKey() { key = Key, upper = upr });
 					MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() { key = Key, upper = upr });
-					Logging.Log("Added [" + Key + "]^"+upr);
+					Logging.Log("[WORD] > Added [" + Key + "]^"+upr);
 				}
 			}
 			#endregion
 			#region Alt+Numpad (fully workable)
 			if (incapt &&
 			   (Key == Keys.RMenu || Key == Keys.LMenu || Key == Keys.Menu) && !down) {
-				Logging.Log("Capture of numpads ended, captured [" + tempNumpads.Count + "] numpads.");
+				Logging.Log("[NUM] > Capture of numpads ended, captured [" + tempNumpads.Count + "] numpads.");
 				if (tempNumpads.Count > 0) { // Prevents zero numpads(alt only) keys
 					MMain.c_word.Add(new YuKey() {
 						altnum = true,
@@ -405,7 +412,7 @@ namespace Mahou {
 				incapt = false;
 			}
 			if (!incapt && (alt || alt_r) && down) {
-				Logging.Log("Alt is down, starting capture of Numpads...");
+				Logging.Log("[NUM] > Alt is down, starting capture of Numpads...");
 				incapt = true;
 			}
 			if ((alt || alt_r) && incapt) {
@@ -554,6 +561,7 @@ namespace Mahou {
 					PLC_HWNDs.Add(hwnd);
 			}
 			uint hwndLayout = Locales.GetCurrentLocale(hwnd);
+			as_lword_layout = 0;
 			bool conhost = false;
 			if (MahouUI.UseJKL) {
 				if (ConHost_HWNDs.Contains(hwnd)) {
@@ -570,10 +578,10 @@ namespace Mahou {
 						jklXHidServ.CycleAllLayouts(hwnd);
 					}
 				}
-		}
+			}
 			if (!MahouUI.UseJKL || !conhost) {
 				MahouUI.currentLayout = /*MahouUI.GlobalLayout =*/ hwndLayout;
-				Logging.Log("Updating currentLayout on window activate to ["+MahouUI.currentLayout+"]...");
+				Logging.Log("[FOCUS] > Updating currentLayout on window activate to ["+MahouUI.currentLayout+"]...");
 			}
 			Logging.Log("Hwnd " + hwnd + ", layout: " + hwndLayout + ", Mahou layout: " + MahouUI.GlobalLayout);		
 			if (MMain.mahou.OneLayout)
@@ -581,13 +589,22 @@ namespace Mahou {
 					var title = new StringBuilder(128);
 					WinAPI.GetWindowText(hwnd, title, 127);
 					DoLater(() => {
-						Logging.Log("Layout in this window ["+title+"] was different, changing layout to Mahou global layout.");
+						Logging.Log("[ONEL] > Layout in this window ["+title+"] was different, changing layout to Mahou global layout.");
 						ChangeToLayout(hwnd, MahouUI.GlobalLayout);
 			       	 }, 100);
 				}
 		}
 		#endregion
 		#region Functions/Struct
+		static bool _hasKey(string[] ar, string key) {
+			for (int i = 0; i < ar.Length; i++) {
+				if (ar[i] == null) continue;
+				if (key.Length == ar[i].Length) {
+					if (ar[i].ToLowerInvariant() == key.ToLowerInvariant()) return true;
+				}
+			}
+			return false;
+		}
 		static bool CheckAutoSwitch(string snip, List<YuKey> word, bool single = true) {
 			var matched = false;
 			var corr = "";
@@ -612,6 +629,14 @@ namespace Mahou {
 	        					corr = as_corrects[i];
 	        					var snl = WordGuessLayout(snil).Item2;
 	        					var asl = WordGuessLayout(as_corrects[i]).Item2;
+	        					if (_hasKey(as_wrongs, as_corrects[i])) {
+	        						Logging.Log("[AS] > Double-layout autoswitch rule: " +as_wrongs[i] +"<=>" +as_corrects[i]);
+	        						if (snl == as_lword_layout) {
+	        							Logging.Log("[AS] > Leave as it was: "+snil);
+	        							break;
+	        						}
+	        					}
+    							as_lword_layout = asl;
 	        					var skipLS = (snl == asl);
 	        					Debug.WriteLine("snl: " +snil + ", l:" +snl + "\nas_crI: " + as_corrects[i] + ", l: " +asl + "\nSKIP: " +skipLS);
 	        					var ofk = false;
@@ -651,11 +676,11 @@ namespace Mahou {
 						}
 //					}
 				} else {
-					Logging.Log("Auto-switch word ["+snip+"] has no expansion, snippet is not finished or its expansion commented.", 1);
+					Logging.Log("[AS] > word ["+snip+"] has no expansion, snippet is not finished or its expansion commented.", 1);
 				}
 			}
 			if (matched) {
-				Logging.Log("Changed last snippet to AS-ed, "+corr+", instead of ignorecase: "+ snil);
+				Logging.Log("[AS] > Changed last snippet to AS-ed, "+corr+", instead of ignorecase: "+ snil);
 				aftsingleAS = single;
 				last_snip = corr;
 			}
@@ -664,7 +689,7 @@ namespace Mahou {
 		static bool CheckSnippet(string snip, bool xx2 = false) {
 			var matched = false;
 			var x2 = xx2 && aftsingleAS && !MMain.mahou.AutoSwitchSpaceAfter;
-			Logging.Log("Current snippet is [" + snip + "].");
+			Logging.Log("[SNI] > Current snippet is [" + snip + "].");
 			for (int i = 0; i < snipps.Length; i++) {
 				if (snipps[i] == null) break;
 				if (snipps[i].Contains(__ANY__)) {
@@ -676,7 +701,7 @@ namespace Mahou {
 //					Debug.WriteLine("aftst:"+pins[aft]);
 					var laf = len-aft;
 					if (snip.Length < laf+at) {
-						Debug.WriteLine("Too small snip, to use with "+__ANY__);
+						Logging.Log("[SNI] > Too small snip, to use with "+__ANY__);
 						continue;
 					}
 //					Debug.WriteLine("at:"+at+",aft:"+aft+",laf:"+laf);
@@ -700,7 +725,7 @@ namespace Mahou {
     						MahouUI.Sound2Play();
 						any = snip.Substring(at, (snip.Length-laf-at));
 //						Debug.WriteLine("Yay!" + any);
-						Logging.Log("Current snippet [" + snip + "] matched with "+__ANY__+" existing snippet [" + exps[i] + "].");
+						Logging.Log("[SNI] > Current snippet [" + snip + "] matched with "+__ANY__+" existing snippet [" + exps[i] + "].");
 						var exp = exps[i].Replace(__ANY__, any);
 //						Debug.WriteLine("exp: " + exp);
 						ExpandSnippet(snip, exp, MMain.mahou.SnippetSpaceAfter, MMain.mahou.SnippetsSwitchToGuessLayout, false, x2);
@@ -715,11 +740,11 @@ namespace Mahou {
     						MahouUI.SoundPlay();
     					if (MahouUI.SoundOnSnippets2)
     						MahouUI.Sound2Play();
-						Logging.Log("Current snippet [" + snip + "] matched existing snippet [" + exps[i] + "].");
+						Logging.Log("[SNI] > Current snippet [" + snip + "] matched existing snippet [" + exps[i] + "].");
 						ExpandSnippet(snip, exps[i], MMain.mahou.SnippetSpaceAfter, MMain.mahou.SnippetsSwitchToGuessLayout, false, x2);
 						matched = true;
 					} else {
-						Logging.Log("Snippet ["+snip+"] has no expansion, snippet is not finished or its expansion commented.", 1);
+						Logging.Log("[SNI] > Snippet ["+snip+"] has no expansion, snippet is not finished or its expansion commented.", 1);
 					}
 					aftsingleAS = false;
 					break;
@@ -775,7 +800,7 @@ namespace Mahou {
 				    	tsdict[lr[0]] = lr[1];
 //				    	Debug.WriteLine("Added to TSDict: " +lr[0] +" <=> " + lr[1]);
 					} else {
-						Logging.Log("Wrong Transliteration Dict line #"+i+", => " +line);
+						Logging.Log("[TRANSLTRT] > Wrong Transliteration Dict line #"+i+", => " +line);
 				    	tsdict = null;
 				    	break;
 					}
@@ -788,10 +813,10 @@ namespace Mahou {
 				System.IO.File.WriteAllText(tsdictp, raw);
 			}
 			if (tsdict != null && tsdict.Count != 0) {
-				Logging.Log("Succesfully initialized Transliteration Dictionary from ["+tsdictp+"].");
+				Logging.Log("[TRANSLTRT] > Succesfully initialized Transliteration Dictionary from ["+tsdictp+"].");
 				transliterationDict = tsdict;
 			} else {
-				Logging.Log(tsdictp+" missing or wrong syntax reset to default transliteration Dictionary.");
+				Logging.Log("[TRANSLTRT] > "+tsdictp+" missing or wrong syntax reset to default transliteration Dictionary.");
 				transliterationDict = DefaultTransliterationDict;
 			}
 		}
@@ -801,7 +826,7 @@ namespace Mahou {
 		       		Debug.WriteLine("Snippet: " +snip);
 					if (switchLayout) {
 						var guess = WordGuessLayout(expand);
-						Logging.Log("Changing to guess layout [" + guess.Item2 + "] after snippet ["+ guess.Item1 + "].");
+						Logging.Log("[SNI] > Changing to guess layout [" + guess.Item2 + "] after snippet ["+ guess.Item1 + "].");
 						ChangeToLayout(Locales.ActiveWindow(), guess.Item2);
 					}
 					if (!ignoreExpand) {
@@ -809,7 +834,7 @@ namespace Mahou {
 		       			Debug.WriteLine("X2" + x2);
 		       			if (x2) backs--;
 		       			KInputs.MakeInput(KInputs.AddPress(Keys.Back, backs));
-						Logging.Log("Expanding snippet [" + snip + "] to [" + expand + "].");
+						Logging.Log("[SNI] > Expanding snippet [" + snip + "] to [" + expand + "].");
 		       			ExpandSnippetWithExpressions(expand);
 						ClearWord(true, true, false, "Cleared due to snippet expansion");
 //						KInputs.MakeInput(KInputs.AddString(expand));
@@ -820,7 +845,7 @@ namespace Mahou {
 						MMain.mahou.UpdateLDs();
 					}), snip.Length*2);
 		       	} catch(Exception e) {
-					Logging.Log("Some snippets configured wrong, check them, error:\r\n" + e.Message +"\r\n" + e.StackTrace+"\r\n", 1);
+					Logging.Log("[SNI] > Some snippets configured wrong, check them, error:\r\n" + e.Message +"\r\n" + e.StackTrace+"\r\n", 1);
 					// If not use TASK, form(MessageBox) won't accept the keys(Enter/Escape/Alt+F4).
 					var msg = new [] {"", ""};
 					msg[0] = MMain.Lang[Languages.Element.MSG_SnippetsError];
@@ -857,7 +882,7 @@ namespace Mahou {
 				else err+=e;
 				if (is_expr && e == ')') { // Escape closing
 					if (expand[i-1] == '\\') {
-						Logging.Log("Escaped \")\" at position: "+i);
+						Logging.Log("[EXPR] > Escaped \")\" at position: "+i);
 						if (args.Length >2)
 							args = args.Substring(0, args.Length-1);
 					} else {
@@ -866,7 +891,7 @@ namespace Mahou {
 							args_get = true;
 	//						Debug.WriteLine("end of args of: " + fun + " -> " +i);
 						} else {
-							Logging.Log("Expression \"(\" missing, but \")\" were there, in ["+ex+"], at position: "+expr_start+" in ["+expand+"]");
+							Logging.Log("[EXPR] > Expression \"(\" missing, but \")\" were there, in ["+ex+"], at position: "+expr_start+" in ["+expand+"]");
 							KInputs.MakeInput(KInputs.AddString(ex+err));
 							is_expr = false;
 							args_get = false;
@@ -905,12 +930,12 @@ namespace Mahou {
 					}
 				}
 				if (is_expr && i == expand.Length-1 && !args_get) {
-					Logging.Log("Expression [" + ex +"] missing its end \")\", at positon: " + expr_start +" in: [" + expand + "].", 2);
+					Logging.Log("[EXPR] > Expression [" + ex +"] missing its end \")\", at positon: " + expr_start +" in: [" + expand + "].", 2);
 					KInputs.MakeInput(KInputs.AddString(ex+err+args));
 					err = "";
 				}
 				if (args_get && !escaped) {
-					Logging.Log("Executing expression: " + ex + " with args: [" + args + "]");
+					Logging.Log("[EXPR] > Executing expression: " + ex + " with args: [" + args + "]");
 					var curlefts = expand.Length - i -1;
 					ExecExpression(ex, args, curlefts);
 					is_expr = false;
@@ -933,7 +958,7 @@ namespace Mahou {
 					raw = "";
 				}
 				if (escaped) {
-					Logging.Log("Ignored espaced expression: " + ex);
+					Logging.Log("[EXPR] > Ignored espaced expression: " + ex);
 					KInputs.MakeInput(KInputs.AddPress(Keys.Back));
 					KInputs.MakeInput(KInputs.AddString(ex));
 					is_expr = false;
@@ -951,7 +976,7 @@ namespace Mahou {
 		static void ExecExpression(string expr, string args, int curlefts = -1) {
 			switch (expr) {
 				case "__paste":
-					Logging.Log("Pasting text from snippet.");
+					Logging.Log("[EXPR] > Pasting text from snippet.");
 					Debug.WriteLine("Paste: " + args);
 					GetClipStr();
 					RestoreClipBoard(Regex.Replace(args, "\r?\n|\r", Environment.NewLine));
@@ -1008,7 +1033,7 @@ namespace Mahou {
 					arg += c;
 				}
 			}
-			Logging.Log("Executing: executable: ["+fil+"] with args: ["+arg+"].");
+			Logging.Log("[EXPR] > Executing: executable: ["+fil+"] with args: ["+arg+"].");
 			var p = new ProcessStartInfo();
 			p.Arguments = arg;
 			p.UseShellExecute = true;
@@ -1016,7 +1041,7 @@ namespace Mahou {
 			try {
 				Process.Start(p);
 			} catch(Exception e) {
-				Logging.Log("Execute error: " + e.Message);
+				Logging.Log("[EXPR] > Execute error: " + e.Message);
 			}
 		}
 		static void SimKeyboard(string args) {
@@ -1063,24 +1088,24 @@ namespace Mahou {
 								}
 								if (ok)
 									if (code == (int)k) { 
-										Logging.Log("Added the key by code: " + code + ", key: " + k);
+										Logging.Log("[EXPR] > Added the key by code: " + code + ", key: " + k);
 										keys.Add(k);
 										break;
 									}
 							}
 						}
 						if (key == "esc") {
-							Logging.Log("Added the short escape: " + key);
+							Logging.Log("[EXPR] > Added the short escape: " + key);
 							keys.Add(Keys.Escape);
 							break;
 						}
 						if (key == "win") {
-							Logging.Log("Added the lwin as base of: " + _n);
+							Logging.Log("[EXPR] > Added the lwin as base of: " + _n);
 							keys.Add(Keys.LWin);
 							break;
 						}
 						if (_n == key) {
-							Logging.Log("Added the " + _n);
+							Logging.Log("[EXPR] > Added the " + _n);
 							keys.Add(k);
 							break;
 						}
@@ -1091,11 +1116,11 @@ namespace Mahou {
 			foreach (var keys in all_keys) {
 				var q = new List<WinAPI.INPUT>();
 				foreach (var key in keys) {
-					Logging.Log("Pressing: " +key);
+					Logging.Log("[EXPR] > Pressing: " +key);
 					q.Add(KInputs.AddKey(key, true));
 				}
 				foreach (var key in keys) {
-					Logging.Log("Releasing: " +key);
+					Logging.Log("[EXPR] > Releasing: " +key);
 					q.Add(KInputs.AddKey(key, false));
 				}
 				KInputs.MakeInput(q.ToArray());
@@ -1136,7 +1161,7 @@ namespace Mahou {
 			if (MMain.mahou == null) return false;
 			var hwnd = WinAPI.GetForegroundWindow();
 		if (NOT_EXCLUDED_HWNDs.Contains(hwnd)) {
-				Logging.Log("This program was been checked already, it is not excluded hwnd: " + hwnd);
+				Logging.Log("[EXCL] > This program was been checked already, it is not excluded hwnd: " + hwnd);
 				return false;
 			}
 			if (!EXCLUDED_HWNDs.Contains(hwnd)) {
@@ -1151,9 +1176,9 @@ namespace Mahou {
 						EXCLUDED_HWNDs.Add(hwnd);
 						return true;
 					}
-				} catch { Logging.Log("Process with id ["+pid+"] not exist...", 1); }
+				} catch { Logging.Log("[EXCL] > Process with id ["+pid+"] not exist...", 1); }
 			} else {
-				Logging.Log("Excluded program by excluded program saved hwnd: " + hwnd);
+				Logging.Log("[EXCL] > Excluded program by excluded program saved hwnd: " + hwnd);
 				return true;
 			}
 			NOT_EXCLUDED_HWNDs.Add(hwnd);
@@ -1186,72 +1211,72 @@ namespace Mahou {
 								DoSelf(() => { KeybdEvent(Keys.CapsLock, 0); KeybdEvent(Keys.CapsLock, 2); });
 						var speclayout = (string)typeof(MahouUI).GetField("Layout"+i).GetValue(MMain.mahou);
 						if (String.IsNullOrEmpty(speclayout)) {
-						    Logging.Log("No layout for Layout"+i + " variable.");
+						    Logging.Log("[SPKEY] > No layout for Layout"+i + " variable.");
 						    return;
 					    }
 						if (speclayout == MMain.Lang[Languages.Element.SwitchBetween]) {
 							if (specificKey == 12 && Key == Keys.Tab && !ctrl && !ctrl_r && !shift_r && !shift && !win && !win_r && !alt && !alt_r) {
-								Logging.Log("Changing layout by Tab key.");
+								Logging.Log("[SPKEY] > Changing layout by Tab key.");
 								ChangeLayout();
 						    	return;
 							}
 							if (specificKey == 11 && (
 								(Key == Keys.LShiftKey && ctrl) || (Key == Keys.RShiftKey && ctrl_r) ||
 								(Key == Keys.LControlKey && shift) || (Key == Keys.RControlKey && shift_r)) && !win && !win_r && !alt && !alt_r) {
-								Logging.Log("Changing layout by Ctrl+Shift key.");
+								Logging.Log("[SPKEY] > Changing layout by Ctrl+Shift key.");
 								ChangeLayout();
 						    	return;
 							}
 							if (specificKey == 10 && (
 								(Key == Keys.LShiftKey && alt) || (Key == Keys.RShiftKey && alt_r) ||
 								(Key == Keys.LMenu && shift) || (Key == Keys.RMenu && shift_r)) && !win && !win_r && !ctrl && !ctrl_r) {
-								Logging.Log("Changing layout by Alt+Shift key.");
+								Logging.Log("[SPKEY] > Changing layout by Alt+Shift key.");
 								ChangeLayout();
 						    	return;
 							}
 							if (specificKey == 8 && (Key == Keys.CapsLock || F18 || GJIME) && (shift || shift_r) && !alt && !alt_r && !ctrl && !ctrl_r) {
-								Logging.Log("Changing layout by Shift+CapsLock"+(GJIME?"(KeyCode: 240, Google Japanese IME's Shift+CapsLock remap)":"")+(F18?"(F18)":"")+" key.");
+								Logging.Log("[SPKEY] > Changing layout by Shift+CapsLock"+(GJIME?"(KeyCode: 240, Google Japanese IME's Shift+CapsLock remap)":"")+(F18?"(F18)":"")+" key.");
 								ChangeLayout();
 						    	return;
 							} else 
 							if (!shift && !shift_r && !alt && !alt_r && !ctrl && !ctrl_r && !win && !win_r && specificKey == 1 && 
 								    (Key == Keys.CapsLock || F18)) {
 								ChangeLayout();
-								Logging.Log("Changing layout by CapsLock"+(F18?"(F18)":"")+" key.");
+								Logging.Log("[SPKEY] > Changing layout by CapsLock"+(F18?"(F18)":"")+" key.");
 						    	return;
 							}
 							if (specificKey == 2 && Key == Keys.LControlKey && !keyAfterCTRL) {
-								Logging.Log("Changing layout by L-Ctrl key.");
+								Logging.Log("[SPKEY] > Changing layout by L-Ctrl key.");
 								ChangeLayout();
 						    	return;
 							}
 							if (specificKey == 3 && Key == Keys.RControlKey && !keyAfterCTRL) {
-								Logging.Log("Changing layout by R-Ctrl key.");
+								Logging.Log("[SPKEY] > Changing layout by R-Ctrl key.");
 								ChangeLayout();
 						    	return;
 							}
 							if (specificKey == 4 && Key == Keys.LShiftKey && !keyAfterSHIFT) {
-								Logging.Log("Changing layout by L-Shift key.");
+								Logging.Log("[SPKEY] > Changing layout by L-Shift key.");
 								ChangeLayout();
 						    	return;
 							}
 							if (specificKey == 5 && Key == Keys.RShiftKey && !keyAfterSHIFT) {
-								Logging.Log("Changing layout by R-Shift key.");
+								Logging.Log("[SPKEY] > Changing layout by R-Shift key.");
 								ChangeLayout();
 						    	return;
 							}
 							if (specificKey == 6 && Key == Keys.LMenu && !keyAfterALT) {
-								Logging.Log("Changing layout by L-Alt key.");
+								Logging.Log("[SPKEY] > Changing layout by L-Alt key.");
 								ChangeLayout();
 						    	return;
 							}
 							if (specificKey == 7 && Key == Keys.RMenu && !keyAfterALT) {
-								Logging.Log("Changing layout by R-Alt key.");
+								Logging.Log("[SPKEY] > Changing layout by R-Alt key.");
 								ChangeLayout();
 						    	return;
 							}
 							if (specificKey == 9 && Key == Keys.RMenu) {
-								Logging.Log("Changing layout by AltGr key.");
+								Logging.Log("[SPKEY] > Changing layout by AltGr key.");
 								ChangeLayout();
 						    	return;
 							}
@@ -1266,7 +1291,7 @@ namespace Mahou {
 							#region By layout switch
 							var matched = false;
 							if (specificKey == 12 && Key == Keys.Tab && !ctrl && !ctrl_r && !shift_r && !shift && !win && !win_r && !alt && !alt_r) {
-								Logging.Log("Switching to specific layout by Tab key.");
+								Logging.Log("[SPKEY] > Switching to specific layout by Tab key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
 						    	return;
@@ -1274,63 +1299,63 @@ namespace Mahou {
 							if (specificKey == 10 && (
 								(Key == Keys.LShiftKey && alt) || (Key == Keys.RShiftKey && alt_r) ||
 								(Key == Keys.LMenu && shift) || (Key == Keys.RMenu && shift_r)) && !win && !win_r && !ctrl && !ctrl_r) {
-								Logging.Log("Switching to specific layout by Alt+Shift key.");
+								Logging.Log("[SPKEY] > Switching to specific layout by Alt+Shift key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
 						    	return;
 							}
 							if (specificKey == 8 && (Key == Keys.CapsLock || F18 || GJIME) && (shift || shift_r) && !alt && !alt_r && !ctrl && !ctrl_r) {
-								Logging.Log("Switching to specific layout by Shift+CapsLock"+(GJIME?"(KeyCode: 240, Google Japanese IME's Shift+CapsLock remap)":"")+(F18?"(F18)":"")+" key.");
+								Logging.Log("[SPKEY] > Switching to specific layout by Shift+CapsLock"+(GJIME?"(KeyCode: 240, Google Japanese IME's Shift+CapsLock remap)":"")+(F18?"(F18)":"")+" key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
 						    	return;
 							} else
 							if (specificKey == 1 && (Key == Keys.CapsLock || F18)) {
-								Logging.Log("Switching to specific layout by Caps Lock"+(F18?"(F18)":"")+" key.");
+								Logging.Log("[SPKEY] > Switching to specific layout by Caps Lock"+(F18?"(F18)":"")+" key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
 						    	return;
 							}
 							if (specificKey == 2 && Key == Keys.LControlKey && !keyAfterCTRL) {
-								Logging.Log("Switching to specific layout by  L-Ctrl key.");
+								Logging.Log("[SPKEY] > Switching to specific layout by  L-Ctrl key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
 						    	return;
 							}
 							if (specificKey == 3 && Key == Keys.RControlKey && !keyAfterCTRL) {
-								Logging.Log("Switching to specific layout by R-Ctrl key.");
+								Logging.Log("[SPKEY] > Switching to specific layout by R-Ctrl key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
 						    	return;
 							}
 							if (specificKey == 4 && Key == Keys.LShiftKey && !keyAfterSHIFT) {
-								Logging.Log("Switching to specific layout by L-Shift key.");
+								Logging.Log("[SPKEY] > Switching to specific layout by L-Shift key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
 						    	return;
 							}
 							if (specificKey == 5 && Key == Keys.RShiftKey && !keyAfterSHIFT) {
-								Logging.Log("Switching to specific layout by R-Shift key.");
+								Logging.Log("[SPKEY] > Switching to specific layout by R-Shift key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
 						    	return;
 							}
 							if (specificKey == 6 && Key == Keys.LMenu && !keyAfterALT) {
-								Logging.Log("Switching to specific layout by L-Alt key.");
+								Logging.Log("[SPKEY] > Switching to specific layout by L-Alt key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);	
 								matched = true;
 								DoSelf(()=>{ KeybdEvent(Keys.LMenu, 0); KeybdEvent(Keys.LMenu, 2); });
 						    	return;
 							}
 							if (specificKey == 7 && Key == Keys.RMenu && !keyAfterALT) {
-								Logging.Log("Switching to specific layout by R-Alt key.");
+								Logging.Log("[SPKEY] > Switching to specific layout by R-Alt key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
 								DoSelf(()=>{ KeybdEvent(Keys.RMenu, 0); KeybdEvent(Keys.RMenu, 2); });
 						    	return;
 							}
 							if (specificKey == 9 && Key == Keys.RMenu) {
-								Logging.Log("Switching to specific layout by AltGr key.");
+								Logging.Log("[SPKEY] > Switching to specific layout by AltGr key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
 								DoSelf(()=>{ KeybdEvent(Keys.RMenu, 0); KeybdEvent(Keys.RMenu, 2); });
@@ -1338,7 +1363,7 @@ namespace Mahou {
 							}
 							try {
 								if (matched) {
-									Logging.Log("Available layout from string ["+speclayout+"] & id ["+i+"].");
+									Logging.Log("[SPKEY] > Available layout from string ["+speclayout+"] & id ["+i+"].");
 									//Fix for alt-show-menu in programs
 //				       			    if (Key == Keys.LMenu)
 //										DoSelf(()=>{ KeybdEvent(Keys.LMenu, 0); KeybdEvent(Keys.LMenu, 2); });
@@ -1346,7 +1371,7 @@ namespace Mahou {
 //										DoSelf(()=>{ KeybdEvent(Keys.RMenu, 0); KeybdEvent(Keys.RMenu, 2); });
 								}
 							} catch { 
-								Logging.Log("No layout available from string ["+speclayout+"] & id ["+i+"]."); 
+								Logging.Log("[SPKEY] > No layout available from string ["+speclayout+"] & id ["+i+"]."); 
 							}
 						}
 						#endregion
@@ -1367,16 +1392,16 @@ namespace Mahou {
 				c_word_backup_last = new List<YuKey>(c_word_backup);
 				c_word_backup = new List<YuKey>(MMain.c_word);
 				MMain.c_word.Clear();
-				Logging.Log("Cleared last word" + ReasonEnding);
+				Logging.Log("[CLWORD] > Cleared last word" + ReasonEnding);
 			}
 			if (LastLine) {
 				MMain.c_words.Clear();
-				Logging.Log("Cleared last line" + ReasonEnding);
+				Logging.Log("[CLWORD] > Cleared last line" + ReasonEnding);
 			}
 			if (Snippet) {
 				if (MMain.mahou.SnippetsEnabled) {
 					c_snip.Clear();
-					Logging.Log("Cleared current snippet" + ReasonEnding);
+					Logging.Log("[CLWORD] > Cleared current snippet" + ReasonEnding);
 				}
 			}
 			MahouUI.RefreshFLAG();
@@ -1409,17 +1434,17 @@ namespace Mahou {
 			Debug.WriteLine("Start CS");
 			try { //Used to catch errors
 				DoSelf(() => {
-					Logging.Log("Starting Convert selection.");
+					Logging.Log("[CS] > Starting Convert selection.");
 					string ClipStr = GetClipStr();
 					ClipStr = Regex.Replace(ClipStr, @"(\d+)[,.?бю/]", "$1.");
 					if (!String.IsNullOrEmpty(ClipStr)) {
 						csdoing = true;
-						Logging.Log("Starting conversion of [" + ClipStr + "].");
+						Logging.Log("[CS] > Starting conversion of [" + ClipStr + "].");
 						KInputs.MakeInput(KInputs.AddPress(Keys.Back));
 						var result = "";
 						int items = 0;
 						if (MMain.mahou.ConvertSelectionLS && !MMain.mahou.OneLayoutWholeWord) {
-							Logging.Log("Using CS-Switch mode.");
+							Logging.Log("[CS] > Using CS-Switch mode.");
 							var wasLocale = Locales.GetCurrentLocale() & 0xffff;
 							var wawasLocale = wasLocale & 0xffff;
 							ChangeLayout(true);
@@ -1456,9 +1481,9 @@ namespace Mahou {
 								if (state2 == 1)
 									bytes2[(int)Keys.ShiftKey] = 0xFF;
 								if (MMain.mahou.ConvertSelectionLSPlus) {
-									Logging.Log("Using Experimental CS-Switch mode.");
+									Logging.Log("[CS] > Using Experimental CS-Switch mode.");
 									WinAPI.ToUnicodeEx((uint)scan, (uint)scan, bytes, s, s.Capacity, 0, (IntPtr)wasLocale);
-									Logging.Log("Char 1 is [" + s + "] in locale +[" + wasLocale + "].");
+									Logging.Log("[CS] > Char 1 is [" + s + "] in locale +[" + wasLocale + "].");
 									if (ClipStr[index].ToString() == s.ToString()) {
 										if (!SymbolIgnoreRules((Keys)(scan & 0xff), state == 1, wasLocale)) {
 											Logging.Log("Making input of [" + scan + "] in locale +[" + nowLocale + "].");
@@ -1468,9 +1493,9 @@ namespace Mahou {
 										continue;
 									}
 									WinAPI.ToUnicodeEx((uint)scan2, (uint)scan2, bytes2, sb, sb.Capacity, 0, (IntPtr)nowLocale);
-									Logging.Log("Char 2 is [" + sb + "] in locale +[" + nowLocale + "].");
+									Logging.Log("[CS] > Char 2 is [" + sb + "] in locale +[" + nowLocale + "].");
 									if (ClipStr[index].ToString() == sb.ToString()) {
-										Logging.Log("Char 1, 2 and original are equivalent.");
+										Logging.Log("[CS] > Char 1, 2 and original are equivalent.");
 										ChangeToLayout(Locales.ActiveWindow(), wasLocale);
 										wasLocale = nowLocale;
 										scan = scan2;
@@ -1485,7 +1510,7 @@ namespace Mahou {
 										var key = (Keys)(scan & 0xff);
 										bool upper = false || state == 1;
 										yk = new YuKey() { key = key, upper = upper };
-										Logging.Log("Key of char [" + c + "] = {" + key + "}, upper = +[" + state + "].");
+										Logging.Log("[CS] > Key of char [" + c + "] = {" + key + "}, upper = +[" + state + "].");
 									} else {
 										yk = new YuKey() { key = Keys.None };
 									}
@@ -1493,11 +1518,11 @@ namespace Mahou {
 								if (yk.key == Keys.None) { // retype unrecognized as unicode
 									var unrecognized = ClipStr[items - 1].ToString();
 									WinAPI.INPUT unr = KInputs.AddString(unrecognized)[0];
-									Logging.Log("Key of char [" + c + "] = not exist, using input as string.");
+									Logging.Log("[CS] > Key of char [" + c + "] = not exist, using input as string.");
 									q.Add(unr);
 								} else {
 									if (!SymbolIgnoreRules(yk.key, yk.upper, wasLocale)) {
-										Logging.Log("Making input of [" + yk.key + "] key with upper = [" + yk.upper + "].");
+										Logging.Log("[CS] > Making input of [" + yk.key + "] key with upper = [" + yk.upper + "].");
 										if (yk.upper)
 											q.Add(KInputs.AddKey(Keys.LShiftKey, true));
 										q.AddRange(KInputs.AddPress(yk.key));
@@ -1511,7 +1536,7 @@ namespace Mahou {
 						} else {
 							var l1 = cs_layout_last;
 							if (MMain.mahou.ConvertSelectionLS) {
-								Logging.Log("Using Layout Switch in Convert Selection.");
+								Logging.Log("[CS] > Using Layout Switch in Convert Selection.");
 								l1 = Locales.GetCurrentLocale();
 								if (MahouUI.UseJKL)
 									l1 = MahouUI.currentLayout;
@@ -1521,7 +1546,7 @@ namespace Mahou {
 							Debug.WriteLine("next: " +l2);
 							var index = 0;
 							if (MMain.mahou.OneLayoutWholeWord) {
-								Logging.Log("Using one layout whole word convert selection mode.");
+								Logging.Log("[CS] > Using one layout whole word convert selection mode.");
 								var allWords = SplitWords(ClipStr);
 								var word_index = 0;
 								foreach (var w in allWords) {
@@ -1531,7 +1556,7 @@ namespace Mahou {
 									index++;
 								}
 							} else {
-								Logging.Log("Using default convert selection mode.");
+								Logging.Log("[CS] > Using default convert selection mode.");
 								for (int I=0; I!=ClipStr.Length; I++) {
 									var sm = false;
 									var c = ClipStr[I];
@@ -1577,9 +1602,9 @@ namespace Mahou {
 								}
 							}
 							cs_layout_last = l2;
-							Logging.Log("Conversion of string [" + ClipStr + "] from locale [" + l1 + "] into locale [" + l2 + "] became [" + result + "].");
+							Logging.Log("[CS] > Conversion of string [" + ClipStr + "] from locale [" + l1 + "] into locale [" + l2 + "] became [" + result + "].");
 							//Inputs converted text
-							Logging.Log("Making input of [" + result + "] as string");
+							Logging.Log("[CS] > Making input of [" + result + "] as string");
 							KInputs.MakeInput(KInputs.AddString(result));
 							items = result.Length;
 						}
@@ -1589,7 +1614,7 @@ namespace Mahou {
 					RestoreClipBoard();
 				});
 			} catch(Exception e) {
-				Logging.Log("Convert Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
+				Logging.Log("[CS] > Convert Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
 			}
 			Memory.Flush();
 		}
@@ -1597,7 +1622,7 @@ namespace Mahou {
 			try { //Used to catch errors
 				Locales.IfLessThan2();
 				DoSelf(() => {
-					Logging.Log("Starting Transliterate selection.");
+					Logging.Log("[TRANSLTRT] > Starting Transliterate selection.");
 					string ClipStr = GetClipStr();
 					if (!String.IsNullOrEmpty(ClipStr)) {
 						string output = ClipStr;
@@ -1623,7 +1648,7 @@ namespace Mahou {
 					RestoreClipBoard();
 	            });
 				} catch(Exception e) {
-					Logging.Log("Transliterate Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
+					Logging.Log("[TRANSLTRT] > Transliterate Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
 				}
 			Memory.Flush();
 		}
@@ -2111,6 +2136,7 @@ namespace Mahou {
 		/// </summary>
 		public static uint ChangeLayout(bool quiet = false) {
 			uint desired = 0;
+			as_lword_layout = 0;
 			Debug.WriteLine(">> LC + SELF");
 			DoSelf(() => {
 				if (!quiet) {
