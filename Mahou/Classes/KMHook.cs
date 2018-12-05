@@ -1882,7 +1882,13 @@ namespace Mahou {
 			Debug.WriteLine(">> MC");
 			KInputs.MakeInput(KInputs.AddPress(Keys.Insert), (int)WinAPI.MOD_CONTROL);
 			Thread.Sleep(30);
-			return NativeClipboard.GetText();
+			var txt = NativeClipboard.GetText();
+			if (string.IsNullOrEmpty(txt)) {
+				KInputs.MakeInput(KInputs.AddPress(Keys.C), (int)WinAPI.MOD_CONTROL);
+				Thread.Sleep(30);
+				txt = NativeClipboard.GetText();
+			}
+			return txt;
 		}
 		public static string GetClipStr() {
 			Debug.WriteLine(">> GCS");
