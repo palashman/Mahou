@@ -1959,8 +1959,10 @@ DEL "+restartMahouPath;
 			ScrlCheck.Tick += (_, __) => {
 				if (ScrollTip && !KMHook.alt) {
 					KMHook.DoSelf(() => {
-						if (Locales.GetCurrentLocale() == 
-						    MahouUI.MAIN_LAYOUT1) {
+		              	var l = currentLayout;
+		              	if (!UseJKL)
+		              		l = Locales.GetCurrentLocale();
+						if (l == MahouUI.MAIN_LAYOUT1) {
 							if (!Control.IsKeyLocked(Keys.Scroll)) { // Turn on 
 								KMHook.KeybdEvent(Keys.Scroll, 0);
 								KMHook.KeybdEvent(Keys.Scroll, 2);
