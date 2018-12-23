@@ -50,13 +50,13 @@ namespace Mahou {
         }
         /// <summary>Hides tray icon.</summary>
         public void Hide() {
-        	if (MMain.mahou.TrayFlags)
+        	if (MMain.mahou.TrayFlags || MMain.mahou.TrayText)
         		MMain.mahou.flagsCheck.Stop();
             trIcon.Visible = false;
         }
         /// <summary>Shows tray icon.</summary>
         public void Show() {
-        	if (MMain.mahou.TrayFlags)
+        	if (MMain.mahou.TrayFlags || MMain.mahou.TrayText)
         		MMain.mahou.flagsCheck.Start();
             trIcon.Visible = true;
         }

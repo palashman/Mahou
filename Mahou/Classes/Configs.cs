@@ -425,6 +425,7 @@ namespace Mahou {
 			CheckBool("Layouts", "SwitchBetweenLayouts", "true");
 			#endregion
             #region Functions section
+            CheckBool("Functions", "TrayText", "false");
             CheckInt("Functions", "WriteInputHistoryBackSpaceType", "0");
             CheckBool("Functions", "WriteInputHistory", "false");
             CheckBool("Functions", "ReadOnlyNA", "false");

@@ -52,7 +52,7 @@ namespace Mahou {
 		public Timer resC = new Timer();
 		#endregion
 		static uint lastTrayFlagLayout = 0;
-		public static Bitmap FLAG;
+		public static Bitmap FLAG, ITEXT;
 		static int progress = 0, _progress = 0;
 		public string SnippetsExpandType = "";
 		int titlebar = 12;
@@ -65,7 +65,7 @@ namespace Mahou {
 		public static int TrTransparency;
 		/// <summary> In memory settings, for timers/hooks.</summary>
 		public bool DiffAppearenceForLayouts, LDForCaretOnChange, LDForMouseOnChange, ScrollTip, AddOneSpace,
-					TrayFlags, SymIgnEnabled, TrayIconVisible, SnippetsEnabled, ChangeLayouByKey, EmulateLS,
+					TrayFlags, TrayText, SymIgnEnabled, TrayIconVisible, SnippetsEnabled, ChangeLayouByKey, EmulateLS,
 					RePress, BlockHKWithCtrl, blueIcon, SwitchBetweenLayouts, SelectedTextGetMoreTries, ReSelect,
 					ConvertSelectionLS, ConvertSelectionLSPlus, MCDSSupport, OneLayoutWholeWord,
 					MouseTTAlways, OneLayout, MouseLangTooltipEnabled, CaretLangTooltipEnabled, QWERTZ_fix, 
@@ -187,7 +187,7 @@ namespace Mahou {
 			InitializeTrayIcon();
 			// Switch to more secure connection.
 			ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
-			LoadConfigs();
+           	LoadConfigs();
 			InitializeListBoxes();
 			// Set minnimum values because they're ALWAYS restores to 0 after Form Editor is used.
 		    nud_CapsLockRefreshRate.Minimum = nud_DoubleHK2ndPressWaitTime.Minimum =
@@ -794,7 +794,8 @@ namespace Mahou {
 				MMain.MyConfs.Write("Functions", "StartupUpdatesCheck", chk_StartupUpdatesCheck.Checked.ToString());
 				MMain.MyConfs.Write("Functions", "SilentUpdate", chk_SilentUpdate.Checked.ToString());
 				MMain.MyConfs.Write("Functions", "Logging", chk_Logging.Checked.ToString());
-				MMain.MyConfs.Write("Functions", "TrayFlags", chk_FlagsInTray.Checked.ToString());
+				MMain.MyConfs.Write("Functions", "TrayFlags", (cbb_TrayDislpayType.SelectedIndex == 1).ToString());
+				MMain.MyConfs.Write("Functions", "TrayText", (cbb_TrayDislpayType.SelectedIndex == 2).ToString());
 				MMain.MyConfs.Write("Functions", "CapsLockTimer", chk_CapsLockDTimer.Checked.ToString());
 				MMain.MyConfs.Write("Functions", "BlockMahouHotkeysWithCtrl", chk_BlockHKWithCtrl.Checked.ToString());
 				MMain.MyConfs.Write("Functions", "MCDServerSupport", chk_MCDS_support.Checked.ToString());
@@ -1072,7 +1073,8 @@ namespace Mahou {
 				MMain._logTimer.Change(300, 0);
 			else 
 				MMain._logTimer.Change(0, 0);
-			TrayFlags = chk_FlagsInTray.Checked = MMain.MyConfs.ReadBool("Functions", "TrayFlags");
+			TrayFlags = MMain.MyConfs.ReadBool("Functions", "TrayFlags");
+			TrayText = MMain.MyConfs.ReadBool("Functions", "TrayText");
 			CapsLockDisablerTimer = chk_CapsLockDTimer.Checked = MMain.MyConfs.ReadBool("Functions", "CapsLockTimer");
 			BlockHKWithCtrl = chk_BlockHKWithCtrl.Checked = MMain.MyConfs.ReadBool("Functions", "BlockMahouHotkeysWithCtrl");
 			SymIgnEnabled = MMain.MyConfs.ReadBool("Functions", "SymbolIgnoreModeEnabled");
@@ -1447,6 +1449,16 @@ namespace Mahou {
 			cbb_BackSpaceType.Items.Clear();
 			cbb_BackSpaceType.Items.Add(MMain.Lang[Languages.Element.InputHistoryBackSpaceWriteType1]);
 			cbb_BackSpaceType.Items.Add(MMain.Lang[Languages.Element.InputHistoryBackSpaceWriteType2]);
+			cbb_TrayDislpayType.Items.Clear();
+			cbb_TrayDislpayType.Items.Add(MMain.Lang[Languages.Element.JustIcon]);
+			cbb_TrayDislpayType.Items.Add(MMain.Lang[Languages.Element.ContryFlags]);
+			cbb_TrayDislpayType.Items.Add(MMain.Lang[Languages.Element.TextLayout]);
+			if (TrayFlags)
+				cbb_TrayDislpayType.SelectedIndex = 1;
+			else if (TrayText)
+				cbb_TrayDislpayType.SelectedIndex = 2;
+			else 
+				cbb_TrayDislpayType.SelectedIndex = 0;
 			InputHistoryBackSpaceWriteType = cbb_BackSpaceType.SelectedIndex = MMain.MyConfs.ReadInt("Functions", "WriteInputHistoryBackSpaceType");
 			if (SpecKeySetCount > 0)
 			for(int i = 1; i <= SpecKeySetCount; i++) {
@@ -1522,7 +1534,7 @@ namespace Mahou {
 				chk_CSLayoutSwitching.ForeColor = chk_CSLayoutSwitchingPlus.ForeColor = Color.Red;
 			else 
 				chk_CSLayoutSwitching.ForeColor = chk_CSLayoutSwitchingPlus.ForeColor = chk_OneLayoutWholeWord.ForeColor;
-			chk_FlagsInTray.Enabled = chk_TrayIcon.Checked;
+			lbl_TrayDislpayType.Enabled = cbb_TrayDislpayType.Enabled = chk_TrayIcon.Checked;
 			chk_SilentUpdate.Enabled = chk_StartupUpdatesCheck.Checked;
 			lnk_OpenHistory.Enabled = lbl_BackSpaceType.Enabled = cbb_BackSpaceType.Enabled = chk_WriteInputHistory.Checked;
 			lnk_OpenLogs.Enabled = chk_Logging.Checked;
@@ -1576,7 +1588,7 @@ namespace Mahou {
 			nud_SelectedTextGetTriesCount.Enabled = chk_SelectedTextGetMoreTries.Checked;
 			lbl_ScrollLockRefreshRate.Enabled = nud_ScrollLockRefreshRate.Enabled = chk_HighlightScroll.Checked;
 			lbl_CapsLockRefreshRate.Enabled = nud_CapsLockRefreshRate.Enabled = chk_CapsLockDTimer.Checked;
-			lbl_FlagTrayRefreshRate.Enabled = nud_TrayFlagRefreshRate.Enabled = chk_FlagsInTray.Checked;
+			lbl_FlagTrayRefreshRate.Enabled = nud_TrayFlagRefreshRate.Enabled = cbb_TrayDislpayType.SelectedIndex == 1;
 			lbl_LangTTCaretRefreshRate.Enabled = nud_LangTTCaretRefreshRate.Enabled = chk_LangTooltipCaret.Checked;
 			lbl_LangTTMouseRefreshRate.Enabled = nud_LangTTMouseRefreshRate.Enabled = LDUseWindowsMessages || chk_LangTooltipMouse.Checked;
 			lbl_LangTTCaretRefreshRate.Enabled = !chk_LDMessages.Checked;
@@ -1647,12 +1659,12 @@ DEL "+restartMahouPath;
 		/// Refreshes all icon's images and tray icon visibility.
 		/// </summary>
 		public void RefreshAllIcons() {
-			if (TrayFlags) {
+			if (TrayFlags || TrayText) {
 				ChangeTrayIconToFlag();
 			} else {
 				if (HKSymIgn_tempEnabled && SymIgnEnabled && icon.trIcon.Icon != Properties.Resources.MahouSymbolIgnoreMode)
 					icon.trIcon.Icon = Properties.Resources.MahouSymbolIgnoreMode;
-				else if (!TrayFlags && icon.trIcon.Icon != Properties.Resources.MahouTrayHD)
+				else if (!TrayFlags && !TrayText && icon.trIcon.Icon != Properties.Resources.MahouTrayHD)
 					icon.trIcon.Icon = Properties.Resources.MahouTrayHD;
 			}
 			if (!blueIcon && HKSymIgn_tempEnabled && SymIgnEnabled) {
@@ -1676,7 +1688,7 @@ DEL "+restartMahouPath;
 				return;
 			}
 			int lcid = 0;
-			if (MahouUI.currentLayout == 0)
+			if (!UseJKL)
 				lcid = (int)(Locales.GetCurrentLocale() & 0xffff);
 			else 
 				lcid = (int)(MahouUI.currentLayout & 0xffff);
@@ -1751,6 +1763,39 @@ DEL "+restartMahouPath;
 								Logging.Log("Missing flag for language [" + flagname + " / " + lcid + "].", 2);
 								break;
 						}
+					if (MMain.mahou.TrayText) {
+						Debug.WriteLine("Drawing the text layout *icon* in tray.");
+						var n2 = true;
+						var t = char.ToUpper(flagname[0]) + flagname.Substring(1);
+						var bg = MMain.mahou.LDCaretBack_temp;
+						var fg = MMain.mahou.LDCaretFore_temp;
+						var fn = MMain.mahou.LDCaretFont_temp;
+						if (lcid == (MAIN_LAYOUT2 & 0xffff)) {
+							bg = MMain.mahou.Layout2Back_temp;
+							fg = MMain.mahou.Layout2Fore_temp;
+							fn = MMain.mahou.Layout2Font_temp;
+							if (!String.IsNullOrEmpty(MMain.mahou.Layout2TText)) t = MMain.mahou.Layout2TText;
+							n2 = false;	
+						} else if (lcid == (MAIN_LAYOUT1 & 0xffff)) {
+							bg = MMain.mahou.Layout1Back_temp;
+							fg = MMain.mahou.Layout1Fore_temp;
+							fn = MMain.mahou.Layout1Font_temp;
+							if (!String.IsNullOrEmpty(MMain.mahou.Layout1TText)) t = MMain.mahou.Layout1TText;
+							n2 = false;	
+			            }
+						Debug.WriteLine("D" + n2);
+						var b = new Bitmap(16, 16);
+						var g = Graphics.FromImage(b);
+						var sf = new StringFormat(){ LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center };
+						g.Clear(bg);
+						g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+						g.DrawString(t, fn, new SolidBrush(fg), new PointF(8, 8), sf);
+						g.Dispose();
+						ITEXT = b;
+						if (n2 && MMain.mahou.LDCaretUseFlags_temp) {
+							ITEXT = FLAG;
+						}
+					}
 					latestSwitch = flagname;
 				}
 			} else
@@ -1763,13 +1808,15 @@ DEL "+restartMahouPath;
 			uint lcid = 0;
 			if (OneLayout)
 				lcid = GlobalLayout;
-			else if (MahouUI.currentLayout == 0)
+			else if (!UseJKL)
 				lcid = Locales.GetCurrentLocale();
 			else 
 				lcid = MahouUI.currentLayout;
 			if (lastTrayFlagLayout != lcid || force) {
 				RefreshFLAG();
-				Icon flagicon = Icon.FromHandle(FLAG.GetHicon());
+				var b = FLAG;
+				if (TrayText) b = ITEXT;
+				Icon flagicon = Icon.FromHandle(b.GetHicon());
 				icon.trIcon.Icon = flagicon;
 				WinAPI.DestroyIcon(flagicon.Handle);
 				lastTrayFlagLayout = lcid;
@@ -2186,7 +2233,7 @@ DEL "+restartMahouPath;
 				capsCheck.Start();
 			else
 				capsCheck.Dispose();
-			if (MMain.MyConfs.ReadBool("Functions", "TrayFlags") && TrayIconVisible)
+			if ((MMain.MyConfs.ReadBool("Functions", "TrayFlags") || MMain.MyConfs.ReadBool("Functions", "TrayText")) && TrayIconVisible)
 				flagsCheck.Start();
 			else
 				flagsCheck.Dispose();
@@ -2487,7 +2534,7 @@ DEL "+restartMahouPath;
 				if (key == (int)Keys.Capital) {
 					rk = (int)Keys.F18;
 				}
-				Debug.WriteLine("WCHI " + key + " rk:" +rk);
+//				Debug.WriteLine("WCHI " + key + " rk:" +rk);
 			}
 			WinAPI.RegisterHotKey(h, id,mod, rk);
 		}
@@ -3375,7 +3422,7 @@ DEL ""ExtractASD.cmd""";
 			chk_SilentUpdate.Text = MMain.Lang[Languages.Element.SilentUpdate];
 			chk_Logging.Text = MMain.Lang[Languages.Element.Logging];
 			chk_CapsLockDTimer.Text = MMain.Lang[Languages.Element.CapsTimer];
-			chk_FlagsInTray.Text = MMain.Lang[Languages.Element.ContryFlags];
+			lbl_TrayDislpayType.Text = MMain.Lang[Languages.Element.DisplayInTray];
 			chk_BlockHKWithCtrl.Text = MMain.Lang[Languages.Element.BlockCtrlHKs];
 			chk_MCDS_support.Text = MMain.Lang[Languages.Element.MCDSSupport];
 			chk_GuessKeyCodeFix.Text = MMain.Lang[Languages.Element.GuessKeyCodeFix];
@@ -3441,7 +3488,7 @@ DEL ""ExtractASD.cmd""";
 			lbl_LangTTMouseRefreshRate.Text = MMain.Lang[Languages.Element.LDForMouseRefreshRate];
 			lbl_LangTTCaretRefreshRate.Text = MMain.Lang[Languages.Element.LDForCaretRefreshRate];
 			lbl_DoubleHK2ndPressWaitTime.Text = MMain.Lang[Languages.Element.DoubleHKDelay];
-			lbl_FlagTrayRefreshRate.Text = MMain.Lang[Languages.Element.ContryFlags];
+			lbl_FlagTrayRefreshRate.Text = MMain.Lang[Languages.Element.TrayFlagsRefreshRate];
 			lbl_ScrollLockRefreshRate.Text = MMain.Lang[Languages.Element.ScrollLockRefreshRate];
 			lbl_CapsLockRefreshRate.Text = MMain.Lang[Languages.Element.CapsLockRefreshRate];
 			chk_SelectedTextGetMoreTries.Text = MMain.Lang[Languages.Element.MoreTriesToGetSelectedText];
@@ -3573,7 +3620,8 @@ DEL ""ExtractASD.cmd""";
 			HelpMeUnderstand.SetToolTip(chk_HighlightScroll, MMain.Lang[Languages.Element.TT_ScrollTip]);
 			HelpMeUnderstand.SetToolTip(chk_Logging, MMain.Lang[Languages.Element.TT_Logging]);
 			HelpMeUnderstand.SetToolTip(chk_CapsLockDTimer, MMain.Lang[Languages.Element.TT_CapsDis]);
-			HelpMeUnderstand.SetToolTip(chk_FlagsInTray, MMain.Lang[Languages.Element.TT_CountryFlags]);
+			HelpMeUnderstand.SetToolTip(cbb_TrayDislpayType, MMain.Lang[Languages.Element.TT_TrayDisplayType]);
+			HelpMeUnderstand.SetToolTip(lbl_TrayDislpayType, MMain.Lang[Languages.Element.TT_TrayDisplayType]);
 			HelpMeUnderstand.SetToolTip(chk_BlockHKWithCtrl, MMain.Lang[Languages.Element.TT_BlockCtrl]);
 			HelpMeUnderstand.SetToolTip(chk_MCDS_support, MMain.Lang[Languages.Element.TT_MCDSSupport]);
 			HelpMeUnderstand.SetToolTip(chk_OneLayoutWholeWord, MMain.Lang[Languages.Element.TT_OneLayoutWholeWordCS]);

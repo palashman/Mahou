@@ -132,6 +132,7 @@ namespace Mahou
 		}
 		void ReSize() {
 			if (DisplayFlag) {
+				if (BackgroundImage == null) return;
 				if (lastsize == BackgroundImage.Size) return;
 				Size = BackgroundImage.Size;
 			}

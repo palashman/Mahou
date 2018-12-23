@@ -70,7 +70,6 @@ namespace Mahou
 		private System.Windows.Forms.Label lbl_FlagTrayRefreshRate;
 		private System.Windows.Forms.NumericUpDown nud_CapsLockRefreshRate;
 		private System.Windows.Forms.Label lbl_CapsLockRefreshRate;
-		private System.Windows.Forms.CheckBox chk_FlagsInTray;
 		private System.Windows.Forms.CheckBox chk_CapsLockDTimer;
 		private System.Windows.Forms.CheckBox chk_LangTTDiffLayoutColors;
 		private System.Windows.Forms.CheckBox chk_LangTTCaretOnChange;
@@ -252,6 +251,8 @@ namespace Mahou
 		private System.Windows.Forms.LinkLabel lnk_OpenHistory;
 		private System.Windows.Forms.LinkLabel lnk_OpenLogs;
 		private System.Windows.Forms.LinkLabel lnk_OpenConfig;
+		private System.Windows.Forms.ComboBox cbb_TrayDislpayType;
+		private System.Windows.Forms.Label lbl_TrayDislpayType;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -275,6 +276,8 @@ namespace Mahou
 			this.components = new System.ComponentModel.Container();
 			this.tabs = new System.Windows.Forms.TabControl();
 			this.tab_functions = new System.Windows.Forms.TabPage();
+			this.lbl_TrayDislpayType = new System.Windows.Forms.Label();
+			this.cbb_TrayDislpayType = new System.Windows.Forms.ComboBox();
 			this.lnk_OpenConfig = new System.Windows.Forms.LinkLabel();
 			this.lnk_OpenLogs = new System.Windows.Forms.LinkLabel();
 			this.lnk_OpenHistory = new System.Windows.Forms.LinkLabel();
@@ -296,7 +299,6 @@ namespace Mahou
 			this.chk_OneLayoutWholeWord = new System.Windows.Forms.CheckBox();
 			this.lnk_plugin = new System.Windows.Forms.LinkLabel();
 			this.chk_MCDS_support = new System.Windows.Forms.CheckBox();
-			this.chk_FlagsInTray = new System.Windows.Forms.CheckBox();
 			this.chk_CapsLockDTimer = new System.Windows.Forms.CheckBox();
 			this.chk_StartupUpdatesCheck = new System.Windows.Forms.CheckBox();
 			this.chk_HighlightScroll = new System.Windows.Forms.CheckBox();
@@ -595,6 +597,8 @@ namespace Mahou
 			// 
 			// tab_functions
 			// 
+			this.tab_functions.Controls.Add(this.lbl_TrayDislpayType);
+			this.tab_functions.Controls.Add(this.cbb_TrayDislpayType);
 			this.tab_functions.Controls.Add(this.lnk_OpenConfig);
 			this.tab_functions.Controls.Add(this.lnk_OpenLogs);
 			this.tab_functions.Controls.Add(this.lnk_OpenHistory);
@@ -616,7 +620,6 @@ namespace Mahou
 			this.tab_functions.Controls.Add(this.chk_OneLayoutWholeWord);
 			this.tab_functions.Controls.Add(this.lnk_plugin);
 			this.tab_functions.Controls.Add(this.chk_MCDS_support);
-			this.tab_functions.Controls.Add(this.chk_FlagsInTray);
 			this.tab_functions.Controls.Add(this.chk_CapsLockDTimer);
 			this.tab_functions.Controls.Add(this.chk_StartupUpdatesCheck);
 			this.tab_functions.Controls.Add(this.chk_HighlightScroll);
@@ -635,6 +638,23 @@ namespace Mahou
 			this.tab_functions.TabIndex = 0;
 			this.tab_functions.Text = "Functions";
 			this.tab_functions.UseVisualStyleBackColor = true;
+			// 
+			// lbl_TrayDislpayType
+			// 
+			this.lbl_TrayDislpayType.AutoSize = true;
+			this.lbl_TrayDislpayType.Location = new System.Drawing.Point(24, 47);
+			this.lbl_TrayDislpayType.Name = "lbl_TrayDislpayType";
+			this.lbl_TrayDislpayType.Size = new System.Drawing.Size(84, 15);
+			this.lbl_TrayDislpayType.TabIndex = 34;
+			this.lbl_TrayDislpayType.Text = "Display in tray:";
+			// 
+			// cbb_TrayDislpayType
+			// 
+			this.cbb_TrayDislpayType.FormattingEnabled = true;
+			this.cbb_TrayDislpayType.Location = new System.Drawing.Point(151, 44);
+			this.cbb_TrayDislpayType.Name = "cbb_TrayDislpayType";
+			this.cbb_TrayDislpayType.Size = new System.Drawing.Size(145, 23);
+			this.cbb_TrayDislpayType.TabIndex = 33;
 			// 
 			// lnk_OpenConfig
 			// 
@@ -847,16 +867,6 @@ namespace Mahou
 			this.chk_MCDS_support.TabIndex = 13;
 			this.chk_MCDS_support.Text = "Enable MCDS support.";
 			this.chk_MCDS_support.UseVisualStyleBackColor = true;
-			// 
-			// chk_FlagsInTray
-			// 
-			this.chk_FlagsInTray.AutoSize = true;
-			this.chk_FlagsInTray.Location = new System.Drawing.Point(8, 47);
-			this.chk_FlagsInTray.Name = "chk_FlagsInTray";
-			this.chk_FlagsInTray.Size = new System.Drawing.Size(201, 19);
-			this.chk_FlagsInTray.TabIndex = 11;
-			this.chk_FlagsInTray.Text = "Display country flags in tray icon.";
-			this.chk_FlagsInTray.UseVisualStyleBackColor = true;
 			// 
 			// chk_CapsLockDTimer
 			// 
