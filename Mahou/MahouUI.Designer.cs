@@ -650,6 +650,7 @@ namespace Mahou
 			// 
 			// cbb_TrayDislpayType
 			// 
+			this.cbb_TrayDislpayType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.cbb_TrayDislpayType.FormattingEnabled = true;
 			this.cbb_TrayDislpayType.Location = new System.Drawing.Point(151, 44);
 			this.cbb_TrayDislpayType.Name = "cbb_TrayDislpayType";
