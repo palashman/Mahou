@@ -1788,7 +1788,7 @@ DEL "+restartMahouPath;
 						var g = Graphics.FromImage(b);
 						var sf = new StringFormat(){ LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center };
 						g.Clear(bg);
-						g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+						g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SystemDefault;
 						g.DrawString(t, fn, new SolidBrush(fg), new PointF(8, 8), sf);
 						g.Dispose();
 						ITEXT = b;
