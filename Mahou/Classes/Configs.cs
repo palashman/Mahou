@@ -138,6 +138,11 @@ namespace Mahou {
         	bool create = true;
         	try {
 	        	if (!File.Exists(filePath)) { //Create an UTF-16 configuration file
+        			// Test write permissions
+        			var dummy = Path.Combine(MahouUI.nPath, "dummy");
+        			File.WriteAllText(dummy, "dummy");
+        			File.Delete(dummy);
+        			// Write configs start
 	                File.WriteAllText(filePath, "!Unicode(✔), Mahou settings file", Encoding.Unicode);
 	                create = false;
         		} else { 
@@ -157,6 +162,7 @@ namespace Mahou {
         		                    MMain.Lang[Languages.Element.Error], MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes) {
         			if (!Directory.Exists(MahouUI.mahou_folder_appd))
         				Directory.CreateDirectory(MahouUI.mahou_folder_appd);
+        			var copy = File.Exists(filePath);
         			filePath = Path.Combine(MahouUI.mahou_folder_appd, "Mahou.ini");
         			File.Create(Path.Combine(MahouUI.mahou_folder_appd,".force"));
         			MMain.MyConfs = new Configs();

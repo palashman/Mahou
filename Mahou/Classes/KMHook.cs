@@ -753,20 +753,38 @@ namespace Mahou {
 			return matched;
 		}
 		static void RemLastHistory() {
-			var txt = System.IO.File.ReadAllText(System.IO.Path.Combine(MahouUI.nPath, "history.txt"));
-			if (txt.Length<1) return;
-			txt = txt.Substring(0, txt.Length-1);
-			System.IO.File.WriteAllText(System.IO.Path.Combine(MahouUI.nPath, "history.txt"), txt);
+			try {
+				var txt = System.IO.File.ReadAllText(System.IO.Path.Combine(MahouUI.nPath, "history.txt"));
+				if (txt.Length<1) return;
+				txt = txt.Substring(0, txt.Length-1);
+				System.IO.File.WriteAllText(System.IO.Path.Combine(MahouUI.nPath, "history.txt"), txt);
+			} catch (Exception e) {
+				if (!Configs.SwitchToAppData(true, e))
+					MahouUI.WriteInputHistory = false;
+				Logging.Log("Write history(r) error: "+e.Message, 1);
+			}
 		}
 		static void WriteToHistory(char c) {
-			var sw = System.IO.File.AppendText(System.IO.Path.Combine(MahouUI.nPath, "history.txt"));
-			sw.Write(c);
-			sw.Close();
+			try {
+				var sw = System.IO.File.AppendText(System.IO.Path.Combine(MahouUI.nPath, "history.txt"));
+				sw.Write(c);
+				sw.Close();
+			} catch (Exception e) {
+				if (!Configs.SwitchToAppData(true, e))
+					MahouUI.WriteInputHistory = false;
+				Logging.Log("Write history(c) error: "+e.Message, 1);
+			}
 		}
 		static void WriteToHistory(string s) {
-			var sw = System.IO.File.AppendText(System.IO.Path.Combine(MahouUI.nPath, "history.txt"));
-			sw.Write(s);
-			sw.Close();
+			try {
+				var sw = System.IO.File.AppendText(System.IO.Path.Combine(MahouUI.nPath, "history.txt"));
+				sw.Write(s);
+				sw.Close();
+			} catch (Exception e) {
+				if (!Configs.SwitchToAppData(true, e))
+					MahouUI.WriteInputHistory = false;
+				Logging.Log("Write history(s) error: "+e.Message, 1);
+			}
 		}
 		static char getSym(int vkCode) {
 			var stb = new StringBuilder(10);
