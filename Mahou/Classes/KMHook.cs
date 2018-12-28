@@ -2021,10 +2021,12 @@ namespace Mahou {
 				for (int i = 0; i < YuKeys.Length; i++) {
 					if (YuKeys[i].altnum) {
 						Logging.Log("An YuKey with [" + YuKeys[i].numpads.Count + "] numpad(s) passed.");
+						q.Add(KInputs.AddKey(Keys.LMenu, true));
 						foreach (var numpad in YuKeys[i].numpads) {
 							Logging.Log(numpad + " is being inputted.");
 							q.AddRange(KInputs.AddPress(numpad));
 						}
+						q.Add(KInputs.AddKey(Keys.LMenu, false));
 					} else {
 						Logging.Log("An YuKey with state passed, key = {" + YuKeys[i].key + "}, upper = [" + YuKeys[i].upper + "].");
 						var upp = YuKeys[i].upper && !Control.IsKeyLocked(Keys.CapsLock);
