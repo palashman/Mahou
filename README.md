@@ -29,6 +29,42 @@ Mahou работает так как **Вы** хотите, настраивай
 5. Начиная с v1.0.4.4, при конвертации выделения текст, не распознанный ни в одной из выбранных в настройках раскладках (пример: ♥), просто переписывается.
 6. Почитайте [wiki](https://github.com/BladeMight/Mahou/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA-%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B9) или [спросите меня](#%D0%9B%D0%B8%D1%86%D0%B5%D0%BD%D0%B7%D0%B8%D1%8F).
 
+### Горячие клавиши
+- <kbd>Pause</kbd> - Конверт последнего слова.
+- <kbd>Shift</kbd>+<kbd>Pause</kbd> - Конверт линии.
+- <kbd>Scroll</kbd> - Конверт выделения.
+- <kbd>Shift</kbd>+<kbd>F11</kbd> - Конверт нескольких последних слов, для выбора количества нажимайте 1-9(0 = 10) на клавиатуре(не NumPad)..
+- <kbd>Shift</kbd>+<kbd>F9</kbd> - Переключить видимость языковой панели.
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>Win</kbd>+<kbd>Insert</kbd> - Показать/скрыть главное окно.
+- <kbd>Shift</kbd>+<kbd>Alt</kbd><kbd>PageUp</kbd> - Перезапустить Mahou.
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>Win</kbd>+<kbd>F12</kbd> - Завершить Mahou.
+- Остальные гор. клавиши выключены по умолчанию или имеют описание в Mahou.
+
+### [Скачать или посмотреть заметки о выпусках.](https://github.com/BladeMight/Mahou/releases)
+
+### Beta или "версия с последними изменениями"(aka latest-commit) [здесь](https://github.com/BladeMight/Mahou/releases/tag/latest-commit)
+
+### Используете Chocolatey? `cinst Mahou` для установки.
+
+### Wiki
+Ознакомьтесь с [Mahou Wiki](https://github.com/BladeMight/Mahou/wiki).
+
+### Лицензия
+Mahou находится под GPL v2+.
+
+### Связаться со мной
+Если Вы нашли ошибку или есть идея как улучшить Mahou напишите её [здесь](https://github.com/BladeMight/Mahou/issues)
+или свяжитесь со мной через [email](mailto:BladeMight@gmail.com) (можете спрашивать о чем угодно)
+
+### Поддержать проект материально
+
+Если Вы считаете что хотите помочь материально, буду очень благодарен :)
+
+Кошельки:
+
+- Яндекс.Деньги: 410015057363201 или http://yasobe.ru/na/mahou
+- MasterCard: 5168 7573 3941 2985
+
 ###### Возможности по версиям:
 
 **v2.8.0.0**<br/>
@@ -44,7 +80,7 @@ Mahou работает так как **Вы** хотите, настраивай
 - :bug: Исправлено что конверт выделения иногда был очень медленным. #193
 - :bug: Исправлен показ языков в некоторых случаях в подсказках языка при включенном
   режиме Windows сообщений.
-- :buf: Исправлена функция "Конверт последнего слова" в "Эмуляции переключения раскладок" при JKL включенном.
+- :bug: Исправлена функция "Конверт последнего слова" в "Эмуляции переключения раскладок" при JKL включенном.
 - :memo: Добавлено правило чтобы изменялось окно Mahou в зависимости от вкладок. #181
 - :bug: Исправлено отображение значков "T", "L" и "->" во вкладке Функции.
 - :bug: Добавлена проверка путей автозапуска при запуске. #198
@@ -671,42 +707,6 @@ Mahou работает так как **Вы** хотите, настраивай
 **v1.0.0.4**<br/>
 - Добавлена возможность изменять горячие клавиши для `Конверт слова` (Convert Last) & `Конверт выделения` (Convert Selection).
 
-### Горячие клавиши
-- <kbd>Pause</kbd> - Конверт последнего слова.
-- <kbd>Shift</kbd>+<kbd>Pause</kbd> - Конверт линии.
-- <kbd>Scroll</kbd> - Конверт выделения.
-- <kbd>Shift</kbd>+<kbd>F11</kbd> - Конверт нескольких последних слов, для выбора количества нажимайте 1-9(0 = 10) на клавиатуре(не NumPad)..
-- <kbd>Shift</kbd>+<kbd>F9</kbd> - Переключить видимость языковой панели.
-- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>Win</kbd>+<kbd>Insert</kbd> - Показать/скрыть главное окно.
-- <kbd>Shift</kbd>+<kbd>Alt</kbd><kbd>PageUp</kbd> - Перезапустить Mahou.
-- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>Win</kbd>+<kbd>F12</kbd> - Завершить Mahou.
-- Остальные гор. клавиши выключены по умолчанию или имеют описание в Mahou.
-
-### [Скачать или посмотреть заметки о выпусках.](https://github.com/BladeMight/Mahou/releases)
-
-### Beta или "версия с последними изменениями"(aka latest-commit) [здесь](https://github.com/BladeMight/Mahou/releases/tag/latest-commit)
-
-### Используете Chocolatey? `cinst Mahou` для установки.
-
-### Wiki
-Ознакомьтесь с [Mahou Wiki](https://github.com/BladeMight/Mahou/wiki).
-
-### Лицензия
-Mahou находится под GPL v2+.
-
-### Связаться со мной
-Если Вы нашли ошибку или есть идея как улучшить Mahou напишите её [здесь](https://github.com/BladeMight/Mahou/issues)
-или свяжитесь со мной через [email](mailto:BladeMight@gmail.com) (можете спрашивать о чем угодно)
-
-### Поддержать проект материально
-
-Если Вы считаете что хотите помочь материально, буду очень благодарен :)
-
-Кошельки:
-
-- Яндекс.Деньги: 410015057363201 или http://yasobe.ru/na/mahou
-- MasterCard: 5168 7573 3941 2985
-
 # English
 
 ![](http://i.imgur.com/3BpvbgI.png)
@@ -730,6 +730,43 @@ Even selected text switches just between **selected** layouts, though if you lik
 4. To change layout by one key press <kbd>CapsLock</kbd>.
 5. Starting from v1.0.4.4 in Convert selection unrecognized text by all selected layout in settings (example: ♥) just rewrites.
 6. Read the [wiki](https://github.com/BladeMight/Mahou/wiki/Functions-list) or [ask me](#license).
+
+### Hotkeys
+- <kbd>Pause</kbd> - Convert last input.
+- <kbd>Scroll</kbd> - Convert selection.
+- <kbd>Shift</kbd>+<kbd>Pause</kbd> - Convert last inputted line.
+- <kbd>Scroll</kbd> - Convert selected text.
+- <kbd>Shift</kbd>+<kbd>F11</kbd> - Convert multiple last words, to select quantity press 1-9(0 = 10) after hotkey on keyboard(not NumPad)..
+- <kbd>Shift</kbd>+<kbd>F9</kbd> - Toggle language panel visibility.
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>Win</kbd>+<kbd>Insert</kbd> - To toggle configs windows visibility.
+- <kbd>Shift</kbd>+<kbd>Alt</kbd><kbd>PageUp</kbd> - Restart Mahou.
+- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>Win</kbd>+<kbd>F12</kbd> - To exit Mahou.
+- Other hotkeys disabled by default or have description in Mahou.
+
+### [Download or view release notes.](https://github.com/BladeMight/Mahou/releases)
+
+### Beta or "version with latest changes "(aka latest-commit) [here](https://github.com/BladeMight/Mahou/releases/tag/latest-commit)
+
+### Using Chocolatey? type `cinst Mahou` to install.
+
+### Wiki
+Check out [Mahou Wiki](https://github.com/BladeMight/Mahou/wiki).
+
+### License
+Mahou is under GPL v2+
+
+### Contact
+If you found an issue or have an idea how to improve Mahou write [here](https://github.com/BladeMight/Mahou/issues)
+or contact me though [email](mailto:BladeMight@gmail.com) (You can ask anything)
+
+### Donate
+
+If you think that you want to help financially, I will be very grateful :)
+
+Wallets:
+
+- Yandex.Money: 410015057363201 or http://yasobe.ru/na/mahou
+- MasterCard: 5168 7573 3941 2985
 
 ###### By version features:
 
@@ -1444,40 +1481,3 @@ Removed (some just commented) the ones that are less popular.
 
 **v1.0.0.4**<br/>
 - Added ability to change hotkeys for `Convert Last` & `Convert Selection`.
-
-### Hotkeys
-- <kbd>Pause</kbd> - Convert last input.
-- <kbd>Scroll</kbd> - Convert selection.
-- <kbd>Shift</kbd>+<kbd>Pause</kbd> - Convert last inputted line.
-- <kbd>Scroll</kbd> - Convert selected text.
-- <kbd>Shift</kbd>+<kbd>F11</kbd> - Convert multiple last words, to select quantity press 1-9(0 = 10) after hotkey on keyboard(not NumPad)..
-- <kbd>Shift</kbd>+<kbd>F9</kbd> - Toggle language panel visibility.
-- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>Win</kbd>+<kbd>Insert</kbd> - To toggle configs windows visibility.
-- <kbd>Shift</kbd>+<kbd>Alt</kbd><kbd>PageUp</kbd> - Restart Mahou.
-- <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>Win</kbd>+<kbd>F12</kbd> - To exit Mahou.
-- Other hotkeys disabled by default or have description in Mahou.
-
-### [Download or view release notes.](https://github.com/BladeMight/Mahou/releases)
-
-### Beta or "version with latest changes "(aka latest-commit) [here](https://github.com/BladeMight/Mahou/releases/tag/latest-commit)
-
-### Using Chocolatey? type `cinst Mahou` to install.
-
-### Wiki
-Check out [Mahou Wiki](https://github.com/BladeMight/Mahou/wiki).
-
-### License
-Mahou is under GPL v2+
-
-### Contact
-If you found an issue or have an idea how to improve Mahou write [here](https://github.com/BladeMight/Mahou/issues)
-or contact me though [email](mailto:BladeMight@gmail.com) (You can ask anything)
-
-### Donate
-
-If you think that you want to help financially, I will be very grateful :)
-
-Wallets:
-
-- Yandex.Money: 410015057363201 or http://yasobe.ru/na/mahou
-- MasterCard: 5168 7573 3941 2985
