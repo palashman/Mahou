@@ -69,117 +69,117 @@ Mahou находится под GPL v2+.
 
 **v2.8.0.0**<br/>
 
-- :bug: Обновлена функция обновлений.
-- :memo: Изменен способ инициализации текущей раскладки для JKL.
-- :bug: Исправлено что выбор тайминга был отключен во вкладке тайминга,
+- 🐛 Обновлена функция обновлений.
+- 📝 Изменен способ инициализации текущей раскладки для JKL.
+- 🐛 Исправлено что выбор тайминга был отключен во вкладке тайминга,
   Сделано так потому что при изменении этого значения так же меняется значение 
   показа языковых подсказок при "только при смене" влкюченной.
-- :bug: Исправлена ошибка инициализации панели переводчика.
-- :bug: Исправлены ненужные отпускания модификаторов, когда они не были до этого нажаты.
-- :memo: Добавлено больше лога.
-- :bug: Исправлено что конверт выделения иногда был очень медленным. #193
-- :bug: Исправлен показ языков в некоторых случаях в подсказках языка при включенном
+- 🐛 Исправлена ошибка инициализации панели переводчика.
+- 🐛 Исправлены ненужные отпускания модификаторов, когда они не были до этого нажаты.
+- 📝 Добавлено больше лога.
+- 🐛 Исправлено что конверт выделения иногда был очень медленным. #193
+- 🐛 Исправлен показ языков в некоторых случаях в подсказках языка при включенном
   режиме Windows сообщений.
-- :bug: Исправлена функция "Конверт последнего слова" в "Эмуляции переключения раскладок" при JKL включенном.
-- :memo: Добавлено правило чтобы изменялось окно Mahou в зависимости от вкладок. #181
-- :bug: Исправлено отображение значков "T", "L" и "->" во вкладке Функции.
-- :bug: Добавлена проверка путей автозапуска при запуске. #198
+- 🐛 Исправлена функция "Конверт последнего слова" в "Эмуляции переключения раскладок" при JKL включенном.
+- 📝 Добавлено правило чтобы изменялось окно Mahou в зависимости от вкладок. #181
+- 🐛 Исправлено отображение значков "T", "L" и "->" во вкладке Функции.
+- 🐛 Добавлена проверка путей автозапуска при запуске. #198
   Теперь она проверяет пути ярлыка и задачи.
-- :memo: Добавлена клавиша Tab в "Переключать раскладки 1 клавишей". #182
-- :memo: Убрано переключение между всемя раскладками,
+- 📝 Добавлена клавиша Tab в "Переключать раскладки 1 клавишей". #182
+- 📝 Убрано переключение между всемя раскладками,
   когда текущая раскладка уже и есть нужная.
-- :bug: Исправлено отображение неправильной иконки в подсказсках языка с JKL при запуске Mahou.
-- :bug: Другие мелкие исправления с конверт последнего слова и сниппетами.
-- :bug: Потенциальное исправление для #192.
-- :gem: Некоторый код упрощен.
-- :gem: Улучшены функции Автозамены и сниппетов.
-- :gem: Добавлена возможность назначать 2-словные сниппеты(и автозамены).
+- 🐛 Исправлено отображение неправильной иконки в подсказсках языка с JKL при запуске Mahou.
+- 🐛 Другие мелкие исправления с конверт последнего слова и сниппетами.
+- 🐛 Потенциальное исправление для #192.
+- 💎 Некоторый код упрощен.
+- 💎 Улучшены функции Автозамены и сниппетов.
+- 💎 Добавлена возможность назначать 2-словные сниппеты(и автозамены).
   пример: 
   сниппет: ->как то====>как-то<====
   результат: "как то" => "как-то"
-- :speech_balloon: Обнлвлены подсказки мыши возле "Смена раскладки в Конверт выделения.".
-- :bug: Исправлено что GetNextLayout возвравшал последнюю раскладки, а не первую при break.
-- :gem: Добавлена возможность использовать "Смена раскладки в Конверт выделения."  СРдВС. #200
+- 💬 Обнлвлены подсказки мыши возле "Смена раскладки в Конверт выделения.".
+- 🐛 Исправлено что GetNextLayout возвравшал последнюю раскладки, а не первую при break.
+- 💎 Добавлена возможность использовать "Смена раскладки в Конверт выделения."  СРдВС. #200
   СРдВС = Считать раскладку для всего слова в КВ.
   При совместном использовании будет производится реальная смена раскладки,
   без - "реально" раскладка не будет изменена, только текст.
-- :gem: Доабвлена возможность внедрять версию коммит для Mahou dev в сам Mahou.exe. #203
+- 💎 Доабвлена возможность внедрять версию коммит для Mahou dev в сам Mahou.exe. #203
   P.S. Только используя скрипт build.cmd (при git в путе), или вручную.
-- :bug: Другие мелкие исправления.
+- 🐛 Другие мелкие исправления.
 
 **v2.7.5.0**<br/>
 
-- :memo: Упрощены проверки и убрана ненужная замена с Regex.
-- :gem: Добавлена загрузка разделителя плавающих значений шрифта и замена его при необходимости.
-- :gem: Упрощен код получения шрифта/цвета в функции загрузке конфигурации.
-- :bug: Исправлено режим одной горяч. клавиши для конвертации выделенного и последнего:
+- 📝 Упрощены проверки и убрана ненужная замена с Regex.
+- 💎 Добавлена загрузка разделителя плавающих значений шрифта и замена его при необходимости.
+- 💎 Упрощен код получения шрифта/цвета в функции загрузке конфигурации.
+- 🐛 Исправлено режим одной горяч. клавиши для конвертации выделенного и последнего:
   Теперь не вызывает неправильную раскладку после конвертации.
-- :bug: Исправлена ошибка переключения раскладки перед конвертацией последнего:
+- 🐛 Исправлена ошибка переключения раскладки перед конвертацией последнего:
   со включенной эмуляцией и сменой между раскладками,
   без этого исправления результат конверсии был бы в -
   перед-нужной раскладке а ПОСЛЕ конверсии текста раскладка стает нужной, а текст нет.
-- :bug: Обновлены regex функции обновления.
-- :bug: Добавлено исправления для функции угадывания раскладки слова, добавив несколько попыток.
-- :gem: Добавлена возможность изменять шрифт Заголовка и Текста в панели перевода.
-- :gem: Добавлена новая функция сниппетов: __paste().
+- 🐛 Обновлены regex функции обновления.
+- 🐛 Добавлено исправления для функции угадывания раскладки слова, добавив несколько попыток.
+- 💎 Добавлена возможность изменять шрифт Заголовка и Текста в панели перевода.
+- 💎 Добавлена новая функция сниппетов: __paste().
 	Создана для быстрого ввода больших кусков текста, вместо того чтобы вводить
 	каждый символ эта функция просто вставляет его.
-- :bug: Потенциальное исправления для #189.
-- :bug: Исправлено не запоминание раскладки при обычной смене раскладки через WinAPI.
-- :memo: Исправлена опечатка.
+- 🐛 Потенциальное исправления для #189.
+- 🐛 Исправлено не запоминание раскладки при обычной смене раскладки через WinAPI.
+- 📝 Исправлена опечатка.
 
 **v2.7.3.1**<br/>
 
-- :memo: Добавлено исправление редкого падения при запуске с языковыми подсказками.
-- :gem: Добавлен другой тип ввода BackSpace в истории ввода.
-- :gem: Добавлена возможность менять тип ввода BackSpace.
-- :bug: Исповлена ошибка с нажатием BackSpace при пустой history.txt(истории ввода, с типом BackSpace стоящим на удаление)
-- :memo: Добавлены подсказка для функции тип BackSpace и истории ввода.
-- :gem: Добавлена функция "История ввода"(с поддержкой Backspace!).
-- :bug: Исправлено проблема с панелью перевода.
-- :gem: Добавлена возможность установить свой словарь транслитерации.
+- 📝 Добавлено исправление редкого падения при запуске с языковыми подсказками.
+- 💎 Добавлен другой тип ввода BackSpace в истории ввода.
+- 💎 Добавлена возможность менять тип ввода BackSpace.
+- 🐛 Исповлена ошибка с нажатием BackSpace при пустой history.txt(истории ввода, с типом BackSpace стоящим на удаление)
+- 📝 Добавлены подсказка для функции тип BackSpace и истории ввода.
+- 💎 Добавлена функция "История ввода"(с поддержкой Backspace!).
+- 🐛 Исправлено проблема с панелью перевода.
+- 💎 Добавлена возможность установить свой словарь транслитерации.
 	Дает возможность создать и редактировать свой словарь.
 	Просто создайте(или запустите Mahou и он создастся автоматически) TSDict.txt
 	рядом с Mahou.exe, и создавайте записи с таким синтаксисом:
 	YA|Я
 	т.е. разделение символом "|".
-- :bug: Исправлена ошибка в функции Командных ключей.
-- :bug: Добавлено исправление Ctrl+Alt+Delete, Ctrl & Alt были зажаты в коде Mahou (#184).
-- :memo: Добавлен ключ для перезапуска Mahou: Mahou.exe "/R" или "-R" or "R" не зависимо от регистра.
-- :bug: Исправлен перевод нескольких языков в тот же язык,
+- 🐛 Исправлена ошибка в функции Командных ключей.
+- 🐛 Добавлено исправление Ctrl+Alt+Delete, Ctrl & Alt были зажаты в коде Mahou (#184).
+- 📝 Добавлен ключ для перезапуска Mahou: Mahou.exe "/R" или "-R" or "R" не зависимо от регистра.
+- 🐛 Исправлен перевод нескольких языков в тот же язык,
 	Испралвяет что иногда авто-определение языка не всегда верное, например:
 	auto->ru и zh_cn->ru и ja->ru, потому что иногда Google Translate, думает что японский текст(без каны) - китайский.
-- :memo: Добавлено исправления для раскладки в конвертации выделения.
-- :bug: Добавлена возможность переключения текста по >2 раскладках.
-- :memo: Добавлена информация о нерекоммендуемой функции: Смена раскладки в Конверт выделения(или +), и изменен ее текст в красный.
-- :bug: Исправлена ошибка панели перевода при отсутствии интернета.
-- :memo: Добавлен Армянский флаг.
-- :bug: Добавлено эксперементальное исправлене Alt+[любая] для горяч. клавиш.
-- :bug: Исправлена загрузка из настроек ширины подсказки возле каретки.
-- :bug: Исправлены неправельные utf-8 символы в запросе GTLink.
-- :memo: Панель перевода теперь показывает язык авто-определения в скобках <> в названии панели.
-- :bug: Исправлена speech_url для панели перевода.
-- :gem: Добавлен Auray, многомерный массив как в JavaScript, но для C#.
-- :gem: Используюя Auray Панель перевода теперь переводит в  ~30 раз быстрее :rocket:
+- 📝 Добавлено исправления для раскладки в конвертации выделения.
+- 🐛 Добавлена возможность переключения текста по >2 раскладках.
+- 📝 Добавлена информация о нерекоммендуемой функции: Смена раскладки в Конверт выделения(или +), и изменен ее текст в красный.
+- 🐛 Исправлена ошибка панели перевода при отсутствии интернета.
+- 📝 Добавлен Армянский флаг.
+- 🐛 Добавлено эксперементальное исправлене Alt+[любая] для горяч. клавиш.
+- 🐛 Исправлена загрузка из настроек ширины подсказки возле каретки.
+- 🐛 Исправлены неправельные utf-8 символы в запросе GTLink.
+- 📝 Панель перевода теперь показывает язык авто-определения в скобках <> в названии панели.
+- 🐛 Исправлена speech_url для панели перевода.
+- 💎 Добавлен Auray, многомерный массив как в JavaScript, но для C#.
+- 💎 Используюя Auray Панель перевода теперь переводит в  ~30 раз быстрее :rocket:
   Используется прямой доступ к массиву с переводом, вместа удаленного google script(на JavaScript).
-- :bug: Исправлена сохранение символа '=' в настройках, исправляет сохранения шрифтов.
-- :bug: Исправлена сохранение настроек ширины подсказки возле каретки, сохранялось значение из подсказки мыши.
-- :memo: Опечатка.
-- :memo: Added sound code to any snippet.
-- :bug: Fixed stop seraching next snippet aft any.
-- :bug: Fixed out of index exception for __ANY__.
-- :gem: Добавлена возможность писать слово ***ANY*** в маленькие слова сниппетов для:
+- 🐛 Исправлена сохранение символа '=' в настройках, исправляет сохранения шрифтов.
+- 🐛 Исправлена сохранение настроек ширины подсказки возле каретки, сохранялось значение из подсказки мыши.
+- 📝 Опечатка.
+- 📝 Added sound code to any snippet.
+- 🐛 Fixed stop seraching next snippet aft any.
+- 🐛 Fixed out of index exception for __ANY__.
+- 💎 Добавлена возможность писать слово ***ANY*** в маленькие слова сниппетов для:
 	того что этот сниппет срабатывал при любых буквах/символах,  полезно для создания сниппетов похожих на HTML/XML тэги,
 	например `-><***ANY***>====><***ANY***>__cursorhere()</***ANY***><====`, 
 	этот сниппет будут заменять все что будет начитанься на `<` и заканчиватся на `>`,
 	на все что было введено в скобках и с завершением и функцией `__cursorhere()` ставит курсор между ними.
-- :memo: Улучшена функция __cursorhere, так что только последнее будет работать.
-- :bug: Испрвлена дерегистрация LowLeveHook на другом потоке.
-- :bug: Исправлена выгрузка таймеров при выходе.
-- :memo: Исправлено что шрифт загружался без стиля.
-- :memo: Исправлена совместимость функции Единая раскладка с JKL.
-- :gem: Добавлена функция __cursorhere в функции сниппетов.
-- :bug: Исправлено отпускане модификаторов в: переключать раскладки по клавишам.
+- 📝 Улучшена функция __cursorhere, так что только последнее будет работать.
+- 🐛 Испрвлена дерегистрация LowLeveHook на другом потоке.
+- 🐛 Исправлена выгрузка таймеров при выходе.
+- 📝 Исправлено что шрифт загружался без стиля.
+- 📝 Исправлена совместимость функции Единая раскладка с JKL.
+- 💎 Добавлена функция __cursorhere в функции сниппетов.
+- 🐛 Исправлено отпускане модификаторов в: переключать раскладки по клавишам.
 
 **v2.7.0.0**<br/>
 
@@ -772,148 +772,148 @@ Wallets:
 
 **v2.8.0.0**<br/>
 
-- :bug: Updated update regex.
-- :memo: Another way to initialize layout for JKL.
+- 🐛 Updated update regex.
+- 📝 Another way to initialize layout for JKL.
   now just switches 1 layout forward and backward.
   instead of switching through all layouts,
-- :bug: Fixed numeric updown was disabled in timings tabs,
+- 🐛 Fixed numeric updown was disabled in timings tabs,
   Actually it is also used for language tooltip on change display time.
   due to enabled windows messages feature for language tooltips.
-- :bug: Fixed translation panel initialization before MMain.mahou.
-- :bug: Fixed un-needed send modifiers up.
-- :bug: Minor bugs fixes.
-- :memo: Added more debugging.
-- :bug: Fixed Convert Last was sometimes too slow.
-- :bug: Fixed language display display on switch in windows messages.
-- :bug: Fixed Convert Last function in Emulate LS Between layouts mode with JKL.
-- :bug: Fixed access to MMain.mahou through _TranslatePanel before init.
-- :memo: Added rule to increase height based on count of tab rows.
-- :gem: Added rule to increase height of Mahou window depending on tab rows.
-- :bug: Fixed "T", "L" and "->" was empty in functions tab.
-- :bug: Added checking of startup path of types. #198
+- 🐛 Fixed translation panel initialization before MMain.mahou.
+- 🐛 Fixed un-needed send modifiers up.
+- 🐛 Minor bugs fixes.
+- 📝 Added more debugging.
+- 🐛 Fixed Convert Last was sometimes too slow.
+- 🐛 Fixed language display display on switch in windows messages.
+- 🐛 Fixed Convert Last function in Emulate LS Between layouts mode with JKL.
+- 🐛 Fixed access to MMain.mahou through _TranslatePanel before init.
+- 📝 Added rule to increase height based on count of tab rows.
+- 💎 Added rule to increase height of Mahou window depending on tab rows.
+- 🐛 Fixed "T", "L" and "->" was empty in functions tab.
+- 🐛 Added checking of startup path of types. #198
   Now it checks lnk and task path.
-- :memo: Added Tab key to one key layout switch. #182
-- :memo: Removed useless switch between all layouts,
+- 📝 Added Tab key to one key layout switch. #182
+- 📝 Removed useless switch between all layouts,
   when layout already desired.
-- :bug: Fix for wrong layout icon at start in Language Displays with JKL.
-- :bug: Some minor bug fixes with Convert Last and Snippets.
-- :bug: Potential fix for #192.
-- :gem: Some code simplified.
-- :gem: Improved AutoSwitch and Snippets functions.
-- :gem: Added ability to use 2-word snippets/autoswitch.
+- 🐛 Fix for wrong layout icon at start in Language Displays with JKL.
+- 🐛 Some minor bug fixes with Convert Last and Snippets.
+- 🐛 Potential fix for #192.
+- 💎 Some code simplified.
+- 💎 Improved AutoSwitch and Snippets functions.
+- 💎 Added ability to use 2-word snippets/autoswitch.
   example: chat room => chat-room
-- :speech_balloon: Updated tooltips around "Use layout switching in CS.".
-- :bug: Fixed GetNextLayout was returning last layout on break.
-- :gem: Added ability to use Convert Selection Layout Switching with WWL. #200
+- 💬 Updated tooltips around "Use layout switching in CS.".
+- 🐛 Fixed GetNextLayout was returning last layout on break.
+- 💎 Added ability to use Convert Selection Layout Switching with WWL. #200
   WWL = Whole Word Layout
-- :gem: Added ability to set commit on build. #203
+- 💎 Added ability to set commit on build. #203
   P.S. Only using the build.cmd script(with git in path), or yourself.
-- :memo: Saving *real* commit to Mahou.ini on start.
-- :bug: Wrong function to write commit into configuration.
+- 📝 Saving *real* commit to Mahou.ini on start.
+- 🐛 Wrong function to write commit into configuration.
 
 
 **v2.7.5.0**<br/>
 
-- :memo: Simplified checking and removed unneeded regex replace.
-- :gem: Added font decimal retrieve and raw font conversion.
-- :gem: Simplifice code about getting font/color in loadconfigs.
-- :bug: Fixed wrong fonts pt in configs.
-- :bug: Added try/catch for translate panel fonts loading.
-- :bug: Fixed 1 hotkey for convert selection and last:
+- 📝 Simplified checking and removed unneeded regex replace.
+- 💎 Added font decimal retrieve and raw font conversion.
+- 💎 Simplifice code about getting font/color in loadconfigs.
+- 🐛 Fixed wrong fonts pt in configs.
+- 🐛 Added try/catch for translate panel fonts loading.
+- 🐛 Fixed 1 hotkey for convert selection and last:
   Now using these two actions for 1 hotkey doesn't cause wrong
   layout switching after conversion of selected text.
-- :bug: Fixed convert last layout switching before conversion:
+- 🐛 Fixed convert last layout switching before conversion:
   with emulation and switch between layouts enabled,
   without that fix the convert result would be in layout -
   pre-needed and after conversion LAYOUT(not text) switched to needed.
-- :bug: Updated Mahou update title find regex.
-- :bug: Another fix for guess word layout tries.
-- :bug: Added guess tries fix for sometimes wrong guess.
-- :gem: Added Title and Text font selection for Translate Panel.
+- 🐛 Updated Mahou update title find regex.
+- 🐛 Another fix for guess word layout tries.
+- 🐛 Added guess tries fix for sometimes wrong guess.
+- 💎 Added Title and Text font selection for Translate Panel.
 - :chocolate_bar: Updated chocolatey uninstall script.
-- :gem: Added new snippets function: __paste().
+- 💎 Added new snippets function: __paste().
 	Text that expanded through that function is significally faster that
 	from default snippet expansion type, because it just being copied and
 	pasted through keyboard, instead of inputting every character like in
 	default.
-- :bug: Potential fix-for #189.
-- :bug: Fixed layout wasn't remembering after winapi switch.
-- :memo: Typo fixed.
+- 🐛 Potential fix-for #189.
+- 🐛 Fixed layout wasn't remembering after winapi switch.
+- 📝 Typo fixed.
 
 **v2.7.3.1**<br/>
 
-- :memo: Added fix for rare startup crash with language displays enabled.
-- :memo: BackSpace Combobox resize.
-- :memo: Note about faster BackSpace type.
-- :gem: Added other BackSpace type.
-- :gem: Added BackSpace type switcher.
-- :bug: Fixed pressing BackSpace to delete empty history.txt
-- :memo: Translations and tooltips updated for BackSpace type and Input
+- 📝 Added fix for rare startup crash with language displays enabled.
+- 📝 BackSpace Combobox resize.
+- 📝 Note about faster BackSpace type.
+- 💎 Added other BackSpace type.
+- 💎 Added BackSpace type switcher.
+- 🐛 Fixed pressing BackSpace to delete empty history.txt
+- 📝 Translations and tooltips updated for BackSpace type and Input
 	History.
-- :gem: Added input history feature(with Backspace support!).
-- :bug: Fixed translation panel update due to wrong id.
-- :gem: Added ability to edit transliteration dictionary.
+- 💎 Added input history feature(with Backspace support!).
+- 🐛 Fixed translation panel update due to wrong id.
+- 💎 Added ability to edit transliteration dictionary.
 	It allows to create custom transliteration dictionary, and edit it.
 	Just create(or run Mahou so it will create it automatically) TSDict.txt
 	near to Mahou.exe, and create entries with that syntax:
 	YA|Я
 	e.g. separate transliterations by "|" pipe.
-- :bug: Fixed Mahou args 0 exception.
-- :bug: Added fix for Ctrl+Alt+Delete, Ctrl & Alt were stuck in Mahou's
+- 🐛 Fixed Mahou args 0 exception.
+- 🐛 Added fix for Ctrl+Alt+Delete, Ctrl & Alt were stuck in Mahou's
 	code.
-- :memo: Added Restart switch Mahou.exe "/R" or "-R" or "R" case
+- 📝 Added Restart switch Mahou.exe "/R" or "-R" or "R" case
 	insensetive.
-- :bug: Fixed multiple sametarget language translate
+- 🐛 Fixed multiple sametarget language translate
 	Fixes something like when you don't want to be auto-detect, e.g. having:
 	auto->ru and zh_cn->ru and ja->ru, because sometimes google translate
 	auto-detect thinks that japanese is chinese(whene no katakana and
 - hiragana are present).
-- :memo: Added special fix for special layout in CS.
-- :memo: Added note about ALL LAYOUTS switching.
-- :bug: Fixed >2 layout selected text switching.
+- 📝 Added special fix for special layout in CS.
+- 📝 Added note about ALL LAYOUTS switching.
+- 🐛 Fixed >2 layout selected text switching.
 	In both modes: Whout whole layout word
 	(which actually works far better!),
 	and normal mode without it.
-- :bug: Fixed convert sel when wrong layout selected.
-- :gem: Added convert selection for more that 2 layouts.
+- 🐛 Fixed convert sel when wrong layout selected.
+- 💎 Added convert selection for more that 2 layouts.
   quite experimental.
-- :memo: Added note(in tooltips) about bad function: Convert Selection Layout
+- 📝 Added note(in tooltips) about bad function: Convert Selection Layout
 	Switching(or +), and changed function text to red.
-- :bug: Fixed translation panel bug with no network access.
-- :memo: Added Armenian flag.
-- :bug: Added experimental fix for only Alt+[Any].
+- 🐛 Fixed translation panel bug with no network access.
+- 📝 Added Armenian flag.
+- 🐛 Added experimental fix for only Alt+[Any].
 	For hotkeys.
-- :bug: Fixed loading of caret tt width.
-- :memo: Fix white color close button not intsant.
-- :memo: Corrected comment position.
-- :bug: Fixed wrong utf-8 chars in GTLink request.
-- :memo: Translation now shows selected text source language in <> brackets in translator title.
-- :bug: Fixed undefined reference to Debug.
-- :memo: Changed Auray log messages to Debug.WriteLine.
-- :bug: Fixed speech_url for translate panel.
-- :bug: Fixed non-static method call from static.
-- :gem: Added Auray, multidimensional array,
+- 🐛 Fixed loading of caret tt width.
+- 📝 Fix white color close button not intsant.
+- 📝 Corrected comment position.
+- 🐛 Fixed wrong utf-8 chars in GTLink request.
+- 📝 Translation now shows selected text source language in <> brackets in translator title.
+- 🐛 Fixed undefined reference to Debug.
+- 📝 Changed Auray log messages to Debug.WriteLine.
+- 🐛 Fixed speech_url for translate panel.
+- 🐛 Fixed non-static method call from static.
+- 💎 Added Auray, multidimensional array,
   like in JavaScript, but for C#.
-- :gem: Using Auray Translate panel now translates ~30 times
+- 💎 Using Auray Translate panel now translates ~30 times
 	faster!!! :rocket:
   Using direct access to array, instead of remote google script.
-- :memo: Actually this hotkey should up modifiers.
-- :bug: Fixed loading saving that contained '=' symbol.
-- :bug: Fixed caret lt Width was saving into mouse lt width.
-- :memo: RU lang typo.
-- :memo: Added sound code to any snippet.
-- :bug: Fixed stop seraching next snippet aft any.
-- :bug: Fixed out of index exception for __ANY__.
-- :gem: Added ***ANY*** word to snippets small words.
+- 📝 Actually this hotkey should up modifiers.
+- 🐛 Fixed loading saving that contained '=' symbol.
+- 🐛 Fixed caret lt Width was saving into mouse lt width.
+- 📝 RU lang typo.
+- 📝 Added sound code to any snippet.
+- 🐛 Fixed stop seraching next snippet aft any.
+- 🐛 Fixed out of index exception for __ANY__.
+- 💎 Added ***ANY*** word to snippets small words.
 	It matches any words, useful for something like auto-insert-ending and move cursor between ihtml/xml tags, also added default snippets to autocomplete all html/xml tags.
-- :memo: shorten code
-- :memo: Optimized __cursorhere expression so only last will work.
-- :bug: Fixed llhook unregister on different thread.
-- :bug: Fixed unloading of timers on exit.
-- :memo: Fixed font without style loading.
-- :memo: Fixed One Layout feature with JKL enabled.
-- :gem: Added __cursorhere expression.
-- :bug: Fixed release of modifiers in:
+- 📝 shorten code
+- 📝 Optimized __cursorhere expression so only last will work.
+- 🐛 Fixed llhook unregister on different thread.
+- 🐛 Fixed unloading of timers on exit.
+- 📝 Fixed font without style loading.
+- 📝 Fixed One Layout feature with JKL enabled.
+- 💎 Added __cursorhere expression.
+- 🐛 Fixed release of modifiers in:
   specific layout switch hotkeys.
 
 **v2.7.0.0**<br/>
@@ -930,7 +930,7 @@ Wallets:
 - 💎 Added __execute expression to snippets expressions.
 - 📝 Added base "win" to be "lwin".
 - 💎 Added __keyboard expression to snippets expressions.
-- 📝 Rewrited method for snippets expressions to support __keyboard(in future) function.:memo: etc...
+- 📝 Rewrited method for snippets expressions to support __keyboard(in future) function.📝 etc...
 - 💎 Added multiline support to translate panel.
 - 📝 Fixed newlines, replaced just with spaces.
 - 🐛 Fixed translator language selector wasn't able to decrease translate languages.
