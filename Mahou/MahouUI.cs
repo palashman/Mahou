@@ -1861,6 +1861,7 @@ DEL "+restartMahouPath;
 			icon.Exit += (_, __) => ExitProgram();
 			icon.ShowHide += (_, __) => ToggleVisibility();
 			icon.EnaDisable += (_, __) => ToggleMahou();
+			icon.Restart += (_, __) => Restart();
 		}
 		/// <summary>
 		/// Initializes list boxes.
@@ -3591,7 +3592,7 @@ DEL ""ExtractASD.cmd""";
 			btn_OK.Text = MMain.Lang[Languages.Element.ButtonOK];
 			#endregion
 			#region Misc
-			icon.RefreshText(MMain.Lang[Languages.Element.Mahou], MMain.Lang[Languages.Element.ShowHide], MMain.Lang[Languages.Element.ExitMahou], MMain.Lang[Languages.Element.Enable]);
+			icon.RefreshText(MMain.Lang[Languages.Element.Mahou], MMain.Lang[Languages.Element.ShowHide], MMain.Lang[Languages.Element.ExitMahou], MMain.Lang[Languages.Element.Enable], MMain.Lang[Languages.Element.RestartMahou]);
 			#endregion
 			Logging.Log("Language changed.");
 			SetTooltips();

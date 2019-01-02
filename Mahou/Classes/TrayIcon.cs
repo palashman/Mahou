@@ -6,9 +6,10 @@ namespace Mahou {
         public event EventHandler<EventArgs> Exit;
         public event EventHandler<EventArgs> EnaDisable;
         public event EventHandler<EventArgs> ShowHide;
+        public event EventHandler<EventArgs> Restart;
         public NotifyIcon trIcon;
         ContextMenu cMenu;
-        MenuItem Exi, ShHi, EnDis;
+        MenuItem Exi, ShHi, EnDis, Resta;
         /// <summary>Initializes new tray icon.</summary>
         /// <param name="visible">State of tray icon's visibility on initialize.</param>
         public TrayIcon(bool? visible = true) {
@@ -19,9 +20,11 @@ namespace Mahou {
             Exi = new MenuItem("Exit", ExitHandler);
             ShHi = new MenuItem("Show", ShowHideHandler);
             EnDis = new MenuItem("Enable", EnaDisableHandler);
+            Resta = new MenuItem("Restart", RestartHandler);
             EnDis.Checked = true;
             cMenu.MenuItems.Add(ShHi);
             cMenu.MenuItems.Add(EnDis);
+            cMenu.MenuItems.Add(Resta);
             cMenu.MenuItems.Add(Exi);
             trIcon.Text = "Mahou (魔法)\nA magical layout switcher.";
             trIcon.ContextMenu = cMenu;
@@ -37,6 +40,11 @@ namespace Mahou {
         void EnaDisableHandler(object sender, EventArgs e) {
             if (EnaDisable != null)
                 EnaDisable(this, null);
+        }
+        /// <summary>Restart event handler..</summary>
+        void RestartHandler(object sender, EventArgs e) {
+            if (Restart != null)
+                Restart(this, null);
         }
         /// <summary>Exit event handler..</summary>
         void ExitHandler(object sender, EventArgs e) {
@@ -64,7 +72,7 @@ namespace Mahou {
         /// <param name="TrText">Tray icon hover text.</param>
         /// <param name="ShHiText">Show/Hide tray icon menu item's text.</param>
         /// <param name="ExiText">Exit tray icon menu item's text.</param>
-        public void RefreshText(string TrText, string ShHiText, string ExiText, string EnaDisText) {
+        public void RefreshText(string TrText, string ShHiText, string ExiText, string EnaDisText, string RestartText) {
             trIcon.Text = TrText;
             if (!String.IsNullOrEmpty(ShHiText))
             	ShHi.Text = ShHiText;
@@ -72,6 +80,8 @@ namespace Mahou {
             	Exi.Text = ExiText;
             if (!String.IsNullOrEmpty(EnaDisText))
             	EnDis.Text = EnaDisText;
+            if (!String.IsNullOrEmpty(RestartText))
+            	Resta.Text = RestartText;
         }
     }
 }
