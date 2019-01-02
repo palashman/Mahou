@@ -67,6 +67,44 @@ Mahou находится под GPL v2+.
 
 ###### Возможности по версиям:
 
+**v2.9.0.0**<br/>
+
+- 💎 Добавлен новый элемент в меню трея: "Перезапуск".
+- 📝 "Возможности по версиям" перемещены в низ.
+- 🐛 Исправлен ввод запомненных alt-numpad комбинаций, Mahou не нажимал alt.
+- 🐛 Добавлена проверка на права чтение/запись истории ввода. #217
+- 📝 Добавлена проверка на права чтение/запись в папке где запущен Mahou при запуске.
+- 💎 Добавлена возможность отображения текста раскладки в трее. #218
+- 💎 Добавлена возможность выбирать что отображать в трее: иконку, флаги или текст.
+- 🐛 Исправление подсказки лампочки ScrollLock для CMD.exe вместе с JKL.
+- 🐛 Добавлен еще один способ взятия выделенного текста - Ctrl+C если RCtrl+Insert не срабатывает.  #216
+- 💎 Добавлено исправление для взаимообратных правил автозамены:
+	Теперь правила такие как "here" и "руку", будут заменяться 
+	на раскладку последнего введенного слова, если небыло введенного слова
+	то тогда просто произойдет переключение на другую.
+- 💎 Добавлено открытие ссылок(на файлы) по Л/П кнопкам мыши.
+- Левая - открыть файл, Правая - открыть папку с файлом.
+- 💬 Добавлены подсказки к ссылкам "Открыть".
+- 💎 Добавлено больше ссылок "Открыть" для Логов и Настроек.
+- 🐛 Исправлено определение раскладки в JKL при фокусе окна.
+- 🐛 Исправлена совместимость АЗ и Сниппетов "Добавлять 1 Пробел".
+- 💎 Переработка KInputs.
+- 🐛 Исправлена работа Автозамены с функцией "Считать пробел частью последнего слова".
+- 📝 Добавлена FreeLibrary после unHook в JKL.
+  This may cause Windows to unload JKL dlls from other processes, since:
+  "Windows keeps a loaded count for DLLs and only when it goes to zero does it unload the DLL"
+- 🐛 Добавлена возможность использовать Win+CapsLock для переключения состояния CapsLock, когда сам CapsLock настроен на что-то в Mahou.
+- 💎 Добавлена поддерка CapsLock как F18 и гор. клавиш.
+- 📝 Обновлен RegEx обновлений.
+- 🐛 Добавлено исправление для "залипание alt", может связано с #81.
+- 💎 Добавлено исправление для случайных "переставаний работать" функции Конвертация последнего слова.
+- 💎 Добавлены галочки в меню трея.
+- 💎 Добавлен новый элемент в меню трея: "Включить", т.е. включить/выключить Mahou.
+- 💎 Добавлена ссылка "Открыть" для истории ввода.
+- 📝 Добавлена новая функция в сниппетах: __mahouhome().
+- 💎 Добавлена гор. клавиша для приостановки/возобновления всех функций Mahou гор. клавиш(кроме этой),хуков,таймеров, и т.д. #210
+- 📝 Исправлены иконки.
+
 **v2.8.0.0**<br/>
 
 - 🐛 Обновлена функция обновлений.
@@ -769,6 +807,82 @@ Wallets:
 - MasterCard: 5168 7573 3941 2985
 
 ###### By version features:
+
+**v2.8.0.0**<br/>
+
+- 💎 Added restart menu item to tray.
+- 📝 By ver. features moved lower.
+- 🐛 Fixed alt-num wasn't pressing alt before input.
+- 🐛 Added error check for write history. #217
+- 📝 Added folder write error check at startup.
+- 📝 Changed draw AA to system default.
+- 📝 Readonly tray display type combobox.
+- 💎 Added layout text in tray feature. #218
+- 💎 iTray display overhaul, now you can choose what to display.
+- 💬 Added tooltip.
+- 📝 Dictionary updated by big+custom.
+- 📝 Added "нормально" to dictionary.
+- 🐛 Fix for ScrollTip in CMD.exe with JKL.
+- 🐛 Fix for clipboard text get by Ctrl+C if RCtrl+Insert fails.  #216
+- 📝 AS_dict update, [big+custom].
+- 📝 Added рук* rules.
+- 💎 Added fix for Multi-layout AutoSwitch rules.
+  2  Now if there are rules such as "here" and "руку", they will switch to
+  3  the layout of last inputted word, or if there were no last inputted
+  4  word they will switch to another.
+- 📝 Added logging types at start of some logging.
+- 💎 Added L/R mouse button link opening.
+- Left - open file, Right - open directory.
+- 💬 Added tooltips to "Open" links.
+- 💎 Added more "Open" links, for Configs and Logs.
+- 📝 Simplified link opening code.
+- 🐛 Fix for JKL layout detection on window focus.
+- 📝 Not only on JKL should change L when winfocus.
+- 🐛 sinputs instead of intputs.
+- 🐛 Fixed compatibility between AS and Snippets add 1 SPACE.
+- 🐛 Fixed issue with Snippets, causing not to work properly(due to recent update to KInputs).
+- 💎 KInputs overhaul.
+- 🐛 Fixed AutoSwitch with Eat One Space function.
+- 📝 Other minor improvements.
+- 📝 Added FreeLibrary after unHook in JKL.
+  This may cause Windows to unload JKL dlls from other processes, since:
+  "Windows keeps a loaded count for DLLs and only when it goes to zero does it unload the DLL"
+- 🐛 Improved OS detection.
+- 🐛 Added Win+CapsLock toggle when CapsLock assigned on some action
+- 📝 Added clear c_word(s) on Win+(0-9).
+- 📝 Added refresh icons on clear words.
+- 🐛 uint is safer than UIntPtr on x64/AnyCPU.
+  UIntPtr on x64/AnyCPU(x64) not works.
+- 🐛 Replaced PostMessage with SendMessage.
+  Sometimes PostMessage stops working until reboot(W7).
+  Which cause impossible to change layout non-emulation way,
+  causing not to work the Convert Last Word/Line functions.
+- 🐛 Added logging, in order to find more info about:
+  "Mysterious Convert Last Word/Line stop working."
+- 📝 Simplified code about upper add to c_word(s).
+- 💎 Added compatibility between hotkeys and F18.
+- 📝 Double check if latest-commit checking.
+- 📝 Update regex version, to achieve the latest-commit as well.
+- 💎🐛 Added fix for extended keys.
+- 🐛 Added fix for alt-stuck, probably will affect #81.
+- 💎 Added another fix for last word conversion stucking.
+- 💎 Added unregistering hotkeys when selecting item from list
+  (This allows to assign same hotkey to different actions without
+   switching tabs from Hotkey tab and back, in order to unregister
+   theme again.)
+- 🐛 Fixed emulate layout change was actually captured by RIL...
+- 🐛 Safer fix for last fix.
+- 💎 Fixed random "stops working" of ConvertLast.
+- 💎 Added checks in Tray Icon menu's.
+- 💎 Added new Tray Icon menu: "Enable", e.g. enable/disable Mahou.
+- 📝 Simplified some code.
+- 💎 Added open input history link.
+- 📝 Added __mahouhome() snippets expression.
+- 💎 Added some new sounds to repository.
+- 💎 Added hotkey to toggle all Mahou hotkeys,hooks,timers, etc. #210
+  Works like a Pause/Unpause  Mahou.
+- 📝 Fixed another messed icons.
+- 📝 Fixed messed icons.
 
 **v2.8.0.0**<br/>
 
