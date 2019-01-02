@@ -818,7 +818,7 @@ Wallets:
 - 📝 Changed draw AA to system default.
 - 📝 Readonly tray display type combobox.
 - 💎 Added layout text in tray feature. #218
-- 💎 iTray display overhaul, now you can choose what to display.
+- 💎 Tray display overhaul, now you can choose what to display.
 - 💬 Added tooltip.
 - 📝 Dictionary updated by big+custom.
 - 📝 Added "нормально" to dictionary.
