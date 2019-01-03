@@ -31,18 +31,18 @@ namespace Mahou {
 		}
 		public static IntPtr Callback(int nCode, IntPtr wParam, IntPtr lParam) {
 			if (MMain.mahou == null || nCode < 0) return WinAPI.CallNextHookEx(_LLHook_ID, nCode, wParam, lParam);
-			if (KMHook.ExcludedProgram() && !MMain.mahou.ChangeLayoutInExcluded) 
+			if (KMHook.ExcludedProgram() && !MahouUI.ChangeLayoutInExcluded) 
 				return WinAPI.CallNextHookEx(_LLHook_ID, nCode, wParam, lParam);
 			var vk = Marshal.ReadInt32(lParam);
 			var Key = (Keys)vk;
 			SetModifs(Key, wParam);
-			if (MMain.mahou.SnippetsEnabled)
+			if (MahouUI.SnippetsEnabled)
 				if (KMHook.c_snip.Count > 0)
 					if (MMain.mahou.SnippetsExpandType == "Tab" && Key == Keys.Tab && !shift && !alt && !win && !ctrl) {
 						WinAPI.keybd_event((byte)Keys.F14, (byte)Keys.F14, (int)WinAPI.KEYEVENTF_KEYUP, 0);
 						return (IntPtr)1; // Disable event
 					}
-			if (MMain.mahou.RemapCapslockAsF18) {
+			if (MahouUI.RemapCapslockAsF18) {
 				bool _shift = !shift, _alt = !alt, _ctrl = !ctrl, _win = !win;
 				if (Key == Keys.CapsLock) {
 					for (int i = 1; i!=5; i++) {

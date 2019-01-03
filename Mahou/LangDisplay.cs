@@ -25,7 +25,7 @@ namespace Mahou
 			if (DisplayFlag) {
 				lbLang.Visible = false;
 				MahouUI.RefreshFLAG();
-				if (MMain.mahou.MouseTTAlways && mouseDisplay) {// fix for tray stuck due to variable "LayoutChanged" which being changed by this mouse tooltip always
+				if (MahouUI.MouseTTAlways && mouseDisplay) {// fix for tray stuck due to variable "LayoutChanged" which being changed by this mouse tooltip always
 					var fi = Icon.FromHandle(MahouUI.FLAG.GetHicon());
 					MMain.mahou.icon.trIcon.Icon = fi;
 					WinAPI.DestroyIcon(fi.Handle);
@@ -68,19 +68,19 @@ namespace Mahou
 		/// </summary>
 		public void RefreshLang() {
 			uint cLid = Locales.GetCurrentLocale();
-			if (DisplayFlag && MMain.mahou.DiffAppearenceForLayouts) {
+			if (DisplayFlag && MahouUI.DiffAppearenceForLayouts) {
 				if (cLid == MahouUI.MAIN_LAYOUT1 && MMain.mahou.Layout1TText.Length < 2)
 					lbLang.Text = MMain.mahou.Layout1TText;
 				else if (cLid == MahouUI.MAIN_LAYOUT2 && MMain.mahou.Layout2TText.Length < 2)
 					lbLang.Text = MMain.mahou.Layout2TText;
-				Empty = (MMain.mahou.DiffAppearenceForLayouts && lbLang.Text == " ");
+				Empty = (MahouUI.DiffAppearenceForLayouts && lbLang.Text == " ");
 			}
 			if (!Visible || Empty) return;
 			if (cLid == 0)
 				cLid = MahouUI.currentLayout;
 			if (MahouUI.UseJKL)
 				cLid = MahouUI.currentLayout;
-			if (MMain.mahou.OneLayout)
+			if (MahouUI.OneLayout)
 				cLid = MahouUI.GlobalLayout;
 			if (MMain.mahou.LDCaretTransparentBack_temp && caretDisplay)
 				transparentBG = true;
@@ -90,7 +90,7 @@ namespace Mahou
 			var notTwo = false;
 			if ((cLid & 0xffff) > 0) {
 				var clangname = new System.Globalization.CultureInfo((int)(cLid & 0xffff));
-				if (MMain.mahou.DiffAppearenceForLayouts && !DisplayFlag) {
+				if (MahouUI.DiffAppearenceForLayouts && !DisplayFlag) {
 					if (cLid == MahouUI.MAIN_LAYOUT1) {
 						ChangeColors(MMain.mahou.Layout1Font_temp, MMain.mahou.Layout1Fore_temp, 
 						             MMain.mahou.Layout1Back_temp, MMain.mahou.Layout1TransparentBack_temp);
@@ -116,7 +116,7 @@ namespace Mahou
 					}
 					ChangeLD(clangname.ThreeLetterISOLanguageName.Substring(0, 1).ToUpper() + clangname.ThreeLetterISOLanguageName.Substring(1));
 				}
-				if (!MMain.mahou.DiffAppearenceForLayouts || lbLang.Text == "") 
+				if (!MahouUI.DiffAppearenceForLayouts || lbLang.Text == "") 
 					ChangeLD(clangname.ThreeLetterISOLanguageName.Substring(0, 1).ToUpper() + clangname.ThreeLetterISOLanguageName.Substring(1));
 				if (transparentBG)
 					TransparencyKey = BackColor = lbLang.BackColor = pct_UpperArrow.BackColor = Color.Pink;

@@ -79,7 +79,7 @@ namespace Mahou {
 					_pntCR = new Point(gti.rectCaret.Left, gti.rectCaret.Top);
 					WinAPI.GetWindowRect(_fw, out _fwFCS_Re);
 				}
-				if (_clsNMfw == "PX_WINDOW_CLASS" && MMain.mahou.MCDSSupport) {
+				if (_clsNMfw == "PX_WINDOW_CLASS" && MahouUI.MCDSSupport) {
 					System.Threading.Tasks.Task.Factory.StartNew(GetDataFromMCDS);
 					var CaretToScreen = new Point(_fwFCS_Re.Left, _fwFCS_Re.Top);
 					CaretToScreen.X += _CaretST3.X + SidebarWidth + MMain.mahou.MCDS_Xpos_temp;

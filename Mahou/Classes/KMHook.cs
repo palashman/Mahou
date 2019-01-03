@@ -63,7 +63,7 @@ namespace Mahou {
 		#endregion
 		#region Keyboard, Mouse & Event hooks callbacks
 		public static void ListenKeyboard(int vkCode, uint MSG, short Flags = 0) {
-			if (MMain.mahou.CaretLangTooltipEnabled)
+			if (MahouUI.CaretLangTooltipEnabled)
 				ff_chr_wheeled = false;
 			if (vkCode > 254) return;
 			var down = ((MSG == WinAPI.WM_SYSKEYDOWN) ? true : false) || ((MSG == WinAPI.WM_KEYDOWN) ? true : false);
@@ -85,7 +85,7 @@ namespace Mahou {
 				case Keys.RWin:        win_r = down; break;
 			}
 			// Additional fix for scroll tip.
-			if (MMain.mahou.ScrollTip && Key == Keys.Scroll && down) {
+			if (MahouUI.ScrollTip && Key == Keys.Scroll && down) {
 				DoSelf(() => {
 					KeybdEvent(Keys.Scroll, 0);
 					KeybdEvent(Keys.Scroll, 2);
@@ -166,13 +166,13 @@ namespace Mahou {
 			var upper = false;
 			if (MahouUI.LangPanelUpperArrow || MahouUI.mouseLTUpperArrow || MahouUI.caretLTUpperArrow)
 				upper = IsUpperInput();
-			if (MMain.mahou.LangPanelDisplay)
+			if (MahouUI.LangPanelDisplay)
 				if (MahouUI.LangPanelUpperArrow)
 					MMain.mahou._langPanel.DisplayUpper(upper);
-			if (MMain.mahou.MouseLangTooltipEnabled)
+			if (MahouUI.MouseLangTooltipEnabled)
 				if (MahouUI.mouseLTUpperArrow)
 					MMain.mahou.mouseLangDisplay.DisplayUpper(upper);
-			if (MMain.mahou.CaretLangTooltipEnabled)
+			if (MahouUI.CaretLangTooltipEnabled)
 				if (MahouUI.caretLTUpperArrow)
 					MMain.mahou.caretLangDisplay.DisplayUpper(upper);
 			#endregion
@@ -192,7 +192,7 @@ namespace Mahou {
 			}
 			#endregion
 			#region Snippets
-			if (MMain.mahou.SnippetsEnabled && !ExcludedProgram()) {
+			if (MahouUI.SnippetsEnabled && !ExcludedProgram()) {
 				if (printable && printable_mod && down) {
 					if (sym == '\0')
 						sym = getSym(vkCode);
@@ -224,7 +224,7 @@ namespace Mahou {
 					if (MahouUI.AutoSwitchEnabled && !matched && as_wrongs != null && Key == Keys.Space) {
 						var CW = c_word_backup;
 						var CLW = c_word_backup_last;
-						if (MMain.mahou.AddOneSpace) {
+						if (MahouUI.AddOneSpace) {
 							CW = MMain.c_word;
 							CLW = c_word_backup;
 						}
@@ -237,7 +237,7 @@ namespace Mahou {
 		            		var last2words = CLW.Concat(dash).Concat(CW).ToList();
 		            		asls = matched = CheckAutoSwitch(snip2x, last2words);
 		            		if (!matched) {
-			            		last2words = CLW.Concat(MMain.mahou.AddOneSpace ? new List<YuKey>() : SPace).Concat(CW).ToList();
+			            		last2words = CLW.Concat(MahouUI.AddOneSpace ? new List<YuKey>() : SPace).Concat(CW).ToList();
 			            		asls = matched = CheckAutoSwitch(snip2x, last2words);
 		            		}
 		            	}
@@ -286,7 +286,7 @@ namespace Mahou {
 					clickAfterALT = false;
 				if (Key != Keys.LShiftKey && Key != Keys.RShiftKey)
 					clickAfterSHIFT = false;
-			if (MMain.mahou.ChangeLayouByKey) {
+			if (MahouUI.ChangeLayouByKey) {
 					if (((Key == Keys.LControlKey || Key == Keys.RControlKey) && !MahouUI.CtrlInHotkey) ||
 					    ((Key == Keys.LShiftKey || Key == Keys.RShiftKey) && !MahouUI.ShiftInHotkey) ||
 					    ((Key == Keys.LMenu || Key == Keys.RMenu) && !MahouUI.AltInHotkey) ||
@@ -326,7 +326,7 @@ namespace Mahou {
 							MMain.c_words.RemoveAt(MMain.c_words.Count - 1);
 						}
 					}
-					if (MMain.mahou.SnippetsEnabled) {
+					if (MahouUI.SnippetsEnabled) {
 						if (c_snip.Count != 0) {
 							c_snip.RemoveAt(c_snip.Count - 1);
 							Logging.Log("[SNI] >Removed one character from current snippet.");
@@ -355,7 +355,7 @@ namespace Mahou {
 					Logging.Log("[FUN] > Adding one new empty word to words, and adding to it [Space] key.");
 					MMain.c_words.Add(new List<YuKey>());
 					MMain.c_words[MMain.c_words.Count - 1].Add(new YuKey() { key = Keys.Space });
-					if (MMain.mahou.AddOneSpace && MMain.c_word.Count != 0 &&
+					if (MahouUI.AddOneSpace && MMain.c_word.Count != 0 &&
 					   MMain.c_word[MMain.c_word.Count - 1].key != Keys.Space) {
 						Logging.Log("[FUN] > Eat one space passed, next space will clear last word.");
 						MMain.c_word.Add(new YuKey() { key = Keys.Space });
@@ -366,7 +366,7 @@ namespace Mahou {
 					}
 				}
 				if (Key == Keys.Enter) {
-					if (MMain.mahou.Add1NL && MMain.c_word.Count != 0 && 
+					if (MahouUI.Add1NL && MMain.c_word.Count != 0 && 
 					    MMain.c_word[MMain.c_word.Count - 1].key != Keys.Enter) {
 						Logging.Log("[FUN] > Eat one New Line passed, next Enter will clear last word.");
 						MMain.c_word.Add(new YuKey() { key = Keys.Enter });
@@ -431,7 +431,7 @@ namespace Mahou {
 		}
 		public static void ListenMouse(ushort MSG) {
 			if ((MSG == (ushort)WinAPI.RawMouseButtons.MouseWheel)) {
-				if (MMain.mahou.caretLangDisplay.Visible && MMain.mahou.CaretLangTooltipEnabled) {
+				if (MMain.mahou.caretLangDisplay.Visible && MahouUI.CaretLangTooltipEnabled) {
 					var _fw = WinAPI.GetForegroundWindow();
 					var _clsNMb = new StringBuilder(40);
 					WinAPI.GetClassName(_fw, _clsNMb, _clsNMb.Capacity);
@@ -496,7 +496,7 @@ namespace Mahou {
 					}
 				}
 			#endregion
-			if (MMain.mahou.LDUseWindowsMessages) {
+			if (MahouUI.LDUseWindowsMessages) {
 				if (MSG == (ushort)WinAPI.RawMouseButtons.LeftDown)
 					LMB_down = true;
 				else if (MSG == (ushort)WinAPI.RawMouseButtons.LeftUp)
@@ -513,23 +513,23 @@ namespace Mahou {
 					MSG == (ushort)WinAPI.RawMouseButtons.LeftUp ||
 					MSG == (ushort)WinAPI.RawMouseButtons.RightUp ||
 					MSG == (ushort)WinAPI.RawMouseButtons.MiddleUp) {
-					if (MMain.mahou.LDForCaret) {
+					if (MahouUI.LDForCaret) {
 						MMain.mahou.UpdateCaredLD();
 					}
 				}
 				if (MSG == (ushort)WinAPI.RawMouseButtons.LeftUp ||
 					MSG == (ushort)WinAPI.RawMouseButtons.RightUp ||
 					MSG == (ushort)WinAPI.RawMouseButtons.MiddleUp)
-					if (MMain.mahou.CaretLangTooltipEnabled)
+					if (MahouUI.CaretLangTooltipEnabled)
 						ff_chr_wheeled = false;
 				if (skip_mouse_events-- == 0 || skip_mouse_events == 0) {
 					skip_mouse_events = MahouUI.LD_MouseSkipMessagesCount;
 					if (MSG == (ushort)WinAPI.RawMouseFlags.MoveRelative) {
-						if (MMain.mahou.LDForMouse) {
+						if (MahouUI.LDForMouse) {
 							MMain.mahou.UpdateMouseLD();
 						}
 						if ((LMB_down || RMB_down || MMB_down)) {
-							if (MMain.mahou.LDForCaret) {
+							if (MahouUI.LDForCaret) {
 								MMain.mahou.UpdateCaredLD();
 							}
 						}
@@ -539,7 +539,7 @@ namespace Mahou {
 		}
 		public static void LDEventHook(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject,
 		                                     int idChild, uint dwEventThread, uint dwmsEventTime) {
-			if (MMain.mahou.LDUseWindowsMessages) {
+			if (MahouUI.LDUseWindowsMessages) {
 				if (eventType == WinAPI.EVENT_OBJECT_FOCUS) {
 					if (MMain.mahou != null)
 						MMain.mahou.UpdateLDs();
@@ -548,16 +548,16 @@ namespace Mahou {
 		}
 		public static void EventHookCallback(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject,
 		                                       int idChild, uint dwEventThread, uint dwmsEventTime) {
-			if (MMain.mahou.PersistentLayoutOnWindowChange) {
+			if (MahouUI.PersistentLayoutOnWindowChange) {
 				var proc = Locales.ActiveWindowProcess();
 				var cont = PLC_HWNDs.Contains(hwnd);
-				if (!cont || !MMain.mahou.PersistentLayoutOnlyOnce) {
-					if (MMain.mahou.PersistentLayoutForLayout1)
+				if (!cont || !MahouUI.PersistentLayoutOnlyOnce) {
+					if (MahouUI.PersistentLayoutForLayout1)
 						MMain.mahou.PersistentLayoutCheck(MMain.mahou.PersistentLayout1Processes, MahouUI.MAIN_LAYOUT1, proc.ProcessName);
-					if (MMain.mahou.PersistentLayoutForLayout2)
+					if (MahouUI.PersistentLayoutForLayout2)
 						MMain.mahou.PersistentLayoutCheck(MMain.mahou.PersistentLayout2Processes, MahouUI.MAIN_LAYOUT2, proc.ProcessName);
 				}
-				if (MMain.mahou.PersistentLayoutOnlyOnce && !cont)
+				if (MahouUI.PersistentLayoutOnlyOnce && !cont)
 					PLC_HWNDs.Add(hwnd);
 			}
 			uint hwndLayout = Locales.GetCurrentLocale(hwnd);
@@ -584,7 +584,7 @@ namespace Mahou {
 				Logging.Log("[FOCUS] > Updating currentLayout on window activate to ["+MahouUI.currentLayout+"]...");
 			}
 			Logging.Log("Hwnd " + hwnd + ", layout: " + hwndLayout + ", Mahou layout: " + MahouUI.GlobalLayout);		
-			if (MMain.mahou.OneLayout)
+			if (MahouUI.OneLayout)
 				if (hwndLayout != MahouUI.GlobalLayout) {
 					var title = new StringBuilder(128);
 					WinAPI.GetWindowText(hwnd, title, 127);
@@ -641,34 +641,34 @@ namespace Mahou {
 	        					Debug.WriteLine("snl: " +snil + ", l:" +snl + "\nas_crI: " + as_corrects[i] + ", l: " +asl + "\nSKIP: " +skipLS);
 	        					var ofk = false;
 	        					if (!skipLS) {
-	        						if (MahouUI.UseJKL && MMain.mahou.SwitchBetweenLayouts && MMain.mahou.EmulateLS) {
+	        						if (MahouUI.UseJKL && MahouUI.SwitchBetweenLayouts && MahouUI.EmulateLS) {
 										jklXHidServ.OnLayoutAction = asl;
 										var was = Locales.GetCurrentLocale();
 	        							jklXHidServ.ActionOnLayout = () => {
-											if (!MMain.mahou.AddOneSpace)
+											if (!MahouUI.AddOneSpace)
 												KInputs.MakeInput(KInputs.AddPress(Keys.Back));
-											else if (!MMain.mahou.AutoSwitchSpaceAfter) {
+											else if (!MahouUI.AutoSwitchSpaceAfter) {
 												KInputs.MakeInput(KInputs.AddPress(Keys.Back));
 												word.RemoveAt(word.Count-1);
 											}
 				        					StartConvertWord(word.ToArray(), was, true);
-											ExpandSnippet(snip, as_corrects[i], !MMain.mahou.AddOneSpace && MMain.mahou.AutoSwitchSpaceAfter,
-											MMain.mahou.AutoSwitchSwitchToGuessLayout, true);
+											ExpandSnippet(snip, as_corrects[i], !MahouUI.AddOneSpace && MahouUI.AutoSwitchSpaceAfter,
+											MahouUI.AutoSwitchSwitchToGuessLayout, true);
 										};
 	        						} else ofk = true;
         							ChangeToLayout(Locales.ActiveWindow(), asl);
         							Debug.WriteLine("ASL"+asl);
 	        					} else ofk = true;
 	        					if (ofk) {
-									if (!MMain.mahou.AddOneSpace)
+									if (!MahouUI.AddOneSpace)
 										KInputs.MakeInput(KInputs.AddPress(Keys.Back));
-									else if (!MMain.mahou.AutoSwitchSpaceAfter) {
+									else if (!MahouUI.AutoSwitchSpaceAfter) {
 										KInputs.MakeInput(KInputs.AddPress(Keys.Back));
 										word.RemoveAt(word.Count-1);
 									}
 									StartConvertWord(word.ToArray(), Locales.GetCurrentLocale(), true);
-									ExpandSnippet(snip, as_corrects[i], !MMain.mahou.AddOneSpace && MMain.mahou.AutoSwitchSpaceAfter,
-		        					              MMain.mahou.AutoSwitchSwitchToGuessLayout, true);
+									ExpandSnippet(snip, as_corrects[i], !MahouUI.AddOneSpace && MahouUI.AutoSwitchSpaceAfter,
+		        					              MahouUI.AutoSwitchSwitchToGuessLayout, true);
 	        					}
 								matched = true;
 								break;
@@ -688,7 +688,7 @@ namespace Mahou {
 		}
 		static bool CheckSnippet(string snip, bool xx2 = false) {
 			var matched = false;
-			var x2 = xx2 && aftsingleAS && !MMain.mahou.AutoSwitchSpaceAfter;
+			var x2 = xx2 && aftsingleAS && !MahouUI.AutoSwitchSpaceAfter;
 			Logging.Log("[SNI] > Current snippet is [" + snip + "].");
 			for (int i = 0; i < snipps.Length; i++) {
 				if (snipps[i] == null) break;
@@ -728,7 +728,7 @@ namespace Mahou {
 						Logging.Log("[SNI] > Current snippet [" + snip + "] matched with "+__ANY__+" existing snippet [" + exps[i] + "].");
 						var exp = exps[i].Replace(__ANY__, any);
 //						Debug.WriteLine("exp: " + exp);
-						ExpandSnippet(snip, exp, MMain.mahou.SnippetSpaceAfter, MMain.mahou.SnippetsSwitchToGuessLayout, false, x2);
+						ExpandSnippet(snip, exp, MahouUI.SnippetSpaceAfter, MahouUI.SnippetsSwitchToGuessLayout, false, x2);
 						aftsingleAS = false;
 						break;
 					}
@@ -741,7 +741,7 @@ namespace Mahou {
     					if (MahouUI.SoundOnSnippets2)
     						MahouUI.Sound2Play();
 						Logging.Log("[SNI] > Current snippet [" + snip + "] matched existing snippet [" + exps[i] + "].");
-						ExpandSnippet(snip, exps[i], MMain.mahou.SnippetSpaceAfter, MMain.mahou.SnippetsSwitchToGuessLayout, false, x2);
+						ExpandSnippet(snip, exps[i], MahouUI.SnippetSpaceAfter, MahouUI.SnippetsSwitchToGuessLayout, false, x2);
 						matched = true;
 					} else {
 						Logging.Log("[SNI] > Snippet ["+snip+"] has no expansion, snippet is not finished or its expansion commented.", 1);
@@ -1214,7 +1214,7 @@ namespace Mahou {
 			for (int i = 1; i!=5; i++) {
 				if ((MSG == WinAPI.WM_KEYUP || MSG == WinAPI.WM_SYSKEYUP || vkCode == 240)) {
 		       		var specificKey = (int)typeof(MahouUI).GetField("Key"+i).GetValue(MMain.mahou);
-					if (MMain.mahou.ChangeLayoutInExcluded || !ExcludedProgram()) {
+					if (MahouUI.ChangeLayoutInExcluded || !ExcludedProgram()) {
 						#region Switch between layouts with one key
 						bool F18 = Key == Keys.F18;
 						bool GJIME = false;
@@ -1417,7 +1417,7 @@ namespace Mahou {
 				Logging.Log("[CLWORD] > Cleared last line" + ReasonEnding);
 			}
 			if (Snippet) {
-				if (MMain.mahou.SnippetsEnabled) {
+				if (MahouUI.SnippetsEnabled) {
 					c_snip.Clear();
 					Logging.Log("[CLWORD] > Cleared current snippet" + ReasonEnding);
 				}
@@ -1461,13 +1461,13 @@ namespace Mahou {
 						KInputs.MakeInput(KInputs.AddPress(Keys.Back));
 						var result = "";
 						int items = 0;
-						if (MMain.mahou.ConvertSelectionLS && !MMain.mahou.OneLayoutWholeWord) {
+						if (MahouUI.ConvertSelectionLS && !MahouUI.OneLayoutWholeWord) {
 							Logging.Log("[CS] > Using CS-Switch mode.");
 							var wasLocale = Locales.GetCurrentLocale() & 0xffff;
 							var wawasLocale = wasLocale & 0xffff;
 							ChangeLayout(true);
 							uint nowLocale = 0;
-							if(MMain.mahou.SwitchBetweenLayouts) {
+							if(MahouUI.SwitchBetweenLayouts) {
 								nowLocale = wasLocale == (MahouUI.MAIN_LAYOUT1 & 0xffff)
 									? MahouUI.MAIN_LAYOUT2 & 0xffff
 									: MahouUI.MAIN_LAYOUT1 & 0xffff;
@@ -1498,7 +1498,7 @@ namespace Mahou {
 								var bytes2 = new byte[255];
 								if (state2 == 1)
 									bytes2[(int)Keys.ShiftKey] = 0xFF;
-								if (MMain.mahou.ConvertSelectionLSPlus) {
+								if (MahouUI.ConvertSelectionLSPlus) {
 									Logging.Log("[CS] > Using Experimental CS-Switch mode.");
 									WinAPI.ToUnicodeEx((uint)scan, (uint)scan, bytes, s, s.Capacity, 0, (IntPtr)wasLocale);
 									Logging.Log("[CS] > Char 1 is [" + s + "] in locale +[" + wasLocale + "].");
@@ -1553,7 +1553,7 @@ namespace Mahou {
 							KInputs.MakeInput(q.ToArray());
 						} else {
 							var l1 = cs_layout_last;
-							if (MMain.mahou.ConvertSelectionLS) {
+							if (MahouUI.ConvertSelectionLS) {
 								Logging.Log("[CS] > Using Layout Switch in Convert Selection.");
 								l1 = Locales.GetCurrentLocale();
 								if (MahouUI.UseJKL)
@@ -1563,7 +1563,7 @@ namespace Mahou {
 							var l2 = GetNextLayout(l1).uId;
 							Debug.WriteLine("next: " +l2);
 							var index = 0;
-							if (MMain.mahou.OneLayoutWholeWord) {
+							if (MahouUI.OneLayoutWholeWord) {
 								Logging.Log("[CS] > Using one layout whole word convert selection mode.");
 								var allWords = SplitWords(ClipStr);
 								var word_index = 0;
@@ -1783,7 +1783,7 @@ namespace Mahou {
 			Memory.Flush();
 		}
 		static void ReSelect(int count) {
-			if (MMain.mahou.ReSelect) {
+			if (MahouUI.ReSelect) {
 				//reselects text
 				Logging.Log("Reselecting text.");
 				KInputs.MakeInput(KInputs.AddPress(Keys.Left, count), (int)WinAPI.MOD_SHIFT);
@@ -1809,7 +1809,7 @@ namespace Mahou {
 			return repl;
 		}
 		static string GermanLayoutFix(char c) {
-			if (!MMain.mahou.QWERTZ_fix)
+			if (!MahouUI.QWERTZ_fix)
 				return "";
 			var T = "";
 			switch (c) {
@@ -1924,7 +1924,7 @@ namespace Mahou {
 //			by pressing "Convert Selection hotkey" without selected text.
 			NativeClipboard.Clear();
 			Logging.Log("Getting selected text.");
-			if (MMain.mahou.SelectedTextGetMoreTries)
+			if (MahouUI.SelectedTextGetMoreTries)
 				for (int i = 0; i != MMain.mahou.SelectedTextGetMoreTriesCount; i++) {
 					if (WaitForClip2BeFree()) {
 							ClipStr = MakeCopy();
@@ -1983,13 +1983,13 @@ namespace Mahou {
 			} else {
 				Debug.WriteLine(">> DS" + self_action.Method.Name);
 				MMain.mahou.Invoke((MethodInvoker)delegate {
-                   	if (MMain.mahou.RemapCapslockAsF18) { LLHook.UnSet(); } MMain.mahou.UnregisterHotkeys(); });
+                   	if (MahouUI.RemapCapslockAsF18) { LLHook.UnSet(); } MMain.mahou.UnregisterHotkeys(); });
 				MMain.rif.Invoke((MethodInvoker)delegate{MMain.rif.RegisterRawInputDevices(IntPtr.Zero, WinAPI.RawInputDeviceFlags.Remove);});
 				selfie = true;
 				busy_on = self_action.Method.Name;
 				self_action();
 				MMain.mahou.Invoke((MethodInvoker)delegate {
-                   	if (MMain.mahou.RemapCapslockAsF18) { LLHook.Set(); } MMain.mahou.RegisterHotkeys(); });
+                   	if (MahouUI.RemapCapslockAsF18) { LLHook.Set(); } MMain.mahou.RegisterHotkeys(); });
 				MMain.rif.Invoke((MethodInvoker)delegate{MMain.rif.RegisterRawInputDevices(MMain.rif.Handle);});
 				selfie = false;
 				Debug.WriteLine(">> ES" + self_action.Method.Name);
@@ -2013,7 +2013,7 @@ namespace Mahou {
 				Debug.WriteLine(">> LC Aft. " + (MMain.locales.Length * 20));
 				Logging.Log("Deleting old word, with lenght of [" + YuKeys.Length + "].");
 				KInputs.MakeInput(KInputs.AddPress(Keys.Back, backs));
-				if (MMain.mahou.UseDelayAfterBackspaces)
+				if (MahouUI.UseDelayAfterBackspaces)
 					Thread.Sleep(MMain.mahou.DelayAfterBackspaces);
 				if(!skipsnip)
 					c_snip.Clear();
@@ -2073,7 +2073,7 @@ namespace Mahou {
 					MahouUI.Sound2Play();
 				var wasLocale = Locales.GetCurrentLocale() & 0xFFFF;
 				var desl = ChangeLayout(true);
-				if (MahouUI.UseJKL && MMain.mahou.SwitchBetweenLayouts && MMain.mahou.EmulateLS) {
+				if (MahouUI.UseJKL && MahouUI.SwitchBetweenLayouts && MahouUI.EmulateLS) {
 					Debug.WriteLine("JKL-ed CLW");
 					jklXHidServ.OnLayoutAction = desl;
 					jklXHidServ.ActionOnLayout = () => StartConvertWord(YuKeys, wasLocale);
@@ -2096,10 +2096,10 @@ namespace Mahou {
 		static bool SymbolIgnoreRules(Keys key, bool upper, uint wasLocale) {
 			Logging.Log("Passing Key = ["+key+"]+["+(upper ? "UPPER" : "lower") + "] with WasLayoutID = ["+wasLocale+"] through symbol ignore rules.");
 			if (MMain.mahou.HKSymIgn.Enabled &&
-			    MMain.mahou.SymIgnEnabled &&
+			    MahouUI.SymIgnEnabled &&
 			    (wasLocale == 1033 || wasLocale == 1041) &&
-			    ((Locales.AllList().Length < 3 && !MMain.mahou.SwitchBetweenLayouts) ||
-			    MMain.mahou.SwitchBetweenLayouts) && (
+			    ((Locales.AllList().Length < 3 && !MahouUI.SwitchBetweenLayouts) ||
+			    MahouUI.SwitchBetweenLayouts) && (
 			        key == Keys.Oem5 ||
 			        key == Keys.OemOpenBrackets ||
 			        key == Keys.Oem6 ||
@@ -2175,7 +2175,7 @@ namespace Mahou {
 		       		KInputs.MakeInput(KInputs.AddPress(Keys.Space), (int)WinAPI.MOD_CONTROL);
 					Thread.Sleep(13);
 				} else {
-					if (MMain.mahou.SwitchBetweenLayouts) {
+					if (MahouUI.SwitchBetweenLayouts) {
 						uint last = 0;
 						bool conhost = false;
 						if (MahouUI.UseJKL) {
@@ -2199,11 +2199,11 @@ namespace Mahou {
 							last = nowLocale;
 							ChangeToLayout(Locales.ActiveWindow(), notnowLocale, conhost);
 							desired = notnowLocale;
-							if (MMain.mahou.EmulateLS)
+							if (MahouUI.EmulateLS)
 								break;
 						}
 					} else {
-						if (MMain.mahou.EmulateLS) {
+						if (MahouUI.EmulateLS) {
 							CycleEmulateLayoutSwitch();
 						} else {
 							CycleLayoutSwitch();
@@ -2220,7 +2220,7 @@ namespace Mahou {
 		/// <param name="LayoutId">Desired layout to switch to.</param>
 		public static void ChangeToLayout(IntPtr hwnd, uint LayoutId, bool conhost = false) {
 			Debug.WriteLine(">> CTL");
-			if (MMain.mahou.EmulateLS) 
+			if (MahouUI.EmulateLS) 
 				EmulateChangeToLayout(LayoutId, conhost);
 			 else
 			 	NormalChangeToLayout(hwnd, LayoutId, conhost);
@@ -2335,7 +2335,7 @@ namespace Mahou {
 				if (last != 0 && cur != last)
 					break;
 				var br = false;
-				if (MMain.mahou.SwitchBetweenLayouts) {
+				if (MahouUI.SwitchBetweenLayouts) {
 					if (cur == MahouUI.MAIN_LAYOUT1) 
 						loc.uId = MahouUI.MAIN_LAYOUT2;
 					else if (cur == MahouUI.MAIN_LAYOUT2) {
@@ -2488,7 +2488,7 @@ namespace Mahou {
 			string guess = "";
 			uint target = 0;
 			if (_target == 0) {
-				if (MMain.mahou.SwitchBetweenLayouts) {
+				if (MahouUI.SwitchBetweenLayouts) {
 					var cur = Locales.GetCurrentLocale();
 					if (MahouUI.UseJKL)
 						cur = MahouUI.currentLayout;

@@ -147,7 +147,7 @@ namespace Mahou {
 			if (MMain.mahou == null) { base.OnPaint(e); return; }
 			Graphics g = CreateGraphics();
 			var pn = new Pen(Color.Black);
-			if (AeroEnabled && MMain.mahou.LangPanelBorderAero)
+			if (AeroEnabled && MahouUI.LangPanelBorderAero)
 				pn = new Pen(CurrentAeroColor());
 			else
 				pn.Color = MMain.mahou.LangPanelBorderColor;

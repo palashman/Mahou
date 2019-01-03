@@ -139,8 +139,8 @@ namespace Mahou {
 			if (hotkey.ID == (int)hkID && hotkey.Enabled) {
 				if (hkOK || once) {
 					Logging.Log("Hotkey [" + Enum.GetName(typeof(HKID), hkID) + "] fired.");
-					if (MMain.mahou.BlockHKWithCtrl && ContainsModifier((int)hotkey.Modifiers, (int)WinAPI.MOD_CONTROL)) { } else {
-						if (hotkey.Modifiers > 0 && MMain.mahou.RePress) {
+					if (MahouUI.BlockHKWithCtrl && ContainsModifier((int)hotkey.Modifiers, (int)WinAPI.MOD_CONTROL)) { } else {
+						if (hotkey.Modifiers > 0 && MahouUI.RePress) {
 							KMHook.hotkeywithmodsfired = true;
 							KMHook.RePressAfter(Convert.ToInt32(hotkey.Modifiers));
 						}
@@ -151,7 +151,7 @@ namespace Mahou {
 					}
 					KMHook.IfKeyIsMod((System.Windows.Forms.Keys)hotkey.VirtualKeyCode);
 					hkAction();
-					if (MMain.mahou.RePress)
+					if (MahouUI.RePress)
 						KMHook.RePress();
 				} else if (hotkey.Double) {
 					Logging.Log("Waiting for second hotkey ["+Enum.GetName(typeof(HKID), hkID) +"] press.");

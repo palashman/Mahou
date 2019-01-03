@@ -64,7 +64,7 @@ namespace Mahou {
 		public static Font TrText, TrTitle;
 		public static int TrTransparency;
 		/// <summary> In memory settings, for timers/hooks.</summary>
-		public bool DiffAppearenceForLayouts, LDForCaretOnChange, LDForMouseOnChange, ScrollTip, AddOneSpace,
+		public static bool DiffAppearenceForLayouts, LDForCaretOnChange, LDForMouseOnChange, ScrollTip, AddOneSpace,
 					TrayFlags, TrayText, SymIgnEnabled, TrayIconVisible, SnippetsEnabled, ChangeLayouByKey, EmulateLS,
 					RePress, BlockHKWithCtrl, blueIcon, SwitchBetweenLayouts, SelectedTextGetMoreTries, ReSelect,
 					ConvertSelectionLS, ConvertSelectionLSPlus, MCDSSupport, OneLayoutWholeWord,
@@ -126,7 +126,7 @@ namespace Mahou {
 		/// <summary> Temporary specific keys. </summary>
 		public int Key1, Key2, Key3, Key4;
 		/// <summary> LangPanel temporary bool variables. </summary>
-		public bool LangPanelDisplay, LangPanelBorderAero;
+		public static bool LangPanelDisplay, LangPanelBorderAero;
 		/// <summary> LangPanel temporary int variables. </summary>
 		public int LangPanelRefreshRate, LangPanelTransparency;
 		/// <summary> LangPanel temporary color variables. </summary>
@@ -326,7 +326,7 @@ namespace Mahou {
 				#region SpecificKeys
 				var specific = false;
 				if (m.WParam.ToInt32() >= 201 && m.WParam.ToInt32() <= 299 && 
-				    (MMain.mahou.ChangeLayoutInExcluded || !KMHook.ExcludedProgram())) {
+				    (MahouUI.ChangeLayoutInExcluded || !KMHook.ExcludedProgram())) {
 					specific = true;
 					if (!OnceSpecific) {
 						OnceSpecific = true;
@@ -1694,7 +1694,7 @@ DEL "+restartMahouPath;
 				lcid = (int)(MahouUI.currentLayout & 0xffff);
 			var ol = false;
 			if (MMain.mahou != null) 
-				ol = MMain.mahou.OneLayout;
+				ol = MahouUI.OneLayout;
 			else 
 				ol = MMain.MyConfs.ReadBool("Layouts", "OneLayout");
 			if (ol)
@@ -1763,7 +1763,7 @@ DEL "+restartMahouPath;
 								Logging.Log("Missing flag for language [" + flagname + " / " + lcid + "].", 2);
 								break;
 						}
-					if (MMain.mahou.TrayText) {
+					if (TrayText) {
 						Debug.WriteLine("Drawing the text layout *icon* in tray.");
 						var n2 = true;
 						var t = char.ToUpper(flagname[0]) + flagname.Substring(1);

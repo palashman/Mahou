@@ -107,7 +107,7 @@ namespace Mahou {
 	                Type = WinAPI.INPUT_KEYBOARD,
 	                Data = {
 	                    Keyboard = new WinAPI.KEYBDINPUT {
-	                    	Vk = Mahou.MMain.mahou.GuessKeyCodeFix ? resultvk : (ushort)0,
+	                    	Vk = MahouUI.GuessKeyCodeFix ? resultvk : (ushort)0,
 	                        Flags = (UInt32)(WinAPI.KEYEVENTF_UNICODE),
 	                        Scan = (UInt16)s,
 	                        ExtraInfo = IntPtr.Zero,
@@ -119,7 +119,7 @@ namespace Mahou {
 	                Type = WinAPI.INPUT_KEYBOARD,
 	                Data = {
 	                    Keyboard = new WinAPI.KEYBDINPUT {
-	                    	Vk = Mahou.MMain.mahou.GuessKeyCodeFix ? resultvk : (ushort)0,
+	                    	Vk = MahouUI.GuessKeyCodeFix ? resultvk : (ushort)0,
 	                        Flags = (UInt32)(WinAPI.KEYEVENTF_UNICODE | WinAPI.KEYEVENTF_KEYUP),
 	                        Scan = (UInt16)s,
 	                        ExtraInfo = IntPtr.Zero,
