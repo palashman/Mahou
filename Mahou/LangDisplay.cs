@@ -69,10 +69,10 @@ namespace Mahou
 		public void RefreshLang() {
 			uint cLid = Locales.GetCurrentLocale();
 			if (DisplayFlag && MahouUI.DiffAppearenceForLayouts) {
-				if (cLid == MahouUI.MAIN_LAYOUT1 && MMain.mahou.Layout1TText.Length < 2)
-					lbLang.Text = MMain.mahou.Layout1TText;
-				else if (cLid == MahouUI.MAIN_LAYOUT2 && MMain.mahou.Layout2TText.Length < 2)
-					lbLang.Text = MMain.mahou.Layout2TText;
+				if (cLid == MahouUI.MAIN_LAYOUT1 && MahouUI.Layout1TText.Length < 2)
+					lbLang.Text = MahouUI.Layout1TText;
+				else if (cLid == MahouUI.MAIN_LAYOUT2 && MahouUI.Layout2TText.Length < 2)
+					lbLang.Text = MahouUI.Layout2TText;
 				Empty = (MahouUI.DiffAppearenceForLayouts && lbLang.Text == " ");
 			}
 			if (!Visible || Empty) return;
@@ -82,9 +82,9 @@ namespace Mahou
 				cLid = MahouUI.currentLayout;
 			if (MahouUI.OneLayout)
 				cLid = MahouUI.GlobalLayout;
-			if (MMain.mahou.LDCaretTransparentBack_temp && caretDisplay)
+			if (MahouUI.LDCaretTransparentBack_temp && caretDisplay)
 				transparentBG = true;
-			else if (MMain.mahou.LDMouseTransparentBack_temp && mouseDisplay)
+			else if (MahouUI.LDMouseTransparentBack_temp && mouseDisplay)
 				transparentBG = true;
 			else transparentBG = false;
 			var notTwo = false;
@@ -92,27 +92,27 @@ namespace Mahou
 				var clangname = new System.Globalization.CultureInfo((int)(cLid & 0xffff));
 				if (MahouUI.DiffAppearenceForLayouts && !DisplayFlag) {
 					if (cLid == MahouUI.MAIN_LAYOUT1) {
-						ChangeColors(MMain.mahou.Layout1Font_temp, MMain.mahou.Layout1Fore_temp, 
-						             MMain.mahou.Layout1Back_temp, MMain.mahou.Layout1TransparentBack_temp);
-						ChangeSize(MMain.mahou.Layout1Height_temp, MMain.mahou.Layout1Width_temp);
-						ChangeLD(MMain.mahou.Layout1TText);
+						ChangeColors(MahouUI.Layout1Font_temp, MahouUI.Layout1Fore_temp, 
+						             MahouUI.Layout1Back_temp, MahouUI.Layout1TransparentBack_temp);
+						ChangeSize(MahouUI.Layout1Height_temp, MahouUI.Layout1Width_temp);
+						ChangeLD(MahouUI.Layout1TText);
 					} else if (cLid == MahouUI.MAIN_LAYOUT2) {
-						ChangeColors(MMain.mahou.Layout2Font_temp, MMain.mahou.Layout2Fore_temp, 
-						             MMain.mahou.Layout2Back_temp, MMain.mahou.Layout2TransparentBack_temp);
-						ChangeSize(MMain.mahou.Layout2Height_temp, MMain.mahou.Layout2Width_temp);
-						ChangeLD(MMain.mahou.Layout2TText);
+						ChangeColors(MahouUI.Layout2Font_temp, MahouUI.Layout2Fore_temp, 
+						             MahouUI.Layout2Back_temp, MahouUI.Layout2TransparentBack_temp);
+						ChangeSize(MahouUI.Layout2Height_temp, MahouUI.Layout2Width_temp);
+						ChangeLD(MahouUI.Layout2TText);
 					} else notTwo = true;
 				} else notTwo = true;
 				if (notTwo) {
 					if (mouseDisplay) {
-						ChangeColors(MMain.mahou.LDMouseFont_temp, MMain.mahou.LDMouseFore_temp,
-						             MMain.mahou.LDMouseBack_temp, MMain.mahou.LDMouseTransparentBack_temp);
-						ChangeSize(MMain.mahou.LDMouseHeight_temp, MMain.mahou.LDMouseWidth_temp);
+						ChangeColors(MahouUI.LDMouseFont_temp, MahouUI.LDMouseFore_temp,
+						             MahouUI.LDMouseBack_temp, MahouUI.LDMouseTransparentBack_temp);
+						ChangeSize(MahouUI.LDMouseHeight_temp, MahouUI.LDMouseWidth_temp);
 					}
 					if (caretDisplay) {
-						ChangeColors(MMain.mahou.LDCaretFont_temp, MMain.mahou.LDCaretFore_temp, 
-						             MMain.mahou.LDCaretBack_temp, MMain.mahou.LDCaretTransparentBack_temp);
-						ChangeSize(MMain.mahou.LDCaretHeight_temp, MMain.mahou.LDCaretWidth_temp);
+						ChangeColors(MahouUI.LDCaretFont_temp, MahouUI.LDCaretFore_temp, 
+						             MahouUI.LDCaretBack_temp, MahouUI.LDCaretTransparentBack_temp);
+						ChangeSize(MahouUI.LDCaretHeight_temp, MahouUI.LDCaretWidth_temp);
 					}
 					ChangeLD(clangname.ThreeLetterISOLanguageName.Substring(0, 1).ToUpper() + clangname.ThreeLetterISOLanguageName.Substring(1));
 				}

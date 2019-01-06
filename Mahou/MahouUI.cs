@@ -94,21 +94,21 @@ namespace Mahou {
  				HKRandomCase_tempDouble, HKSwapCase_tempDouble, HKTransliteration_tempDouble,
  				HKToggleLangPanel_tempDouble, HKShowSelectionTranslate_tempDouble, HKToggleMahou_tempDouble;
 		/// <summary> Temporary colors of LangDisplays appearece. </summary>
-		public Color LDMouseFore_temp, LDCaretFore_temp, LDMouseBack_temp, LDCaretBack_temp, 
+		public static Color LDMouseFore_temp, LDCaretFore_temp, LDMouseBack_temp, LDCaretBack_temp, 
 		 	  Layout1Fore_temp, Layout2Fore_temp, Layout1Back_temp, Layout2Back_temp;
 		/// <summary> Temporary fonts of LangDisplays appearece. </summary>
-		public Font LDMouseFont_temp, LDCaretFont_temp, Layout1Font_temp, Layout2Font_temp;
+		public static Font LDMouseFont_temp, LDCaretFont_temp, Layout1Font_temp, Layout2Font_temp;
 		/// <summary> Temporary use flags of LangDisplays appearece. </summary>
-		public bool LDMouseUseFlags_temp, LDCaretUseFlags_temp;
+		public static bool LDMouseUseFlags_temp, LDCaretUseFlags_temp;
 		/// <summary> Temporary transparent backgrounds of LangDisplays appearece. </summary>
-		public bool LDMouseTransparentBack_temp, LDCaretTransparentBack_temp,
+		public static bool LDMouseTransparentBack_temp, LDCaretTransparentBack_temp,
      		 Layout1TransparentBack_temp, Layout2TransparentBack_temp;
 		/// <summary> Temporary positions of LangDisplays appearece. </summary>
-		public int LDMouseY_Pos_temp, LDCaretY_Pos_temp, LDMouseX_Pos_temp, LDCaretX_Pos_temp, 
+		public static int LDMouseY_Pos_temp, LDCaretY_Pos_temp, LDMouseX_Pos_temp, LDCaretX_Pos_temp, 
 		 	  Layout1Y_Pos_temp, Layout2Y_Pos_temp, Layout1X_Pos_temp, Layout2X_Pos_temp,
 		 	  MCDS_Xpos_temp, MCDS_Ypos_temp, MCDS_TopIndent_temp, MCDS_BottomIndent_temp;
 		/// <summary> Temporary sizes of LangDisplays appearece. </summary>
-		public int LDMouseHeight_temp, LDCaretHeight_temp, LDMouseWidth_temp, LDCaretWidth_temp, 
+		public static int LDMouseHeight_temp, LDCaretHeight_temp, LDMouseWidth_temp, LDCaretWidth_temp, 
 		 	  Layout1Height_temp, Layout2Height_temp, Layout1Width_temp, Layout2Width_temp;
 		/// <summary>
 		/// Temporary list boxes indexes before and after settings loaded.
@@ -121,7 +121,7 @@ namespace Mahou {
 		/// <summary> Temporary persistent layout's processes. </summary>
 		public string PersistentLayout1Processes, PersistentLayout2Processes;
 		/// <summary> Temporary layouts, etc.. </summary>
-		public string Layout1, Layout2, Layout3, Layout4, 
+		public static string Layout1, Layout2, Layout3, Layout4, 
 			MainLayout1, MainLayout2, EmulateLSType, ExcludedPrograms, Layout1TText, Layout2TText;
 		/// <summary> Temporary specific keys. </summary>
 		public int Key1, Key2, Key3, Key4;
@@ -1682,6 +1682,8 @@ DEL "+restartMahouPath;
 			}
 		}
 		public static void RefreshFLAG() {
+			// No need for update when no display wrapper
+			if (!TrayIconVisible && !LDCaretUseFlags_temp && !LDMouseUseFlags_temp && !LangPanelDisplay) return;
 			if (!ENABLED) {
 				Debug.WriteLine("NOT ENABLED");
 				FLAG = Properties.Resources.MahouTrayHD.ToBitmap();
@@ -1767,20 +1769,20 @@ DEL "+restartMahouPath;
 						Debug.WriteLine("Drawing the text layout *icon* in tray.");
 						var n2 = true;
 						var t = char.ToUpper(flagname[0]) + flagname.Substring(1);
-						var bg = MMain.mahou.LDCaretBack_temp;
-						var fg = MMain.mahou.LDCaretFore_temp;
-						var fn = MMain.mahou.LDCaretFont_temp;
+						var bg = LDCaretBack_temp;
+						var fg = LDCaretFore_temp;
+						var fn = LDCaretFont_temp;
 						if (lcid == (MAIN_LAYOUT2 & 0xffff)) {
-							bg = MMain.mahou.Layout2Back_temp;
-							fg = MMain.mahou.Layout2Fore_temp;
-							fn = MMain.mahou.Layout2Font_temp;
-							if (!String.IsNullOrEmpty(MMain.mahou.Layout2TText)) t = MMain.mahou.Layout2TText;
+							bg = Layout2Back_temp;
+							fg = Layout2Fore_temp;
+							fn = Layout2Font_temp;
+							if (!String.IsNullOrEmpty(Layout2TText)) t = Layout2TText;
 							n2 = false;	
 						} else if (lcid == (MAIN_LAYOUT1 & 0xffff)) {
-							bg = MMain.mahou.Layout1Back_temp;
-							fg = MMain.mahou.Layout1Fore_temp;
-							fn = MMain.mahou.Layout1Font_temp;
-							if (!String.IsNullOrEmpty(MMain.mahou.Layout1TText)) t = MMain.mahou.Layout1TText;
+							bg = Layout1Back_temp;
+							fg = Layout1Fore_temp;
+							fn = Layout1Font_temp;
+							if (!String.IsNullOrEmpty(Layout1TText)) t = Layout1TText;
 							n2 = false;	
 			            }
 						Debug.WriteLine("D" + n2);
@@ -1792,7 +1794,7 @@ DEL "+restartMahouPath;
 						g.DrawString(t, fn, new SolidBrush(fg), new PointF(8, 8), sf);
 						g.Dispose();
 						ITEXT = b;
-						if (n2 && MMain.mahou.LDCaretUseFlags_temp) {
+						if (n2 && LDCaretUseFlags_temp) {
 							ITEXT = FLAG;
 						}
 					}

@@ -1189,7 +1189,7 @@ namespace Mahou {
 				try { 
 					prc = Process.GetProcessById((int)pid);
 					if (prc == null) return false;
-					if (MMain.mahou.ExcludedPrograms.Replace(Environment.NewLine, " ").ToLower().Contains(prc.ProcessName.ToLower().Replace(" ", "_") + ".exe")) {
+					if (MahouUI.ExcludedPrograms.Replace(Environment.NewLine, " ").ToLower().Contains(prc.ProcessName.ToLower().Replace(" ", "_") + ".exe")) {
 						Logging.Log(prc.ProcessName + ".exe->excluded");
 						EXCLUDED_HWNDs.Add(hwnd);
 						return true;
@@ -2303,11 +2303,11 @@ namespace Mahou {
 		/// </summary>
 		public static void CycleEmulateLayoutSwitch() {
 			Debug.WriteLine(">> CELS");
-			if (MMain.mahou.EmulateLSType == "Alt+Shift") {
+			if (MahouUI.EmulateLSType == "Alt+Shift") {
 				Logging.Log("Changing layout using cycle mode by simulating key press [Alt+Shift].");
 				//Emulate Alt+Shift
 				KInputs.MakeInput(KInputs.AddPress(Keys.LShiftKey), (int)WinAPI.MOD_ALT);
-			} else if (MMain.mahou.EmulateLSType == "Ctrl+Shift") {
+			} else if (MahouUI.EmulateLSType == "Ctrl+Shift") {
 				Logging.Log("Changing layout using cycle mode by simulating key press [Ctrl+Shift].");
 				//Emulate Ctrl+Shift
 				KInputs.MakeInput(KInputs.AddPress(Keys.LShiftKey), (int)WinAPI.MOD_CONTROL);

@@ -82,14 +82,14 @@ namespace Mahou {
 				if (_clsNMfw == "PX_WINDOW_CLASS" && MahouUI.MCDSSupport) {
 					System.Threading.Tasks.Task.Factory.StartNew(GetDataFromMCDS);
 					var CaretToScreen = new Point(_fwFCS_Re.Left, _fwFCS_Re.Top);
-					CaretToScreen.X += _CaretST3.X + SidebarWidth + MMain.mahou.MCDS_Xpos_temp;
+					CaretToScreen.X += _CaretST3.X + SidebarWidth + MahouUI.MCDS_Xpos_temp;
 					if (viewID == 4) {
 						WinAPI.RECT clts = new WinAPI.RECT(0,0,0,0);
 						WinAPI.GetWindowRect(WinAPI.GetForegroundWindow(), out clts);
-						CaretToScreen.Y = clts.Bottom - MMain.mahou.MCDS_BottomIndent_temp - 45 + MMain.mahou.MCDS_Ypos_temp;
+						CaretToScreen.Y = clts.Bottom - MahouUI.MCDS_BottomIndent_temp - 45 + MahouUI.MCDS_Ypos_temp;
 						CaretToScreen.X -= 20;
 					} else 
-						CaretToScreen.Y += _CaretST3.Y + MMain.mahou.MCDS_TopIndent_temp + MMain.mahou.MCDS_Ypos_temp;
+						CaretToScreen.Y += _CaretST3.Y + MahouUI.MCDS_TopIndent_temp + MahouUI.MCDS_Ypos_temp;
 					caretOnlyPos = _CaretST3;
 					return CaretToScreen;
 				} else {
