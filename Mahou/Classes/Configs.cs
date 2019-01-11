@@ -257,6 +257,16 @@ namespace Mahou {
 			CheckBool("Hotkeys", "ExitMahou_Double", "false");
 			CheckBool("Hotkeys", "ExitMahou_Enabled", "true");
 			// Exit Mahou hotkey
+			CheckInt("Hotkeys", "SelectedToLower_Key", "88");
+			CheckString("Hotkeys", "SelectedToLower_Modifiers", "Win");
+			CheckBool("Hotkeys", "SelectedToLower_Double", "false");
+			CheckBool("Hotkeys", "SelectedToLower_Enabled", "false");
+			// Selected text To Lower hotkey
+			CheckInt("Hotkeys", "SelectedToUpper_Key", "90");
+			CheckString("Hotkeys", "SelectedToUpper_Modifiers", "Win");
+			CheckBool("Hotkeys", "SelectedToUpper_Double", "false");
+			CheckBool("Hotkeys", "SelectedToUpper_Enabled", "false");
+			// Selected text To Upper hotkey
 			CheckInt("Hotkeys", "SelectedTextTransliteration_Key", "191");
 			CheckString("Hotkeys", "SelectedTextTransliteration_Modifiers", "Win");
 			CheckBool("Hotkeys", "SelectedTextTransliteration_Double", "false");

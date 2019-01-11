@@ -18,13 +18,13 @@ namespace Mahou {
 		// Hotkeys, HKC => HotKey Convert
 		public Hotkey Mainhk, ExitHk, HKCLast, HKCSelection, HKCLine, HKSymIgn, HKConMorWor,
 			  	      HKTitleCase, HKRandomCase, HKSwapCase, HKTransliteration, HKRestart, 
-			  	      HKToggleLP, HKShowST, HKToggleMahou;
+			  	      HKToggleLP, HKShowST, HKToggleMahou, HKUpperCase, HKLowerCase;
 		public List<Hotkey> SpecificSwitchHotkeys = new List<Hotkey>();
 		/// <summary>
 		/// Hotkey OK to fire action bools.
 		/// </summary>
 		public bool hksTTCOK, hksTRCOK, hksTSCOK, hksTrslOK, hkShWndOK, hkcwdsOK, hklOK, 
-					hksOK, hklineOK, hkSIOK, hkExitOK, hkToglLPOK, hkShowTSOK, hkToggleMahouOK;
+					hksOK, hklineOK, hkSIOK, hkExitOK, hkToglLPOK, hkShowTSOK, hkToggleMahouOK, hkUcOK, hklcOK;
 		public static string nPath = AppDomain.CurrentDomain.BaseDirectory, CustomSound, CustomSound2;
 		public static bool LoggingEnabled, dummy, CapsLockDisablerTimer, LangPanelUpperArrow, mouseLTUpperArrow, caretLTUpperArrow,
 						   ShiftInHotkey, AltInHotkey, CtrlInHotkey, WinInHotkey, AutoStartAsAdmin, UseJKL, AutoSwitchEnabled, ReadOnlyNA,
@@ -77,22 +77,26 @@ namespace Mahou {
 		string Mainhk_tempMods, ExitHk_tempMods, HKCLast_tempMods, HKCSelection_tempMods, 
 			    HKCLine_tempMods, HKSymIgn_tempMods, HKConMorWor_tempMods, HKTitleCase_tempMods,
  				HKRandomCase_tempMods, HKSwapCase_tempMods, HKTransliteration_tempMods, HKRestart_tempMods,
- 				HKToggleLangPanel_tempMods, HKShowSelectionTranslate_tempMods, HKToggleMahou_tempMods;
+ 				HKToggleLangPanel_tempMods, HKShowSelectionTranslate_tempMods, HKToggleMahou_tempMods, HKToUpper_tempMods,
+ 				HKToLower_tempMods;
 		/// <summary> Temporary key of hotkeys. </summary>
 		int Mainhk_tempKey, ExitHk_tempKey, HKCLast_tempKey, HKCSelection_tempKey,
 			    HKCLine_tempKey, HKSymIgn_tempKey, HKConMorWor_tempKey, HKTitleCase_tempKey,
  				HKRandomCase_tempKey, HKSwapCase_tempKey, HKTransliteration_tempKey, HKRestart_tempKey,
- 				HKToggleLangPanel_tempKey, HKShowSelectionTranslate_tempKey, HKToggleMahou_tempKey;
+ 				HKToggleLangPanel_tempKey, HKShowSelectionTranslate_tempKey, HKToggleMahou_tempKey, HKToUpper_tempKey,
+ 				HKToLower_tempKey;
 		/// <summary> Temporary Enabled of hotkeys. </summary>
 		bool Mainhk_tempEnabled, ExitHk_tempEnabled, HKCLast_tempEnabled, HKCSelection_tempEnabled,
 			    HKCLine_tempEnabled, HKSymIgn_tempEnabled, HKConMorWor_tempEnabled, HKTitleCase_tempEnabled,
  				HKRandomCase_tempEnabled, HKSwapCase_tempEnabled, HKTransliteration_tempEnabled, HKRestart_tempEnabled,
- 				HKToggleLangPanel_tempEnabled, HKShowSelectionTranslate_tempEnabled, HKToggleMahou_tempEnabled;
+ 				HKToggleLangPanel_tempEnabled, HKShowSelectionTranslate_tempEnabled, HKToggleMahou_tempEnabled,
+ 				HKToUpper_tempEnabled, HKToLower_tempEnabled;
 		/// <summary> Temporary Double of hotkeys. </summary>
 		bool Mainhk_tempDouble, ExitHk_tempDouble, HKCLast_tempDouble, HKCSelection_tempDouble,
 			    HKCLine_tempDouble, HKSymIgn_tempDouble, HKConMorWor_tempDouble, HKTitleCase_tempDouble,
  				HKRandomCase_tempDouble, HKSwapCase_tempDouble, HKTransliteration_tempDouble,
- 				HKToggleLangPanel_tempDouble, HKShowSelectionTranslate_tempDouble, HKToggleMahou_tempDouble;
+ 				HKToggleLangPanel_tempDouble, HKShowSelectionTranslate_tempDouble, HKToggleMahou_tempDouble,
+ 				HKToUpper_tempDouble, HKToLower_tempDouble;
 		/// <summary> Temporary colors of LangDisplays appearece. </summary>
 		public static Color LDMouseFore_temp, LDCaretFore_temp, LDMouseBack_temp, LDCaretBack_temp, 
 		 	  Layout1Fore_temp, Layout2Fore_temp, Layout1Back_temp, Layout2Back_temp;
@@ -358,11 +362,13 @@ namespace Mahou {
 						Hotkey.CallHotkey(HKCLast, id, ref hksOK, KMHook.ConvertSelection); // Use HKCLast id for cs if hotkeys are the same
 					else 
 						Hotkey.CallHotkey(HKCSelection, id, ref hksOK, KMHook.ConvertSelection);
-					Hotkey.CallHotkey(HKTitleCase, id, ref hksTTCOK, KMHook.ToTitleSelection);
-					Hotkey.CallHotkey(HKSwapCase, id, ref hksTSCOK, KMHook.ToSwapSelection);
-					Hotkey.CallHotkey(HKRandomCase, id, ref hksTRCOK, KMHook.ToRandomSelection);
+					Hotkey.CallHotkey(HKTitleCase, id, ref hksTTCOK, ()=>KMHook.SelectionConversion(KMHook.ConvT.Title));
+					Hotkey.CallHotkey(HKSwapCase, id, ref hksTSCOK, ()=>KMHook.SelectionConversion(KMHook.ConvT.Swap));
+					Hotkey.CallHotkey(HKUpperCase, id, ref hkUcOK, ()=>KMHook.SelectionConversion(KMHook.ConvT.Upper));
+					Hotkey.CallHotkey(HKLowerCase, id, ref hklcOK, ()=>KMHook.SelectionConversion(KMHook.ConvT.Lower));
+					Hotkey.CallHotkey(HKRandomCase, id, ref hksTRCOK, ()=>KMHook.SelectionConversion(KMHook.ConvT.Random));
 					Hotkey.CallHotkey(HKConMorWor, id, ref hkcwdsOK, PrepareConvertMoreWords);
-					Hotkey.CallHotkey(HKTransliteration, id, ref hksTrslOK, KMHook.TransliterateSelection);
+					Hotkey.CallHotkey(HKTransliteration, id, ref hksTrslOK, ()=>KMHook.SelectionConversion(KMHook.ConvT.Transliteration));
 					var clcl = false; // Convert Line + Convert Last
 					var conv = false;
 					if (Hotkey.GetMods(HKCLine_tempMods) == Hotkey.GetMods(HKCLast_tempMods) &&
@@ -502,6 +508,8 @@ namespace Mahou {
 			HKTitleCase_tempEnabled = MMain.MyConfs.ReadBool("Hotkeys", "SelectedTextToTitleCase_Enabled");
 			HKRandomCase_tempEnabled = MMain.MyConfs.ReadBool("Hotkeys", "SelectedTextToRandomCase_Enabled");
 			HKSwapCase_tempEnabled = MMain.MyConfs.ReadBool("Hotkeys", "SelectedTextToSwapCase_Enabled");
+			HKToUpper_tempEnabled = MMain.MyConfs.ReadBool("Hotkeys", "SelectedToUpper_Enabled");
+			HKToLower_tempEnabled = MMain.MyConfs.ReadBool("Hotkeys", "SelectedToLower_Enabled");
 			HKTransliteration_tempEnabled = MMain.MyConfs.ReadBool("Hotkeys", "SelectedTextTransliteration_Enabled");
 			ExitHk_tempEnabled = MMain.MyConfs.ReadBool("Hotkeys", "ExitMahou_Enabled");
 			HKRestart_tempEnabled = MMain.MyConfs.ReadBool("Hotkeys", "RestartMahou_Enabled");
@@ -519,6 +527,8 @@ namespace Mahou {
 			HKTitleCase_tempDouble = MMain.MyConfs.ReadBool("Hotkeys", "SelectedTextToTitleCase_Double");
 			HKRandomCase_tempDouble = MMain.MyConfs.ReadBool("Hotkeys", "SelectedTextToRandomCase_Double");
 			HKSwapCase_tempDouble = MMain.MyConfs.ReadBool("Hotkeys", "SelectedTextToSwapCase_Double");
+			HKToUpper_tempDouble = MMain.MyConfs.ReadBool("Hotkeys", "SelectedToUpper_Double");
+			HKToLower_tempDouble = MMain.MyConfs.ReadBool("Hotkeys", "SelectedToLower_Double");
 			HKTransliteration_tempDouble = MMain.MyConfs.ReadBool("Hotkeys", "SelectedTextTransliteration_Double");
 			ExitHk_tempDouble = MMain.MyConfs.ReadBool("Hotkeys", "ExitMahou_Double");
 			HKToggleLangPanel_tempDouble = MMain.MyConfs.ReadBool("Hotkeys", "ToggleLangPanel_Double");
@@ -535,6 +545,8 @@ namespace Mahou {
 			HKTitleCase_tempMods = MMain.MyConfs.Read("Hotkeys", "SelectedTextToTitleCase_Modifiers");
 			HKRandomCase_tempMods = MMain.MyConfs.Read("Hotkeys", "SelectedTextToRandomCase_Modifiers");
 			HKSwapCase_tempMods = MMain.MyConfs.Read("Hotkeys", "SelectedTextToSwapCase_Modifiers");
+			HKToUpper_tempMods = MMain.MyConfs.Read("Hotkeys", "SelectedToUpper_Modifiers");
+			HKToLower_tempMods = MMain.MyConfs.Read("Hotkeys", "SelectedToLower_Modifiers");
 			HKTransliteration_tempMods = MMain.MyConfs.Read("Hotkeys", "SelectedTextTransliteration_Modifiers");
 			ExitHk_tempMods = MMain.MyConfs.Read("Hotkeys", "ExitMahou_Modifiers");
 			HKRestart_tempMods = MMain.MyConfs.Read("Hotkeys", "RestartMahou_Modifiers");
@@ -552,6 +564,8 @@ namespace Mahou {
 			HKTitleCase_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "SelectedTextToTitleCase_Key");
 			HKRandomCase_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "SelectedTextToRandomCase_Key");
 			HKSwapCase_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "SelectedTextToSwapCase_Key");
+			HKToUpper_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "SelectedToUpper_Key");
+			HKToLower_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "SelectedToLower_Key");
 			HKTransliteration_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "SelectedTextTransliteration_Key");
 			ExitHk_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "ExitMahou_Key");
 			HKRestart_tempKey = MMain.MyConfs.ReadInt("Hotkeys", "RestartMahou_Key");
@@ -621,6 +635,8 @@ namespace Mahou {
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextToTitleCase_Enabled", HKTitleCase_tempEnabled.ToString());
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextToRandomCase_Enabled", HKRandomCase_tempEnabled.ToString());
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextToSwapCase_Enabled", HKSwapCase_tempEnabled.ToString());
+			MMain.MyConfs.Write("Hotkeys", "SelectedToUpper_Enabled", HKToUpper_tempEnabled.ToString());
+			MMain.MyConfs.Write("Hotkeys", "SelectedToLower_Enabled", HKToLower_tempEnabled.ToString());
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextTransliteration_Enabled", HKTransliteration_tempEnabled.ToString());
 			MMain.MyConfs.Write("Hotkeys", "ExitMahou_Enabled", ExitHk_tempEnabled.ToString());
 			MMain.MyConfs.Write("Hotkeys", "RestartMahou_Enabled", HKRestart_tempEnabled.ToString());
@@ -638,6 +654,8 @@ namespace Mahou {
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextToTitleCase_Double", HKTitleCase_tempDouble.ToString());
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextToRandomCase_Double", HKRandomCase_tempDouble.ToString());
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextToSwapCase_Double", HKSwapCase_tempDouble.ToString());
+			MMain.MyConfs.Write("Hotkeys", "SelectedToUpper_Double", HKToUpper_tempDouble.ToString());
+			MMain.MyConfs.Write("Hotkeys", "SelectedToLower_Double", HKToLower_tempDouble.ToString());
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextTransliteration_Double", HKTransliteration_tempDouble.ToString());
 			MMain.MyConfs.Write("Hotkeys", "ExitMahou_Double", ExitHk_tempDouble.ToString());
 			MMain.MyConfs.Write("Hotkeys", "ToggleLangPanel_Double", HKToggleLangPanel_tempDouble.ToString());
@@ -654,6 +672,8 @@ namespace Mahou {
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextToTitleCase_Modifiers", HKTitleCase_tempMods);
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextToRandomCase_Modifiers", HKRandomCase_tempMods);
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextToSwapCase_Modifiers", HKSwapCase_tempMods);
+			MMain.MyConfs.Write("Hotkeys", "SelectedToUpper_Modifiers", HKToUpper_tempMods);
+			MMain.MyConfs.Write("Hotkeys", "SelectedToLower_Modifiers", HKToLower_tempMods);
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextTransliteration_Modifiers", HKTransliteration_tempMods);
 			MMain.MyConfs.Write("Hotkeys", "ExitMahou_Modifiers", ExitHk_tempMods);
 			MMain.MyConfs.Write("Hotkeys", "RestartMahou_Modifiers", HKRestart_tempMods);
@@ -671,6 +691,8 @@ namespace Mahou {
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextToTitleCase_Key", HKTitleCase_tempKey.ToString());
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextToRandomCase_Key", HKRandomCase_tempKey.ToString());
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextToSwapCase_Key", HKSwapCase_tempKey.ToString());
+			MMain.MyConfs.Write("Hotkeys", "SelectedToUpper_Key", HKToUpper_tempKey.ToString());
+			MMain.MyConfs.Write("Hotkeys", "SelectedToLower_Key", HKToLower_tempKey.ToString());
 			MMain.MyConfs.Write("Hotkeys", "SelectedTextTransliteration_Key", HKTransliteration_tempKey.ToString());
 			MMain.MyConfs.Write("Hotkeys", "ExitMahou_Key", ExitHk_tempKey.ToString());
 			MMain.MyConfs.Write("Hotkeys", "RestartMahou_Key", HKRestart_tempKey.ToString());
@@ -1582,7 +1604,7 @@ namespace Mahou {
 			btn_LPBorderColor.Enabled = !chk_LPAeroColor.Checked;
 			// Hotkeys tab
 			chk_DoubleHotkey.Enabled = chk_WinInHotKey.Enabled = txt_Hotkey.Enabled = chk_HotKeyEnabled.Checked;
-			chk_DoubleHotkey.Enabled = lsb_Hotkeys.SelectedIndex != 11;
+			chk_DoubleHotkey.Enabled = lsb_Hotkeys.SelectedIndex != 13;
 			// Timings tab
 			nud_DelayAfterBackspaces.Enabled = chk_UseDelayAfterBackspaces.Checked;
 			nud_SelectedTextGetTriesCount.Enabled = chk_SelectedTextGetMoreTries.Checked;
@@ -1913,6 +1935,10 @@ DEL "+restartMahouPath;
 				Hotkey.GetMods(HKRandomCase_tempMods), (int)Hotkey.HKID.ToRandomSelection, HKRandomCase_tempDouble);			
 			HKSwapCase = new Hotkey(HKSwapCase_tempEnabled, (uint)HKSwapCase_tempKey,
 				Hotkey.GetMods(HKSwapCase_tempMods), (int)Hotkey.HKID.ToSwapSelection, HKSwapCase_tempDouble);			
+			HKUpperCase = new Hotkey(HKToUpper_tempEnabled, (uint)HKToUpper_tempKey,
+				Hotkey.GetMods(HKToUpper_tempMods), (int)Hotkey.HKID.ToUpperSelection, HKToUpper_tempDouble);		
+			HKLowerCase = new Hotkey(HKToLower_tempEnabled, (uint)HKToLower_tempKey,
+				Hotkey.GetMods(HKToLower_tempMods), (int)Hotkey.HKID.ToLowerSelection, HKToLower_tempDouble);		
 			HKTransliteration = new Hotkey(HKTransliteration_tempEnabled, (uint)HKTransliteration_tempKey, 
 				Hotkey.GetMods(HKTransliteration_tempMods), (int)Hotkey.HKID.TransliterateSelection, HKTransliteration_tempDouble);
 			ExitHk = new Hotkey(ExitHk_tempEnabled, (uint)ExitHk_tempKey, 
@@ -1937,6 +1963,8 @@ DEL "+restartMahouPath;
 				thishk == HKTitleCase ||
 				thishk == HKRandomCase ||
 				thishk == HKSwapCase ||		
+				thishk == HKUpperCase ||	
+				thishk == HKLowerCase ||	
 				thishk == HKTransliteration ||
 				thishk == ExitHk ||
 				thishk == HKRestart ||
@@ -2056,6 +2084,10 @@ DEL "+restartMahouPath;
 					hksTTCOK = false;
 				if (hksTSCOK)
 					hksTSCOK = false;
+				if (hkUcOK)
+					hkUcOK = false;
+				if (hklcOK)
+					hklcOK = false;
 				if (hkShowTSOK)
 					hkShowTSOK = false;
 				if (hkToggleMahouOK)
@@ -2561,6 +2593,12 @@ DEL "+restartMahouPath;
 				if (HKSwapCase_tempEnabled)
 					_regHK(Handle, (int)Hotkey.HKID.ToSwapSelection, 
 					                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKSwapCase_tempMods), HKSwapCase_tempKey);
+				if (HKToUpper_tempEnabled)
+					_regHK(Handle, (int)Hotkey.HKID.ToUpperSelection, 
+					                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKToUpper_tempMods), HKToUpper_tempKey);
+				if (HKToLower_tempEnabled)
+					_regHK(Handle, (int)Hotkey.HKID.ToLowerSelection, 
+					                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKToLower_tempMods), HKToLower_tempKey);
 				if (HKRandomCase_tempEnabled)
 					_regHK(Handle, (int)Hotkey.HKID.ToRandomSelection, 
 					                      WinAPI.MOD_NO_REPEAT + Hotkey.GetMods(HKRandomCase_tempMods), HKRandomCase_tempKey);
@@ -2820,7 +2858,7 @@ DEL "+restartMahouPath;
 		/// Calls UpdateHotkeyControls() which updates hotkey controls based on selected [layout appearence]. 
 		/// </summary>
 		void UpdateHotkeyControlsSwitch() {
-			chk_DoubleHotkey.Enabled = lsb_Hotkeys.SelectedIndex != 11;
+			chk_DoubleHotkey.Enabled = lsb_Hotkeys.SelectedIndex != 13;
 			switch(lsb_Hotkeys.SelectedIndex) {
 				case 0:
 					UpdateHotkeyControls(Mainhk_tempEnabled, Mainhk_tempDouble, Mainhk_tempMods, Mainhk_tempKey);
@@ -2850,21 +2888,27 @@ DEL "+restartMahouPath;
 					UpdateHotkeyControls(HKSwapCase_tempEnabled, HKSwapCase_tempDouble, HKSwapCase_tempMods, HKSwapCase_tempKey);
 					break;
 				case 9:
-					UpdateHotkeyControls(HKTransliteration_tempEnabled, HKTransliteration_tempDouble, HKTransliteration_tempMods, HKTransliteration_tempKey);
+					UpdateHotkeyControls(HKToUpper_tempEnabled, HKToUpper_tempDouble, HKToUpper_tempMods, HKToUpper_tempKey);
 					break;
 				case 10:
-					UpdateHotkeyControls(ExitHk_tempEnabled, ExitHk_tempDouble, ExitHk_tempMods, ExitHk_tempKey);
+					UpdateHotkeyControls(HKToLower_tempEnabled, HKToLower_tempDouble, HKToLower_tempMods, HKToLower_tempKey);
 					break;
 				case 11:
-					UpdateHotkeyControls(HKRestart_tempEnabled, false, HKRestart_tempMods, HKRestart_tempKey);
+					UpdateHotkeyControls(HKTransliteration_tempEnabled, HKTransliteration_tempDouble, HKTransliteration_tempMods, HKTransliteration_tempKey);
 					break;
 				case 12:
-					UpdateHotkeyControls(HKToggleLangPanel_tempEnabled, HKToggleLangPanel_tempDouble, HKToggleLangPanel_tempMods, HKToggleLangPanel_tempKey);
+					UpdateHotkeyControls(ExitHk_tempEnabled, ExitHk_tempDouble, ExitHk_tempMods, ExitHk_tempKey);
 					break;
 				case 13:
-					UpdateHotkeyControls(HKShowSelectionTranslate_tempEnabled, HKShowSelectionTranslate_tempDouble, HKShowSelectionTranslate_tempMods, HKShowSelectionTranslate_tempKey);
+					UpdateHotkeyControls(HKRestart_tempEnabled, false, HKRestart_tempMods, HKRestart_tempKey);
 					break;
 				case 14:
+					UpdateHotkeyControls(HKToggleLangPanel_tempEnabled, HKToggleLangPanel_tempDouble, HKToggleLangPanel_tempMods, HKToggleLangPanel_tempKey);
+					break;
+				case 15:
+					UpdateHotkeyControls(HKShowSelectionTranslate_tempEnabled, HKShowSelectionTranslate_tempDouble, HKShowSelectionTranslate_tempMods, HKShowSelectionTranslate_tempKey);
+					break;
+				case 16:
 					UpdateHotkeyControls(HKToggleMahou_tempEnabled, HKToggleMahou_tempDouble, HKToggleMahou_tempMods, HKToggleMahou_tempKey);
 					break;
 			}
@@ -2943,35 +2987,47 @@ DEL "+restartMahouPath;
 					HKSwapCase_tempKey = txt_Hotkey_tempKey;
 					break;
 				case 9:
+					HKToUpper_tempEnabled = chk_HotKeyEnabled.Checked;
+					HKToUpper_tempDouble = chk_DoubleHotkey.Checked;
+					HKToUpper_tempMods = (chk_WinInHotKey.Checked ? "Win + " : "") + txt_Hotkey_tempModifiers;
+					HKToUpper_tempKey = txt_Hotkey_tempKey;
+					break;
+				case 10:
+					HKToLower_tempEnabled = chk_HotKeyEnabled.Checked;
+					HKToLower_tempDouble = chk_DoubleHotkey.Checked;
+					HKToLower_tempMods = (chk_WinInHotKey.Checked ? "Win + " : "") + txt_Hotkey_tempModifiers;
+					HKToLower_tempKey = txt_Hotkey_tempKey;
+					break;
+				case 11:
 					HKTransliteration_tempEnabled = chk_HotKeyEnabled.Checked;
 					HKTransliteration_tempDouble = chk_DoubleHotkey.Checked;
 					HKTransliteration_tempMods = (chk_WinInHotKey.Checked ? "Win + " : "") + txt_Hotkey_tempModifiers;
 					HKTransliteration_tempKey = txt_Hotkey_tempKey;
 					break;
-				case 10:
+				case 12:
 					ExitHk_tempEnabled = chk_HotKeyEnabled.Checked;
 					ExitHk_tempDouble = chk_DoubleHotkey.Checked;
 					ExitHk_tempMods = (chk_WinInHotKey.Checked ? "Win + " : "") + txt_Hotkey_tempModifiers;
 					ExitHk_tempKey = txt_Hotkey_tempKey;
 					break;
-				case 11:
+				case 13:
 					HKRestart_tempEnabled = chk_HotKeyEnabled.Checked;
 					HKRestart_tempMods = (chk_WinInHotKey.Checked ? "Win + " : "") + txt_Hotkey_tempModifiers;
 					HKRestart_tempKey = txt_Hotkey_tempKey;
 					break;
-				case 12:
+				case 14:
 					HKToggleLangPanel_tempEnabled = chk_HotKeyEnabled.Checked;
 					HKToggleLangPanel_tempDouble = chk_DoubleHotkey.Checked;
 					HKToggleLangPanel_tempMods = (chk_WinInHotKey.Checked ? "Win + " : "") + txt_Hotkey_tempModifiers;
 					HKToggleLangPanel_tempKey = txt_Hotkey_tempKey;
 					break;
-				case 13:
+				case 15:
 					HKShowSelectionTranslate_tempEnabled = chk_HotKeyEnabled.Checked;
 					HKShowSelectionTranslate_tempDouble = chk_DoubleHotkey.Checked;
 					HKShowSelectionTranslate_tempMods = (chk_WinInHotKey.Checked ? "Win + " : "") + txt_Hotkey_tempModifiers;
 					HKShowSelectionTranslate_tempKey = txt_Hotkey_tempKey;
 					break;
-				case 14:
+				case 16:
 					HKToggleMahou_tempEnabled = chk_HotKeyEnabled.Checked;
 					HKToggleMahou_tempDouble = chk_DoubleHotkey.Checked;
 					HKToggleMahou_tempMods = (chk_WinInHotKey.Checked ? "Win + " : "") + txt_Hotkey_tempModifiers;
@@ -3003,10 +3059,14 @@ DEL "+restartMahouPath;
 				case 8:
 					return HKSwapCase_tempDouble;
 				case 9:
-					return HKTransliteration_tempDouble;
+					return HKToUpper_tempDouble;
 				case 10:
-					return ExitHk_tempDouble;
+					return HKToLower_tempDouble;
 				case 11:
+					return HKTransliteration_tempDouble;
+				case 12:
+					return ExitHk_tempDouble;
+				case 13:
 					return false;
 			}
 			return false;
@@ -3532,6 +3592,8 @@ DEL ""ExtractASD.cmd""";
 										MMain.Lang[Languages.Element.SelectedToTitleCase],
 										MMain.Lang[Languages.Element.SelectedToRandomCase],
 										MMain.Lang[Languages.Element.SelectedToSwapCase],
+										MMain.Lang[Languages.Element.SelectedToUpperCase],
+										MMain.Lang[Languages.Element.SelectedToLowerCase],
 										MMain.Lang[Languages.Element.SelectedTransliteration],
 										MMain.Lang[Languages.Element.ExitMahou],
 										MMain.Lang[Languages.Element.RestartMahou],
@@ -3812,7 +3874,7 @@ DEL ""ExtractASD.cmd""";
 				case 5:
 					lbl_HotkeyHelp.Text = MMain.Lang[Languages.Element.TT_SymbolIgnore];
 					break;
-				case 13:
+				case 15:
 					lbl_HotkeyHelp.Text = MMain.Lang[Languages.Element.TT_ShowSelectionTranslationHotkey];
 					break;
 				default:
@@ -3828,10 +3890,10 @@ DEL ""ExtractASD.cmd""";
 				case 5:
 					WinAPI.UnregisterHotKey(Handle, (int)Hotkey.HKID.ToggleSymbolIgnoreMode);
 					break;
-				case 10:
+				case 12:
 					WinAPI.UnregisterHotKey(Handle, (int)Hotkey.HKID.Exit);
 					break;
-				case 11:
+				case 13:
 					WinAPI.UnregisterHotKey(Handle, (int)Hotkey.HKID.Restart);
 					break;
 			}

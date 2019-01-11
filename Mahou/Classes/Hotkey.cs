@@ -26,6 +26,8 @@ namespace Mahou {
 			ConvertMultipleWords,
 			ToTitleSelection,
 			ToSwapSelection,
+			ToUpperSelection,
+			ToLowerSelection,
 			ToRandomSelection,
 			TransliterateSelection,
 			ToggleSymbolIgnoreMode,

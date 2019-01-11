@@ -1636,151 +1636,119 @@ namespace Mahou {
 			}
 			Memory.Flush();
 		}
-		public static void TransliterateSelection() {
+		public enum ConvT {
+			Transliteration,
+			Random,
+			Title,
+			Swap,
+			Upper,
+			Lower
+		}
+		public static void SelectionConversion(ConvT t = 0) {
+			var tn = Enum.GetName(typeof(ConvT), t);
 			try { //Used to catch errors
 				Locales.IfLessThan2();
 				DoSelf(() => {
-					Logging.Log("[TRANSLTRT] > Starting Transliterate selection.");
+					Logging.Log("["+tn+"] > Starting "+tn+" selection.");
 					string ClipStr = GetClipStr();
 					if (!String.IsNullOrEmpty(ClipStr)) {
-						string output = ClipStr;
-						foreach (KeyValuePair<string, string> key in transliterationDict) {
-							if (output.Contains(key.Key))
-			                	output.Replace(key.Key, key.Value);
-			            }
-						if (ClipStr == output) {
-							foreach (KeyValuePair<string, string> key in transliterationDict) {
-								if (ClipStr.Contains(key.Value))
-				                	ClipStr = ClipStr.Replace(key.Value, key.Key);
-		                	}
-							if (ClipStr == output)
-							foreach (KeyValuePair<string, string> key in transliterationDict) {
-								if (ClipStr.Contains(key.Key))
-				                	ClipStr = ClipStr.Replace(key.Key, key.Value);
-		                	}
-							KInputs.MakeInput(KInputs.AddString(ClipStr));
-						} else { KInputs.MakeInput(KInputs.AddString(output)); }
-						ReSelect(ClipStr.Length);
+						var output = "";
+						switch (t) {
+							case ConvT.Transliteration:
+								output = TransliterateSelection(ClipStr); break;
+							case ConvT.Random:
+								output = ToSTULRSelection(ClipStr,false,false,false,true); break;
+							case ConvT.Title:
+								output = ToSTULRSelection(ClipStr,false,true); break;
+							case ConvT.Swap:
+								output = ToSTULRSelection(ClipStr,true); break;
+							case ConvT.Upper:
+								output = ToSTULRSelection(ClipStr); break;
+							case ConvT.Lower:
+								output = ToSTULRSelection(ClipStr,false,false,true); break;
+						}
+						Logging.Log("Inputting ["+output+"] as "+tn);
+						KInputs.MakeInput(KInputs.AddString(output));
+						ReSelect(output.Length);
 					}
 					NativeClipboard.Clear();
 					RestoreClipBoard();
 	            });
 				} catch(Exception e) {
-					Logging.Log("[TRANSLTRT] > Transliterate Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
+					Logging.Log("["+tn+"] > Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
 				}
 			Memory.Flush();
 		}
-		public static void ToTitleSelection() {
-			try {
-				DoSelf(() => {
-					string ClipStr = GetClipStr();
-					if (!String.IsNullOrEmpty(ClipStr)) {
-						string[] ClipStrLines = ClipStr.Split('\n');
-						int lines = 0;
-						foreach (var line in ClipStrLines) {
-							lines++;
-							string[] ClipStrWords = SplitWords(line);
-							int words = 0;
-							foreach (var word in ClipStrWords) {
-								words++;
-								string Tword = "";
-								if (word.Length > 0)
-									Tword += word[0].ToString().ToUpper();
-								if (word .Length > 1)
-									foreach(char ch in word.Substring(1, word.Length - 1)) {
-										Tword += char.ToLower(ch);
-									}
-								Logging.Log("Inputting word ["+Tword+"] as Title case");
-								KInputs.MakeInput(KInputs.AddString(Tword));
-							}
-							if (lines != ClipStrLines.Length)
-								KInputs.MakeInput(KInputs.AddString("\n"));
-						}
-						ReSelect(ClipStr.Length);
-					}
-					NativeClipboard.Clear();
-					RestoreClipBoard();
-	              });
-			} catch(Exception e) {
-				Logging.Log("To Title Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
+		public static string TransliterateSelection(string ClipStr) {
+			Logging.Log("[TRANSLTRT] > Starting Transliterate selection.");
+			string output = ClipStr;
+			foreach (KeyValuePair<string, string> key in transliterationDict) {
+				if (output.Contains(key.Key))
+                	output.Replace(key.Key, key.Value);
+            }
+			if (ClipStr == output) {
+				foreach (KeyValuePair<string, string> key in transliterationDict) {
+					if (ClipStr.Contains(key.Value))
+	                	ClipStr = ClipStr.Replace(key.Value, key.Key);
+            	}
+				if (ClipStr == output)
+				foreach (KeyValuePair<string, string> key in transliterationDict) {
+					if (ClipStr.Contains(key.Key))
+	                	ClipStr = ClipStr.Replace(key.Key, key.Value);
+            	}
+				return ClipStr;
 			}
-			Memory.Flush();
+			return output;
 		}
-		public static void ToSwapSelection() {
-			try {
-				DoSelf(() => {
-					string ClipStr = GetClipStr();
-					if (!String.IsNullOrEmpty(ClipStr)) {
-						string[] ClipStrLines = ClipStr.Split('\n');
-						int lines = 0;
-						foreach (var line in ClipStrLines) {
-							lines++;
-							string[] ClipStrWords = SplitWords(line);
-							int words = 0;
-							foreach (var word in ClipStrWords) {
-								words++;
-								string Sword = "";
-								foreach(char ch in word) {
-									if (char.IsUpper(ch))
-										Sword += char.ToLower(ch);
-									else if (char.IsLower(ch))
-										Sword += char.ToUpper(ch);
-									else
-										Sword += ch;
-								}
-								Logging.Log("Inputting word ["+Sword+"] as sWAP case");
-								KInputs.MakeInput(KInputs.AddString(Sword));
+		public static string ToSTULRSelection(string ClipStr, bool swap = false, bool title = false, bool lower = false, bool random = false) {
+			string[] ClipStrLines = ClipStr.Split('\n');
+			int lines = 0;
+			var output = "";
+			Random rand = null;
+			if (random) rand = new Random();
+			foreach (var line in ClipStrLines) {
+				lines++;
+				string[] ClipStrWords = SplitWords(line);
+				int words = 0;
+				foreach (var word in ClipStrWords) {
+					words++;
+					var STULR = "";
+					if (title) {
+						if (word.Length > 0)
+							STULR += word[0].ToString().ToUpper();
+						if (word.Length > 1)
+							foreach(char ch in word.Substring(1, word.Length - 1)) {
+								STULR += char.ToLower(ch);
 							}
-							if (lines != ClipStrLines.Length)
-								KInputs.MakeInput(KInputs.AddString("\n"));
-						}
-						ReSelect(ClipStr.Length);
-					}
-					NativeClipboard.Clear();
-					RestoreClipBoard();
-	              });
-			} catch(Exception e) {
-				Logging.Log("To sWAP Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
-			}
-			Memory.Flush();
-		}
-		public static void ToRandomSelection() {
-			try {
-				DoSelf(() => {
-					string ClipStr = GetClipStr();
-					if (!String.IsNullOrEmpty(ClipStr)) {
-						string[] ClipStrLines = ClipStr.Split('\n');
-						int lines = 0;
-						foreach (var line in ClipStrLines) {
-							lines++;
-							string[] ClipStrWords = SplitWords(line);
-							int words = 0;
-							foreach (var word in ClipStrWords) {
-								words++;
-								Random rand = new Random();
-								string Rword = "";
-								foreach(char ch in word) {
-									if (rand.NextDouble() >= 0.5) {
-										Rword += char.ToLower(ch);
-									} else {
-										Rword += char.ToUpper(ch);
-									}
+					} else {
+						foreach(char ch in word) {
+							if (random) {
+								if (rand.NextDouble() >= 0.5) {
+									STULR += char.ToLower(ch);
+								} else {
+									STULR += char.ToUpper(ch);
 								}
-								Logging.Log("Inputting word ["+Rword+"] as RaNdoM case");
-								KInputs.MakeInput(KInputs.AddString(Rword));
+							} else if (swap) {
+								if (char.IsUpper(ch))
+									STULR += char.ToLower(ch);
+								else if (char.IsLower(ch))
+									STULR += char.ToUpper(ch);
+								else
+									STULR += ch;
+							} else {
+								if (lower)
+									STULR += char.ToLower(ch);
+								else
+									STULR += char.ToUpper(ch);
 							}
-							if (lines != ClipStrLines.Length)
-								KInputs.MakeInput(KInputs.AddString("\n"));
 						}
-						ReSelect(ClipStr.Length);
 					}
-					NativeClipboard.Clear();
-					RestoreClipBoard();
-	              });
-			} catch(Exception e) {
-				Logging.Log("To RaNdoM Selection encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
+					output +=STULR;
+				}
+				if (lines != ClipStrLines.Length)
+					output +="\n";
 			}
-			Memory.Flush();
+			return output;
 		}
 		static void ReSelect(int count) {
 			if (MahouUI.ReSelect) {
