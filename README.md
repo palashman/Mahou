@@ -64,6 +64,7 @@ Mahou находится под GPL v2+.
 
 - Яндекс.Деньги: 410015057363201 или http://yasobe.ru/na/mahou
 - MasterCard: 5168 7573 3941 2985
+- PayPal: BladeMight@gmail.com
 
 ###### Возможности по версиям:
 
@@ -805,6 +806,7 @@ Wallets:
 
 - Yandex.Money: 410015057363201 or http://yasobe.ru/na/mahou
 - MasterCard: 5168 7573 3941 2985
+- PayPal: BladeMight@gmail.com
 
 ###### By version features:
 
