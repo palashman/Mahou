@@ -1313,7 +1313,7 @@ namespace Mahou {
 			InitializeTimers();
 			InitializeLangPanel();
 			ToggleDependentControlsEnabledState();
-			RefreshAllIcons();
+			RefreshAllIcons(true);
 			if (_langPanel != null) {
 				_langPanel.UpdateApperence(LangPanelBackColor, LangPanelForeColor, LangPanelTransparency, LangPanelFont);
 				if(LangPanelDisplay)
@@ -1680,9 +1680,9 @@ DEL "+restartMahouPath;
 		/// <summary>
 		/// Refreshes all icon's images and tray icon visibility.
 		/// </summary>
-		public void RefreshAllIcons() {
+		public void RefreshAllIcons(bool force = false) {
 			if (TrayFlags || TrayText) {
-				ChangeTrayIconToFlag();
+				ChangeTrayIconToFlag(force);
 			} else {
 				if (HKSymIgn_tempEnabled && SymIgnEnabled && icon.trIcon.Icon != Properties.Resources.MahouSymbolIgnoreMode)
 					icon.trIcon.Icon = Properties.Resources.MahouSymbolIgnoreMode;
@@ -1703,14 +1703,17 @@ DEL "+restartMahouPath;
 				icon.Hide();
 			}
 		}
-		public static void RefreshFLAG() {
+		public static void RefreshFLAG(bool force = false) {
+			Debug.WriteLine("aLIVe");
 			// No need for update when no display wrapper
-			if (!TrayIconVisible && !LDCaretUseFlags_temp && !LDMouseUseFlags_temp && !LangPanelDisplay) return;
+			if (!TrayIconVisible && !LDCaretUseFlags_temp && !LDMouseUseFlags_temp && !LangPanelDisplay && !force) return;
 			if (!ENABLED) {
 				Debug.WriteLine("NOT ENABLED");
 				FLAG = Properties.Resources.MahouTrayHD.ToBitmap();
 				return;
 			}
+			if (force) FLAG = ITEXT = null;
+			Debug.WriteLine("STIlL");
 			int lcid = 0;
 			if (!UseJKL)
 				lcid = (int)(Locales.GetCurrentLocale() & 0xffff);
@@ -1728,8 +1731,10 @@ DEL "+restartMahouPath;
 				var clangname = new CultureInfo(lcid);
 				flagname = clangname.ThreeLetterISOLanguageName.Substring(0, 2).ToLower();
 				var flagpth = Path.Combine(MahouUI.nPath, "Flags\\" + flagname + ".png");
-				if (flagname != latestSwitch) {
+				Debug.WriteLine("UpDATe?"+(flagname != latestSwitch || (TrayText && ITEXT == null) || (TrayFlags && FLAG == null)));
+				if (flagname != latestSwitch || (TrayText && ITEXT == null) || (TrayFlags && FLAG == null)) {
 					Logging.Log("Changed flag to " + flagname + " lcid " + lcid);
+					Debug.WriteLine("Changed flag to " + flagname + " lcid " + lcid);
 					if (File.Exists(flagpth))
 						FLAG = ((Bitmap)Image.FromFile(flagpth));
 					else
@@ -1836,16 +1841,20 @@ DEL "+restartMahouPath;
 				lcid = Locales.GetCurrentLocale();
 			else 
 				lcid = MahouUI.currentLayout;
+			Debug.WriteLine("refresh?"+ (lastTrayFlagLayout != lcid || force));
 			if (lastTrayFlagLayout != lcid || force) {
-				RefreshFLAG();
+				RefreshFLAG(force);
 				var b = FLAG;
 				if (TrayText) b = ITEXT;
-				if (FLAG != null) {
-					Icon flagicon = Icon.FromHandle(b.GetHicon());
-					icon.trIcon.Icon = flagicon;
+				Icon flagicon;
+				if (FLAG != null)
+					flagicon = Icon.FromHandle(b.GetHicon());
+				else 
+					flagicon = Mahou.Properties.Resources.MahouTrayHD;
+				icon.trIcon.Icon = flagicon;
+				if (!force)
 					WinAPI.DestroyIcon(flagicon.Handle);
-					lastTrayFlagLayout = lcid;
-				}
+				lastTrayFlagLayout = lcid;
 			}
 		}
 		/// <summary>
