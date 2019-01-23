@@ -1840,10 +1840,12 @@ DEL "+restartMahouPath;
 				RefreshFLAG();
 				var b = FLAG;
 				if (TrayText) b = ITEXT;
-				Icon flagicon = Icon.FromHandle(b.GetHicon());
-				icon.trIcon.Icon = flagicon;
-				WinAPI.DestroyIcon(flagicon.Handle);
-				lastTrayFlagLayout = lcid;
+				if (FLAG != null) {
+					Icon flagicon = Icon.FromHandle(b.GetHicon());
+					icon.trIcon.Icon = flagicon;
+					WinAPI.DestroyIcon(flagicon.Handle);
+					lastTrayFlagLayout = lcid;
+				}
 			}
 		}
 		/// <summary>
