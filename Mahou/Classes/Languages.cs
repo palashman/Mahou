@@ -195,7 +195,11 @@ public class Languages
 		#endregion
 		#region Misc
 		Not,
+		Transliterate,
+		Convert,
 		Exist,
+		Latest,
+		Clipboard,
 		Keys,
 		Key_Left,
 		Key_Right,
@@ -473,6 +477,10 @@ public class Languages
 		#endregion
 		#region Misc
 		{ Element.Not, "Not" },
+		{ Element.Transliterate, "Transliterate" },
+		{ Element.Convert, "Convert" },
+		{ Element.Latest, "Latest" },
+		{ Element.Clipboard, "Clipboard" },
 		{ Element.Exist, "exist" },
 		{ Element.Checking, "Checking..." }, 
 		{ Element.Keys, "Keys" }, 
@@ -765,6 +773,10 @@ public class Languages
 		#endregion
 		#region Misc
 		{ Element.Not, "Не"},
+		{ Element.Transliterate, "Транслитерация" },
+		{ Element.Convert, "Конвертация" },
+		{ Element.Latest, "Последние" },
+		{ Element.Clipboard, "Буффер обмена" },
 		{ Element.Exist, "существует" },
 		{ Element.Keys, "Клавиши" }, 
 		{ Element.Key_Left, "Левый" }, 

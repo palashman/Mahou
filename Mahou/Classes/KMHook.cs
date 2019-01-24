@@ -1445,6 +1445,76 @@ namespace Mahou {
 			}
 			return LIST.ToArray();
 		}
+		public static string ConvertText(string ClipStr, uint l1 = 0, uint l2 = 0) {
+			if (l1 == 0) l1 = cs_layout_last;
+			if (l2 == 0) l2 = GetNextLayout(l1).uId;
+			var result = "";
+			var index = 0;
+			if (MahouUI.OneLayoutWholeWord) {
+				Logging.Log("[CT] > Using one layout whole word convert text mode.");
+				var allWords = SplitWords(ClipStr);
+				var word_index = 0;
+				foreach (var w in allWords) {
+					if (w == " ") {
+						result += w;
+					} else {
+						var wx = WordGuessLayout(w, l2).Item1;
+						if (!String.IsNullOrEmpty(wx))
+							result += wx;
+						else result += w;
+					}
+					word_index +=1;
+//					Debug.WriteLine("(" + w + ") ["+ result +"]");
+					index++;
+				}
+			} else {
+				Logging.Log("[CT] > Using default convert text mode.");
+				for (int I=0; I!=ClipStr.Length; I++) {
+					var sm = false;
+					var c = ClipStr[I];
+					if (c == 'ո' || c == 'Ո') {
+						if (c == 'ո') sm = true;
+						if (ClipStr.Length > I+1) {
+							if (ClipStr[I+1] == 'ւ') {
+								var shrt = l2 & 0xffff;
+								var _shrt = l1 & 0xffff;
+								if (shrt == 1033 || shrt == 1041) {
+									result += sm ? "u" : "U";
+									I++; continue;
+								}
+								if (_shrt == 1033 || _shrt == 1041) {
+									result += sm ? "u" : "U";
+									I++; continue;
+								}
+								if (shrt == 1049) {
+									result += sm ? "г" : "Г";
+									I++; continue;
+								}
+								if (_shrt == 1049) {
+									result += sm ? "г" : "Г";
+									I++; continue;
+								}
+							}
+						}
+					}
+					var T = InAnother(c, l1 & 0xffff, l2 & 0xffff);
+					for (int i = 0; i != MMain.locales.Length; i++) {
+						var l = MMain.locales[i].uId;
+						if (c == '\n')
+							T = "\n";
+						T = GermanLayoutFix(c);
+						T = InAnother(c, l & 0xffff, l2 & 0xffff);
+						if (T != "") 
+							break;
+						index++;
+					}
+					if (T == "")
+						T = ClipStr[index].ToString();
+					result += T;
+				}
+			}
+			return result;
+		}
 		/// <summary>
 		/// Converts selected text.
 		/// </summary>
@@ -1562,63 +1632,7 @@ namespace Mahou {
 							}
 							var l2 = GetNextLayout(l1).uId;
 							Debug.WriteLine("next: " +l2);
-							var index = 0;
-							if (MahouUI.OneLayoutWholeWord) {
-								Logging.Log("[CS] > Using one layout whole word convert selection mode.");
-								var allWords = SplitWords(ClipStr);
-								var word_index = 0;
-								foreach (var w in allWords) {
-									result += w == " " ? w : WordGuessLayout(w, l2).Item1;
-									word_index +=1;
-//									Debug.WriteLine("(" + w + ") ["+ result +"]");
-									index++;
-								}
-							} else {
-								Logging.Log("[CS] > Using default convert selection mode.");
-								for (int I=0; I!=ClipStr.Length; I++) {
-									var sm = false;
-									var c = ClipStr[I];
-									if (c == 'ո' || c == 'Ո') {
-										if (c == 'ո') sm = true;
-										if (ClipStr.Length > I+1) {
-											if (ClipStr[I+1] == 'ւ') {
-												var shrt = l2 & 0xffff;
-												var _shrt = l1 & 0xffff;
-												if (shrt == 1033 || shrt == 1041) {
-													result += sm ? "u" : "U";
-													I++; continue;
-												}
-												if (_shrt == 1033 || _shrt == 1041) {
-													result += sm ? "u" : "U";
-													I++; continue;
-												}
-												if (shrt == 1049) {
-													result += sm ? "г" : "Г";
-													I++; continue;
-												}
-												if (_shrt == 1049) {
-													result += sm ? "г" : "Г";
-													I++; continue;
-												}
-											}
-										}
-									}
-									var T = InAnother(c, l1 & 0xffff, l2 & 0xffff);
-									for (int i = 0; i != MMain.locales.Length; i++) {
-										var l = MMain.locales[i].uId;
-										if (c == '\n')
-											T = "\n";
-										T = GermanLayoutFix(c);
-										T = InAnother(c, l & 0xffff, l2 & 0xffff);
-										if (T != "") 
-											break;
-										index++;
-									}
-									if (T == "")
-										T = ClipStr[index].ToString();
-									result += T;
-								}
-							}
+							result = ConvertText(ClipStr, l1, l2);
 							cs_layout_last = l2;
 							Logging.Log("[CS] > Conversion of string [" + ClipStr + "] from locale [" + l1 + "] into locale [" + l2 + "] became [" + result + "].");
 							//Inputs converted text
@@ -1655,7 +1669,7 @@ namespace Mahou {
 						var output = "";
 						switch (t) {
 							case ConvT.Transliteration:
-								output = TransliterateSelection(ClipStr); break;
+								output = TransliterateText(ClipStr); break;
 							case ConvT.Random:
 								output = ToSTULRSelection(ClipStr,false,false,false,true); break;
 							case ConvT.Title:
@@ -1679,8 +1693,8 @@ namespace Mahou {
 				}
 			Memory.Flush();
 		}
-		public static string TransliterateSelection(string ClipStr) {
-			Logging.Log("[TRANSLTRT] > Starting Transliterate selection.");
+		public static string TransliterateText(string ClipStr) {
+			Logging.Log("[TRANSLTRT] > Starting Transliterate text.");
 			string output = ClipStr;
 			foreach (KeyValuePair<string, string> key in transliterationDict) {
 				if (output.Contains(key.Key))
@@ -1859,6 +1873,15 @@ namespace Mahou {
 				catch { Logging.Log("Error during clipboard "+(spc?"Special ":"")+"text restore after 5 tries.", 2); return false; }
 			}
 			return false;
+		}
+		public static string GetClipboard(int tries = 1, int timeout = 5) {
+			var txt = NativeClipboard.GetText();
+			for (int i = 1; i<tries; i++) {
+				if (!String.IsNullOrEmpty(txt)) break;
+				txt = NativeClipboard.GetText();
+				Thread.Sleep(timeout);
+			}
+			return txt;
 		}
 		/// <summary>
 		/// Sends RCtrl + Insert to selected get text, and returns that text by using WinAPI.GetText().

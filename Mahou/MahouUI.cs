@@ -1897,6 +1897,14 @@ DEL "+restartMahouPath;
 			icon.ShowHide += (_, __) => ToggleVisibility();
 			icon.EnaDisable += (_, __) => ToggleMahou();
 			icon.Restart += (_, __) => Restart();
+			icon.ConvertClip += (_, __) => {
+				var t = KMHook.ConvertText(KMHook.GetClipboard(2));
+				KMHook.RestoreClipBoard(t);
+			};
+			icon.TransliClip += (_, __) => {
+				var t = KMHook.TransliterateText(KMHook.GetClipboard(2));
+				KMHook.RestoreClipBoard(t);
+			};
 		}
 		/// <summary>
 		/// Initializes list boxes.
@@ -3667,7 +3675,11 @@ DEL ""ExtractASD.cmd""";
 			btn_OK.Text = MMain.Lang[Languages.Element.ButtonOK];
 			#endregion
 			#region Misc
-			icon.RefreshText(MMain.Lang[Languages.Element.Mahou], MMain.Lang[Languages.Element.ShowHide], MMain.Lang[Languages.Element.ExitMahou], MMain.Lang[Languages.Element.Enable], MMain.Lang[Languages.Element.RestartMahou]);
+			icon.RefreshText(MMain.Lang[Languages.Element.Mahou], MMain.Lang[Languages.Element.ShowHide],
+			                 MMain.Lang[Languages.Element.ExitMahou], MMain.Lang[Languages.Element.Enable],
+			                 MMain.Lang[Languages.Element.RestartMahou], MMain.Lang[Languages.Element.Convert],
+			                 MMain.Lang[Languages.Element.Transliterate], MMain.Lang[Languages.Element.Clipboard],
+			                 MMain.Lang[Languages.Element.Latest]);
 			#endregion
 			Logging.Log("Language changed.");
 			SetTooltips();

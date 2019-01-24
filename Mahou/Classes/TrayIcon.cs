@@ -3,13 +3,13 @@ using System.Windows.Forms;
 
 namespace Mahou {
     public class TrayIcon {
-        public event EventHandler<EventArgs> Exit;
-        public event EventHandler<EventArgs> EnaDisable;
-        public event EventHandler<EventArgs> ShowHide;
-        public event EventHandler<EventArgs> Restart;
+        public event EventHandler<EventArgs> Exit, EnaDisable,
+        	ShowHide, Restart, ConvertClip, TransliClip;
         public NotifyIcon trIcon;
         ContextMenu cMenu;
         MenuItem Exi, ShHi, EnDis, Resta;
+        /// <summary> Clipboard menu item. </summary>
+		MenuItem Clip, CConvert, CTransli, CLast;
         /// <summary>Initializes new tray icon.</summary>
         /// <param name="visible">State of tray icon's visibility on initialize.</param>
         public TrayIcon(bool? visible = true) {
@@ -17,12 +17,17 @@ namespace Mahou {
             cMenu = new ContextMenu();
             trIcon.Icon = Properties.Resources.MahouTrayHD;
             trIcon.Visible = visible == true;
+            CConvert = new MenuItem("Convert", ConvertClipHandler);
+            CTransli = new MenuItem("Transliterate", TransliClipHandler);
+            CLast = new MenuItem("Latest: (not implemented)"); // Dynamically add the last later
+            Clip = new MenuItem("Clipboard", new []{CConvert, CTransli, CLast});
             Exi = new MenuItem("Exit", ExitHandler);
             ShHi = new MenuItem("Show", ShowHideHandler);
             EnDis = new MenuItem("Enable", EnaDisableHandler);
             Resta = new MenuItem("Restart", RestartHandler);
             EnDis.Checked = true;
             cMenu.MenuItems.Add(ShHi);
+            cMenu.MenuItems.Add(Clip);
             cMenu.MenuItems.Add(EnDis);
             cMenu.MenuItems.Add(Resta);
             cMenu.MenuItems.Add(Exi);
@@ -36,25 +41,29 @@ namespace Mahou {
         public void CheckEnDis(bool endis) {
         	EnDis.Checked = endis;
         }
+        /// <summary>Transliterate the text in clipboard.</summary>
+        void TransliClipHandler(object sender, EventArgs e) {
+            if (TransliClip != null) TransliClip(this, null);
+        }
+        /// <summary>Convert the text in clipboard.</summary>
+        void ConvertClipHandler(object sender, EventArgs e) {
+            if (ConvertClip != null) ConvertClip(this, null);
+        }
         /// <summary>Toggle Mahou, enable/disable event handler..</summary>
         void EnaDisableHandler(object sender, EventArgs e) {
-            if (EnaDisable != null)
-                EnaDisable(this, null);
+            if (EnaDisable != null) EnaDisable(this, null);
         }
         /// <summary>Restart event handler..</summary>
         void RestartHandler(object sender, EventArgs e) {
-            if (Restart != null)
-                Restart(this, null);
+            if (Restart != null) Restart(this, null);
         }
         /// <summary>Exit event handler..</summary>
         void ExitHandler(object sender, EventArgs e) {
-            if (Exit != null)
-                Exit(this, null);
+            if (Exit != null) Exit(this, null);
         }
         /// <summary>ShowHide event handler..</summary>
         void ShowHideHandler(object sender, EventArgs e) {
-            if (ShowHide != null)
-                ShowHide(this, null);
+            if (ShowHide != null) ShowHide(this, null);
         }
         /// <summary>Hides tray icon.</summary>
         public void Hide() {
@@ -69,10 +78,8 @@ namespace Mahou {
             trIcon.Visible = true;
         }
         /// <summary>Refreshes tray icon various text.</summary>
-        /// <param name="TrText">Tray icon hover text.</param>
-        /// <param name="ShHiText">Show/Hide tray icon menu item's text.</param>
-        /// <param name="ExiText">Exit tray icon menu item's text.</param>
-        public void RefreshText(string TrText, string ShHiText, string ExiText, string EnaDisText, string RestartText) {
+        public void RefreshText(string TrText, string ShHiText, string ExiText, string EnaDisText,
+                                string RestartText, string ConvClipText, string TransliClipText, string ClipbText, string LatestText) {
             trIcon.Text = TrText;
             if (!String.IsNullOrEmpty(ShHiText))
             	ShHi.Text = ShHiText;
@@ -82,6 +89,14 @@ namespace Mahou {
             	EnDis.Text = EnaDisText;
             if (!String.IsNullOrEmpty(RestartText))
             	Resta.Text = RestartText;
+            if (!String.IsNullOrEmpty(ConvClipText))
+            	CConvert.Text = ConvClipText;
+            if (!String.IsNullOrEmpty(TransliClipText))
+            	CTransli.Text = TransliClipText;
+            if (!String.IsNullOrEmpty(ClipbText))
+            	Clip.Text = ClipbText;
+            if (!String.IsNullOrEmpty(LatestText))
+            	CLast.Text = LatestText;
         }
     }
 }
