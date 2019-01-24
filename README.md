@@ -807,7 +807,7 @@ Wallets:
 
 - Yandex.Money: 410015057363201 or http://yasobe.ru/na/mahou
 - MasterCard: 5168 7573 3941 2985
-- PayPal: [![](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4UHE4VSYVNUJW&source=url
+- PayPal: [![](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4UHE4VSYVNUJW&source=url)
 
 ###### By version features:
 
