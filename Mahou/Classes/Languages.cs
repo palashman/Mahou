@@ -776,7 +776,7 @@ public class Languages
 		{ Element.Transliterate, "Транслитерация" },
 		{ Element.Convert, "Конвертация" },
 		{ Element.Latest, "Последние" },
-		{ Element.Clipboard, "Буффер обмена" },
+		{ Element.Clipboard, "Буфер обмена" },
 		{ Element.Exist, "существует" },
 		{ Element.Keys, "Клавиши" }, 
 		{ Element.Key_Left, "Левый" }, 
