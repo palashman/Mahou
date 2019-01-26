@@ -4026,35 +4026,39 @@ DEL ""ExtractASD.cmd""";
 						MMain.MyConfs.WriteSave("Updates", "LatestCommit", UpdInfo[4]);
 					else MMain.MyConfs.WriteSave("Updates", "LatestCommit", "Downgraded to Stable");
 					Logging.Log("Downloading Mahou update: "+UpdInfo[3]);
-					wc.DownloadFileAsync(new Uri(UpdInfo[3]), Path.Combine(Path.GetTempPath(), fn));
-					btn_DownloadUpdate.Text = "Downloading " + fn;
-					animate.Tick += (_, __) => { btn_DownloadUpdate.Text += "."; };
-					animate.Start();
-					btn_DownloadUpdate.Enabled = false;
-					tmr.Tick += (_, __) => {
-						// Checks if progress changed?
-						if (progress == _progress) {
-							old.Stop();
-							isold = true;
-							btn_DownloadUpdate.Enabled = true;
-							animate.Stop();
-							prb_UpdateDownloadProgress.Value = progress = _progress = 0;
-							wc.CancelAsync();
-							updating = false;
-							btn_DownloadUpdate.Text = "Error...";
-							tmr.Tick += (o, oo) => {
-								btn_DownloadUpdate.Text = BDMText;
+					try {
+						wc.DownloadFileAsync(new Uri(UpdInfo[3]), Path.Combine(Path.GetTempPath(), fn));
+						btn_DownloadUpdate.Text = "Downloading " + fn;
+						animate.Tick += (_, __) => { btn_DownloadUpdate.Text += "."; };
+						animate.Start();
+						btn_DownloadUpdate.Enabled = false;
+						tmr.Tick += (_, __) => {
+							// Checks if progress changed?
+							if (progress == _progress) {
+								old.Stop();
+								isold = true;
+								btn_DownloadUpdate.Enabled = true;
+								animate.Stop();
+								prb_UpdateDownloadProgress.Value = progress = _progress = 0;
+								wc.CancelAsync();
+								updating = false;
+								btn_DownloadUpdate.Text = "Error...";
+								tmr.Tick += (o, oo) => {
+									btn_DownloadUpdate.Text = BDMText;
+									tmr.Stop();
+								};
+								tmr.Interval = 3000;
+								tmr.Start();
+							} else {
 								tmr.Stop();
-							};
-							tmr.Interval = 3000;
-							tmr.Start();
-						} else {
-							tmr.Stop();
-						}
-					};
-					old.Start();
-					tmr.Interval = 15000;
-					tmr.Start();
+							}
+						};
+						old.Start();
+						tmr.Interval = 15000;
+						tmr.Start();
+					} catch(Exception ex) {
+						Logging.Log("Download update error: "+ ex.Message + Environment.NewLine+ex.StackTrace, 1);
+					}
 				}
 			}
 		}
