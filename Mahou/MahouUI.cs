@@ -2539,6 +2539,8 @@ DEL "+restartMahouPath;
 		public void ExitProgram() {
 			Logging.Log("Exit by user demand.");
 			PreExit();
+			if (!KMHook.IfNW7())
+				System.Threading.Thread.Sleep(100);
 			var piKill = new ProcessStartInfo() {
 				FileName = "taskkill",
 				Arguments = "/IM Mahou.exe /F", 
