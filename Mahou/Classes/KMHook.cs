@@ -2079,8 +2079,10 @@ namespace Mahou {
 					jklXHidServ.ActionOnLayout = () => StartConvertWord(YuKeys, wasLocale);
 					jklXHidServ.OnLayoutAction = desl;
 					ChangeLayout(true);
-				} else
+				} else {
+					ChangeLayout(true);
 					StartConvertWord(YuKeys, wasLocale);
+				}
 			} catch (Exception e) {
 				Logging.Log("Convert Last encountered error, details:\r\n" +e.Message+"\r\n"+e.StackTrace, 1);
 			}
