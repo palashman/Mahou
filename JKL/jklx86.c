@@ -6,6 +6,7 @@
 
 HWND MAIN;
 HMODULE lib32;
+UINT uMSG;
 
 void PostQuit() {
 	FUNC unHook32 = (FUNC)GetProcAddress(lib32, "unHook");
@@ -46,7 +47,7 @@ void SetTimerThread() {
 void StandAlone(LPSTR nCmdLine) {
 	if (strcmp(nCmdLine, "-msg") == 0) {
 		UFUNC getUMsg = (UFUNC)GetProcAddress(lib32, "getUMsg");
-		UINT uMSG = getUMsg();
+		uMSG = getUMsg();
 		FILE* fp;
 		fp = fopen("umsg.id", "w");
 		if(fp == NULL)
@@ -62,6 +63,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR nCmdLine,
 	MAIN = CreateHWND(hInstance, "_HIDDEN_X86_HELPER", (WNDPROC)WndProc);
     lib32 = LoadLibrary("jklx86.dll");
 	SetTimerThread();
+  UFUNC getUMsg = (UFUNC)GetProcAddress(lib32, "getUMsg");
+  uMSG = getUMsg();
 	FUNC setHook32 = (FUNC)GetProcAddress(lib32, "setHook");
 	setHook32();
 	MSG Msg;
