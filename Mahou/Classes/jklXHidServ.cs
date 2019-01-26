@@ -83,6 +83,7 @@ namespace Mahou {
 		        }
 		        HWND = WinAPI.CreateWindowExW(0, "_XHIDDEN_HWND_SERVER", "_XHIDDEN_HWND_SERVER", 0, 0, 0, 0, 0,
 		                                      IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
+		        Logging.Log("[JKL] > SERVER HWND: " +HWND);
 			}
 			if (!running) {
 				if (jklExist()) {
@@ -116,7 +117,7 @@ namespace Mahou {
 					if (tries <= 20) {
 						Logging.Log("[JKL] > umsg.id found, after " + tries + " tries * 350ms timeout.");
 						Logging.Log("[JKL] > Retrieving umsg.id...");
-						jkluMSG = Convert.ToInt32(File.ReadAllText(umsgID));
+						jkluMSG = Int32.Parse(File.ReadAllText(umsgID));
 						File.Delete(umsgID);
 //						KMHook.DoLater(() => CycleAllLayouts(Locales.ActiveWindow()), 350);
 						KMHook.DoLater(() => { MahouUI.GlobalLayout = MahouUI.currentLayout = Locales.GetCurrentLocale(); }, 200);
@@ -145,6 +146,8 @@ namespace Mahou {
 				MahouUI.GlobalLayout = MahouUI.currentLayout = layout;
 				Logging.Log("[JKL] > Layout changed to [" + layout + "] / [0x"+layout.ToString("X") +"].");
 				Debug.WriteLine(">> JKL LC: " + layout);
+				Logging.Log("[JKL] > On layout act:" +OnLayoutAction);
+				Logging.Log("[JKL] > ACtion: " +(ActionOnLayout==null?"null":ActionOnLayout.Method.Name));
 				if (layout == OnLayoutAction) {
 					OnLayoutAction = 0;
 					Debug.WriteLine("Executing action: " + ActionOnLayout.Method.Name + " on layout: " +layout);
