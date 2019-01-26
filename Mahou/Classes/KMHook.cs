@@ -1409,17 +1409,23 @@ namespace Mahou {
 			if (LastWord) {
 				c_word_backup_last = new List<YuKey>(c_word_backup);
 				c_word_backup = new List<YuKey>(MMain.c_word);
-				MMain.c_word.Clear();
-				Logging.Log("[CLWORD] > Cleared last word" + ReasonEnding);
+				if (MMain.c_word.Count > 0) {
+					MMain.c_word.Clear();
+					Logging.Log("[CLWORD] > Cleared last word" + ReasonEnding);
+				}
 			}
 			if (LastLine) {
-				MMain.c_words.Clear();
-				Logging.Log("[CLWORD] > Cleared last line" + ReasonEnding);
+				if (MMain.c_words.Count > 0) {
+					MMain.c_words.Clear();
+					Logging.Log("[CLWORD] > Cleared last line" + ReasonEnding);
+				}
 			}
 			if (Snippet) {
-				if (MahouUI.SnippetsEnabled) {
-					c_snip.Clear();
+				if (MMain.c_snip.Count > 0) {
+					if (MahouUI.SnippetsEnabled) {
+						c_snip.Clear();
 					Logging.Log("[CLWORD] > Cleared current snippet" + ReasonEnding);
+				}
 				}
 			}
 			MahouUI.RefreshFLAG();
