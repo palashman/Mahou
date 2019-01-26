@@ -23,7 +23,7 @@ namespace Mahou {
 		public static int skip_mouse_events, skip_spec_keys, cursormove = -1, guess_tries;
 		static uint as_lword_layout = 0;
 		static uint cs_layout_last = 0;
-		static string lastClipText = "", busy_on = "";
+		static string lastClipText = "", busy_on = "", lastLWClearReason = "";
 		static List<Keys> tempNumpads = new List<Keys>();
 		public static List<char> c_snip = new List<char>();
 		public static System.Windows.Forms.Timer doublekey = new System.Windows.Forms.Timer();
@@ -1148,7 +1148,7 @@ namespace Mahou {
 		}
 		#endregion
 		public static bool IfNW7() {
-			Logging.Log("OS: " +Environment.OSVersion.Version);
+//			Logging.Log("OS: " +Environment.OSVersion.Version);
 			return Environment.OSVersion.Version.Major == 10 || (Environment.OSVersion.Version.Major == 6 && Environment.OSVersion.Version.Minor > 1);
 		}
 		public static void DoLater(Action act, int timeout) {
@@ -1411,6 +1411,7 @@ namespace Mahou {
 				c_word_backup = new List<YuKey>(MMain.c_word);
 				if (MMain.c_word.Count > 0) {
 					MMain.c_word.Clear();
+					lastLWClearReason = ReasonEnding;
 					Logging.Log("[CLWORD] > Cleared last word" + ReasonEnding);
 				}
 			}
@@ -2059,21 +2060,25 @@ namespace Mahou {
 			try { //Used to catch errors, since it called as Task
 				Debug.WriteLine("Start CL");
 				Debug.WriteLine(c_.Count + " LL");
+				Logging.Log("[CLAST] > Starting to convert word, count:"+c_.Count+", LW: "+MMain.c_word.Count+" Last CR:"+lastLWClearReason);
 				if (c_.Count <= 0)
 					return;
 				Locales.IfLessThan2();
 				YuKey[] YuKeys = c_.ToArray();
-				Logging.Log("Starting to convert word.");
 				if (MahouUI.SoundOnConvLast)
 					MahouUI.SoundPlay();
 				if (MahouUI.SoundOnConvLast2)
 					MahouUI.Sound2Play();
 				var wasLocale = Locales.GetCurrentLocale() & 0xFFFF;
-				var desl = ChangeLayout(true);
+				if (MahouUI.UseJKL)
+					wasLocale = MahouUI.currentLayout;
+				var desl = GetNextLayout(wasLocale).uId;
 				if (MahouUI.UseJKL && MahouUI.SwitchBetweenLayouts && MahouUI.EmulateLS) {
 					Debug.WriteLine("JKL-ed CLW");
-					jklXHidServ.OnLayoutAction = desl;
+					Logging.Log("[CLAST] > On JKL layout: " +desl);
 					jklXHidServ.ActionOnLayout = () => StartConvertWord(YuKeys, wasLocale);
+					jklXHidServ.OnLayoutAction = desl;
+					ChangeLayout(true);
 				} else
 					StartConvertWord(YuKeys, wasLocale);
 			} catch (Exception e) {
