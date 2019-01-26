@@ -1421,7 +1421,7 @@ namespace Mahou {
 				}
 			}
 			if (Snippet) {
-				if (MMain.c_snip.Count > 0) {
+				if (c_snip.Count > 0) {
 					if (MahouUI.SnippetsEnabled) {
 						c_snip.Clear();
 					Logging.Log("[CLWORD] > Cleared current snippet" + ReasonEnding);
