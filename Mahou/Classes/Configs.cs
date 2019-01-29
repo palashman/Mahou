@@ -147,8 +147,8 @@ namespace Mahou {
 	                create = false;
         		} else { 
 			    	using (var sr = new StreamReader(filePath)) {
-			    				sr.Read();
-		        		}
+	    				sr.Read();
+	        		}
         		}
         		fine = true;
         	} catch(Exception e) {
@@ -158,16 +158,17 @@ namespace Mahou {
         	}
         }
         public static bool SwitchToAppData(bool create, Exception e) {
-         if (MessageBox.Show(MMain.Lang[Languages.Element.ConfigsCannot]+(create ? MMain.Lang[Languages.Element.Created] : MMain.Lang[Languages.Element.Readen])+", "+ MMain.Lang[Languages.Element.Error].ToLower() + ":\r\n" + e.Message + "\r\n" + MMain.Lang[Languages.Element.RetryInAppData],
+        	Logging.Log("Configs read/write error, details: " + e.Message +"\n"+e.StackTrace);
+         	if (MessageBox.Show(MMain.Lang[Languages.Element.ConfigsCannot]+(create ? MMain.Lang[Languages.Element.Created] : MMain.Lang[Languages.Element.Readen])+", "+ MMain.Lang[Languages.Element.Error].ToLower() + ":\r\n" + e.Message + "\r\n" + MMain.Lang[Languages.Element.RetryInAppData],
         		                    MMain.Lang[Languages.Element.Error], MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes) {
-        			if (!Directory.Exists(MahouUI.mahou_folder_appd))
-        				Directory.CreateDirectory(MahouUI.mahou_folder_appd);
-        			var copy = File.Exists(filePath);
-        			filePath = Path.Combine(MahouUI.mahou_folder_appd, "Mahou.ini");
-        			File.Create(Path.Combine(MahouUI.mahou_folder_appd,".force"));
-        			MMain.MyConfs = new Configs();
-        			return true;
-        		}
+    			if (!Directory.Exists(MahouUI.mahou_folder_appd))
+    				Directory.CreateDirectory(MahouUI.mahou_folder_appd);
+    			var copy = File.Exists(filePath);
+    			filePath = Path.Combine(MahouUI.mahou_folder_appd, "Mahou.ini");
+    			File.Create(Path.Combine(MahouUI.mahou_folder_appd,".force"));
+    			MMain.MyConfs = new Configs();
+    			return true;
+    		}
         	return false;
         }
         /// <summary> Check if configs file readable. </summary>
@@ -175,7 +176,7 @@ namespace Mahou {
 	        public static bool Readable() {
         	try {
 		    	using (var sr = new StreamReader(filePath)) {
-	    				sr.Read();
+    				sr.Read();
         		}
         	} catch(Exception e) { Logging.Log("Configs file ["+filePath+"] cannot be readen, error:\r\n" + e.Message); return false; }
         	return true;
