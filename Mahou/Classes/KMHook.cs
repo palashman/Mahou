@@ -18,7 +18,7 @@ namespace Mahou {
 			clickAfterCTRL, clickAfterALT, clickAfterSHIFT,
 			hotkeywithmodsfired, csdoing, incapt, waitfornum, 
 			IsHotkey, ff_chr_wheeled, preSnip, LMB_down, RMB_down, MMB_down,
-			dbl_click, click, selfie, aftsingleAS;
+			dbl_click, click, selfie, aftsingleAS, JKLERR;
 		public static System.Windows.Forms.Timer click_reset = new System.Windows.Forms.Timer();
 		public static int skip_mouse_events, skip_spec_keys, cursormove = -1, guess_tries;
 		static uint as_lword_layout = 0;
@@ -142,7 +142,7 @@ namespace Mahou {
 					win_r = false;
 			}
 			// Clear currentLayout in MMain.mahou rule
-			if (!MahouUI.UseJKL)
+			if (!MahouUI.UseJKL || KMHook.JKLERR)
 				if (((win || alt || ctrl || win_r || alt_r || ctrl_r) && Key == Keys.Tab) ||
 				    win && (Key != Keys.None && 
 				            Key != Keys.LWin && 
@@ -152,7 +152,7 @@ namespace Mahou {
 			    ((alt || ctrl || alt_r || ctrl_r) && (Key == Keys.Shift || Key == Keys.LShiftKey || Key == Keys.RShiftKey)) ||
 			     shift && (Key == Keys.Menu || Key == Keys.LMenu || Key == Keys.RMenu) ||
 			     (IfNW7() && (win || win_r) && Key == Keys.Space))) {
-				if (!MahouUI.UseJKL) {
+				if (!MahouUI.UseJKL || KMHook.JKLERR) {
 					var time = 200;
 					if (IfNW7())
 						time = 50;
@@ -447,7 +447,7 @@ namespace Mahou {
 					clickAfterSHIFT = true;
 				if (alt || alt_r)
 					clickAfterALT = true;
-				if (!MahouUI.UseJKL)
+				if (!MahouUI.UseJKL || KMHook.JKLERR)
 					MahouUI.currentLayout = 0;
 				ClearWord(true, true, true, "Mouse click");
 			}
@@ -563,7 +563,7 @@ namespace Mahou {
 			uint hwndLayout = Locales.GetCurrentLocale(hwnd);
 			as_lword_layout = 0;
 			bool conhost = false;
-			if (MahouUI.UseJKL) {
+			if (MahouUI.UseJKL && !KMHook.JKLERR) {
 				if (ConHost_HWNDs.Contains(hwnd)) {
 					conhost = true;
 					Logging.Log("[JKL] > Known ConHost window: " + hwnd);
@@ -579,7 +579,7 @@ namespace Mahou {
 					}
 				}
 			}
-			if (!MahouUI.UseJKL || !conhost) {
+			if (!MahouUI.UseJKL || KMHook.JKLERR || !conhost) {
 				MahouUI.currentLayout = /*MahouUI.GlobalLayout =*/ hwndLayout;
 				Logging.Log("[FOCUS] > Updating currentLayout on window activate to ["+MahouUI.currentLayout+"]...");
 			}
@@ -641,7 +641,7 @@ namespace Mahou {
 	        					Debug.WriteLine("snl: " +snil + ", l:" +snl + "\nas_crI: " + as_corrects[i] + ", l: " +asl + "\nSKIP: " +skipLS);
 	        					var ofk = false;
 	        					if (!skipLS) {
-	        						if (MahouUI.UseJKL && MahouUI.SwitchBetweenLayouts && MahouUI.EmulateLS) {
+	        						if (MahouUI.UseJKL && MahouUI.SwitchBetweenLayouts && MahouUI.EmulateLS && !KMHook.JKLERR) {
 										jklXHidServ.OnLayoutAction = asl;
 										var was = Locales.GetCurrentLocale();
 	        							jklXHidServ.ActionOnLayout = () => {
@@ -793,7 +793,7 @@ namespace Mahou {
 				byt[(int)Keys.ShiftKey] = 0xFF;
 			}
 			uint layout = Locales.GetCurrentLocale() & 0xffff;
-			if (MahouUI.UseJKL) {
+			if (MahouUI.UseJKL && !KMHook.JKLERR) {
 				if (layout != (MahouUI.currentLayout & 0xffff)) {
 					if (IsConhost())
 						layout = MahouUI.currentLayout & 0xffff;
@@ -1633,7 +1633,7 @@ namespace Mahou {
 							if (MahouUI.ConvertSelectionLS) {
 								Logging.Log("[CS] > Using Layout Switch in Convert Selection.");
 								l1 = Locales.GetCurrentLocale();
-								if (MahouUI.UseJKL)
+								if (MahouUI.UseJKL && !KMHook.JKLERR)
 									l1 = MahouUI.currentLayout;
 								ChangeLayout();
 							}
@@ -2041,7 +2041,7 @@ namespace Mahou {
 						}
 						if (!skipsnip) {
 							var loc = (Locales.GetCurrentLocale() & 0xffff);
-							if (MahouUI.UseJKL)
+							if (MahouUI.UseJKL && !KMHook.JKLERR)
 								loc = MahouUI.currentLayout & 0xffff;
 							WinAPI.ToUnicodeEx((uint)YuKeys[i].key, (uint)WinAPI.MapVirtualKey((uint)YuKeys[i].key, 0), byu, c, (int)5, (uint)0, (IntPtr)loc);
 							c_snip.Add(c[0]);
@@ -2070,15 +2070,23 @@ namespace Mahou {
 				if (MahouUI.SoundOnConvLast2)
 					MahouUI.Sound2Play();
 				var wasLocale = Locales.GetCurrentLocale() & 0xFFFF;
-				if (MahouUI.UseJKL)
+				if (MahouUI.UseJKL && !KMHook.JKLERR)
 					wasLocale = MahouUI.currentLayout;
 				var desl = GetNextLayout(wasLocale).uId;
-				if (MahouUI.UseJKL && MahouUI.SwitchBetweenLayouts && MahouUI.EmulateLS) {
+				if (MahouUI.UseJKL && MahouUI.SwitchBetweenLayouts && MahouUI.EmulateLS && !JKLERR) {
 					Debug.WriteLine("JKL-ed CLW");
 					Logging.Log("[CLAST] > On JKL layout: " +desl);
+					jklXHidServ.actionOnLayoutExecuted = false;
 					jklXHidServ.ActionOnLayout = () => StartConvertWord(YuKeys, wasLocale);
 					jklXHidServ.OnLayoutAction = desl;
 					ChangeLayout(true);
+					DoLater(() => {
+					        	if (!jklXHidServ.actionOnLayoutExecuted) {
+					        		Logging.Log("JKL convert word failed, JKL didn't monitor the layout or didn't send it, fallback to default...",1);
+									StartConvertWord(YuKeys, wasLocale);
+									JKLERR = true;
+				        		}
+					        }, 1800);
 				} else {
 					ChangeLayout(true);
 					StartConvertWord(YuKeys, wasLocale);
@@ -2182,7 +2190,7 @@ namespace Mahou {
 					if (MahouUI.SwitchBetweenLayouts) {
 						uint last = 0;
 						bool conhost = false;
-						if (MahouUI.UseJKL) {
+						if (MahouUI.UseJKL && !KMHook.JKLERR) {
 							conhost = IsConhost();
 						}
 						for (int i=MMain.locales.Length; i!=0; i--) {
@@ -2242,7 +2250,7 @@ namespace Mahou {
 			var loc = Locales.GetCurrentLocale();
 			//Cycles while layout not changed
 			do {
-				if (MahouUI.UseJKL)
+				if (MahouUI.UseJKL && !KMHook.JKLERR)
 					if ((loc == last && loc != 0) || conhost)
 						loc = MahouUI.currentLayout;
 				WinAPI.SendMessage(hwnd, (int)WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, LayoutId);
@@ -2276,7 +2284,7 @@ namespace Mahou {
 			for (int i = MMain.locales.Length; i != 0; i--) {
 				uint loc = Locales.GetCurrentLocale();
 //				Debug.WriteLine(loc + " " + last);
-				if (MahouUI.UseJKL && ((loc == 0 || loc == last) || conhost)) {
+				if (MahouUI.UseJKL && !KMHook.JKLERR && ((loc == 0 || loc == last) || conhost)) {
 					jklXHidServ.start_cyclEmuSwitch = true;
 					jklXHidServ.cycleEmuDesiredLayout = LayoutId;
 					Debug.WriteLine("LI: " + LayoutId);
@@ -2295,7 +2303,7 @@ namespace Mahou {
 				if (!failed)
 					break;
 			}
-			if (!MahouUI.UseJKL)
+			if (!MahouUI.UseJKL || KMHook.JKLERR)
 				if (!failed) {
 					MahouUI.currentLayout = MahouUI.GlobalLayout = LayoutId;
 				} else
@@ -2321,7 +2329,7 @@ namespace Mahou {
 				KInputs.MakeInput(KInputs.AddPress(Keys.Space), (int)WinAPI.MOD_WIN);
 				Thread.Sleep(20); //Important!
 			}
-			if (!MahouUI.UseJKL)
+			if (!MahouUI.UseJKL || KMHook.JKLERR)
 				DoLater(() => { MahouUI.currentLayout = MahouUI.GlobalLayout = Locales.GetCurrentLocale(); }, 10);
 		}
 		public static Locales.Locale GetNextLayout(uint before = 0) {
@@ -2329,7 +2337,7 @@ namespace Mahou {
 			var loc = new Locales.Locale();
 			uint last = 0;
 			var cur = Locales.GetCurrentLocale(); 
-			if (MahouUI.UseJKL)
+			if (MahouUI.UseJKL && !KMHook.JKLERR)
 				if (cur == 0 || cur == last)
 					cur = MahouUI.currentLayout;
 			if (before != 0)
@@ -2494,7 +2502,7 @@ namespace Mahou {
 			if (_target == 0) {
 				if (MahouUI.SwitchBetweenLayouts) {
 					var cur = Locales.GetCurrentLocale();
-					if (MahouUI.UseJKL)
+					if (MahouUI.UseJKL && !KMHook.JKLERR)
 						cur = MahouUI.currentLayout;
 					target = cur == MahouUI.MAIN_LAYOUT1 ? MahouUI.MAIN_LAYOUT2 : MahouUI.MAIN_LAYOUT1;
 				} else 

@@ -11,7 +11,7 @@ namespace Mahou {
 		public static Action ActionOnLayout;
 		public static uint OnLayoutAction = 0;
 		public static int jkluMSG = -1;
-		public static bool running = false, self_change;
+		public static bool running = false, self_change, actionOnLayoutExecuted;
 		/// <summary>0=exe, 1=dll, 2=x86.exe, 3=x86.dll</summary>
 		public static bool[] jklFEX = new bool[5];
 		public static string jklInfoStr = "";
@@ -126,6 +126,10 @@ namespace Mahou {
 				} else {
 					Logging.Log("[JKL] > " + jklInfoStr, 1);
 				}
+				if (jkluMSG == -1)
+					KMHook.JKLERR = true;
+				else 
+					KMHook.JKLERR = false;
 				Logging.Log("[JKL] > Init done, umsg: ["+jkluMSG+"], JKLXServ: ["+HWND+"].");
 			}
 	    }
@@ -152,6 +156,8 @@ namespace Mahou {
 					OnLayoutAction = 0;
 					Debug.WriteLine("Executing action: " + ActionOnLayout.Method.Name + " on layout: " +layout);
 					ActionOnLayout();
+					ActionOnLayout = null;
+					actionOnLayoutExecuted = true;
 				}
 				if (start_cyclEmuSwitch) {
 					if (layout != cycleEmuDesiredLayout)

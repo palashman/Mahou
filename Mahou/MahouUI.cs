@@ -1715,9 +1715,9 @@ DEL "+restartMahouPath;
 			if (force) FLAG = ITEXT = null;
 			Debug.WriteLine("STIlL");
 			int lcid = 0;
-			if (!UseJKL)
+			if (!UseJKL || KMHook.JKLERR)
 				lcid = (int)(Locales.GetCurrentLocale() & 0xffff);
-			else 
+			else
 				lcid = (int)(MahouUI.currentLayout & 0xffff);
 			var ol = false;
 			if (MMain.mahou != null) 
@@ -1837,7 +1837,7 @@ DEL "+restartMahouPath;
 			uint lcid = 0;
 			if (OneLayout)
 				lcid = GlobalLayout;
-			else if (!UseJKL)
+			else if (!UseJKL || KMHook.JKLERR)
 				lcid = Locales.GetCurrentLocale();
 			else 
 				lcid = MahouUI.currentLayout;
@@ -2057,7 +2057,7 @@ DEL "+restartMahouPath;
 				if (ScrollTip && !KMHook.alt) {
 					KMHook.DoSelf(() => {
 		              	var l = currentLayout;
-		              	if (!UseJKL)
+		              	if (!UseJKL || KMHook.JKLERR)
 		              		l = Locales.GetCurrentLocale();
 						if (l == MahouUI.MAIN_LAYOUT1) {
 							if (!Control.IsKeyLocked(Keys.Scroll)) { // Turn on 
@@ -2145,7 +2145,7 @@ DEL "+restartMahouPath;
 		public void UpdateMouseLD() {
 			if (LDForMouseOnChange) {
 				var cLuid = Locales.GetCurrentLocale();
-				if (UseJKL)
+				if (UseJKL && !KMHook.JKLERR)
 					cLuid = currentLayout;
 				if (onepass) {
 					latestL = cLuid;
@@ -2174,7 +2174,7 @@ DEL "+restartMahouPath;
 			var notTwo = false;
 			if (LDForCaretOnChange || DiffAppearenceForLayouts) {
 				cLuid = Locales.GetCurrentLocale();
-				if (UseJKL)
+				if (UseJKL && !KMHook.JKLERR)
 					cLuid = currentLayout;
 			}
 			if (LDForCaretOnChange && cLuid != 0) {
@@ -2509,7 +2509,7 @@ DEL "+restartMahouPath;
 			}
 		}
 		void PreExit(bool hideicon = true, int noglobal = 0) {
-			if (UseJKL)
+			if (UseJKL && !KMHook.JKLERR)
 				jklXHidServ.Destroy();
 			if (hideicon)
 				icon.Hide();

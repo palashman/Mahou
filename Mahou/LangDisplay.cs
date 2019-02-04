@@ -78,7 +78,7 @@ namespace Mahou
 			if (!Visible || Empty) return;
 			if (cLid == 0)
 				cLid = MahouUI.currentLayout;
-			if (MahouUI.UseJKL)
+			if (MahouUI.UseJKL && !KMHook.JKLERR)
 				cLid = MahouUI.currentLayout;
 			if (MahouUI.OneLayout)
 				cLid = MahouUI.GlobalLayout;
