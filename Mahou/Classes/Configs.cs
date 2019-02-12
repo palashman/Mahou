@@ -220,6 +220,7 @@ namespace Mahou {
 			#region Updates
 			CheckString("Updates", "LatestCommit", "");
 			CheckString("Updates", "Channel", "Stable");
+			CheckString("Updates", "Delay", "5");
 			#endregion
 			#region Language Panel
 			CheckBool("LangPanel", "UpperArrow", "true");
