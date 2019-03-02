@@ -234,10 +234,6 @@ namespace Mahou {
 			RefreshAllIcons();
 			//Background startup check for updates
 			if (MMain.MyConfs.ReadBool("Functions", "StartupUpdatesCheck")) {
-				var update_delay = MMain.MyConfs.ReadInt("Updates", "Delay");
-				if (update_delay <= 0) update_delay = 1;
-				Logging.Log("[UPD] > Delaying updates by " + update_delay +"s.");
-				System.Threading.Thread.Sleep(update_delay*1000);
 				uche = new System.Threading.Thread(StartupCheck);
 				uche.Name = "Startup Check";
 				uche.Start();
@@ -3420,6 +3416,10 @@ DEL ""ExtractASD.cmd""";
 		/// </summary>
 		public void StartupCheck() {
 			Logging.Log("Startup check for updates.");
+			var update_delay = MMain.MyConfs.ReadInt("Updates", "Delay");
+			if (update_delay <= 0) update_delay = 1;
+			Logging.Log("[UPD] > Delaying updates by " + update_delay +"s.");
+			System.Threading.Thread.Sleep(update_delay*1000);
 			System.Threading.Tasks.Task.Factory.StartNew(GetUpdateInfo).Wait();
 			SetUInfo();
 			bool silent = MMain.MyConfs.ReadBool("Functions", "SilentUpdate");
