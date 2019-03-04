@@ -153,11 +153,11 @@ namespace Mahou {
 				Logging.Log("[JKL] > On layout act:" +OnLayoutAction);
 				Logging.Log("[JKL] > ACtion: " +(ActionOnLayout==null?"null":ActionOnLayout.Method.Name));
 				if (layout == OnLayoutAction) {
+					actionOnLayoutExecuted = true;
 					OnLayoutAction = 0;
 					Debug.WriteLine("Executing action: " + ActionOnLayout.Method.Name + " on layout: " +layout);
 					ActionOnLayout();
 					ActionOnLayout = null;
-					actionOnLayoutExecuted = true;
 				}
 				if (start_cyclEmuSwitch) {
 					if (layout != cycleEmuDesiredLayout)

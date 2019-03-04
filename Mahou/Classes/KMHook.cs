@@ -18,8 +18,9 @@ namespace Mahou {
 			clickAfterCTRL, clickAfterALT, clickAfterSHIFT,
 			hotkeywithmodsfired, csdoing, incapt, waitfornum, 
 			IsHotkey, ff_chr_wheeled, preSnip, LMB_down, RMB_down, MMB_down,
-			dbl_click, click, selfie, aftsingleAS, JKLERR;
+			dbl_click, click, selfie, aftsingleAS, JKLERR, JKLERRchecking;
 		public static System.Windows.Forms.Timer click_reset = new System.Windows.Forms.Timer();
+		public static System.Windows.Forms.Timer JKLERRT = new System.Windows.Forms.Timer();
 		public static int skip_mouse_events, skip_spec_keys, cursormove = -1, guess_tries;
 		static uint as_lword_layout = 0;
 		static uint cs_layout_last = 0;
@@ -2081,17 +2082,40 @@ namespace Mahou {
 				if (MahouUI.UseJKL && MahouUI.SwitchBetweenLayouts && MahouUI.EmulateLS && !JKLERR) {
 					Debug.WriteLine("JKL-ed CLW");
 					Logging.Log("[CLAST] > On JKL layout: " +desl);
-					jklXHidServ.actionOnLayoutExecuted = false;
-					jklXHidServ.ActionOnLayout = () => StartConvertWord(YuKeys, wasLocale);
-					jklXHidServ.OnLayoutAction = desl;
-					ChangeLayout(true);
-					DoLater(() => {
-					        	if (!jklXHidServ.actionOnLayoutExecuted) {
-					        		Logging.Log("JKL convert word failed, JKL didn't monitor the layout or didn't send it, fallback to default...",1);
-									StartConvertWord(YuKeys, wasLocale);
-									JKLERR = true;
-				        		}
-					        }, 1800);
+		        	if (!JKLERRchecking) {
+						Debug.WriteLine("JKL-ed CLW JKLERRNCH");
+						jklXHidServ.actionOnLayoutExecuted = false;
+						jklXHidServ.ActionOnLayout = () => StartConvertWord(YuKeys, wasLocale);
+						jklXHidServ.OnLayoutAction = desl;
+						ChangeLayout(true);
+						JKLERRchecking = true;
+						var t = 0;
+						JKLERRT.Interval = 50;
+						JKLERRT.Tick += (_, __) => {
+				        	if (!jklXHidServ.actionOnLayoutExecuted) {
+				        		Logging.Log("JKL convert word failed, JKL didn't monitor the layout or didn't send it, fallback to default...",1);
+				        		Logging.Log("JKL seems BAD.");
+								StartConvertWord(YuKeys, wasLocale);
+								JKLERR = true;
+								JKLERRchecking = false;
+								JKLERRT.Stop();
+								JKLERRT.Dispose();
+								JKLERRT = new System.Windows.Forms.Timer();
+							} else {
+								Logging.Log("JKL seems OK.");
+								Debug.WriteLine("JKL seems OK...");
+								JKLERRchecking = false;
+								JKLERRT.Stop();
+								JKLERRT.Dispose();
+								JKLERRT = new System.Windows.Forms.Timer();
+							}
+							Debug.WriteLine("JKL CHECK...");
+							if (t > 50)
+								JKLERRchecking = false;
+							t++;
+						};
+						JKLERRT.Start();
+					}
 				} else {
 					ChangeLayout(true);
 					StartConvertWord(YuKeys, wasLocale);
