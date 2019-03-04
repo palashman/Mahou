@@ -875,7 +875,7 @@ namespace Mahou {
               });
 		}
 		#region in Snippets expressions  
-		static readonly string[] expressions = new []{ "__date", "__time", "__version", "__system", "__title", "__keyboard", "__execute", "__cursorhere", "__paste", "__mahouhome" };
+		static readonly string[] expressions = new []{ "__date", "__time", "__version", "__system", "__title", "__keyboard", "__execute", "__cursorhere", "__paste", "__mahouhome", "__delay" };
 		static void ExpandSnippetWithExpressions(string expand) {
 			string ex = "", args = "", raw = "", err = "";
 			bool args_getting = false, is_expr = false, escaped = false;
@@ -1027,6 +1027,11 @@ namespace Mahou {
 					break;
 				case "__execute":
 					Execute(args);
+					break;
+				case "__delay":
+					int d = 0;
+					if (Int32.TryParse(args, out d))
+						Thread.Sleep(d);
 					break;
 				case "__mahouhome":
 					KInputs.MakeInput(KInputs.AddString(MahouUI.nPath));
