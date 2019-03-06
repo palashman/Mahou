@@ -3521,6 +3521,7 @@ DEL ""ExtractASD.cmd""";
 			tab_about.Text = MMain.Lang[Languages.Element.tab_About];
 			tab_sounds.Text = MMain.Lang[Languages.Element.tab_Sounds];
 			tab_translator.Text = MMain.Lang[Languages.Element.tab_Translator];
+			tab_sync.Text = MMain.Lang[Languages.Element.tab_Sync];
 			#endregion
 			#region Functions
 			lnk_plugin.Text = "ST3 " + MMain.Lang[Languages.Element.Plugin];
@@ -3554,6 +3555,7 @@ DEL ""ExtractASD.cmd""";
 			chk_WriteInputHistory.Text = MMain.Lang[Languages.Element.WriteInputHistory];
 			lbl_BackSpaceType.Text = MMain.Lang[Languages.Element.BackSpaceType];
 			lnk_OpenLogs.Text = lnk_OpenConfig.Text = lnk_OpenHistory.Text = MMain.Lang[Languages.Element.Open];
+			#endregion
 			#region Layouts
 			chk_SwitchBetweenLayouts.Text = MMain.Lang[Languages.Element.SwitchBetween]+":";
 			chk_EmulateLS.Text = MMain.Lang[Languages.Element.EmulateLS];
@@ -3696,6 +3698,10 @@ DEL ""ExtractASD.cmd""";
 			lnk_Releases.Text = MMain.Lang[Languages.Element.Releases];
 			txt_Help.Text = MMain.Lang[Languages.Element.Mahou] + "\r\n" + MMain.Lang[Languages.Element.About];
 			#endregion
+			#region Sync
+			grb_backup.Text = btn_backup.Text = MMain.Lang[Languages.Element.Backup];
+			grb_restore.Text = btn_restore.Text = MMain.Lang[Languages.Element.Restore];
+			#endregion
 			#region Sounds
 			chk_EnableSnd.Text = MMain.Lang[Languages.Element.EnableSounds];
 			grb_Sound1.Text = MMain.Lang[Languages.Element.Sound] + " #1";
@@ -3808,8 +3814,6 @@ DEL ""ExtractASD.cmd""";
 			return fl;
 		}
 		#endregion
-		#endregion
-
 		#region Links
 		void __lopen(string file, string type, bool dir = false) {
 			string fORd = dir ? Path.GetDirectoryName(file) : file;
@@ -4308,18 +4312,18 @@ DEL ""ExtractASD.cmd""";
 			var f = Path.Combine(nPath, name);
 			if (chk) {
 				if (!File.Exists(f)) {
-					stat += name + " not exists.";
+					stat += name + " " + MMain.Lang[Languages.Element.Not].ToLower() + " " + MMain.Lang[Languages.Element.Exist].ToLower();
 					return new [] {"", stat};
 				}
 				var fi = new FileInfo(f);
 				if (fi.Length > 5000000) 
-					stat += name + " proboably too big...";
+					stat += name + MMain.Lang[Languages.Element.TooBig];
 				try {
 					r += "#------>"+id+Environment.NewLine;
 					r += File.ReadAllText(f);
 					r += Environment.NewLine+"#------>"+id+Environment.NewLine;
 				} catch (Exception e) {
-					stat += name+" read error: " + e.Message;
+					stat += name  + ": " + MMain.Lang[Languages.Element.CannotBe].ToLower() + " " + MMain.Lang[Languages.Element.Readen].ToLower() + e.Message;
 				}
 			}
 			return new []{r, stat};
@@ -4414,6 +4418,7 @@ DEL ""ExtractASD.cmd""";
 			}
 			Debug.WriteLine("id:" + id);
 			txt_backupId.Text = SYNC_HOST + "/" + id;
+			MMain.MyConfs.Write("Sync", "BLast", txt_backupId.Text);
 			txt_backupId.Enabled = true;
 			txt_backupStatus.Text = stat;
 			txt_backupStatus.Visible = true;
@@ -4433,7 +4438,7 @@ DEL ""ExtractASD.cmd""";
 					}
 				} else {
 					if (id.Length >= 32) {
-						stat = "Unknown ID.";
+						stat = MMain.Lang[Languages.Element.UnknownID];
 					} else 
 						id = raw + "/" + id;
 				}
@@ -4449,10 +4454,13 @@ DEL ""ExtractASD.cmd""";
 					}
 				}
 				Debug.WriteLine(d);
-				stat += WriteRestoreFiles(d, chk_rMini.Checked, chk_rStxt.Checked, chk_rHtxt.Checked, chk_rTtxt.Checked);
+				if (!string.IsNullOrEmpty(d)) {
+					stat += WriteRestoreFiles(d, chk_rMini.Checked, chk_rStxt.Checked, chk_rHtxt.Checked, chk_rTtxt.Checked);				MMain.MyConfs.Write("Sync", "BLast", txt_backupId.Text);
+					MMain.MyConfs.Write("Sync", "RLast", txt_restoreId.Text);
+				}
 				LoadConfigs();
 			} else { 
-				stat = "Please enter ID.";
+				stat =  MMain.Lang[Languages.Element.EnterID];
 			}
 			txt_restoreStatus.Text = stat;
 			txt_restoreStatus.Visible = true;

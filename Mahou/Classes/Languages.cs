@@ -17,6 +17,7 @@ public class Languages
 		tab_LangPanel,
 		tab_Sounds,
 		tab_Translator,
+		tab_Sync,
 		#endregion
 		#region Functions
 		AutoStart,
@@ -193,6 +194,14 @@ public class Languages
 		Releases,
 		About,
 		#endregion
+		#region Sync
+		Backup,
+		Restore,
+		TooBig,
+		CannotBe,
+		UnknownID,
+		EnterID,
+		#endregion
 		#region Misc
 		Not,
 		Transliterate,
@@ -293,6 +302,7 @@ public class Languages
 		{ Element.tab_About, "About" }, 
 		{ Element.tab_Sounds, "Sounds" }, 
 		{ Element.tab_Translator, "Translator" }, 
+		{ Element.tab_Sync, "Sync" }, 
 		#endregion
 		#region Functions
 		{ Element.AutoStart, "Start with Windows." }, 
@@ -465,6 +475,14 @@ public class Languages
 			"***If you have problems with selection conversion try inreasing tries to get selected text in Timings tab." +
 			"\r\nRead the wiki, or ask me if you have any questions about Mahou(email and links are below)!\r\n\r\nRegards." },
 		#endregion
+		#region Sync
+		{ Element.Backup, "Backup" },
+		{ Element.Restore, "Restore" },
+		{ Element.TooBig, " probably too big..." },
+		{ Element.CannotBe, "cannot be" },
+		{ Element.UnknownID, "Unknown ID." },
+		{ Element.EnterID, "Please enter ID." },
+		#endregion
 		#region Sounds
 		{ Element.EnableSounds, "Enable sounds." }, 
 		{ Element.PlaySoundWhen, "Play sound when:" }, 
@@ -590,6 +608,7 @@ public class Languages
 		{ Element.tab_About, "О..." },  
 		{ Element.tab_Sounds, "Звуки" }, 
 		{ Element.tab_Translator, "Переводчик" }, 
+		{ Element.tab_Sync, "Синхронизация" }, 
 		#endregion
 		#region Functions
 		{ Element.AutoStart, "Запускать с Windows" }, 
@@ -760,6 +779,14 @@ public class Languages
             "**Если у Вас проблемы с символами при Конвертации выделения, включите функцию(рекомендуется) \"Считать раскладку для всего слова в КВ\", еще можете попробовать \"переключить языки местами (1=>2 & 2=>1)\" или включите \"Смена раскладки в конверт выделенния\" или плюс.\r\n"+
 			"***Если у Вас проблемы при Конвертации выделения попробуйте увеличить количество попыток взятия текста во вкладке Тайминги." +
 			"\r\nПочитайте wiki, или спросите меня если у Вас есть вопросы по поводу Mahou(эл. почта и ссылка на wiki ниже).\r\nУдачи."}, 
+		#endregion
+		#region Sync
+		{ Element.Backup, "Бэкап" },
+		{ Element.Restore, "Восстановление" },
+		{ Element.TooBig, " возможно слишком большой..." },
+		{ Element.CannotBe, "не может быть" },
+		{ Element.UnknownID, "Неизвестный ID." },
+		{ Element.EnterID, "Пожалуйста введите ID." },
 		#endregion
 		#region Sounds
 		{ Element.EnableSounds, "Включить звуки." }, 
