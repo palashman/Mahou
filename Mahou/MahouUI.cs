@@ -4316,7 +4316,7 @@ DEL ""ExtractASD.cmd""";
 					return new [] {"", stat};
 				}
 				var fi = new FileInfo(f);
-				if (fi.Length > 5000000) 
+				if (fi.Length >= 400000) 
 					stat += name + MMain.Lang[Languages.Element.TooBig];
 				try {
 					r += "#------>"+id+Environment.NewLine;
@@ -4414,6 +4414,8 @@ DEL ""ExtractASD.cmd""";
 					id = Regex.Match(Encoding.UTF8.GetString(r), "^[{].key.:.(.+).[}]$").Groups[1].Value;
 				} catch (Exception e) { 
 					stat = e.Message;
+					if (rawtext.Length >= 400000) 
+						stat += MMain.Lang[Languages.Element.TooBig];
 				}
 			}
 			Debug.WriteLine("id:" + id);
