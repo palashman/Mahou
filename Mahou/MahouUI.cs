@@ -163,6 +163,10 @@ namespace Mahou {
 		public Dictionary<string, string> SpecKeySetsValues = new Dictionary<string, string>();
 		public static Dictionary<string, string> TrSetsValues = new Dictionary<string, string>();
 		static string latestSwitch = "null";
+		const string SYNC_HOST = "https://hastebin.com";
+		const string SYNC_SEP = "#------>";
+		readonly string[] SYNC_NAMES = { "Mahou.ini", "snippets.txt", "history.txt", "TSDict.txt" };
+		readonly string[] SYNC_TYPES = { "ini", "sni", "his", "tdi" };
 		// From more configs
 		ColorDialog clrd = new ColorDialog();
 		FontDialog fntd = new FontDialog();
@@ -945,6 +949,12 @@ namespace Mahou {
 				MMain.MyConfs.Write("TranslatePanel", "TitleFont", fcv.ConvertToString(btn_TrTitleFont.Font));
 				SaveTrSets();
 				#endregion
+				#region Sync
+				MMain.MyConfs.Write("Sync", "BBools", string.Join("|", bin(chk_Mini.Checked), bin(chk_Stxt.Checked), bin(chk_Htxt.Checked), bin(chk_Ttxt.Checked)));
+				MMain.MyConfs.Write("Sync", "RBools", string.Join("|", bin(chk_rMini.Checked), bin(chk_rStxt.Checked), bin(chk_rHtxt.Checked), bin(chk_rTtxt.Checked)));
+				MMain.MyConfs.Write("Sync", "BLast", txt_backupId.Text);
+				MMain.MyConfs.Write("Sync", "RLast", txt_restoreId.Text);
+				#endregion
 				#region Proxy
 				MMain.MyConfs.Write("Proxy", "ServerPort", txt_ProxyServerPort.Text);
 				MMain.MyConfs.Write("Proxy", "UserName", txt_ProxyLogin.Text);
@@ -1304,6 +1314,29 @@ namespace Mahou {
 				lbl_CustomSound2.ForeColor = Color.FromKnownColor(KnownColor.WindowText);
 			HelpMeUnderstand.SetToolTip(lbl_CustomSound, lbCSh);
 			HelpMeUnderstand.SetToolTip(lbl_CustomSound2, lbCSh2);
+			#endregion
+			#region Sync
+			var bbools = MMain.MyConfs.Read("Sync", "BBools");
+			bool m, s, h, t;
+			SetBools(bbools, '|', out m, out s, out h, out t);
+			chk_Mini.Checked = m;
+			chk_Stxt.Checked = s;
+			chk_Htxt.Checked = h;
+			chk_Ttxt.Checked = t;
+			var rbools = MMain.MyConfs.Read("Sync", "RBools");
+			SetBools(rbools, '|', out m, out s, out h, out t);
+			chk_rMini.Checked = m;
+			chk_rStxt.Checked = s;
+			chk_rHtxt.Checked = h;
+			chk_rTtxt.Checked = t;
+			var blast = MMain.MyConfs.Read("Sync", "BLast");
+			if (!string.IsNullOrEmpty(blast)) {
+				txt_backupId.Text = blast;
+				txt_backupId.Enabled = true;
+			}
+			var rlast = MMain.MyConfs.Read("Sync", "RLast");
+			if (!string.IsNullOrEmpty(rlast))
+				txt_restoreId.Text = rlast;
 			#endregion
 			if (RemapCapslockAsF18 || SnippetsExpandType == "Tab")
 				LLHook.Set();
@@ -4260,6 +4293,190 @@ DEL ""ExtractASD.cmd""";
 		void Btn_SelectSnd2Click(object sender, EventArgs e) {
 			lbl_CustomSound2.Text = SelectGetWavFile();
 			HelpMeUnderstand.SetToolTip(lbl_CustomSound2, lbl_CustomSound2.Text);
+		}
+		void Btn_backupClick(object sender, EventArgs e) {
+			SyncBackup();
+		}
+		void Btn_restoreClick(object sender, EventArgs e) {
+			SyncRestore();
+		}
+		#endregion
+		#region Sync
+		string[] ReadToBackup(string id, string name, bool chk) {
+			var r = "";
+			var stat = "";
+			var f = Path.Combine(nPath, name);
+			if (chk) {
+				if (!File.Exists(f)) {
+					stat += name + " not exists.";
+					return new [] {"", stat};
+				}
+				var fi = new FileInfo(f);
+				if (fi.Length > 5000000) 
+					stat += name + " proboably too big...";
+				try {
+					r += "#------>"+id+Environment.NewLine;
+					r += File.ReadAllText(f);
+					r += Environment.NewLine+"#------>"+id+Environment.NewLine;
+				} catch (Exception e) {
+					stat += name+" read error: " + e.Message;
+				}
+			}
+			return new []{r, stat};
+		}
+		string WriteRestoreFiles(string raw, bool mini, bool stxt, bool htxt, bool ttxt) {
+			var stat = "";
+			var t = raw.Replace("\r", "");
+			var ll = t.Split('\n');
+			var bb = new [] { mini, stxt, htxt, ttxt };
+			var tn="dummy";
+			var st = false;
+			var d = new Dictionary<string, string>();
+			for (var i = 0; i != ll.Length-1; i++) {
+				var l = ll[i];
+				var cont = false;
+				var end = false;
+				if (st) {
+					if (i+1 <= ll.Length-1) {
+						var lz = ll[i+1];
+						if (lz.StartsWith(SYNC_SEP, StringComparison.InvariantCulture)) {
+							if (lz == SYNC_SEP+tn) {
+								end = true;
+							}
+						}
+					}
+				}
+				if (l.StartsWith(SYNC_SEP, StringComparison.InvariantCulture)) {
+					foreach (var type in SYNC_TYPES) {
+						if (l == SYNC_SEP+type) {
+							if (tn == type) 
+								tn = "dummy";
+							else {
+								tn=type;
+								st=true;
+								cont=true;
+							}
+						}
+					}
+				}
+				if (cont) continue;
+				var ln = l + ((i == ll.Length-2||end) ? "" : Environment.NewLine);
+				if (d.ContainsKey(tn)) {
+					var va = d[tn];
+					d[tn] = va+ln;
+				} else 
+					d.Add(tn, ln);
+			}
+			var OK = "";
+			var ERR = "";
+			for (var i = 0; i != bb.Length; i++) {
+				var b = bb[i];
+				var ty = SYNC_TYPES[i];
+				if (b) {
+					if (d.ContainsKey(ty)) {
+						try {
+							if (ty == "ini") {
+								MMain.MyConfs._INI.Raw = d[ty];
+							}
+							var f = Path.Combine(nPath, SYNC_NAMES[i]);
+							Debug.WriteLine("Writing: " +f);
+							File.WriteAllText(f, d[ty]);
+							OK += " " + SYNC_NAMES[i];
+						} catch (Exception e) {
+							stat += ty + ": " + e.Message + Environment.NewLine;
+						}
+					} else {
+						ERR += " " + SYNC_NAMES[i];
+					}
+				}
+			}
+			stat += "OK:" + OK + (ERR != "" ? (Environment.NewLine +  "ERR:" + ERR) : "");
+			return stat;
+		}
+		void SyncBackup() {
+			string id = "";
+			var rawtext = "";
+			var bb = new [] { chk_Mini.Checked, chk_Stxt.Checked, chk_Htxt.Checked, chk_Ttxt.Checked };
+			var stat = "OK";
+			for (int i = 0; i!= SYNC_NAMES.Length; i++) {
+				var r = ReadToBackup(SYNC_TYPES[i], SYNC_NAMES[i], bb[i]);
+				rawtext += r[0];
+				stat += r[1] != "" ? (Environment.NewLine + r[1]) : "";
+			}
+			Debug.WriteLine("Rawtext: " +rawtext);
+			using (var wc = new WebClient()) {
+				try {
+					var r = wc.UploadData(new Uri(SYNC_HOST+"/documents"), "POST", Encoding.UTF8.GetBytes(rawtext));
+					id = Regex.Match(Encoding.UTF8.GetString(r), "^[{].key.:.(.+).[}]$").Groups[1].Value;
+				} catch (Exception e) { 
+					stat = e.Message;
+				}
+			}
+			Debug.WriteLine("id:" + id);
+			txt_backupId.Text = SYNC_HOST + "/" + id;
+			txt_backupId.Enabled = true;
+			txt_backupStatus.Text = stat;
+			txt_backupStatus.Visible = true;
+		}
+		void SyncRestore() {
+			var id = txt_restoreId.Text;
+			var stat = "";
+			if (!string.IsNullOrEmpty(id)) {
+				var raw = SYNC_HOST+"/raw";
+				if (id.StartsWith("http", StringComparison.InvariantCulture)) {
+					if (!id.StartsWith(raw, StringComparison.InvariantCulture) || id.Contains("hastebin.com")) {
+						var p = id.Split('/');
+						var l = p[p.Length-1];
+						if (string.IsNullOrEmpty(l))
+							l = p[p.Length-2];
+						id = raw + "/" + l;
+					}
+				} else {
+					if (id.Length >= 32) {
+						stat = "Unknown ID.";
+					} else 
+						id = raw + "/" + id;
+				}
+				Debug.WriteLine("id:" +id);
+				var d = "";
+				if (!string.IsNullOrEmpty(id)) {
+					using (var wc = new WebClient()) {
+						try {
+							d = Encoding.UTF8.GetString(wc.DownloadData(new Uri(id)));
+						} catch (Exception e) { 
+							stat = e.Message;
+						}
+					}
+				}
+				Debug.WriteLine(d);
+				stat += WriteRestoreFiles(d, chk_rMini.Checked, chk_rStxt.Checked, chk_rHtxt.Checked, chk_rTtxt.Checked);
+				LoadConfigs();
+			} else { 
+				stat = "Please enter ID.";
+			}
+			txt_restoreStatus.Text = stat;
+			txt_restoreStatus.Visible = true;
+		}
+		void SetBools(string bools, char sep, out bool mini, out bool stxt, out bool htxt, out bool ttxt) {
+			var s = bools.Split(sep);
+			mini = boo(s[0]);
+			stxt = boo(s[1]);
+			htxt = boo(s[2]);
+			ttxt = boo(s[3]);
+		}
+		bool boo(string s) {
+			int i = 0;
+			bool b;
+			bool.TryParse(s, out b);
+			int.TryParse(s, out i);
+			if (i > 0) 
+				return true;
+			return b;
+		}
+		int bin(bool b) {
+			if (b)
+				return 1;
+			return 0;
 		}
 		#endregion
 	}

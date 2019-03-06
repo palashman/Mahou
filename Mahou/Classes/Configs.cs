@@ -185,6 +185,12 @@ namespace Mahou {
         public Configs() {
         	CreateConfigsFile();
         	ReadFromDisk();
+        	#region Sync
+			CheckString("Sync", "BBools", "0|1|0|0");
+			CheckString("Sync", "RBools", "1|1|1|1");
+			CheckString("Sync", "RLast", "");
+			CheckString("Sync", "BLast", "");
+			#endregion
         	#region TranslatePanel
 			CheckString("TranslatePanel", "TextFont", "Microsoft Sans Serif; 8.25pt");
 			CheckString("TranslatePanel", "TitleFont", "Segoe UI; 12pt");

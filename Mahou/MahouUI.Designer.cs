@@ -253,6 +253,25 @@ namespace Mahou
 		private System.Windows.Forms.LinkLabel lnk_OpenConfig;
 		private System.Windows.Forms.ComboBox cbb_TrayDislpayType;
 		private System.Windows.Forms.Label lbl_TrayDislpayType;
+		private System.Windows.Forms.TabPage tab_sync;
+		private System.Windows.Forms.GroupBox grb_restore;
+		private System.Windows.Forms.Button btn_restore;
+		private System.Windows.Forms.TextBox txt_restoreId;
+		private System.Windows.Forms.Label lbl_restoreId;
+		private System.Windows.Forms.GroupBox grb_backup;
+		private System.Windows.Forms.Label lbl_backupId;
+		private System.Windows.Forms.TextBox txt_backupId;
+		private System.Windows.Forms.Button btn_backup;
+		private System.Windows.Forms.CheckBox chk_Htxt;
+		private System.Windows.Forms.CheckBox chk_Ttxt;
+		private System.Windows.Forms.CheckBox chk_Stxt;
+		private System.Windows.Forms.CheckBox chk_Mini;
+		private System.Windows.Forms.CheckBox chk_rHtxt;
+		private System.Windows.Forms.CheckBox chk_rTtxt;
+		private System.Windows.Forms.CheckBox chk_rStxt;
+		private System.Windows.Forms.CheckBox chk_rMini;
+		private System.Windows.Forms.TextBox txt_restoreStatus;
+		private System.Windows.Forms.TextBox txt_backupStatus;
 		/// <summary>
 		/// Disposes resources used by the form.
 		/// </summary>
@@ -492,6 +511,23 @@ namespace Mahou
 			this.btn_TrFG = new System.Windows.Forms.Button();
 			this.nud_TrTransparency = new System.Windows.Forms.NumericUpDown();
 			this.lbl_TrTransparency = new System.Windows.Forms.Label();
+			this.tab_sync = new System.Windows.Forms.TabPage();
+			this.grb_restore = new System.Windows.Forms.GroupBox();
+			this.chk_rHtxt = new System.Windows.Forms.CheckBox();
+			this.chk_rTtxt = new System.Windows.Forms.CheckBox();
+			this.chk_rStxt = new System.Windows.Forms.CheckBox();
+			this.chk_rMini = new System.Windows.Forms.CheckBox();
+			this.btn_restore = new System.Windows.Forms.Button();
+			this.txt_restoreId = new System.Windows.Forms.TextBox();
+			this.lbl_restoreId = new System.Windows.Forms.Label();
+			this.grb_backup = new System.Windows.Forms.GroupBox();
+			this.lbl_backupId = new System.Windows.Forms.Label();
+			this.txt_backupId = new System.Windows.Forms.TextBox();
+			this.btn_backup = new System.Windows.Forms.Button();
+			this.chk_Htxt = new System.Windows.Forms.CheckBox();
+			this.chk_Ttxt = new System.Windows.Forms.CheckBox();
+			this.chk_Stxt = new System.Windows.Forms.CheckBox();
+			this.chk_Mini = new System.Windows.Forms.CheckBox();
 			this.tab_updates = new System.Windows.Forms.TabPage();
 			this.cbb_UpdatesChannel = new System.Windows.Forms.ComboBox();
 			this.lbl_UpdateChannel = new System.Windows.Forms.Label();
@@ -520,6 +556,8 @@ namespace Mahou
 			this.btn_Cancel = new System.Windows.Forms.Button();
 			this.btn_Apply = new System.Windows.Forms.Button();
 			this.HelpMeUnderstand = new System.Windows.Forms.ToolTip(this.components);
+			this.txt_backupStatus = new System.Windows.Forms.TextBox();
+			this.txt_restoreStatus = new System.Windows.Forms.TextBox();
 			this.tabs.SuspendLayout();
 			this.tab_functions.SuspendLayout();
 			this.tab_layouts.SuspendLayout();
@@ -564,6 +602,9 @@ namespace Mahou
 			this.tab_translator.SuspendLayout();
 			this.grb_TrConfs.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.nud_TrTransparency)).BeginInit();
+			this.tab_sync.SuspendLayout();
+			this.grb_restore.SuspendLayout();
+			this.grb_backup.SuspendLayout();
 			this.tab_updates.SuspendLayout();
 			this.grb_DownloadUpdate.SuspendLayout();
 			this.grb_ProxyConfig.SuspendLayout();
@@ -585,6 +626,7 @@ namespace Mahou
 			this.tabs.Controls.Add(this.tab_sounds);
 			this.tabs.Controls.Add(this.tab_LangPanel);
 			this.tabs.Controls.Add(this.tab_translator);
+			this.tabs.Controls.Add(this.tab_sync);
 			this.tabs.Controls.Add(this.tab_updates);
 			this.tabs.Controls.Add(this.tab_about);
 			this.tabs.Location = new System.Drawing.Point(0, 0);
@@ -3120,6 +3162,196 @@ namespace Mahou
 			this.lbl_TrTransparency.TabIndex = 28;
 			this.lbl_TrTransparency.Text = "Transparency:";
 			// 
+			// tab_sync
+			// 
+			this.tab_sync.Controls.Add(this.grb_restore);
+			this.tab_sync.Controls.Add(this.grb_backup);
+			this.tab_sync.Location = new System.Drawing.Point(4, 44);
+			this.tab_sync.Name = "tab_sync";
+			this.tab_sync.Padding = new System.Windows.Forms.Padding(3);
+			this.tab_sync.Size = new System.Drawing.Size(559, 268);
+			this.tab_sync.TabIndex = 14;
+			this.tab_sync.Text = "Sync";
+			this.tab_sync.UseVisualStyleBackColor = true;
+			// 
+			// grb_restore
+			// 
+			this.grb_restore.Controls.Add(this.txt_restoreStatus);
+			this.grb_restore.Controls.Add(this.chk_rHtxt);
+			this.grb_restore.Controls.Add(this.chk_rTtxt);
+			this.grb_restore.Controls.Add(this.chk_rStxt);
+			this.grb_restore.Controls.Add(this.chk_rMini);
+			this.grb_restore.Controls.Add(this.btn_restore);
+			this.grb_restore.Controls.Add(this.txt_restoreId);
+			this.grb_restore.Controls.Add(this.lbl_restoreId);
+			this.grb_restore.Location = new System.Drawing.Point(8, 132);
+			this.grb_restore.Name = "grb_restore";
+			this.grb_restore.Size = new System.Drawing.Size(545, 130);
+			this.grb_restore.TabIndex = 1;
+			this.grb_restore.TabStop = false;
+			this.grb_restore.Text = "Restore";
+			// 
+			// chk_rHtxt
+			// 
+			this.chk_rHtxt.AutoSize = true;
+			this.chk_rHtxt.Checked = true;
+			this.chk_rHtxt.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chk_rHtxt.Location = new System.Drawing.Point(184, 22);
+			this.chk_rHtxt.Name = "chk_rHtxt";
+			this.chk_rHtxt.Size = new System.Drawing.Size(78, 19);
+			this.chk_rHtxt.TabIndex = 12;
+			this.chk_rHtxt.Text = "history.txt";
+			this.chk_rHtxt.UseVisualStyleBackColor = true;
+			// 
+			// chk_rTtxt
+			// 
+			this.chk_rTtxt.AutoSize = true;
+			this.chk_rTtxt.Checked = true;
+			this.chk_rTtxt.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chk_rTtxt.Location = new System.Drawing.Point(268, 22);
+			this.chk_rTtxt.Name = "chk_rTtxt";
+			this.chk_rTtxt.Size = new System.Drawing.Size(76, 19);
+			this.chk_rTtxt.TabIndex = 11;
+			this.chk_rTtxt.Text = "TSDict.txt";
+			this.chk_rTtxt.UseVisualStyleBackColor = true;
+			// 
+			// chk_rStxt
+			// 
+			this.chk_rStxt.AutoSize = true;
+			this.chk_rStxt.Checked = true;
+			this.chk_rStxt.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chk_rStxt.Location = new System.Drawing.Point(92, 22);
+			this.chk_rStxt.Name = "chk_rStxt";
+			this.chk_rStxt.Size = new System.Drawing.Size(86, 19);
+			this.chk_rStxt.TabIndex = 10;
+			this.chk_rStxt.Text = "snippets.txt";
+			this.chk_rStxt.UseVisualStyleBackColor = true;
+			// 
+			// chk_rMini
+			// 
+			this.chk_rMini.AutoSize = true;
+			this.chk_rMini.Checked = true;
+			this.chk_rMini.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chk_rMini.Location = new System.Drawing.Point(6, 22);
+			this.chk_rMini.Name = "chk_rMini";
+			this.chk_rMini.Size = new System.Drawing.Size(80, 19);
+			this.chk_rMini.TabIndex = 9;
+			this.chk_rMini.Text = "Mahou.ini";
+			this.chk_rMini.UseVisualStyleBackColor = true;
+			// 
+			// btn_restore
+			// 
+			this.btn_restore.Location = new System.Drawing.Point(425, 55);
+			this.btn_restore.Name = "btn_restore";
+			this.btn_restore.Size = new System.Drawing.Size(114, 23);
+			this.btn_restore.TabIndex = 2;
+			this.btn_restore.Text = "Restore";
+			this.btn_restore.UseVisualStyleBackColor = true;
+			this.btn_restore.Click += new System.EventHandler(this.Btn_restoreClick);
+			// 
+			// txt_restoreId
+			// 
+			this.txt_restoreId.Location = new System.Drawing.Point(33, 55);
+			this.txt_restoreId.Name = "txt_restoreId";
+			this.txt_restoreId.Size = new System.Drawing.Size(386, 23);
+			this.txt_restoreId.TabIndex = 1;
+			// 
+			// lbl_restoreId
+			// 
+			this.lbl_restoreId.AutoSize = true;
+			this.lbl_restoreId.Location = new System.Drawing.Point(6, 58);
+			this.lbl_restoreId.Name = "lbl_restoreId";
+			this.lbl_restoreId.Size = new System.Drawing.Size(21, 15);
+			this.lbl_restoreId.TabIndex = 0;
+			this.lbl_restoreId.Text = "ID:";
+			// 
+			// grb_backup
+			// 
+			this.grb_backup.Controls.Add(this.txt_backupStatus);
+			this.grb_backup.Controls.Add(this.lbl_backupId);
+			this.grb_backup.Controls.Add(this.txt_backupId);
+			this.grb_backup.Controls.Add(this.btn_backup);
+			this.grb_backup.Controls.Add(this.chk_Htxt);
+			this.grb_backup.Controls.Add(this.chk_Ttxt);
+			this.grb_backup.Controls.Add(this.chk_Stxt);
+			this.grb_backup.Controls.Add(this.chk_Mini);
+			this.grb_backup.Location = new System.Drawing.Point(8, 3);
+			this.grb_backup.Name = "grb_backup";
+			this.grb_backup.Size = new System.Drawing.Size(545, 130);
+			this.grb_backup.TabIndex = 0;
+			this.grb_backup.TabStop = false;
+			this.grb_backup.Text = "Backup";
+			// 
+			// lbl_backupId
+			// 
+			this.lbl_backupId.AutoSize = true;
+			this.lbl_backupId.Location = new System.Drawing.Point(6, 62);
+			this.lbl_backupId.Name = "lbl_backupId";
+			this.lbl_backupId.Size = new System.Drawing.Size(21, 15);
+			this.lbl_backupId.TabIndex = 6;
+			this.lbl_backupId.Text = "ID:";
+			// 
+			// txt_backupId
+			// 
+			this.txt_backupId.Enabled = false;
+			this.txt_backupId.Location = new System.Drawing.Point(33, 59);
+			this.txt_backupId.Name = "txt_backupId";
+			this.txt_backupId.ReadOnly = true;
+			this.txt_backupId.Size = new System.Drawing.Size(386, 23);
+			this.txt_backupId.TabIndex = 5;
+			// 
+			// btn_backup
+			// 
+			this.btn_backup.Location = new System.Drawing.Point(427, 59);
+			this.btn_backup.Name = "btn_backup";
+			this.btn_backup.Size = new System.Drawing.Size(114, 23);
+			this.btn_backup.TabIndex = 4;
+			this.btn_backup.Text = "Backup";
+			this.btn_backup.UseVisualStyleBackColor = true;
+			this.btn_backup.Click += new System.EventHandler(this.Btn_backupClick);
+			// 
+			// chk_Htxt
+			// 
+			this.chk_Htxt.AutoSize = true;
+			this.chk_Htxt.Location = new System.Drawing.Point(184, 22);
+			this.chk_Htxt.Name = "chk_Htxt";
+			this.chk_Htxt.Size = new System.Drawing.Size(78, 19);
+			this.chk_Htxt.TabIndex = 3;
+			this.chk_Htxt.Text = "history.txt";
+			this.chk_Htxt.UseVisualStyleBackColor = true;
+			// 
+			// chk_Ttxt
+			// 
+			this.chk_Ttxt.AutoSize = true;
+			this.chk_Ttxt.Location = new System.Drawing.Point(268, 22);
+			this.chk_Ttxt.Name = "chk_Ttxt";
+			this.chk_Ttxt.Size = new System.Drawing.Size(76, 19);
+			this.chk_Ttxt.TabIndex = 2;
+			this.chk_Ttxt.Text = "TSDict.txt";
+			this.chk_Ttxt.UseVisualStyleBackColor = true;
+			// 
+			// chk_Stxt
+			// 
+			this.chk_Stxt.AutoSize = true;
+			this.chk_Stxt.Checked = true;
+			this.chk_Stxt.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.chk_Stxt.Location = new System.Drawing.Point(92, 22);
+			this.chk_Stxt.Name = "chk_Stxt";
+			this.chk_Stxt.Size = new System.Drawing.Size(86, 19);
+			this.chk_Stxt.TabIndex = 1;
+			this.chk_Stxt.Text = "snippets.txt";
+			this.chk_Stxt.UseVisualStyleBackColor = true;
+			// 
+			// chk_Mini
+			// 
+			this.chk_Mini.AutoSize = true;
+			this.chk_Mini.Location = new System.Drawing.Point(6, 22);
+			this.chk_Mini.Name = "chk_Mini";
+			this.chk_Mini.Size = new System.Drawing.Size(80, 19);
+			this.chk_Mini.TabIndex = 0;
+			this.chk_Mini.Text = "Mahou.ini";
+			this.chk_Mini.UseVisualStyleBackColor = true;
+			// 
 			// tab_updates
 			// 
 			this.tab_updates.Controls.Add(this.cbb_UpdatesChannel);
@@ -3419,6 +3651,32 @@ namespace Mahou
 			this.HelpMeUnderstand.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
 			this.HelpMeUnderstand.Popup += new System.Windows.Forms.PopupEventHandler(this.HelpMeUnderstandPopup);
 			// 
+			// txt_backupStatus
+			// 
+			this.txt_backupStatus.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.txt_backupStatus.Location = new System.Drawing.Point(6, 86);
+			this.txt_backupStatus.Multiline = true;
+			this.txt_backupStatus.Name = "txt_backupStatus";
+			this.txt_backupStatus.ReadOnly = true;
+			this.txt_backupStatus.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.txt_backupStatus.Size = new System.Drawing.Size(533, 42);
+			this.txt_backupStatus.TabIndex = 8;
+			this.txt_backupStatus.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			this.txt_backupStatus.Visible = false;
+			// 
+			// txt_restoreStatus
+			// 
+			this.txt_restoreStatus.BorderStyle = System.Windows.Forms.BorderStyle.None;
+			this.txt_restoreStatus.Location = new System.Drawing.Point(6, 82);
+			this.txt_restoreStatus.Multiline = true;
+			this.txt_restoreStatus.Name = "txt_restoreStatus";
+			this.txt_restoreStatus.ReadOnly = true;
+			this.txt_restoreStatus.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.txt_restoreStatus.Size = new System.Drawing.Size(533, 42);
+			this.txt_restoreStatus.TabIndex = 13;
+			this.txt_restoreStatus.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			this.txt_restoreStatus.Visible = false;
+			// 
 			// MahouUI
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -3505,6 +3763,11 @@ namespace Mahou
 			this.grb_TrConfs.ResumeLayout(false);
 			this.grb_TrConfs.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.nud_TrTransparency)).EndInit();
+			this.tab_sync.ResumeLayout(false);
+			this.grb_restore.ResumeLayout(false);
+			this.grb_restore.PerformLayout();
+			this.grb_backup.ResumeLayout(false);
+			this.grb_backup.PerformLayout();
 			this.tab_updates.ResumeLayout(false);
 			this.tab_updates.PerformLayout();
 			this.grb_DownloadUpdate.ResumeLayout(false);
