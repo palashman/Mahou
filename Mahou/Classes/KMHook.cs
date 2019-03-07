@@ -26,6 +26,7 @@ namespace Mahou {
 		static uint cs_layout_last = 0;
 		static string lastClipText = "", busy_on = "", lastLWClearReason = "";
 		static List<Keys> tempNumpads = new List<Keys>();
+		static Keys preKey = Keys.None;
 		public static List<char> c_snip = new List<char>();
 		public static System.Windows.Forms.Timer doublekey = new System.Windows.Forms.Timer();
 		public static List<YuKey> c_word_backup = new List<YuKey>();
@@ -307,6 +308,18 @@ namespace Mahou {
 					keyAfterSHIFT = true;
 				else 
 					keyAfterSHIFT = false;
+			}
+			if (MSG == WinAPI.WM_KEYDOWN || MSG == WinAPI.WM_SYSKEYDOWN) {
+				if (preKey == Keys.None) {
+					preKey = Key;
+					Debug.WriteLine("PREKEY: " +preKey);
+				}
+			}
+			if (MSG == WinAPI.WM_KEYUP || MSG == WinAPI.WM_SYSKEYUP) {
+				if ((int)Key == (int)preKey) {
+					Debug.WriteLine("PREKEY-OFF: " +preKey);
+					preKey = Keys.None;
+				}
 			}
 			#endregion
 			if ((ctrl||win||alt||ctrl_r||win_r||alt_r) && Key == Keys.Tab) {
@@ -1224,6 +1237,7 @@ namespace Mahou {
 						#region Switch between layouts with one key
 						bool F18 = Key == Keys.F18;
 						bool GJIME = false;
+						var npre = ((int)preKey == (int)Keys.None || (int)preKey == (int)Key);
 						if (specificKey == 8) // Shift+CapsLock
 							if (vkCode == 240) { // Google Japanese IME's  Shift+CapsLock repam fix
 								skip_spec_keys++; // Skip next CapsLock up event
@@ -1269,37 +1283,37 @@ namespace Mahou {
 								Logging.Log("[SPKEY] > Changing layout by CapsLock"+(F18?"(F18)":"")+" key.");
 						    	return;
 							}
-							if (specificKey == 2 && Key == Keys.LControlKey && !keyAfterCTRL) {
+							if (specificKey == 2 && Key == Keys.LControlKey && !keyAfterCTRL && npre) {
 								Logging.Log("[SPKEY] > Changing layout by L-Ctrl key.");
 								ChangeLayout();
 						    	return;
 							}
-							if (specificKey == 3 && Key == Keys.RControlKey && !keyAfterCTRL) {
+							if (specificKey == 3 && Key == Keys.RControlKey && !keyAfterCTRL && npre) {
 								Logging.Log("[SPKEY] > Changing layout by R-Ctrl key.");
 								ChangeLayout();
 						    	return;
 							}
-							if (specificKey == 4 && Key == Keys.LShiftKey && !keyAfterSHIFT) {
+							if (specificKey == 4 && Key == Keys.LShiftKey && !keyAfterSHIFT && npre) {
 								Logging.Log("[SPKEY] > Changing layout by L-Shift key.");
 								ChangeLayout();
 						    	return;
 							}
-							if (specificKey == 5 && Key == Keys.RShiftKey && !keyAfterSHIFT) {
+							if (specificKey == 5 && Key == Keys.RShiftKey && !keyAfterSHIFT && npre) {
 								Logging.Log("[SPKEY] > Changing layout by R-Shift key.");
 								ChangeLayout();
 						    	return;
 							}
-							if (specificKey == 6 && Key == Keys.LMenu && !keyAfterALT) {
+							if (specificKey == 6 && Key == Keys.LMenu && !keyAfterALT && npre) {
 								Logging.Log("[SPKEY] > Changing layout by L-Alt key.");
 								ChangeLayout();
 						    	return;
 							}
-							if (specificKey == 7 && Key == Keys.RMenu && !keyAfterALT) {
+							if (specificKey == 7 && Key == Keys.RMenu && !keyAfterALT && npre) {
 								Logging.Log("[SPKEY] > Changing layout by R-Alt key.");
 								ChangeLayout();
 						    	return;
 							}
-							if (specificKey == 9 && Key == Keys.RMenu) {
+							if (specificKey == 9 && Key == Keys.RMenu && !keyAfterALT && npre) {
 								Logging.Log("[SPKEY] > Changing layout by AltGr key.");
 								ChangeLayout();
 						    	return;
@@ -1340,45 +1354,45 @@ namespace Mahou {
 								matched = true;
 						    	return;
 							}
-							if (specificKey == 2 && Key == Keys.LControlKey && !keyAfterCTRL) {
+							if (specificKey == 2 && Key == Keys.LControlKey && !keyAfterCTRL && npre) {
 								Logging.Log("[SPKEY] > Switching to specific layout by  L-Ctrl key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
 						    	return;
 							}
-							if (specificKey == 3 && Key == Keys.RControlKey && !keyAfterCTRL) {
+							if (specificKey == 3 && Key == Keys.RControlKey && !keyAfterCTRL && npre) {
 								Logging.Log("[SPKEY] > Switching to specific layout by R-Ctrl key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
 						    	return;
 							}
-							if (specificKey == 4 && Key == Keys.LShiftKey && !keyAfterSHIFT) {
+							if (specificKey == 4 && Key == Keys.LShiftKey && !keyAfterSHIFT && npre) {
 								Logging.Log("[SPKEY] > Switching to specific layout by L-Shift key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
 						    	return;
 							}
-							if (specificKey == 5 && Key == Keys.RShiftKey && !keyAfterSHIFT) {
+							if (specificKey == 5 && Key == Keys.RShiftKey && !keyAfterSHIFT && npre) {
 								Logging.Log("[SPKEY] > Switching to specific layout by R-Shift key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
 						    	return;
 							}
-							if (specificKey == 6 && Key == Keys.LMenu && !keyAfterALT) {
+							if (specificKey == 6 && Key == Keys.LMenu && !keyAfterALT && npre) {
 								Logging.Log("[SPKEY] > Switching to specific layout by L-Alt key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);	
 								matched = true;
 								DoSelf(()=>{ KeybdEvent(Keys.LMenu, 0); KeybdEvent(Keys.LMenu, 2); });
 						    	return;
 							}
-							if (specificKey == 7 && Key == Keys.RMenu && !keyAfterALT) {
+							if (specificKey == 7 && Key == Keys.RMenu && !keyAfterALT && npre) {
 								Logging.Log("[SPKEY] > Switching to specific layout by R-Alt key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
 								DoSelf(()=>{ KeybdEvent(Keys.RMenu, 0); KeybdEvent(Keys.RMenu, 2); });
 						    	return;
 							}
-							if (specificKey == 9 && Key == Keys.RMenu) {
+							if (specificKey == 9 && Key == Keys.RMenu && !keyAfterALT && npre) {
 								Logging.Log("[SPKEY] > Switching to specific layout by AltGr key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
