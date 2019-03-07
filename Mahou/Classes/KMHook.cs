@@ -2296,7 +2296,10 @@ namespace Mahou {
 				if (MahouUI.UseJKL && !KMHook.JKLERR)
 					if ((loc == last && loc != 0) || conhost)
 						loc = MahouUI.currentLayout;
-				WinAPI.SendMessage(hwnd, (int)WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, LayoutId);
+				if (LayoutId == 0) {
+					Logging.Log("Layout change skipped, 0 is not layout.", 1);
+				} else 
+					WinAPI.SendMessage(hwnd, (int)WinAPI.WM_INPUTLANGCHANGEREQUEST, 0, LayoutId);
 				Thread.Sleep(10);//Give some time to switch layout
 				tries++;
 				if (tries == MMain.locales.Length) {
