@@ -220,6 +220,8 @@ namespace Mahou {
 					Text += " <"+commit+">";
 			}
 			var mult = 4;
+			if (KMHook.IfNW7())
+				mult = 6;
 			if (tabs.RowCount >= 2)
 				mult++;
 			if (tabs.RowCount >= 3)
