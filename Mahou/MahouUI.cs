@@ -4450,6 +4450,9 @@ DEL ""ExtractASD.cmd""";
 				var d = "";
 				if (!string.IsNullOrEmpty(id)) {
 					using (var wc = new WebClient()) {
+						if (!String.IsNullOrEmpty(txt_ProxyServerPort.Text)) {
+							wc.Proxy = MakeProxy();
+						}
 						try {
 							d = Encoding.UTF8.GetString(wc.DownloadData(new Uri(id)));
 						} catch (Exception e) { 
