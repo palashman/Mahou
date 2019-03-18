@@ -4411,6 +4411,9 @@ DEL ""ExtractASD.cmd""";
 			}
 			Debug.WriteLine("Rawtext: " +rawtext);
 			using (var wc = new WebClient()) {
+				if (!String.IsNullOrEmpty(txt_ProxyServerPort.Text)) {
+					wc.Proxy = MakeProxy();
+				}
 				try {
 					var r = wc.UploadData(new Uri(SYNC_HOST+"/documents"), "POST", Encoding.UTF8.GetBytes(rawtext));
 					id = Regex.Match(Encoding.UTF8.GetString(r), "^[{].key.:.(.+).[}]$").Groups[1].Value;
