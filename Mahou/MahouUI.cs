@@ -4414,6 +4414,7 @@ DEL ""ExtractASD.cmd""";
 				if (!String.IsNullOrEmpty(txt_ProxyServerPort.Text)) {
 					wc.Proxy = MakeProxy();
 				}
+				wc.Encoding = Encoding.UTF8;
 				try {
 					var r = wc.UploadData(new Uri(SYNC_HOST+"/documents"), "POST", Encoding.UTF8.GetBytes(rawtext));
 					id = Regex.Match(Encoding.UTF8.GetString(r), "^[{].key.:.(.+).[}]$").Groups[1].Value;
@@ -4456,6 +4457,7 @@ DEL ""ExtractASD.cmd""";
 						if (!String.IsNullOrEmpty(txt_ProxyServerPort.Text)) {
 							wc.Proxy = MakeProxy();
 						}
+						wc.Encoding = Encoding.UTF8;
 						try {
 							d = Encoding.UTF8.GetString(wc.DownloadData(new Uri(id)));
 						} catch (Exception e) { 
