@@ -4306,6 +4306,50 @@ DEL ""ExtractASD.cmd""";
 		void Btn_restoreClick(object sender, EventArgs e) {
 			SyncRestore();
 		}
+		bool pctres, pctbkp;
+		void PctBkpCopyClick(object sender, EventArgs e) {
+			if (!pctbkp) {
+				pctbkp = true;
+				var t = new Timer();
+				t.Tick += (_, ___) => {
+					pctBkpCopy.BackgroundImage = Properties.Resources.clip;
+					pctbkp = false;
+					t.Stop();
+					t.Dispose();
+				};
+				t.Interval = 1800;
+				if (!string.IsNullOrEmpty(txt_backupId.Text)) {
+					KMHook.RestoreClipBoard(txt_backupId.Text);
+					pctBkpCopy.BackgroundImage = Properties.Resources.clipok;
+					t.Start();
+				} else {
+					pctBkpCopy.BackgroundImage = Properties.Resources.cliperr;
+					t.Start();
+				}
+			}
+		}
+		void PctResPasteClick(object sender, EventArgs e) {
+			if (!pctres) {
+				pctres = true;
+				var t = new Timer();
+				t.Tick += (_, ___) => {
+					pctResPaste.BackgroundImage = Properties.Resources.clip;
+					pctres = false;
+					t.Stop();
+					t.Dispose();
+				};
+				t.Interval = 1800;
+				var stri = KMHook.GetClipboard(3);
+				if (!string.IsNullOrEmpty(stri)) {
+					txt_restoreId.Text = stri;
+					pctResPaste.BackgroundImage = Properties.Resources.clipok;
+					t.Start();
+				} else {
+					pctResPaste.BackgroundImage = Properties.Resources.cliperr;
+					t.Start();
+				}
+			}
+		}
 		#endregion
 		#region Sync
 		string[] ReadToBackup(string id, string name, bool chk) {
