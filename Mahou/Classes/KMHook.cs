@@ -1313,7 +1313,9 @@ namespace Mahou {
 								ChangeLayout();
 						    	return;
 							}
-							if (specificKey == 9 && Key == Keys.RMenu && !keyAfterALT && npre) {
+							if (specificKey == 9 && ((Key == Keys.RMenu && Key == Keys.LControlKey) ||
+							                         ((ctrl && Key == Keys.RMenu) || (alt_r && Key == Keys.LControlKey))
+							                        ) && !keyAfterALT && npre) {
 								Logging.Log("[SPKEY] > Changing layout by AltGr key.");
 								ChangeLayout();
 						    	return;
