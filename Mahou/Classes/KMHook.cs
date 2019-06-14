@@ -1238,6 +1238,8 @@ namespace Mahou {
 						bool F18 = Key == Keys.F18;
 						bool GJIME = false;
 						var npre = ((int)preKey == (int)Keys.None || (int)preKey == (int)Key);
+						var altgr = (Key == Keys.RMenu && Key == Keys.LControlKey) || 
+							((ctrl && Key == Keys.RMenu) || (alt_r && Key == Keys.LControlKey));
 						if (specificKey == 8) // Shift+CapsLock
 							if (vkCode == 240) { // Google Japanese IME's  Shift+CapsLock repam fix
 								skip_spec_keys++; // Skip next CapsLock up event
@@ -1313,9 +1315,7 @@ namespace Mahou {
 								ChangeLayout();
 						    	return;
 							}
-							if (specificKey == 9 && ((Key == Keys.RMenu && Key == Keys.LControlKey) ||
-							                         ((ctrl && Key == Keys.RMenu) || (alt_r && Key == Keys.LControlKey))
-							                        ) && !keyAfterALT && npre) {
+							if (specificKey == 9 && altgr) {
 								Logging.Log("[SPKEY] > Changing layout by AltGr key.");
 								ChangeLayout();
 						    	return;
@@ -1394,7 +1394,7 @@ namespace Mahou {
 								DoSelf(()=>{ KeybdEvent(Keys.RMenu, 0); KeybdEvent(Keys.RMenu, 2); });
 						    	return;
 							}
-							if (specificKey == 9 && Key == Keys.RMenu && !keyAfterALT && npre) {
+							if (specificKey == 9 && altgr) {
 								Logging.Log("[SPKEY] > Switching to specific layout by AltGr key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
