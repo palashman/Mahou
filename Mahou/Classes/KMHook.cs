@@ -1326,7 +1326,7 @@ namespace Mahou {
 								ChangeLayout();
 						    	return;
 							}
-							if (specificKey == 9 && altgr && !keyAfterALTGR && npre) {
+							if (specificKey == 9 && altgr && !keyAfterALTGR) {
 								Logging.Log("[SPKEY] > Changing layout by AltGr key.");
 								ChangeLayout();
 						    	return;
@@ -1405,7 +1405,7 @@ namespace Mahou {
 								DoSelf(()=>{ KeybdEvent(Keys.RMenu, 0); KeybdEvent(Keys.RMenu, 2); });
 						    	return;
 							}
-							if (specificKey == 9 && altgr && !keyAfterALTGR && npre) {
+							if (specificKey == 9 && altgr && !keyAfterALTGR) {
 								Logging.Log("[SPKEY] > Switching to specific layout by AltGr key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
