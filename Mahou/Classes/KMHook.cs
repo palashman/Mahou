@@ -14,7 +14,7 @@ namespace Mahou {
 			win_r, alt_r, ctrl_r, shift_r,
 			shiftRP, ctrlRP, altRP, winRP, //RP = Re-Press
 			awas, swas, cwas, wwas, afterEOS, afterEOL, //*was = alt/shift/ctrl was
-			keyAfterCTRL, keyAfterALT, keyAfterSHIFT,
+			keyAfterCTRL, keyAfterALT, keyAfterALTGR, keyAfterSHIFT,
 			clickAfterCTRL, clickAfterALT, clickAfterSHIFT,
 			hotkeywithmodsfired, csdoing, incapt, waitfornum, 
 			IsHotkey, ff_chr_wheeled, preSnip, LMB_down, RMB_down, MMB_down,
@@ -304,6 +304,12 @@ namespace Mahou {
 					keyAfterALT = true;
 				else 
 					keyAfterALT = false;
+				if (((alt || alt_r) && (ctrl || ctrl_r)) && 
+				    (Key != Keys.LMenu && Key != Keys.RMenu && Key != Keys.Menu || clickAfterALT) &&
+				    (Key != Keys.LControlKey && Key != Keys.RControlKey && Key != Keys.Control || clickAfterCTRL))
+					keyAfterALTGR = true;
+				else 
+					keyAfterALTGR = false;
 				if ((shift || shift_r) && (Key != Keys.LShiftKey && Key != Keys.RShiftKey && Key != Keys.Shift || clickAfterSHIFT))
 					keyAfterSHIFT = true;
 				else 
@@ -1239,12 +1245,11 @@ namespace Mahou {
 						bool GJIME = false;
 						var npre = ((int)preKey == (int)Keys.None || (int)preKey == (int)Key);
 						var altgr = (Key == Keys.RMenu && Key == Keys.LControlKey) || 
-							((ctrl && Key == Keys.RMenu) || (alt_r && Key == Keys.LControlKey)) ||
-							(Key == Keys.LMenu && Key == Keys.LControlKey) || 
-							((ctrl && Key == Keys.LMenu) || (alt && Key == Keys.LControlKey)) || 
 							(Key == Keys.RMenu && Key == Keys.RControlKey) || 
-							((ctrl_r && Key == Keys.RMenu) || (alt_r && Key == Keys.RControlKey)) ||
 							(Key == Keys.LMenu && Key == Keys.LControlKey) || 
+							((ctrl && Key == Keys.RMenu) || (alt_r && Key == Keys.LControlKey)) ||
+							((ctrl && Key == Keys.LMenu) || (alt && Key == Keys.LControlKey)) || 
+							((ctrl_r && Key == Keys.RMenu) || (alt_r && Key == Keys.RControlKey)) ||
 							((ctrl_r && Key == Keys.LMenu) || (alt && Key == Keys.RControlKey));
 						if (specificKey == 8) // Shift+CapsLock
 							if (vkCode == 240) { // Google Japanese IME's  Shift+CapsLock repam fix
@@ -1321,7 +1326,7 @@ namespace Mahou {
 								ChangeLayout();
 						    	return;
 							}
-							if (specificKey == 9 && altgr) {
+							if (specificKey == 9 && altgr && !keyAfterALTGR && npre) {
 								Logging.Log("[SPKEY] > Changing layout by AltGr key.");
 								ChangeLayout();
 						    	return;
@@ -1400,7 +1405,7 @@ namespace Mahou {
 								DoSelf(()=>{ KeybdEvent(Keys.RMenu, 0); KeybdEvent(Keys.RMenu, 2); });
 						    	return;
 							}
-							if (specificKey == 9 && altgr) {
+							if (specificKey == 9 && altgr && !keyAfterALTGR && npre) {
 								Logging.Log("[SPKEY] > Switching to specific layout by AltGr key.");
 								ChangeToLayout(Locales.ActiveWindow(), Locales.GetLocaleFromString(speclayout).uId);
 								matched = true;
