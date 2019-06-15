@@ -1239,7 +1239,13 @@ namespace Mahou {
 						bool GJIME = false;
 						var npre = ((int)preKey == (int)Keys.None || (int)preKey == (int)Key);
 						var altgr = (Key == Keys.RMenu && Key == Keys.LControlKey) || 
-							((ctrl && Key == Keys.RMenu) || (alt_r && Key == Keys.LControlKey));
+							((ctrl && Key == Keys.RMenu) || (alt_r && Key == Keys.LControlKey)) ||
+							(Key == Keys.LMenu && Key == Keys.LControlKey) || 
+							((ctrl && Key == Keys.LMenu) || (alt && Key == Keys.LControlKey)) || 
+							(Key == Keys.RMenu && Key == Keys.RControlKey) || 
+							((ctrl_r && Key == Keys.RMenu) || (alt_r && Key == Keys.RControlKey)) ||
+							(Key == Keys.LMenu && Key == Keys.LControlKey) || 
+							((ctrl_r && Key == Keys.LMenu) || (alt && Key == Keys.RControlKey));
 						if (specificKey == 8) // Shift+CapsLock
 							if (vkCode == 240) { // Google Japanese IME's  Shift+CapsLock repam fix
 								skip_spec_keys++; // Skip next CapsLock up event
