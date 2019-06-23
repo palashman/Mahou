@@ -291,7 +291,7 @@ public class Languages
 		#region Tabs
 		{ Element.tab_Functions, "Functions" }, 
 		{ Element.tab_Layouts, "Layouts" }, 
-		{ Element.tab_Appearence, "Appearence" }, 
+		{ Element.tab_Appearence, "Appearance" }, 
 		{ Element.tab_Timings, "Timings" }, 
 		{ Element.tab_Excluded, "Excluded" }, 
 		{ Element.tab_Snippets, "Snippets" }, 
@@ -357,9 +357,9 @@ public class Languages
 		{ Element.LDMouseDisplay, "Display current language tooltip around mouse." }, 
 		{ Element.LDCaretDisplay, "Display current language tooltip around caret." }, 
 		{ Element.LDOnlyOnChange, "Only on change." }, 
-		{ Element.LDDifferentAppearence, "Use different appearence for layouts." }, 
+		{ Element.LDDifferentAppearence, "Use different appearance for layouts." }, 
 		{ Element.Language, "Language:" }, 
-		{ Element.LDAppearence, "Language tooltip appearence:" }, 
+		{ Element.LDAppearence, "Language tooltip appearance:" }, 
 		{ Element.LDAroundMouse, "Around mouse" }, 
 		{ Element.LDAroundCaret, "Around caret" }, 
 		{ Element.LDTransparentBG, "Transparent color." }, 
@@ -554,13 +554,13 @@ public class Languages
 		{ Element.TT_LDForCaret, "If enabled, a language tooltip will be displayed around the caret." }, 
 		{ Element.TT_Snippets, "If enabled, pressing SPACE will expand small (which starts with \"->\") word, to big (which is between \"====>\" and \"<====\") word/text fragment." }, 
 		{ Element.TT_Logging, "Designed ONLY to search for errors, BIG PERFORMANCE IMPACT, logs are saved in Mahou's folder, in folder Logs." }, 
-		{ Element.TT_LDDifferentAppearence, "If enabled, you can select different appearence for main layouts(1&2), for others will be used from \"around mouse\" or \"around caret\"." }, 
-		{ Element.TT_TrayDisplayType, "Allows to choose what to display in tray icon.\nIf layout text selected, its appearence will be same as in Appearence tab's \"Layout 1\" and \"Layout 2\" appearence, and \"around caret\" for any other layout.\nAlso it is possible to use flags for any other layout, just enable \"Use flags\" in \"around caret\"." }, 
+		{ Element.TT_LDDifferentAppearence, "If enabled, you can select different appearance for main layouts(1&2), for others will be used from \"around mouse\" or \"around caret\"." }, 
+		{ Element.TT_TrayDisplayType, "Allows to choose what to display in tray icon.\nIf layout text selected, its appearance will be same as in Appearance tab's \"Layout 1\" and \"Layout 2\" appearance, and \"around caret\" for any other layout.\nAlso it is possible to use flags for any other layout, just enable \"Use flags\" in \"around caret\"." }, 
 		{ Element.TT_SymbolIgnore, "If enabled, symbols []{};':\"./<>? will be ignored.\nWorks in Convert last word, line, selection with  \"Conver selection layout switching\" enabled or plus.\n" +
 										"WON'T WORK IF YOU HAVE MORE THAN 2 LAYOUTS AND FUNCTION \"Switch between layouts\" disabled!" }, 
 		{ Element.TT_ConvertWords, "Allow to convert specific last word count by pressing hotkey and then 0-9 (0 = 10) on keyboard." }, 
 		{ Element.TT_ExcludedPrograms, "Programs(excluded) in which convert hotkeys won't work.\nSeparators - spaces and new lines.\r\nIf process name has spaces in it replace it with _, if process name has the _ just write it so.\r\nExample: Process Name: foo_bar 2000.exe\r\nIn Mahou: foo_bar_2000.exe." }, 
-		{ Element.TT_MCDSSupport, "Add the ability to display language tooltip around caret in Sublime Text 3.\nFor it to work yout need to install a plugin, link on right.\nSettings avaible in appearence tab:\nTop: Your ST3 titlebar + tab bar height,\nBottom: Your y pixels to ST3 console edit box(ctrl+`).\nFor different windows/themes settings will be different!" }, 
+		{ Element.TT_MCDSSupport, "Add the ability to display language tooltip around caret in Sublime Text 3.\nFor it to work yout need to install a plugin, link on right.\nSettings avaible in appearance tab:\nTop: Your ST3 titlebar + tab bar height,\nBottom: Your y pixels to ST3 console edit box(ctrl+`).\nFor different windows/themes settings will be different!" }, 
 		{ Element.TT_LDText, "Leave empty for auto-detect.\r\nEnter Alt+255(Numpad) to disable displaying of this layout, when display flags feature active." }, 
 		{ Element.TT_OneLayoutWholeWordCS, "Use one layout for whole word in Convert Selection,\r\n"+
 				"this feature uses quantity of rightly recognized chars IN ALL layouts to indicate layout of whole word,"+
