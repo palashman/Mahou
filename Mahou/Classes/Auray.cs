@@ -13,6 +13,8 @@ public class Auray {
 	}
 	public Auray(string RAW) {
 		this.raw = RAW;
+		this.raw = this.raw.Replace("\n","");
+		this.raw = this.raw.Replace("\r","");
 		var size = __SIZE(raw);
 		this.deep = size.deep;
 		this.len = size.len;
