@@ -1072,7 +1072,7 @@ namespace Mahou {
 						break;
 					}
 					if (args.Contains("|")) {
-						var A = args.Split(' ');
+						var A = args.Split('|');
 						t=A[0];
 						Int32.TryParse(A[1], out upc);
 						if (A[1] == "*")
