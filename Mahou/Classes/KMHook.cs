@@ -18,7 +18,7 @@ namespace Mahou {
 			clickAfterCTRL, clickAfterALT, clickAfterSHIFT,
 			hotkeywithmodsfired, csdoing, incapt, waitfornum, 
 			IsHotkey, ff_chr_wheeled, preSnip, LMB_down, RMB_down, MMB_down,
-			dbl_click, click, selfie, aftsingleAS, JKLERR, JKLERRchecking;
+			dbl_click, click, selfie, aftsingleAS, JKLERR, JKLERRchecking, last_snipANY;
 		public static System.Windows.Forms.Timer click_reset = new System.Windows.Forms.Timer();
 		public static System.Windows.Forms.Timer JKLERRT = new System.Windows.Forms.Timer();
 		public static int skip_mouse_events, skip_spec_keys, cursormove = -1, guess_tries;
@@ -218,7 +218,7 @@ namespace Mahou {
 					Debug.WriteLine("Snip " + snip + ", last: " + last_snip);
 					if (Key == seKey) {
 		            	matched = CheckSnippet(snip);
-		            	if (!matched)
+		            	if (!matched && !last_snipANY)
 		            		matched = CheckSnippet(last_snip+" "+snip, true);
 						if (matched || preSnip)
 							c_snip.Clear();
@@ -739,6 +739,7 @@ namespace Mahou {
 						if (snip[g] != pins[t]) yay = false;
 					}
 					if (yay) {
+						last_snipANY = true;
     					if (MahouUI.SoundOnSnippets)
     						MahouUI.SoundPlay();
     					if (MahouUI.SoundOnSnippets2)
@@ -755,6 +756,7 @@ namespace Mahou {
 //		    		Debug.WriteLine("ANY " + yay);
 			    }
 				if (snip == snipps[i]) {
+					last_snipANY = false;
 					if (exps.Length > i) {
     					if (MahouUI.SoundOnSnippets)
     						MahouUI.SoundPlay();
@@ -874,7 +876,8 @@ namespace Mahou {
 		       			KInputs.MakeInput(KInputs.AddPress(Keys.Back, backs));
 						Logging.Log("[SNI] > Expanding snippet [" + snip + "] to [" + expand + "].");
 		       			ExpandSnippetWithExpressions(expand);
-						ClearWord(true, true, false, "Cleared due to snippet expansion");
+						ClearWord(true, true, true, "Cleared due to snippet expansion");
+						Debug.WriteLine("OK");
 //						KInputs.MakeInput(KInputs.AddString(expand));
 					}
 		       		if (spaceAft && !expand.Contains("__cursorhere"))
@@ -1063,7 +1066,12 @@ namespace Mahou {
 				case "__uppercase":
 					var upc = 1;
 					var t = args;
-					if (args.Contains(" ")) {
+					if (args == "") {
+						Debug.WriteLine("sorry nothing here?");
+						ClearWord(false,false,true, "__uppercase NullArgs");
+						break;
+					}
+					if (args.Contains("|")) {
 						var A = args.Split(' ');
 						t=A[0];
 						Int32.TryParse(A[1], out upc);
@@ -1073,13 +1081,18 @@ namespace Mahou {
 					var subst = 0;
 					var res = "";
 					for (int i=0; i!=upc; i++) {
+						if (upc >t.Length) {
+							Debug.WriteLine("Can't go on, no more chars left...");
+							break;
+						}
 						subst++;
 						res += char.ToUpper(t[i]);
 					}
 					if (subst != t.Length)
 						res += t.Substring(subst, t.Length-subst);
 					Debug.WriteLine("Uppercase conversion: " + res);
-					KInputs.MakeInput(KInputs.AddString(res));
+					if (res != "")
+						KInputs.MakeInput(KInputs.AddString(res));
 					break;
 			}
 		}
