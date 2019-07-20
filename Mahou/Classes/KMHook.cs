@@ -898,7 +898,7 @@ namespace Mahou {
               });
 		}
 		#region in Snippets expressions  
-		static readonly string[] expressions = new []{ "__date", "__time", "__version", "__system", "__title", "__keyboard", "__execute", "__cursorhere", "__paste", "__mahouhome", "__delay", "__uppercase" };
+		static readonly string[] expressions = new []{ "__date", "__time", "__version", "__system", "__title", "__keyboard", "__execute", "__cursorhere", "__paste", "__mahouhome", "__delay", "__uppercase", "__convert" };
 		static void ExpandSnippetWithExpressions(string expand) {
 			string ex = "", args = "", raw = "", err = "";
 			bool args_getting = false, is_expr = false, escaped = false;
@@ -1093,6 +1093,9 @@ namespace Mahou {
 					Debug.WriteLine("Uppercase conversion: " + res);
 					if (res != "")
 						KInputs.MakeInput(KInputs.AddString(res));
+					break;
+				case "__convert":
+					KInputs.MakeInput(KInputs.AddString(ConvertText(args)));
 					break;
 			}
 		}
